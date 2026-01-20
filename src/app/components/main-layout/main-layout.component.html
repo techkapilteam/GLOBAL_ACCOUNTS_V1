@@ -1,0 +1,76 @@
+<div class="app-container">
+  <!-- Top Navbar -->
+  <nav class="top-navbar">
+    <div class="navbar-left">
+      <button class="hamburger-btn" (click)="toggleSidebar()">
+        <span class="hamburger-icon">☰</span>
+      </button>
+      <h2 class="app-title">Accounting & Inventory</h2>
+    </div>
+
+    <div class="navbar-modules">
+      <button
+        *ngFor="let module of modules"
+        class="module-btn"
+        [class.active]="selectedModule?.id === module.id"
+        (click)="selectModule(module)">
+        <span class="module-icon">{{ module.icon }}</span>
+        <span class="module-name">{{ module.name }}</span>
+      </button>
+    </div>
+
+    <div class="navbar-right">
+      <span class="username">{{ username }}</span>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+      <div class="sidebar-content" *ngIf="selectedModule && !sidebarCollapsed">
+        <!-- Sub Modules with Accordion -->
+        <div class="sub-modules-section">
+          <h3 class="section-title">{{ selectedModule.name }} Modules</h3>
+          <div class="sub-modules-list">
+            <div *ngFor="let subModule of selectedModule.subModules" class="sub-module-wrapper">
+              <!-- Sub Module Header -->
+              <div
+                class="sub-module-item"
+                [class.active]="selectedSubModule?.id === subModule.id"
+                [class.expanded]="isSubModuleExpanded(subModule.id)"
+                (click)="toggleSubModule(subModule)">
+                <span class="sub-module-icon">{{ subModule.icon }}</span>
+                <span class="sub-module-name">{{ subModule.name }}</span>
+                <span class="arrow" [class.rotated]="isSubModuleExpanded(subModule.id)">›</span>
+              </div>
+
+              <!-- Screens List (Accordion Content) -->
+              <div class="screens-accordion" [class.expanded]="isSubModuleExpanded(subModule.id)">
+                <div class="screens-list">
+                  <div
+                    *ngFor="let screen of subModule.screens"
+                    class="screen-item"
+                    [class.active]="selectedScreen?.id === screen.id"
+                    (click)="selectScreen(screen); $event.stopPropagation()">
+                    <span class="screen-name">{{ screen.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-collapsed-content" *ngIf="sidebarCollapsed">
+        <button class="expand-btn" (click)="toggleSidebar()">›</button>
+      </div>
+    </aside>
+
+    <!-- Main View Area -->
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
