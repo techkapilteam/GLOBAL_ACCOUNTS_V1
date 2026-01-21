@@ -15,6 +15,7 @@ import { PettycashReceiptCancelComponent } from './components/ACCOUNTS TRANSACTI
 import { ChequesIssuedComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-issued/cheques-issued.component';
 import { BankTransferComponent } from './components/ACCOUNTS TRANSACTIONS/bank-transfer/bank-transfer.component';
 import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
+import { JournalVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher/journal-voucher.component';
 
 export const routes: Routes = [
   {
@@ -74,6 +75,10 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-transactions/tds-jv',
         component: TdsJvComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/journal-voucher',
+        component: JournalVoucherComponent
       },
       {
         path: 'accounts/accounts-transactions/:screen',
