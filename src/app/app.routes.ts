@@ -14,6 +14,7 @@ import { OnlineReceiptsComponent } from './components/ACCOUNTS TRANSACTIONS/onli
 import { PettycashReceiptCancelComponent } from './components/ACCOUNTS TRANSACTIONS/pettycash-receipt-cancel/pettycash-receipt-cancel.component';
 import { ChequesIssuedComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-issued/cheques-issued.component';
 import { BankTransferComponent } from './components/ACCOUNTS TRANSACTIONS/bank-transfer/bank-transfer.component';
+import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
 
 export const routes: Routes = [
   {
@@ -71,12 +72,16 @@ export const routes: Routes = [
         component: BankTransferComponent
       },
       {
+        path: 'accounts/accounts-transactions/tds-jv',
+        component: TdsJvComponent
+      },
+      {
         path: 'accounts/accounts-transactions/:screen',
         component: ScreenViewComponent
       },
       {
         path: 'accounts/accounts-reports/jv-list',
-        component: JvListComponent
+        component: JvListComponent  
       },
       {
         path: 'accounts/accounts-reports/:screen',
