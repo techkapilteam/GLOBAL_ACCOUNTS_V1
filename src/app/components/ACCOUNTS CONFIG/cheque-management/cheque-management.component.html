@@ -1,48 +1,73 @@
-<div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>Cheque Management</h2>
-      <div class="screen-breadcrumb">
-        <span class="breadcrumb-item">CHEQUE MANAGEMENT WORKING</span>
-      </div>
-    </div>
-
-    <div class="screen-content">
-      <!-- <div class="info-box">
-        <h3>Screen Information</h3>
-        <p>This is a placeholder screen for <strong>BANK CONFIG WORKS</strong>.</p>
-        <p>In a real application, this would contain the actual functionality and UI for this screen.</p>
-      </div>
-
-      <div class="feature-section">
-        <h3>Available Features</h3>
-        <div class="feature-list">
-          <div class="feature-item">
-            <span class="feature-icon">📝</span>
-            <span class="feature-text">Create and manage records</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">🔍</span>
-            <span class="feature-text">Search and filter data</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">📊</span>
-            <span class="feature-text">View reports and analytics</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">💾</span>
-            <span class="feature-text">Export data</span>
+<form>
+  <div class="section-content">
+    <div class="row g-3">
+      
+      <!-- Select Bank -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label required-field">Select Bank</label>
+          <select class="form-select" id="pBankname" title="Select Bank">
+            <option value="">-- Select Bank --</option>
+            <option value="Bank 1">Bank 1</option>
+            <option value="Bank 2">Bank 2</option>
+            <option value="Bank 3">Bank 3</option>
+          </select>
+          <div class="invalid-feedback">
+            <!-- Validation message -->
           </div>
         </div>
       </div>
 
-      <div class="action-buttons">
-        <button class="btn btn-primary">Add New</button>
-        <button class="btn btn-secondary">View List</button>
-        <button class="btn btn-secondary">Export</button>
-      </div> -->
+      <!-- Entry Date -->
+      <div class="col-md-3">
+        <div class="mb-3">
+          <label class="form-label" title="Entry Date">Entry Date</label>
+          <input type="date" class="form-control" id="pChequeGenerateDate" placeholder="Select date">
+        </div>
+      </div>
 
-      <p>this is cheque configuration component working, design your component here</p>
+      <!-- Number of Cheques -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label required-field">Number Of Cheques</label>
+          <input type="number" class="form-control" id="pNoofcheques" min="1" max="999" placeholder="Enter number of cheques">
+          <div class="invalid-feedback">
+            <!-- Validation message -->
+          </div>
+        </div>
+      </div>
+
+      <!-- From No. and To No. -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label required-field">From No.</label>
+          <input type="number" class="form-control" id="pChequefrom" min="0" placeholder="From cheque number">
+          <div class="invalid-feedback">
+            <!-- Validation message -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label class="form-label required-field">To No.</label>
+          <input type="number" class="form-control" id="pChequeto" readonly placeholder="To cheque number">
+          <div class="invalid-feedback">
+            <!-- Validation message -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-4 mt-5">
+        <button type="button" class="btn btn-primary">
+          Add
+        </button>
+        <button type="button" class="btn btn-secondary ms-2">
+          Clear
+        </button>
+      </div>
+<!-- Add Button -->
+      
     </div>
   </div>
-</div>
+
+</form>

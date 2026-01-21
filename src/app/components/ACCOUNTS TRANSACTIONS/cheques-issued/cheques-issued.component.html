@@ -1,0 +1,60 @@
+<div class="section-content">
+    <form autocomplete="off">
+  
+      <div class="row g-3">
+  
+        <!-- Date -->
+        <div class="col-md-2 col-xl-2">
+          <div class="mb-3">
+            <label class="form-label required-field">Date</label>
+            <input type="date" id="ptransactiondate" class="form-control w-auto" title="Date">
+            <div class="invalid-feedback">
+              <!-- Validation message placeholder -->
+            </div>
+          </div>
+        </div>
+  
+        <!-- Bank Select -->
+        <div class="col-md-4 col-xl-4">
+          <div class="mb-3">
+            <label class="form-label">Bank</label>
+            <select id="bankname" class="form-select">
+              <option value="">Select</option>
+              <option value="Bank 1">Bank 1</option>
+              <option value="Bank 2">Bank 2</option>
+              <option value="Bank 3">Bank 3</option>
+              <!-- Add more options as needed -->
+            </select>
+            <div class="invalid-feedback">
+              <!-- Validation message placeholder -->
+            </div>
+          </div>
+        </div>
+  
+        <!-- Bank Balance & BRS Info -->
+        <div class="col-md-6 col-xl-6">
+          <div class="border rounded shadow-sm bg-light p-3">
+            <span class="fw-bold fs-6 mb-2 d-block">
+              Bank Name Here
+            </span>
+            <hr class="mt-1 mb-1">
+  
+            <div class="mb-0">
+              <label class="me-2">Balance:</label>
+              <span class="fw-bold me-4">
+                $0.00 Dr <!-- Replace with dynamic value if using JS -->
+              </span>
+  
+              <label class="me-2">BRS Date:</label>
+              <span class="fw-bold">
+                16-Jan-2026 <!-- Replace with dynamic value if using JS -->
+              </span>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+  
+    </form>
+  </div>
+  

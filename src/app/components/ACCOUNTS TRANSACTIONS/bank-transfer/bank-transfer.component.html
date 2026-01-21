@@ -1,0 +1,37 @@
+    <form autocomplete="off">
+      <div class="row g-3">
+        
+        <!-- Date -->
+        <div class="col-md-3 col-xl-3">
+          <div class="mb-3">
+            <label class="form-label required-field">Date</label>
+            <input type="date" id="todate" class="form-control">
+          </div>
+        </div>
+  
+        <!-- Transfer Type -->
+        <div class="col-md-6 col-xl-6">
+          <div class="mb-3">
+            <label class="form-label required-field">Transfer Type</label>
+            <select id="transferType" class="form-select">
+              <option value="">-- Select --</option>
+              <option value="Type 1">Type 1</option>
+              <option value="Type 2">Type 2</option>
+              <option value="Type 3">Type 3</option>
+            </select>
+            <div class="invalid-feedback">
+              <!-- Validation message placeholder -->
+            </div>
+          </div>
+        </div>
+  
+        <!-- Save Button -->
+        <div class="col-md-3 col-xl-3 d-flex align-items-start mt-4 pt-4">
+          <button type="button" class="btn btn-primary d-flex align-items-center">
+            <i class="fa fa-spinner fa-spin me-2" style="display:none;"></i>
+            Save
+          </button>
+        </div>
+  
+      </div>
+    </form>
