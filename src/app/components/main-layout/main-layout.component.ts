@@ -29,6 +29,38 @@ export class MainLayoutComponent implements OnInit {
     this.modules = this.navigationService.getModules();
     this.username = this.authService.getUsername();
 
+    // --- Default sidebar with dashboard ---
+const defaultModule = this.modules.find(m => m.name.toLowerCase() === 'accounts');
+if (defaultModule) {
+  this.selectedModule = defaultModule;
+  this.navigationService.selectModule(defaultModule);
+  if (defaultModule.subModules && defaultModule.subModules.length > 0) {
+    const firstSubModule = defaultModule.subModules[0];
+    this.expandedSubModules.add(firstSubModule.id);
+    this.selectedSubModule = firstSubModule;
+    this.navigationService.selectSubModule(firstSubModule);
+  }
+}
+
+let dashboardScreen: Screen | undefined;
+for (const module of this.modules) {
+  for (const subModule of module.subModules || []) {
+    const foundScreen = subModule.screens?.find(screen => screen.name.toLowerCase() === 'dashboard');
+    if (foundScreen) {
+      dashboardScreen = foundScreen;
+      break;
+    }
+  }
+  if (dashboardScreen) break;
+}
+if (dashboardScreen) {
+  this.selectedScreen = dashboardScreen;
+  this.navigationService.selectScreen(dashboardScreen);
+  this.router.navigate([dashboardScreen.route]);
+}
+  // --- Default sidebar with dashboard ---
+
+
     this.navigationService.selectedModule$.subscribe(module => {
       this.selectedModule = module;
     });
