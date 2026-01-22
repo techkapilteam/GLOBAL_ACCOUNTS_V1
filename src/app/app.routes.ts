@@ -22,6 +22,7 @@ import { AccountSummaryComponent } from './components/ACCOUNTS REPORTS/account-s
 import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
 import { CashOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cash-onhand/cash-onhand.component';
 import { JournalVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher/journal-voucher.component';
+import { ReceiptsAndPaymentsComponent } from './components/ACCOUNTS REPORTS/receipts-and-payments/receipts-and-payments.component';
 
 export const routes: Routes = [
   {
@@ -118,6 +119,11 @@ export const routes: Routes = [
         path: 'accounts/accounts-reports/account-summary',
         component: AccountSummaryComponent
       }, 
+      
+      {
+        path: 'accounts/accounts-reports/receipts-and-payments',
+        component: ReceiptsAndPaymentsComponent
+      },
       {
         path: 'accounts/accounts-reports/:screen',
         component: ScreenViewComponent

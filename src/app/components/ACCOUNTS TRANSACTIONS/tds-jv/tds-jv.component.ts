@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-//import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule, ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 // import { PageCriteria } from '../Models/pageCriteria';
@@ -14,7 +14,7 @@ import { PageCriteria } from '../../../Models/pageCriteria';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    //NgSelectModule,
+    NgSelectModule,
     NgxDatatableModule,
     BsDatepickerModule,
 

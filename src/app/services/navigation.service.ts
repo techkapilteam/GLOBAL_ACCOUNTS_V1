@@ -89,7 +89,7 @@ export class NavigationService {
             { id: 'cheque-cancel', name: 'Cheque Cancel', route: '/dashboard/accounts/accounts-reports/cheque-cancel' },
             { id: 'cheque-return', name: 'Cheque Return', route: '/dashboard/accounts/accounts-reports/cheque-return' },
             { id: 'issued-cheque', name: 'Issued Cheque', route: '/dashboard/accounts/accounts-reports/issued-cheque' },
-
+            {id: 'receipts-and-payments', name: 'Receipts and Payments', route: '/dashboard/accounts/accounts-reports/receipts-and-payments' },
             { id: 'cheque-enquiry', name: 'Cheque Enquiry', route: '/dashboard/accounts/accounts-reports/cheque-enquiry' },
             { id: 'gst-report', name: 'GST Report', route: '/dashboard/accounts/accounts-reports/gst-report' },
             { id: 'trial-balance', name: 'Trial Balance', route: '/dashboard/accounts/accounts-reports/trial-balance' },
@@ -98,7 +98,6 @@ export class NavigationService {
             { id: 'pending-transfer', name: 'Pending Transfer', route: '/dashboard/accounts/accounts-reports/pending-transfer' },
             { id: 'online-settlement-report', name: 'Online Settlement Report', route: '/dashboard/accounts/accounts-reports/online-settlement-report' },
             { id: 'schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
-            {id: 'receipts-and-payments', name: 'Receipts and Payments', route: '/dashboard/accounts/accounts-reports/receipts-and-payments' }
           ]
         }
       ]
