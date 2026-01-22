@@ -14,8 +14,11 @@ import { OnlineReceiptsComponent } from './components/ACCOUNTS TRANSACTIONS/onli
 import { PettycashReceiptCancelComponent } from './components/ACCOUNTS TRANSACTIONS/pettycash-receipt-cancel/pettycash-receipt-cancel.component';
 import { ChequesIssuedComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-issued/cheques-issued.component';
 import { BankTransferComponent } from './components/ACCOUNTS TRANSACTIONS/bank-transfer/bank-transfer.component';
-import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
-import { JournalVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher/journal-voucher.component';
+import { BrsComponent } from './components/ACCOUNTS REPORTS/brs/brs.component';
+import { BrsStatementsComponent } from './components/ACCOUNTS REPORTS/brs-statements/brs-statements.component';
+import { TrialBalanceComponent } from './components/ACCOUNTS REPORTS/trial-balance/trial-balance.component';
+import { ChequesOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-onhand/cheques-onhand.component';
+import { AccountSummaryComponent } from './components/ACCOUNTS REPORTS/account-summary/account-summary.component';
 
 export const routes: Routes = [
   {
@@ -61,6 +64,10 @@ export const routes: Routes = [
         component: ChequesIssuedComponent
       },
       {
+        path: 'accounts/accounts-transactions/cheques-onhand',
+        component: ChequesOnhandComponent
+      },
+      {
         path: 'accounts/accounts-transactions/pettycash-receipt-cancel',
         component: PettycashReceiptCancelComponent
       },
@@ -73,20 +80,32 @@ export const routes: Routes = [
         component: BankTransferComponent
       },
       {
-        path: 'accounts/accounts-transactions/tds-jv',
-        component: TdsJvComponent
-      },
-      {
-        path: 'accounts/accounts-transactions/journal-voucher',
-        component: JournalVoucherComponent
-      },
-      {
         path: 'accounts/accounts-transactions/:screen',
         component: ScreenViewComponent
       },
       {
         path: 'accounts/accounts-reports/jv-list',
-        component: JvListComponent  
+        component: JvListComponent
+      },
+      {
+        path: 'accounts/accounts-reports/brs-statements',
+        component: BrsStatementsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/trial-balance',
+        component: TrialBalanceComponent
+      },
+      {
+        path: 'accounts/accounts-reports/brs',
+        component: BrsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/account-summary',
+        component: AccountSummaryComponent
+      },     
+      {
+        path: 'accounts/accounts-reports/:',
+        component: ScreenViewComponent
       },
       {
         path: 'accounts/accounts-reports/:screen',
