@@ -1,0 +1,114 @@
+<div class="card shadow-sm border-0 mb-4 report-box">
+  <div class="card-header bg-primary text-white fw-bold">
+    Online Settlement Report
+  </div>
+
+  <div class="card-body">
+
+    <form>
+
+      <div class="section-content">
+        <div class="row g-3">
+
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group">
+              <label class="required-field">From Date</label>
+              <input type="date" class="form-control" placeholder="Select From Date">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group">
+              <label class="required-field">To Date</label>
+              <input type="date" class="form-control" placeholder="Select To Date">
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group">
+              <label>Online Account</label>
+              <select class="form-control">
+                <option value="">Select</option>
+                <option>Paytm Bank A</option>
+                <option>Paytm Bank B</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-xl-3">
+            <div class="d-flex justify-content-start mt-4 gap-2">
+              <button type="button" class="btn btn-primary px-3">
+                <i class="fa"></i> Generate
+              </button>
+              <button type="button" class="btn btn-outline-primary px-3">
+                View
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-md-12 col-xl-12">
+            <div class="d-flex justify-content-end mb-3">
+              <ul class="temp-ul d-flex align-items-center mb-0">
+                <li class="temp-ico mr-2">
+                  <img src="images/pdf-icon-blue.svg" width="18" alt="PDF">
+                </li>
+                <li class="temp-ico mr-2">
+                  <img src="images/print-icon-blue.svg" width="18" alt="Print">
+                </li>
+                <li class="temp-ico">
+                  <img src="images/icon-excel.svg" width="18" alt="Excel">
+                </li>
+              </ul>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-bordered text-center">
+                <thead class="table-light">
+                  <tr>
+                    <th>Transaction No</th>
+                    <th>Transaction Date</th>
+                    <th>Chit Receipt No</th>
+                    <th>Reference No</th>
+                    <th>Cheque Date</th>
+                    <th>Amount</th>
+                    <th>Chit No.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>TXN001</td>
+                    <td>01-01-2026</td>
+                    <td>CR001</td>
+                    <td>CHQ123</td>
+                    <td>01-01-2026</td>
+                    <td class="text-end">₹ 5,000.00</td>
+                    <td>CHG001 - T001</td>
+                  </tr>
+                  <tr>
+                    <td>TXN002</td>
+                    <td>02-01-2026</td>
+                    <td>CR002</td>
+                    <td>CHQ124</td>
+                    <td>02-01-2026</td>
+                    <td class="text-end">₹ 7,500.00</td>
+                    <td>CHG002 - T002</td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>

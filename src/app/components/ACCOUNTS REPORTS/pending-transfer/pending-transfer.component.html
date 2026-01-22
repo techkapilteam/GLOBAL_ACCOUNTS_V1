@@ -1,0 +1,131 @@
+<div class="container-fluid">
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="mb-0">Pending Transfer Report</h5>
+    </div>
+
+    <div class="card-body">
+      <form>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <label class="required-field">Branch</label>
+            <select class="form-control">
+              <option value="">Select Branch</option>
+              <option>Branch A</option>
+              <option>Branch B</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="required-field">Type of Payment</label>
+            <select class="form-control">
+              <option value="">Select</option>
+              <option>Cash</option>
+              <option>Cheque</option>
+              <option>Online</option>
+            </select>
+          </div>
+
+          <div class="col-md-12 text-end mt-3">
+            <img src="images/icon-check-white.svg" class="me-2" width="18" />
+            <button type="button" class="btn btn-primary px-4">Generate Report</button>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+
+      <div class="row mb-3 align-items-center">
+
+        <div class="col-md-5 offset-md-5">
+          <input type="text" class="form-control" placeholder="Pending Days Filter">
+        </div>
+
+        <div class="col-md-2 text-end">
+          <ul class="d-flex justify-content-end list-unstyled mb-0 gap-3">
+            <li><img src="images/pdf-icon-blue.svg" width="18" alt="PDF"></li>
+            <li><img src="images/print-icon-blue.svg" width="18" alt="Print"></li>
+            <li><img src="images/icon-excel.svg" width="18" alt="Excel"></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered text-center">
+          <thead class="table-light">
+            <tr>
+              <th>Branch Name</th>
+              <th>Chit No.</th>
+              <th>Subscriber Name</th>
+              <th>Chit Status</th>
+              <th>Receipt No.</th>
+              <th>Receipt Date</th>
+              <th>Tr Date</th>
+              <th>Receipt Amount</th>
+              <th>Pending Days</th>
+              <th>Due Months</th>
+              <th>Reference Number</th>
+              <th>Reference Date</th>
+              <th>Bank Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Branch A</td>
+              <td>CHT001</td>
+              <td>John Doe</td>
+              <td>Active</td>
+              <td>R001</td>
+              <td>01-01-2026</td>
+              <td>02-01-2026</td>
+              <td class="text-end">₹ 10,000.00</td>
+              <td>5</td>
+              <td>1</td>
+              <td>REF001</td>
+              <td>03-01-2026</td>
+              <td>Bank A</td>
+            </tr>
+            <tr>
+              <td>Branch B</td>
+              <td>CHT002</td>
+              <td>Jane Smith</td>
+              <td>Pending</td>
+              <td>R002</td>
+              <td>02-01-2026</td>
+              <td>03-01-2026</td>
+              <td class="text-end">₹ 15,500.00</td>
+              <td>3</td>
+              <td>1</td>
+              <td>REF002</td>
+              <td>04-01-2026</td>
+              <td>Bank B</td>
+            </tr>
+
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="text-end fw-bold">Total</td>
+              <td class="text-end fw-bold">₹ 25,500.00</td>
+              <td colspan="5"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="text-center text-muted mt-3">
+        No Records to Display
+      </div>
+
+    </div>
+  </div>
+
+</div>
