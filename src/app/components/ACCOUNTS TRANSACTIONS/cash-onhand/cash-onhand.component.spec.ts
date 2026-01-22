@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScheduleTbComponent } from './schedule-tb.component';
+import { CashOnhandComponent } from './cash-onhand.component';
 
-describe('ScheduleTbComponent', () => {
-  let component: ScheduleTbComponent;
-  let fixture: ComponentFixture<ScheduleTbComponent>;
+describe('CashOnhandComponent', () => {
+  let component: CashOnhandComponent;
+  let fixture: ComponentFixture<CashOnhandComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ScheduleTbComponent]
+      imports: [CashOnhandComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ScheduleTbComponent);
+    fixture = TestBed.createComponent(CashOnhandComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
