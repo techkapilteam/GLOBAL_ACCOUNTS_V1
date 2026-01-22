@@ -14,6 +14,11 @@ import { OnlineReceiptsComponent } from './components/ACCOUNTS TRANSACTIONS/onli
 import { PettycashReceiptCancelComponent } from './components/ACCOUNTS TRANSACTIONS/pettycash-receipt-cancel/pettycash-receipt-cancel.component';
 import { ChequesIssuedComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-issued/cheques-issued.component';
 import { BankTransferComponent } from './components/ACCOUNTS TRANSACTIONS/bank-transfer/bank-transfer.component';
+import { BrsComponent } from './components/ACCOUNTS REPORTS/brs/brs.component';
+import { BrsStatementsComponent } from './components/ACCOUNTS REPORTS/brs-statements/brs-statements.component';
+import { TrialBalanceComponent } from './components/ACCOUNTS REPORTS/trial-balance/trial-balance.component';
+import { AccountSummaryComponent } from './components/ACCOUNTS REPORTS/account-summary/account-summary.component';
+import { ChequesOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-onhand/cheques-onhand.component';
 
 export const routes: Routes = [
   {
@@ -59,6 +64,10 @@ export const routes: Routes = [
         component: ChequesIssuedComponent
       },
       {
+        path: 'accounts/accounts-transactions/cheques-onhand',
+        component: ChequesOnhandComponent
+      },
+      {
         path: 'accounts/accounts-transactions/pettycash-receipt-cancel',
         component: PettycashReceiptCancelComponent
       },
@@ -79,8 +88,21 @@ export const routes: Routes = [
         component: JvListComponent
       },
       {
-        path: 'accounts/accounts-reports/:screen',
-        component: ScreenViewComponent
+        path: 'accounts/accounts-reports/brs-statements',
+        component: BrsStatementsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/trial-balance',
+        component: TrialBalanceComponent
+      },
+      {
+        path: 'accounts/accounts-reports/brs',
+        component: BrsComponent
+      },
+      
+      {
+        path: 'accounts/accounts-reports/account-summary',
+        component: AccountSummaryComponent
       },
       {
         path: 'accounts/accounts-reports/:screen',
