@@ -1,1 +1,179 @@
-<p>tds-jv works!</p>
+<div class="section-content ">
+  <form autocomplete="off" [formGroup]="tdsJvDetailsForm">
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label id="DebitLedger" title="Debit Ledger" class="required-field">Debit Ledger</label>
+          <ng-select id="DebitLedger" title="Debit Ledger" [items]="tdsledgeraccountslist" formControlName="DebitLedger"
+            bindLabel="pledgername" bindValue="pledgername" [multiple]=false placeholder="Debit Ledger"
+            [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
+            (change)="click_jvtype($event)" [ngClass]="{ 'is-invalid': formValidationMessages.DebitLedger }">
+          </ng-select>
+          <!-- <app-validation-message [messgae]="formValidationMessages?.DebitLedger">
+            </app-validation-message> -->
+          <!-- <app-validation-message [message]="formValidationMessages?.DebitLedger">
+          </app-validation-message> -->
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label id="CreditLedger" title="Credit Ledger" class="required-field">Credit Ledger</label>
+          <ng-select id="CreditLedger" title="Credit Ledger" [items]="ledgeraccountslist" formControlName="CreditLedger"
+            bindLabel="pledgername" bindValue="pledgername" [multiple]=false placeholder="Credit Ledger"
+            [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
+            [ngClass]="{ 'is-invalid': formValidationMessages.CreditLedger }">
+          </ng-select>
+          <!-- <app-validation-message [messgae]="formValidationMessages?.CreditLedger">
+          </app-validation-message> -->
+
+
+          <!-- <app-validation-message
+  [message]="formValidationMessages?.CreditLedger">
+        </app-validation-message> -->
+
+
+        
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="required-field">Date</label>
+          <fieldset [disabled]="!disabletransactiondate">
+            <input type="text" class="form-control w-auto" formControlName="preceiptdate" placeholder="Date picker here"
+              [bsConfig]="dpConfig1" #dp="bsDatepicker" bsDatepicker placement="bottom" readonly>
+          </fieldset>
+          <!-- [ngClass]="{ 'is-invalid': submitted &&  LoanConfiguration.controls.preceiptdate.errors }" -->
+        </div>
+
+        
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label id="pPeriodType" title="Year" class="required-field">Year</label>
+          <ng-select id="pPeriodType" title="Calendar Year" [items]="calendarYearData" formControlName="pPeriodType"
+            bindLabel="pPeriodType" bindValue="pCalenderPeriodId" [multiple]=false placeholder="Select Year"
+            [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
+            (change)="CalendarYear_change($event)" [ngClass]="{ 'is-invalid': formValidationMessages.pPeriodType }">
+          </ng-select>
+          <!-- <app-validation-message [messgae]="formValidationMessages?.pPeriodType">
+          </app-validation-message> -->
+
+
+           <!-- <app-validation-message [message]="formValidationMessages?.pPeriodType">
+          </app-validation-message> -->
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label id="pCalendarMonth" title="Month" class="required-field">Month</label>
+          <ng-select id="pCalendarMonth" title="Calender Month" [items]="calendarMonthData"
+            formControlName="pCalendarMonth" bindLabel="pCalendarMonth" bindValue="pCalenderPeriodDetailsId"
+            [multiple]=false placeholder="Month" [searchable]=true [clearable]=true dropdownPosition="bottom"
+            [clearOnBackspace]=true (change)="CalendarYearMOnth_change($event)"
+            [ngClass]="{ 'is-invalid': formValidationMessages.pCalendarMonth }">
+          </ng-select>
+          <!-- <app-validation-message [messgae]="formValidationMessages?.pCalendarMonth">
+          </app-validation-message> -->
+
+           <!-- <app-validation-message [message]="formValidationMessages?.pCalendarMonth">
+          </app-validation-message> -->
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="d-flex justify-content-start mt-4">
+          <button class="btn btn-primary" (click)="gettdsjvdetails()">
+            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}"></i> {{savebutton1}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+  <hr class="light">
+  <div *ngIf="dataisempty">No Records to Display</div>
+  <div class="row" *ngIf="showhidetable">
+    <div class="col-md-12 col-xl-12">
+      <h2 class="sec-head font-16">TDS/GST JV's </h2>
+    </div>
+
+    <div class="col-md-12 col-xl-12">
+      <div class="d-flex justify-content-end">
+        <a class="export-icons" (click)="export()"><img src="assets/images/icon-excel.svg " title="Excel"
+            width="18px"></a>
+      </div>
+
+      <ngx-datatable class="material expandable table" [rows]="tdsJvDetailsGrid" [scrollbarH]="true" [headerHeight]="50"
+        [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize"
+        [offset]="pageCriteria.offset" [summaryRow]="true" [summaryHeight]="40" [summaryPosition]="'bottom'"
+        [selected]="selected1" [selectionType]="SelectionType.checkbox" (select)="onSelect($event)"
+        (activate)="onActivate($event)" [columnMode]="ColumnMode.force">
+
+        <ngx-datatable-column [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false"
+          [width]="60">
+          <ng-template ngx-datatable-header-template  let-allRowsSelected="allRowsSelected"
+            let-selectFn="selectFn">
+            <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn()" />
+          </ng-template>
+          <ng-template ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
+            let-onCheckboxChangeFn="onCheckboxChangeFn">
+            <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event)" />
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Particulars" prop="particulars" [cellClass]="'cell-left'"
+          [headerClass]="'header-left'" [width]="450">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.particulars}}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Debit Amount" prop="debit_amount" [cellClass]="'cell-right'"
+          [headerClass]="'header-right'" [summaryTemplate]="TotalDebitAmount" [width]="100">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.debit_amount==0" title="0"></div>
+            <div *ngIf="row.debit_amount!=0" title="0">{{currencysymbol}} {{row.debit_amount.toFixed(2) | currency}}
+            </div>
+          </ng-template>
+          <ng-template #TotalDebitAmount>
+            {{currencysymbol}} {{ totaldebitamount.toFixed(2) | currency }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Credit Amount" prop="credit_amount" [cellClass]="'cell-right'"
+          [headerClass]="'header-right'" [summaryTemplate]="TotalCreditAmount" [width]="100">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.credit_amount==0" title="0"></div>
+            <div *ngIf="row.credit_amount!=0" title="0">{{currencysymbol}}
+              {{row.credit_amount.toFixed(2) | currency}}</div>
+          </ng-template>
+          <ng-template #TotalCreditAmount>
+            {{currencysymbol}} {{ totalcreditamount.toFixed(2) | currency}}
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+      <div class="form-group mt-1">
+        <label class="required-field">Narration</label>
+        <textarea class="form-control" rows="4" id="pnarration" title="Narration" formControlName="pnarration"
+          maxlength="250" [ngClass]="{ 'is-invalid': formValidationMessages.pnarration }"></textarea>
+
+        <!-- <app-validation-message [messgae]="formValidationMessages?.pnarration"></app-validation-message> -->
+ <!-- <app-validation-message [message]="formValidationMessages?.pnarration">
+          </app-validation-message> -->
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+
+        <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearJVDetails()"><img
+            src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px" height="20px">Clear</a>
+        <!-- <a class="btn btn-s-icon px-3 border-0 " (click)="click_save()">
+            <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"> Save </a>  -->
+        <button *ngIf="isExists" (click)="saveJVDetails()" class="btn btn-primary px-3 border-0"
+          [disabled]="disablesavebutton">
+          <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
+            *ngIf="!disablesavebutton">
+          <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

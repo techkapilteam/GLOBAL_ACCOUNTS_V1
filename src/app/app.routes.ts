@@ -16,6 +16,7 @@ import { ChequesIssuedComponent } from './components/ACCOUNTS TRANSACTIONS/chequ
 import { BankTransferComponent } from './components/ACCOUNTS TRANSACTIONS/bank-transfer/bank-transfer.component';
 import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
 import { JournalVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher/journal-voucher.component';
+import { ScheduleTbComponent } from './components/ACCOUNTS TRANSACTIONS/schedule-tb/schedule-tb.component';
 
 export const routes: Routes = [
   {
@@ -93,8 +94,8 @@ export const routes: Routes = [
         component: ScreenViewComponent
       },
       {
-        path: 'accounts/accounts-reports/:screen',
-        component: ScreenViewComponent
+        path: 'accounts/accounts-reports/:schedule-tb',
+        component: ScheduleTbComponent
       },
       {
         path: 'transactions/deposits/:screen',
