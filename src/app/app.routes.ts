@@ -19,6 +19,9 @@ import { BrsStatementsComponent } from './components/ACCOUNTS REPORTS/brs-statem
 import { TrialBalanceComponent } from './components/ACCOUNTS REPORTS/trial-balance/trial-balance.component';
 import { ChequesOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-onhand/cheques-onhand.component';
 import { AccountSummaryComponent } from './components/ACCOUNTS REPORTS/account-summary/account-summary.component';
+import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
+import { CashOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cash-onhand/cash-onhand.component';
+import { JournalVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher/journal-voucher.component';
 
 export const routes: Routes = [
   {
@@ -80,6 +83,18 @@ export const routes: Routes = [
         component: BankTransferComponent
       },
       {
+        path: 'accounts/accounts-transactions/tds-jv',
+        component: TdsJvComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/cash-onhand',
+        component: CashOnhandComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/journal-voucher',
+        component: JournalVoucherComponent
+      },
+      {
         path: 'accounts/accounts-transactions/:screen',
         component: ScreenViewComponent
       },
@@ -102,11 +117,7 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-reports/account-summary',
         component: AccountSummaryComponent
-      },     
-      {
-        path: 'accounts/accounts-reports/:',
-        component: ScreenViewComponent
-      },
+      }, 
       {
         path: 'accounts/accounts-reports/:screen',
         component: ScreenViewComponent
