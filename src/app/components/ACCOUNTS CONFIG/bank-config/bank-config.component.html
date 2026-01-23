@@ -1,239 +1,249 @@
-<form class="section-content" autocomplete="off">
-  <div class="row g-3">
-    <!-- Bank Date -->
-    <div class="col-md-6 col-xl-4">
-      <div class="mb-3">
-        <label class="form-label">Date</label>
-        <input class="form-control" type="text" readonly placeholder="Select Date">
-      </div>
-    </div>
+<div class="screen-container">
+<div class="screen-card">
+  <div  class="screen-header">
+    <h2>Bank Configuration</h2>
   </div>
+<div class="screen-content">
 
-  <div class="row">
-    <!-- Account Type -->
-    <div class="col-md-6 col-xl-4">
-      <div class="mb-3">
-        <label class="form-label">A/C Type</label>
-        <select class="form-select">
-          <option value="" disabled selected>Select</option>
-          <option>Saving</option>
-          <option>Current</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Account Number -->
-    <div class="col-md-6 col-xl-4">
-      <div class="mb-3">
-        <label class="form-label">Account No.</label>
-        <input class="form-control" type="text" maxlength="50">
-      </div>
-    </div>
-
-    <!-- Bank Name -->
-    <div class="col-md-6 col-xl-4">
-      <div class="mb-3">
-        <label class="form-label">Bank</label>
-        <select class="form-select">
-          <option value="" disabled selected>Select</option>
-          <option>Bank 1</option>
-          <option>Bank 2</option>
-          <option>Bank 3</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Account Name -->
-    <div class="col-md-6 col-xl-4">
-      <div class="mb-3">
-        <label class="form-label">Account Name</label>
-        <input class="form-control" type="text" maxlength="150">
-      </div>
-    </div>
-
-    <!-- Branch -->
-    <div class="col-md-6 col-xl-4">
-      <div class="mb-3">
-        <label class="form-label">Branch</label>
-        <input class="form-control" type="text" maxlength="125">
-      </div>
-    </div>
-
-    <!-- IFSC Code & Overdraft -->
-    <div class="col-md-6 col-xl-4">
-      <label class="form-label">IFSC Code</label>
-      <div class="d-flex gap-2">
-        <input class="form-control" placeholder="IFSC Code" maxlength="12">
-        <input class="form-control text-end" placeholder="Overdraft">
-      </div>
-    </div>
-
-    <!-- Opening Balance -->
-    <div class="col-md-6 col-xl-4">
-      <label class="form-label">Overdraft Limit</label>
-      <div class="input-group">
-        <input class="form-control text-end" placeholder="0.00">
-        <select class="form-select">
-          <option value="" disabled selected>Select</option>
-          <option value="D">Debit</option>
-          <option value="C">Credit</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <hr class="my-4">
-
-  <div class="row">
-     <div class="col-md-12 mb-2">
-      <label class="form-check-label">Branch Address</label>
-     </div> 
-
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label for="address1" title="Address Line 1">Address Line 1</label>
-        <input type="text" id="address1" class="form-control" maxlength="150">
-      </div>
-    </div>
-  
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label for="address2" title="Address Line 2">Address Line 2</label>
-        <input type="text" id="address2" class="form-control" maxlength="150">
-      </div>
-    </div>
-  
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label for="city" title="City / Village">City / Village</label>
-        <input type="text" id="city" class="form-control" maxlength="75">
-      </div>
-    </div>
-  
-  </div>
-  <div class="row mt-2">
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label for="country" title="Country">Country</label>
-        <select id="country" class="form-control">
-          <option value="">Select</option>
-          <option value="1">India</option>
-        </select>
-      </div>
-    </div>
-  
-    <div class="col-md-6 col-xl-4">
-      <div class="d-flex">
-  
-        <div class="col-md-6 col-xl-6 pl-0">
-          <div class="form-group">
-            <label for="state" title="State">State</label>
-            <select id="state" class="form-control">
-              <option value="">Select</option>
-            </select>
-          </div>
+  <form class="section-content" autocomplete="off">
+    <div class="row g-3">
+      <!-- Bank Date -->
+      <div class="col-md-6 col-xl-4">
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input class="form-control" type="text" readonly placeholder="Select Date">
         </div>
-  
-        <div class="col-md-6 col-xl-6 pr-0">
-          <div class="form-group">
-            <label for="district" title="District">District</label>
-            <select id="district" class="form-control">
-              <option value="">Select</option>
-            </select>
-          </div>
-        </div>
-  
       </div>
     </div>
   
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label for="pincode" title="Pincode">Pincode</label>
-        <input type="text" id="pincode" class="form-control" maxlength="6">
+    <div class="row">
+      <!-- Account Type -->
+      <div class="col-md-6 col-xl-4">
+        <div class="mb-3">
+          <label class="form-label">A/C Type</label>
+          <select class="form-select">
+            <option value="" disabled selected>Select</option>
+            <option>Saving</option>
+            <option>Current</option>
+          </select>
+        </div>
+      </div>
+  
+      <!-- Account Number -->
+      <div class="col-md-6 col-xl-4">
+        <div class="mb-3">
+          <label class="form-label">Account No.</label>
+          <input class="form-control" type="text" maxlength="50">
+        </div>
+      </div>
+  
+      <!-- Bank Name -->
+      <div class="col-md-6 col-xl-4">
+        <div class="mb-3">
+          <label class="form-label">Bank</label>
+          <select class="form-select">
+            <option value="" disabled selected>Select</option>
+            <option>Bank 1</option>
+            <option>Bank 2</option>
+            <option>Bank 3</option>
+          </select>
+        </div>
+      </div>
+  
+      <!-- Account Name -->
+      <div class="col-md-6 col-xl-4">
+        <div class="mb-3">
+          <label class="form-label">Account Name</label>
+          <input class="form-control" type="text" maxlength="150">
+        </div>
+      </div>
+  
+      <!-- Branch -->
+      <div class="col-md-6 col-xl-4">
+        <div class="mb-3">
+          <label class="form-label">Branch</label>
+          <input class="form-control" type="text" maxlength="125">
+        </div>
+      </div>
+  
+      <!-- IFSC Code & Overdraft -->
+      <div class="col-md-6 col-xl-4">
+        <label class="form-label">IFSC Code</label>
+        <div class="d-flex gap-2">
+          <input class="form-control" placeholder="IFSC Code" maxlength="12">
+          <input class="form-control text-end" placeholder="Overdraft">
+        </div>
+      </div>
+  
+      <!-- Opening Balance -->
+      <div class="col-md-6 col-xl-4">
+        <label class="form-label">Overdraft Limit</label>
+        <div class="input-group">
+          <input class="form-control text-end" placeholder="0.00">
+          <select class="form-select">
+            <option value="" disabled selected>Select</option>
+            <option value="D">Debit</option>
+            <option value="C">Credit</option>
+          </select>
+        </div>
       </div>
     </div>
   
-  </div>
-
-  <hr  class="light">
-
-  <!-- Debit Card Setup -->
-  <div class="row">
-    <div class="col-md-4">
-      <div class="mb-3">
-        <div class="form-check">
-          <input type="checkbox" class="form-check-input" id="debitCardCheck">
-          <label class="form-check-label" for="debitCardCheck">Add Debit Card</label>
+    <hr class="my-4">
+  
+    <div class="row">
+       <div class="col-md-12 mb-2">
+        <label class="form-check-label">Branch Address</label>
+       </div> 
+  
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label for="address1" title="Address Line 1">Address Line 1</label>
+          <input type="text" id="address1" class="form-control" maxlength="150">
         </div>
+      </div>
     
-        <div class="mt-3">
-          <div class="mb-3">
-            <input class="form-control" placeholder="Card No" maxlength="16">
-          </div>
-          <div class="row g-2 mb-3">
-            <div class="col">
-              <input class="form-control" placeholder="Valid From">
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label for="address2" title="Address Line 2">Address Line 2</label>
+          <input type="text" id="address2" class="form-control" maxlength="150">
+        </div>
+      </div>
+    
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label for="city" title="City / Village">City / Village</label>
+          <input type="text" id="city" class="form-control" maxlength="75">
+        </div>
+      </div>
+    
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label for="country" title="Country">Country</label>
+          <select id="country" class="form-control">
+            <option value="">Select</option>
+            <option value="1">India</option>
+          </select>
+        </div>
+      </div>
+    
+      <div class="col-md-6 col-xl-4">
+        <div class="d-flex">
+    
+          <div class="col-md-6 col-xl-6 pl-0">
+            <div class="form-group">
+              <label for="state" title="State">State</label>
+              <select id="state" class="form-control">
+                <option value="">Select</option>
+              </select>
             </div>
-            <div class="col">
-              <input class="form-control" placeholder="Valid Thru">
+          </div>
+    
+          <div class="col-md-6 col-xl-6 pr-0">
+            <div class="form-group">
+              <label for="district" title="District">District</label>
+              <select id="district" class="form-control">
+                <option value="">Select</option>
+              </select>
             </div>
           </div>
-          <div class="mb-3">
-            <input class="form-control" placeholder="Name on Card">
+    
+        </div>
+      </div>
+    
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label for="pincode" title="Pincode">Pincode</label>
+          <input type="text" id="pincode" class="form-control" maxlength="6">
+        </div>
+      </div>
+    
+    </div>
+  
+    <hr  class="light">
+  
+    <!-- Debit Card Setup -->
+    <div class="row">
+      <div class="col-md-4">
+        <div class="mb-3">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="debitCardCheck">
+            <label class="form-check-label" for="debitCardCheck">Add Debit Card</label>
+          </div>
+      
+          <div class="mt-3">
+            <div class="mb-3">
+              <input class="form-control" placeholder="Card No" maxlength="16">
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col">
+                <input class="form-control" placeholder="Valid From">
+              </div>
+              <div class="col">
+                <input class="form-control" placeholder="Valid Thru">
+              </div>
+            </div>
+            <div class="mb-3">
+              <input class="form-control" placeholder="Name on Card">
+            </div>
           </div>
         </div>
       </div>
+      <div class="col-md-4">
+   <!-- UPI Setup -->
+   <div class="mb-3">
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="upiCheck">
+      <label class="form-check-label" for="upiCheck">Add UPI</label>
     </div>
-    <div class="col-md-4">
- <!-- UPI Setup -->
- <div class="mb-3">
-  <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="upiCheck">
-    <label class="form-check-label" for="upiCheck">Add UPI</label>
+  
+    <div class="mt-3">
+      <div class="mb-3">
+        <input class="form-control" placeholder="UPI ID">
+      </div>
+      <div class="mb-3">
+        <select class="form-select">
+          <option value="" disabled selected>Select</option>
+          <option>UPI 1</option>
+          <option>UPI 2</option>
+        </select>
+      </div>
+    </div>
   </div>
-
-  <div class="mt-3">
-    <div class="mb-3">
-      <input class="form-control" placeholder="UPI ID">
+      </div>
+      <div class="col-md-4">
+        <input type="checkbox" class="form-check-input" id="BankSetup">
+        <label class="form-check-label" for="BankSetup">Bank Setup</label>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="isprimary">
+              <label class="form-check-label" for="isprimary">isprimary</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="isformanbank">
+              <label class="form-check-label" for="isformanbank">isformanbank</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="isforemanpaymentbank">
+              <label class="form-check-label" for="isforemanpaymentbank">isforemanpaymentbank</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="isintrestpaymentbank">
+              <label class="form-check-label" for="isintrestpaymentbank">isintrestpaymentbank</label>
+            </div>
+      </div>
+      
+      
+    </div> 
+    
+  
+    <!-- Buttons -->
+    <div class="d-flex justify-content-end gap-2 mb-4">
+      <button type="reset" class="btn btn-secondary">Clear</button>
+      <button type="submit" class="btn btn-primary">Save</button>
     </div>
-    <div class="mb-3">
-      <select class="form-select">
-        <option value="" disabled selected>Select</option>
-        <option>UPI 1</option>
-        <option>UPI 2</option>
-      </select>
-    </div>
-  </div>
+  </form>
 </div>
-    </div>
-    <div class="col-md-4">
-      <input type="checkbox" class="form-check-input" id="BankSetup">
-      <label class="form-check-label" for="BankSetup">Bank Setup</label>
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="isprimary">
-            <label class="form-check-label" for="isprimary">isprimary</label>
-          </div>
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="isformanbank">
-            <label class="form-check-label" for="isformanbank">isformanbank</label>
-          </div>
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="isforemanpaymentbank">
-            <label class="form-check-label" for="isforemanpaymentbank">isforemanpaymentbank</label>
-          </div>
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="isintrestpaymentbank">
-            <label class="form-check-label" for="isintrestpaymentbank">isintrestpaymentbank</label>
-          </div>
-    </div>
-    
-    
-  </div> 
-  
-
-  <!-- Buttons -->
-  <div class="d-flex justify-content-end gap-2 mb-4">
-    <button type="reset" class="btn btn-secondary">Clear</button>
-    <button type="submit" class="btn btn-primary">Save</button>
-  </div>
-</form>
+</div>
+</div>
