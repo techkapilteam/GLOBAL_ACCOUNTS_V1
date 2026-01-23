@@ -79,22 +79,7 @@ export const routes: Routes = [
         path: 'accounts/accounts-transactions/general-receipt-cancel',
         component: GeneralReceiptCancelComponent
       },
-      {
-        path: 'accounts/accounts-transactions/general-receipt-view',
-        component: GeneralReceiptViewComponent
-      },
-      {
-        path: 'accounts/accounts-transactions/general-receipt',
-        component: GeneralReceiptNewComponent
-      },
-      {
-        path: 'accounts/accounts-transactions/payment-voucher',
-        component: PaymentVoucherComponent
-      },
-       {
-        path: 'accounts/accounts-transactions/payment-voucher-view',
-        component: PaymentVoucherViewComponent
-      },
+      
       {
         path: 'accounts/accounts-transactions/general-receipt',
         component: GeneralReceiptComponent
@@ -115,14 +100,6 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-transactions/pettycash-receipt-cancel',
         component: PettycashReceiptCancelComponent
-      },
-       {
-        path: 'accounts/accounts-transactions/pettycash-receipt',
-        component: PettycashReceiptComponent
-      },
-      {
-        path: 'accounts/accounts-transactions/pettycash-receipt-view',
-        component: PettycashReceiptViewComponent
       },
       {
         path: 'accounts/accounts-transactions/online-receipts',
