@@ -57,6 +57,7 @@ export class NavigationService {
           screens: [
             { id: 'general-receipt', name: 'General Receipt', route: '/dashboard/accounts/accounts-transactions/general-receipt' },
             { id: 'payment-voucher', name: 'Payment Voucher', route: '/dashboard/accounts/accounts-transactions/payment-voucher' },
+            { id: 'payment-voucher-view', name: 'Payment Voucher view', route: '/dashboard/accounts/accounts-transactions/payment-voucher-view' },
             { id: 'petty-cash', name: 'Petty Cash', route: '/dashboard/accounts/accounts-transactions/petty-cash' },
             { id: 'cheques-onhand', name: 'Cheques On Hand', route: '/dashboard/accounts/accounts-transactions/cheques-onhand' },
             { id: 'cheques-inbank', name: 'Cheques In Bank', route: '/dashboard/accounts/accounts-transactions/cheques-inbank' },
