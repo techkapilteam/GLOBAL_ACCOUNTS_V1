@@ -38,6 +38,7 @@ import { AccountLedgerComponent } from './components/ACCOUNTS REPORTS/account-le
 import { BankBookComponent } from './components/ACCOUNTS REPORTS/bank-book/bank-book.component';
 import { DayBookComponent } from './components/ACCOUNTS REPORTS/day-book/day-book.component';
 import { ChequesInbankComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-inbank/cheques-inbank.component';
+import { GeneralReceiptComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt/general-receipt.component';
 
 export const routes: Routes = [
   {
@@ -79,9 +80,30 @@ export const routes: Routes = [
         component: GeneralReceiptCancelComponent
       },
       {
+        path: 'accounts/accounts-transactions/general-receipt-view',
+        component: GeneralReceiptViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/general-receipt',
+        component: GeneralReceiptNewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/payment-voucher',
+        component: PaymentVoucherComponent
+      },
+       {
+        path: 'accounts/accounts-transactions/payment-voucher-view',
+        component: PaymentVoucherViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/general-receipt',
+        component: GeneralReceiptComponent
+      },
+      {
         path: 'accounts/accounts-transactions/cheques-issued',
         component: ChequesIssuedComponent
       },
+      
       {
         path: 'accounts/accounts-transactions/cheques-onhand',
         component: ChequesOnhandComponent
@@ -93,6 +115,14 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-transactions/pettycash-receipt-cancel',
         component: PettycashReceiptCancelComponent
+      },
+       {
+        path: 'accounts/accounts-transactions/pettycash-receipt',
+        component: PettycashReceiptComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/pettycash-receipt-view',
+        component: PettycashReceiptViewComponent
       },
       {
         path: 'accounts/accounts-transactions/online-receipts',
