@@ -33,6 +33,8 @@ import { OnlineSettlementReportComponent } from './components/ACCOUNTS REPORTS/o
 import { ComparisonTbComponent } from './components/ACCOUNTS REPORTS/comparison-tb/comparison-tb.component';
 import { ChequeReturnComponent } from './components/ACCOUNTS REPORTS/cheque-return/cheque-return.component';
 import { IssuedChequeComponent } from './components/ACCOUNTS REPORTS/issued-cheque/issued-cheque.component';
+import { CashBookComponent } from './components/ACCOUNTS REPORTS/cash-book/cash-book.component';
+import { AccountLedgerComponent } from './components/ACCOUNTS REPORTS/account-ledger/account-ledger.component';
 
 export const routes: Routes = [
   {
@@ -114,6 +116,10 @@ export const routes: Routes = [
         component: JvListComponent
       },
       {
+        path: 'accounts/accounts-reports/account-ledger',
+        component: AccountLedgerComponent
+      },
+      {
         path: 'accounts/accounts-reports/brs-statements',
         component: BrsStatementsComponent
       },
@@ -160,6 +166,10 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-reports/online-settlement-report',
         component: OnlineSettlementReportComponent
+      },
+      {
+        path: 'accounts/accounts-reports/cash-book',
+        component: CashBookComponent
       },
       {
         path: 'accounts/accounts-reports/comparison-tb',

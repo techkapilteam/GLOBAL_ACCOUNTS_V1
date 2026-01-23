@@ -1,2 +1,93 @@
-<p>account-ledger works!</p>
- 
+<div class="screen-container">
+    <div class="screen-card">
+      <div  class="screen-header">
+        <h2>Account Ledger</h2>
+      </div>
+      <div class="screen-content">
+<form>
+
+    <div class="row">
+  
+      <!-- From Date -->
+      <div class="col-xl-3 col-md-3 form-group">
+        <label>From Date</label>
+        <input type="date"
+               class="form-control"
+               placeholder="Select From Date"
+                />
+      </div>
+  
+      <!-- To Date -->
+      <div class="col-xl-3 col-md-3 form-group">
+        <label>To Date</label>
+        <input type="date"
+               class="form-control"
+               placeholder="Select To Date"
+             />
+      </div>
+  
+      <!-- Narration -->
+      <div class="col-xl-3 col-md-3 form-group">
+        <div class="d-inline-flex align-items-center">
+          <input type="checkbox" id="WithNarration" />
+          <label for="WithNarration" class="ml-2">With Narration</label>
+        </div>
+      </div>
+      <!-- Narration -->
+      <div class="col-xl-3 col-md-3 form-group">
+        <button type="button" class="btn btn-primary px-3 border-0 ">
+            Generate
+          </button>
+      </div>
+
+  
+    </div>
+  
+  </form>
+  
+  <!-- Report Section -->
+  <div class="section-content mt-2">
+  
+    <!-- Static Table (Replacement for ngx-datatable) -->
+    <div class="table-responsive mt-3">
+      <table class="table table-bordered table-striped">
+        <thead class="thead-light">
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01-01-2026</td>
+            <td>Opening Balance</td>
+            <td>0.00</td>
+            <td>0.00</td>
+            <td>10,000.00</td>
+          </tr>
+          <tr>
+            <td>05-01-2026</td>
+            <td>Sales Entry</td>
+            <td>0.00</td>
+            <td>2,500.00</td>
+            <td>12,500.00</td>
+          </tr>
+          <tr>
+            <td>10-01-2026</td>
+            <td>Purchase Entry</td>
+            <td>1,200.00</td>
+            <td>0.00</td>
+            <td>11,300.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+  </div>
+  </div>
+  </div>
+  </div>
+  
