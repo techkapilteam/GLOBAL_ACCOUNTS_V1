@@ -35,6 +35,9 @@ import { ChequeReturnComponent } from './components/ACCOUNTS REPORTS/cheque-retu
 import { IssuedChequeComponent } from './components/ACCOUNTS REPORTS/issued-cheque/issued-cheque.component';
 import { CashBookComponent } from './components/ACCOUNTS REPORTS/cash-book/cash-book.component';
 import { AccountLedgerComponent } from './components/ACCOUNTS REPORTS/account-ledger/account-ledger.component';
+import { BankBookComponent } from './components/ACCOUNTS REPORTS/bank-book/bank-book.component';
+import { DayBookComponent } from './components/ACCOUNTS REPORTS/day-book/day-book.component';
+import { ChequesInbankComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-inbank/cheques-inbank.component';
 
 export const routes: Routes = [
   {
@@ -82,6 +85,10 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-transactions/cheques-onhand',
         component: ChequesOnhandComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/cheques-inbank',
+        component: ChequesInbankComponent
       },
       {
         path: 'accounts/accounts-transactions/pettycash-receipt-cancel',
@@ -183,6 +190,15 @@ export const routes: Routes = [
         path: 'accounts/accounts-reports/issued-cheque',
         component: IssuedChequeComponent
       },
+       {
+        path: 'accounts/accounts-reports/bank-book',
+        component: BankBookComponent
+      },
+      {
+        path: 'accounts/accounts-reports/day-book',
+        component: DayBookComponent
+      },
+
       {
         path: 'accounts/accounts-reports/:screen',
         component: ScreenViewComponent
