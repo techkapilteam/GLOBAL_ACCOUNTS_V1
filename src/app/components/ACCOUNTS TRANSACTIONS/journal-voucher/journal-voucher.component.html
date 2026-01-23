@@ -1,3 +1,606 @@
+<!-- [formGroup]="paymentVoucherForm"  -->
+<form [formGroup]="paymentVoucherForm" autocomplete="off">
+
+    <div class="section-content">
+        <!-- <div class="row">
+                        <div class="col-md-12 col-xl-12">
+                            <p class="bc-2">Journal Voucher</p>
+                        </div>
+                    </div> -->
+        <div class="row">
+            <div class="col-md-6 col-xl-4">
+                <div class="form-group">
+                    <label class="required-field">Date</label>
+                    <fieldset [disabled]="!disabletransactiondate">
+                        <input class="form-control" id="pjvdate" title="Date" readonly type="text"
+                            formControlName="pjvdate" 
+                             [bsConfig]="ppaymentdateConfig" bsDatepicker [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }"
+
+                           >
+                    </fieldset>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+        <hr class="light">
+        <div class="row" formGroupName="ppaymentsslistcontrols">
+            <div class="col-md-4 col-xl-4">
+                <div class="form-group">
+                    <div class="input-group d-block">
+                        <label class="required-field">Ledger</label>
+                        <ng-select id="pledgername" title="Ledger" [items]="ledgeraccountslist"
+                            formControlName="pledgerid" groupBy="pAccounttype" bindLabel="pledgername"
+                            bindValue="pledgerid" [multiple]=false placeholder="Select" [searchable]=true
+                            [clearable]=false dropdownPosition="bottom" [clearOnBackspace]=true
+                            (change)="ledgerName_Change($event)">
+                            <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pledgername }" -->
+                            <ng-template ng-optgroup-tmp let-item="item">
+                                {{item.pAccounttype}}
+                            </ng-template>
+                        </ng-select>
+
+
+                        <span class=" position-absolute font-italic" style="right:-160px; top:35px;">{{ledgerBalance
+                            }}</span>
+                    </div>
+                    <!-- <app-validation-message [messgae]="formValidationMessages?.pledgername"></app-validation-message> -->
+
+                </div>
+
+                <div class="form-group" *ngIf="showsubledger">
+                    <div class="input-group d-block">
+                        <label id="psubledgerid" class="required-field" title="Sub Ledger">Sub Ledger</label>
+                        <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
+                            formControlName="psubledgerid" bindLabel="psubledgername" bindValue="psubledgerid"
+                            [multiple]=false placeholder="Select" [searchable]=true [clearable]=true
+                            dropdownPosition="bottom" [clearOnBackspace]=true (change)="subledger_Change($event)">
+                            <!--   [ngClass]="{ 'is-invalid': formValidationMessages.psubledgername }"  -->
+                        </ng-select>
+                        <!--<div class="input-group-append">
+          <button class="btn btn-lg-icon rounded-right px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
+        </div>-->
+                        <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{subledgerBalance
+                            }}</span>
+                    </div>
+                    <!-- <app-validation-message [messgae]="formValidationMessages?.psubledgername"></app-validation-message> -->
+
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group d-block">
+                        <label id="ppartyid" class="required-field" title="Party">Party</label>
+
+                        <!-- <select class="form-control" id="ppartyname" title="Party" formControlName="ppartyid" [ngClass]="{ 'is-invalid': formValidationMessages.ppartyname }" (change)="partyName_Change($event)">
+          <option value="" ng-selected="selected">Select</option>
+          <option *ngFor="let party of partylist;trackBy: trackByFn" [value]="party.ppartyid">{{party.ppartyname}}</option>
+        </select> -->
+
+                        <ng-select id="ppartyname" title="Party" [items]="partylist" formControlName="ppartyid"
+                            bindLabel="ppartyname" bindValue="ppartyid" [multiple]=false placeholder="Select"
+                            [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
+                            (change)="partyName_Change($event)" [virtualScroll]="true">
+                            <!--   [ngClass]="{ 'is-invalid': formValidationMessages.ppartyname }" -->
+                        </ng-select>
+                        <!--<div class="input-group-append">
+          <button class="btn btn-lg-icon px-2 rounded-right p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
+        </div>-->
+                        <!-- <app-validation-message [messgae]="formValidationMessages?.ppartyname"></app-validation-message> -->
+                        <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{partyBalance
+                            }}</span>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                </div>
+                <div class="d-flex">
+                    <div class="form-group pr-1">
+                        <!--"-->
+                        <!-- (keyup)="disableamounttype('Credit')"-->
+                        <label class="pl-0 pr-0" class="required-field">Debit</label>
+                        <input class="form-control border-warning sec-head-bold " style="text-align:right;"
+                            id="pdebitamount" formControlName="pdebitamount" [readonly]="readonlydebit" type="text"
+                            placeholder="" (keyup)="disableamounttype('Debit')" (blur)="pamount_change()"
+                            appRoundecimal="12@2" appMyCurrencyFormatorincludingzero>
+                        <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pdebitamount }" -->
+                        <!-- <app-validation-message [messgae]="formValidationMessages?.pdebitamount">
+                        </app-validation-message> -->
+                    </div>
+                    <div class="form-group pl-1">
+                        <label class="pl-0 pr-0" class="required-field">Credit</label>
+                        <input class="form-control border-warning sec-head-bold " style="text-align:right;"
+                            id="pcreditamount" formControlName="pcreditamount" [readonly]="readonlycredit" type="text"
+                            placeholder="" (keyup)="disableamounttype('Credit')" (blur)="pamount_change()"
+                            appRoundecimal="12@2" appMyCurrencyFormatorincludingzero>
+                        <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pcreditamount }" -->
+                        <!-- <app-validation-message [messgae]="formValidationMessages?.pcreditamount">
+                        </app-validation-message> -->
+                    </div>
+
+                </div>
+                <div class=" d-flex justify-content-end mt-4">
+
+
+                    <!-- <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentDetails()"><img
+                            src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
+                            appButtonDoubleClick [debounceTime]="500">Clear</a> -->
+                    <!-- [debounceTime]="500" -->
+                    <a class="btn btn-g-icon mr-4 px-3 border-0" appButtonDoubleClick
+                        (debounceClick)="clearPaymentDetails()">
+
+                        <img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3">
+
+                        Clear
+                    </a>
+
+                    <a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot"
+                        aria-selected="false" appButtonDoubleClick (debounceClick)="addPaymentDetails()"><img
+                            src="assets/images/icon-add-blue.svg" width="20px" height="20px" class="mr-3">Add</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-6 offset-2 pt-2">
+                <div *ngIf="showgstandtds">
+                    <div class="form-group">
+                        <div class="border rounded p-2 mt-3">
+                            <div class="col-md-12 col-xl-12 mt-2 mb-2">
+                                <fieldset [disabled]="disablegst">
+                                    <div class="material-switch">
+                                        <span class="mr-2" id="pisgstapplicable" title="GST"> GST </span>
+                                        <input id="gst-switch" name="gst-switch" formControlName="pisgstapplicable"
+                                            type="checkbox" (change)="isgstapplicableChange();">
+                                        <label for="gst-switch" class="badge-success" data-toggle="collapse"
+                                            data-target="#gst"></label>
+                                    </div>
+                                </fieldset>
+                                <div id="gst" *ngIf="showgst">
+                                    <div class="row">
+                                        <fieldset [disabled]="disablegst">
+                                            <div class="col-md-12 col-xl-12" id="pgstcalculationtype"
+                                                title="GST Calculation Type">
+                                                <div class="form-check form-check-inline mr-4">
+                                                    <input class="form-check-input" type="radio" id="procgstinc"
+                                                        formControlName="pgstcalculationtype" name="pgstcalculationtype"
+                                                        value="INCLUDE" (change)="claculategsttdsamounts()">
+                                                    <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pgstcalculationtype }" -->
+                                                    <label class="mt-1" for="procgstinc"> Include</label>
+                                                </div>
+                                                <div class="form-check form-check-inline mr-4 mb-2 mt-2">
+                                                    <input class="form-check-input" type="radio" id="procgstexc"
+                                                        formControlName="pgstcalculationtype" name="pgstcalculationtype"
+                                                        value="EXCLUDE" (change)="claculategsttdsamounts()">
+                                                    <!--  [ngClass]="{ 'is-invalid': formValidationMessages.pgstcalculationtype }" -->
+                                                    <label class="mt-1" for="procgstexc"> Exclude </label>
+                                                </div>
+                                                <!-- <app-validation-message
+                                                    [messgae]="formValidationMessages?.pgstcalculationtype">
+                                                </app-validation-message> -->
+
+                                            </div>
+                                        </fieldset>
+                                        <div class="col-md-12 col-xl-12">
+                                            <div class="d-flex">
+                                                <div class="form-group mr-1 col-md-4">
+                                                    <label>State</label>
+                                                    <select class="form-control" id="pState" title="State"
+                                                        formControlName="pStateId" (change)="state_change($event)">
+                                                        <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pState }" -->
+                                                        <option value="" ng-selected="selected">Select</option>
+                                                        <option *ngFor="let state of statelist;trackBy: trackByFn"
+                                                            [value]="state.pStateId">{{state.pState}}</option>
+                                                    </select>
+                                                    <!-- <app-validation-message [messgae]="formValidationMessages?.pState">
+                                                    </app-validation-message> -->
+                                                </div>
+
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showgstno">
+                                                    <label>GST No.</label>
+                                                    <input type="text" class="form-control col-md-12" id="pgstno"
+                                                        title=">GST No." formControlName="pgstno"
+                                                        (blur)="gsno_change()" />
+                                                    <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pgstno }" -->
+                                                    <!-- <app-validation-message [messgae]="formValidationMessages?.pgstno">
+                                                    </app-validation-message> -->
+
+                                                </div>
+                                                <div class="form-group mr-1 col-md-4">
+                                                    <label>GST(%)</label>
+                                                    <select class="form-control" id="pgstpercentage" title="GST(%)"
+                                                        formControlName="pgstpercentage" (change)="gst_Change($event)">
+                                                        <!--  [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage }" -->
+                                                        <option value="" ng-selected="selected">Select</option>
+                                                        <option *ngFor="let gst of gstlist;trackBy: trackByFn"
+                                                            [value]="gst.pgstpercentage">{{gst.pgstpercentage}}</option>
+
+                                                    </select>
+                                                    <!-- <app-validation-message
+                                                        [messgae]="formValidationMessages?.pgstpercentage">
+                                                    </app-validation-message> -->
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="d-flex">
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showgstamount">
+                                                    <label>Amount</label>
+                                                    <label
+                                                        class="form-control col-md-12">{{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pgstamount.value}}</label>
+                                                </div>
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showigst">
+                                                    <label>IGST({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pigstpercentage.value}})</label>
+                                                    <label
+                                                        class="col-md-12">{{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pigstamount.value}}</label>
+                                                </div>
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showcgst">
+                                                    <label>CGST
+                                                        ({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pcgstpercentage.value}})</label>
+                                                    <label
+                                                        class="col-md-12">{{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pcgstamount.value}}</label>
+                                                </div>
+                                                <div class="form-group  mr-1 col-md-4" *ngIf="showsgst">
+                                                    <label>SGST({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].psgstpercentage.value}})</label>
+                                                    <label
+                                                        class="col-md-12">{{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].psgstamount.value}}</label>
+                                                </div>
+                                                <div class="form-group  mr-1 col-md-4" *ngIf="showutgst">
+                                                    <label>UTGST({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].putgstpercentage.value}})</label>
+                                                    <label
+                                                        class="col-md-12">{{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].putgstamount.value}}</label>
+                                                </div>
+                                            </div> -->
+
+
+                                            <div class="d-flex">
+
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showgstamount">
+                                                    <label>Amount</label>
+                                                    <label class="form-control col-md-12">
+                                                        {{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.pgstamount')?.value
+                                                        }}
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showigst">
+                                                    <label>
+                                                        IGST ({{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.pigstpercentage')?.value
+                                                        }})
+                                                    </label>
+                                                    <label class="col-md-12">
+                                                        {{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.pigstamount')?.value
+                                                        }}
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showcgst">
+                                                    <label>
+                                                        CGST ({{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.pcgstpercentage')?.value
+                                                        }})
+                                                    </label>
+                                                    <label class="col-md-12">
+                                                        {{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.pcgstamount')?.value
+                                                        }}
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showsgst">
+                                                    <label>
+                                                        SGST ({{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.psgstpercentage')?.value
+                                                        }})
+                                                    </label>
+                                                    <label class="col-md-12">
+                                                        {{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.psgstamount')?.value
+                                                        }}
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group mr-1 col-md-4" *ngIf="showutgst">
+                                                    <label>
+                                                        UTGST ({{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.putgstpercentage')?.value
+                                                        }})
+                                                    </label>
+                                                    <label class="col-md-12">
+                                                        {{
+                                                        paymentVoucherForm.get('ppaymentsslistcontrols.putgstamount')?.value
+                                                        }}
+                                                    </label>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="border rounded p-2 mt-3">
+                            <div class="col-md-12 col-xl-12 mt-2 mb-2">
+                                <div class="material-switch">
+                                    <span class="mr-2" id="pistdsapplicable" title="TDS"> TDS </span>
+                                    <input id="tds-switch" name="tds-switch" formControlName="pistdsapplicable"
+                                        type="checkbox" (change)="istdsapplicableChange()">
+                                    <!--  [ngClass]="{ 'is-invalid': formValidationMessages.pistdsapplicable }" -->
+                                    <label for="tds-switch" class="badge-success" data-toggle="collapse"
+                                        data-target="#tds"></label>
+                                </div>
+                                <div id="tds" *ngIf="showtds">
+                                    <div class="row">
+                                        <fieldset [disabled]="disablegst">
+                                            <div class="col-md-12 col-xl-12" id="ptdscalculationtype"
+                                                title="TDS Calculation Type">
+                                                <div class="form-check form-check-inline radio-btn-secondary mr-4 ">
+                                                    <input class="form-check-input" type="radio" id="tdsinclude"
+                                                        value="INCLUDE" formControlName="ptdscalculationtype"
+                                                        name="ptdscalculationtype" (change)="claculategsttdsamounts()">
+                                                    <!-- [ngClass]="{ 'is-invalid': formValidationMessages.ptdscalculationtype }" -->
+                                                    <label class="mt-1" for="tdsinclude"> Include</label>
+                                                </div>
+                                                <div
+                                                    class="form-check form-check-inline radio-btn-secondary mr-4 mb-2 mt-2">
+                                                    <input class="form-check-input" type="radio" id="tdsexcluded"
+                                                        value="EXCLUDE" formControlName="ptdscalculationtype"
+                                                        name="ptdscalculationtype" (change)="claculategsttdsamounts()">
+                                                    <!-- [ngClass]="{ 'is-invalid': formValidationMessages.ptdscalculationtype }" -->
+                                                    <label class="mt-1" for="tdsexcluded"> Exclude</label>
+                                                </div>
+                                                <!-- <app-validation-message
+                                                    [messgae]="formValidationMessages?.ptdscalculationtype">
+                                                </app-validation-message> -->
+                                            </div>
+                                        </fieldset>
+                                        <div class="col-md-4 col-xl-4">
+                                            <label>Section</label>
+                                            <select class="form-control" id="pTdsSection" title="Section"
+                                                formControlName="pTdsSection" (change)="tdsSection_Change($event)">
+                                                <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pTdsSection }" -->
+                                                <option value="" ng-selected="selected">Select</option>
+                                                <option *ngFor="let tds of tdssectionlist;trackBy: trackByFn"
+                                                    [value]="tds.pTdsSection">{{tds.pTdsSection}}</option>
+
+                                            </select>
+                                            <!-- <app-validation-message [messgae]="formValidationMessages?.pTdsSection">
+                                            </app-validation-message> -->
+                                        </div>
+                                        <div class="col-md-4 col-xl-4">
+                                            <label>Percentage</label>
+                                            <select class="form-control" id="pTdsPercentage" title="Section"
+                                                formControlName="pTdsPercentage" (change)="tds_Change($event)">
+                                                <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pTdsPercentage }" -->
+                                                <option value="" ng-selected="selected">Select</option>
+                                                <option *ngFor="let tds of tdspercentagelist;trackBy: trackByFn"
+                                                    [value]="tds.pTdsPercentage">{{tds.pTdsPercentage}}</option>
+
+                                            </select>
+                                            <!-- <app-validation-message [messgae]="formValidationMessages?.pTdsPercentage">
+                                            </app-validation-message> -->
+                                        </div>
+                                        <div class="col-md-4 col-xl-4">
+                                            <label>Amount</label>
+                                            <label class="form-control col-md-12" id="ptdsamount" title="Section">
+                                                <!-- [ngClass]="{ 'is-invalid': formValidationMessages.ptdsamount }" -->
+                                                <!-- {{ paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptdsamount'].value }} -->
+
+                                                {{ paymentVoucherForm.get('ppaymentsslistcontrols.ptdsamount')?.value }}
+
+                                            </label>
+                                            <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].ptdsamount.value}}-->
+                                            <!--<input class="form-control" type="text" id="ptdsamount" title="Section" formControlName="ptdsamount" [ngClass]="{ 'is-invalid': formValidationMessages.ptdsamount }" />-->
+                                            <!-- <app-validation-message [messgae]="formValidationMessages?.ptdsamount">
+                                            </app-validation-message> -->
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class=" d-flex justify-content-end mt-4">
+            <a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentDetails()">Clear</a>
+            <a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false" appButtonDoubleClick [debounceTime]="500" (debounceClick)="addPaymentDetails()"><img src="assets/images/icon-add-white.svg" width="20px" height="20px" class="mr-3">Add</a>
+          </div>-->
+
+            </div>
+
+        </div>
+    </div>
+    <div class="section-content mt-2">
+        <div class="row">
+            <div class="col-md-12 col-xl-12 pt-4">
+                <ngx-datatable class="material expandable table" [rows]="paymentslist" columnMode="force"
+                    [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="10" [offset]="1" [count]="10"
+                    [summaryRow]="true" [summaryHeight]="50" [summaryPosition]="'bottom'">
+                    <ngx-datatable-column name="Actions" prop="" editable="true">
+                        <!-- [summaryTemplate]="Total11" -->
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row"
+                            let-group="group">
+                            <label for="delete{{ rowIndex }}">
+                                <div id="icon-delete" (click)="removeHandler(row, rowIndex)"></div>
+                            </label>
+                        </ng-template>
+                        <ng-template #Total11>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Party Name" prop="ppartyname" [cellClass]="'cell-left'"
+                        [headerClass]="'header-left'">
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Ledger Name" prop="pledgername" [cellClass]="'cell-left'"
+                        [headerClass]="'header-left'">
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Sub Ledger Name" prop="psubledgername" [cellClass]="'cell-left'"
+                        [headerClass]="'header-left'">
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column prop="ptotaldebitamount" name="Debit" [summaryTemplate]="Total"
+                        [headerClass]="'header-left'" [cellClass]="'cell-left'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.ptotaldebitamount==0"></div>
+                            <div *ngIf="row.ptotaldebitamount!=0"
+                                title="{{currencySymbol}} {{row.ptotaldebitamount | currency}}">
+                                {{currencySymbol}} {{row.ptotaldebitamount | currency}}</div>
+                        </ng-template>
+                        <ng-template #Total>
+                            <span>Total: </span>
+                            {{currencySymbol}} {{debittotalamount.toFixed(2) | currency}}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <!-- <ngx-datatable-column name="Debit" prop="ptotaldebitamount" [cellClass]="'cell-left'"
+                            [headerClass]="'header-left'">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.ptotaldebitamount==0"></div>
+                                <div *ngIf="row.ptotaldebitamount!=0">
+                                <span title="{{currencysymbol}} {{row.ptotaldebitamount | currencypipe}}">{{currencySymbol}} {{row.ptotaldebitamount | currencypipe}}</span>
+                            </div>
+                            </ng-template>
+                        </ngx-datatable-column> -->
+
+                    <ngx-datatable-column name="Credit" prop="ptotalcreditamount" [cellClass]="'cell-left'"
+                        [headerClass]="'header-left'" [summaryTemplate]="Total1">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.ptotalcreditamount==0"></div>
+                            <div *ngIf="row.ptotalcreditamount!=0">
+                                <span
+                                    title="{{currencySymbol}} {{row.ptotalcreditamount | currency}}">{{currencySymbol}}
+                                    {{row.ptotalcreditamount | currency}}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template #Total1>
+                            <span>Total: </span>
+                            <span> {{currencySymbol}} {{credittotalamount.toFixed(2) | currency}} </span>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+
+                <div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="section-content mt-2">
+        <div class="row">
+            <div class="col-md-6 col-xl-6">
+                <div class="mt-2">
+                    <ngx-datatable class="material expandable table" [rows]="paymentslist" columnMode="force"
+                        [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="10">
+                        <ngx-datatable-column name="Journal Entry" prop="pledgername" [cellClass]="'cell-left'"
+                            [headerClass]="'header-left'">
+                        </ngx-datatable-column>
+                        <ngx-datatable-column appMycurrencyFormatter name="Dr" prop="ptotaldebitamount"
+                            [cellClass]="'cell-right'" [headerClass]="'header-right'">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.ptotaldebitamount==0"></div>
+                                <div *ngIf="row.ptotaldebitamount!=0">
+                                    <span
+                                        title="{{currencySymbol}} {{row.ptotaldebitamount | currency}}">{{currencySymbol}}
+                                        {{row.ptotaldebitamount | currency}}</span>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Cr" prop="ptotalcreditamount">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.ptotalcreditamount==0"></div>
+                                <div *ngIf="row.ptotalcreditamount!=0">
+                                    <span
+                                        title="{{currencySymbol}} {{row.ptotalcreditamount | currency}}">{{currencySymbol}}
+                                        {{row.ptotalcreditamount | currency}}</span>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+
+            </div>
+
+            <div class="col-md-6 col-xl-6">
+                <div class="form-group mt-2">
+                    <label class="required-field">Narration</label>
+                    <textarea class="form-control" rows="4" id="pnarration" title="Narration"
+                        formControlName="pnarration" maxlength="250"></textarea>
+                    <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pnarration }" -->
+
+                    <!-- <app-validation-message [messgae]="formValidationMessages?.pnarration"></app-validation-message> -->
+
+                </div>
+                <div class="form-group col-md-6 pl-0">
+                    <div class="form-group">
+                        <label id="pDocStorePath" title="Upload Document">Upload Document</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="" [value]="imageResponse?.name"
+                                [disabled]="isDisabled" formControlName="pDocStorePath">
+                            <div class="input-group-append">
+                                <button class="btn btn-lg-icon px-2 p-0" (click)="fileInput.click()">
+                                    <img src="assets/images/icon-upload-blue.svg" class="" width="18px" height="18px">
+                                </button>
+                                <!-- to uplaod the image -->
+                                <!-- <input style="display: none" type="file"
+                                    (change)="uploadAndProgress($event,fileInput.files)" #fileInput> -->
+                                <input style="display: none" type="file" (change)="uploadAndProgress($event)"
+                                    #fileInput />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- row end -->
+</form>
+
+<!------------- save Buttons ------------>
+
+<div class="row mt-3">
+    <div class="col-md-12 col-xl-12">
+        <div class="d-flex justify-content-end">
+            <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
+            <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()"><img
+                    src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
+                    appButtonDoubleClick>Clear</a>
+            <!-- <button (click)="saveJournalVoucher()" class="btn btn-b-icon px-3 border-0"
+                    [disabled]="disablesavebutton">
+                    <i class="fa"
+                        [ngClass]="{'fa-spin fa-spinner': disablesavebutton, 'fa-check': !disablesavebutton}"></i>
+                    {{savebutton}}
+                </button> -->
+
+            <button (click)="saveJournalVoucher()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
+                <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
+                    *ngIf="!disablesavebutton">
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
+            </button>
+
+            <!--<a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false" appButtonDoubleClick [debounceTime]="500" (debounceClick)="saveJournalVoucher()"><img src="assets/images/icon-check-white.svg" width="20px" height="20px" class="mr-3">Save</a>-->
+        </div>
+    </div>
+</div>
+<!------------- save Buttons ------------>
 <div class="screen-container">
     <div class="screen-card">
       <div  class="screen-header">

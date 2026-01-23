@@ -35,6 +35,7 @@ import { ChequeReturnComponent } from './components/ACCOUNTS REPORTS/cheque-retu
 import { IssuedChequeComponent } from './components/ACCOUNTS REPORTS/issued-cheque/issued-cheque.component';
 import { CashBookComponent } from './components/ACCOUNTS REPORTS/cash-book/cash-book.component';
 import { AccountLedgerComponent } from './components/ACCOUNTS REPORTS/account-ledger/account-ledger.component';
+import { JournalVoucherViewComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher-view/journal-voucher-view.component';
 
 export const routes: Routes = [
   {
@@ -102,6 +103,10 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-transactions/cash-onhand',
         component: CashOnhandComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/journal-voucher-view',
+        component: JournalVoucherViewComponent
       },
       {
         path: 'accounts/accounts-transactions/journal-voucher',

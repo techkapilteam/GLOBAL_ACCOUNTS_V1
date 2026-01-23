@@ -55,7 +55,7 @@ export class NavigationService {
           name: 'Accounts Transactions',
           icon: '🏦',
           screens: [
-            { id: 'general-receipt', name: 'General Receipt', route: '/dashboard/accounts/accounts-transactions/general-receipt' },
+            { id: 'general-receipt-report', name: 'General Receipt', route: '/dashboard/accounts/accounts-transactions/general-receipt-report' },
             { id: 'payment-voucher', name: 'Payment Voucher', route: '/dashboard/accounts/accounts-transactions/payment-voucher' },
             { id: 'petty-cash', name: 'Petty Cash', route: '/dashboard/accounts/accounts-transactions/petty-cash' },
             { id: 'cheques-onhand', name: 'Cheques On Hand', route: '/dashboard/accounts/accounts-transactions/cheques-onhand' },
@@ -64,6 +64,7 @@ export class NavigationService {
             { id: 'general-receipt-cancel', name: 'General Receipt Cancel', route: '/dashboard/accounts/accounts-transactions/general-receipt-cancel' },
             { id: 'pettycash-receipt-cancel', name: 'Petty Cash Receipt Cancel', route: '/dashboard/accounts/accounts-transactions/pettycash-receipt-cancel' },
             { id: 'journal-voucher', name: 'Journal Voucher', route: '/dashboard/accounts/accounts-transactions/journal-voucher' },
+            { id: 'journal-voucher-view', name: 'Journal Voucher view', route: '/dashboard/accounts/accounts-transactions/journal-voucher-view' },
             { id: 'cash-onhand', name: 'Cash On Hand', route: '/dashboard/accounts/accounts-transactions/cash-onhand' },
             { id: 'tds-jv', name: 'TDS Journal Voucher', route: '/dashboard/accounts/accounts-transactions/tds-jv' },
             { id: 'online-settlement', name: 'Online Settlement', route: '/dashboard/accounts/accounts-transactions/online-settlement' },
