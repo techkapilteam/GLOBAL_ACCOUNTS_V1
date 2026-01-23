@@ -57,6 +57,7 @@ export class NavigationService {
           screens: [
             { id: 'general-receipt-report', name: 'General Receipt', route: '/dashboard/accounts/accounts-transactions/general-receipt-report' },
             { id: 'payment-voucher', name: 'Payment Voucher', route: '/dashboard/accounts/accounts-transactions/payment-voucher' },
+            { id: 'payment-voucher-view', name: 'Payment Voucher view', route: '/dashboard/accounts/accounts-transactions/payment-voucher-view' },
             { id: 'petty-cash', name: 'Petty Cash', route: '/dashboard/accounts/accounts-transactions/petty-cash' },
             { id: 'cheques-onhand', name: 'Cheques On Hand', route: '/dashboard/accounts/accounts-transactions/cheques-onhand' },
             { id: 'cheques-inbank', name: 'Cheques In Bank', route: '/dashboard/accounts/accounts-transactions/cheques-inbank' },
@@ -93,12 +94,12 @@ export class NavigationService {
             {id: 'receipts-and-payments', name: 'Receipts and Payments', route: '/dashboard/accounts/accounts-reports/receipts-and-payments' },
             { id: 'cheque-enquiry', name: 'Cheque Enquiry', route: '/dashboard/accounts/accounts-reports/cheque-enquiry' },
             { id: 'gst-report', name: 'GST Report', route: '/dashboard/accounts/accounts-reports/gst-report' },
-            { id: 'trial-balance', name: 'Trial Balance', route: '/dashboard/accounts/accounts-reports/trial-balance' },
+            //{ id: 'trial-balance', name: 'Trial Balance', route: '/dashboard/accounts/accounts-reports/trial-balance' },
             { id: 'tds-report', name: 'TDS Report', route: '/dashboard/accounts/accounts-reports/tds-report' },
             { id: 're-print', name: 'Re-Print', route: '/dashboard/accounts/accounts-reports/re-print' },
             { id: 'pending-transfer', name: 'Pending Transfer', route: '/dashboard/accounts/accounts-reports/pending-transfer' },
             { id: 'online-settlement-report', name: 'Online Settlement Report', route: '/dashboard/accounts/accounts-reports/online-settlement-report' },
-            { id: 'schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
+            { id: ' schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
           ]
         }
       ]

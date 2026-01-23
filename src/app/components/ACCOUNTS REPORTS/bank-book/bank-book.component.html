@@ -1,0 +1,221 @@
+<div class="my-container">
+    <ng-template #customLoadingTemplate>
+        <div class="custom-class">
+
+
+        </div>
+    </ng-template>
+    <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+    </ngx-loading> -->
+
+</div>
+<div class="section-content">
+    <form [formGroup]="BanknBookReportForm" autocomplete="off">
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                <!-- <p class="bc-2">Bank Book</p> -->
+                <!-- <h2>Bank Name</h2> -->
+                <div class="screen-header">
+                    <h2>Bank Book</h2>
+                </div><br/>
+            </div>
+            <div class="col-xs-4 col-md-4 pl-0">
+                <div class="d-flex">
+                    <div class="col-md-6 col-xl-6 ">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <!-- <input type="text" class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true }" [maxDate]="startDate" formControlName="fromDate" [ngClass]="{ 'is-invalid': f.fromDate.errors }"> -->
+                            <input type="text" class="form-control" formControlName="fromDate"
+                                (ngModelChange)="ToDateChange($event)" placeholder="Date picker here"
+                                [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom" readonly>
+                            <!-- <div *ngIf="submitted &&f.fromDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.fromDate.errors.required">Select From Date</div>
+                                            </div> -->
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-6">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <input type="text" class="form-control" formControlName="toDate"
+                                placeholder="Date picker here" [bsConfig]="dpConfig1" #dp="bsDatepicker" bsDatepicker
+                                placement="bottom" readonly (ngModelChange)="FromDateChange($event)">
+                            <!-- <div *ngIf="submitted &&f.toDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.toDate.errors.required">Select To Date</div>
+                                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-6 col-md-4 ">
+
+                <div class="ml-3 mb-3 pl-2 prHDFC-2 ">
+                    <div class="form-group">
+                        <label class="required-field">Bank Name</label>
+
+                        <select class="form-control" id="pbankname" title="Bank Name" (change)="Bankname($event)"
+                            formControlName="pbankname" [ngClass]="{ 'is-invalid': f.pbankname.errors && submitted }">
+                            <option value="" ng-selected="selected">Select</option>
+                            <option *ngFor="let bankDataDetails of bankData;" [value]="bankDataDetails.pbankaccountid">
+                                {{bankDataDetails.pbankname}}</option>
+                        </select>
+                        <div *ngIf="submitted &&f.pbankname.errors?.required" class="invalid-feedback">Select Bank
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-4 form-group mt-3 pt-2">
+                <!-- <a aria-controls="hot" aria-selected="false" class="btn btn-b-icon px-3 border-0" data-toggle="tab" role="tab" (click)="getbankBookReports()"><img class="mr-3" height="20px" src="assets/images/reports-white.svg" width="20px">Generate Report</a> -->
+
+                <!-- <a aria-controls="hot" aria-selected="false" class="btn btn-b-icon px-3 border-0" data-toggle="tab"
+                        role="tab" (click)="getbankBookReports()">
+                        <i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading}"></i>
+                        <span *ngIf="!isLoading"><img class="mr-3" height="20px" src="assets/images/reports-white.svg"
+                                width="20px"></span> {{savebutton}}
+                    </a> -->
+                <button class="btn btn-primary px-3 border-0" (click)="getbankBookReports()">
+                    <i class="fa"></i> {{isLoading ? 'Processing':'Generate Report'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="template" class="section-content mt-2" [hidden]="Showhide">
+    <!-- <div class="d-flex justify-content-end mr-3 mt-4">
+        <ul class="temp-ul">
+            <li class="temp-ico ml-2">
+                <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf"
+                    style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
+            </li>
+            <li class="temp-ico ml-2">
+                <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print"
+                    (click)="pdfOrprint('Print')" style="cursor: pointer;" />
+            </li>
+        </ul>
+    </div> -->
+    <div class="d-flex justify-content-end">
+        <a (click)="pdfOrprint('Pdf')" class="export-icons"><img src="assets/images/pdf-icon-blue.svg " title="pdf"
+                width="18px"></a>
+        <a (click)="pdfOrprint('Print')" class="export-icons"><img src="assets/images/print-icon-blue.svg "
+                title="Print" width="18px"></a>
+        <a class="export-icons" (click)="export()"><img src="assets/images/icon-excel.svg " title="Excel"
+                width="18px"></a>
+    </div>
+
+    <div id="temp-box">
+        <div class="mt-2 border rounded shadow-sm bg-white">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details> -->
+                    <div class="report-head">
+                        <p class="font-16 text-dark text-center m-0">
+                            Bank Book &nbsp; {{bankname}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-card">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="font-14 text-left m-0 mr-4" style="font-size: 14px !important;
+                        font-weight: bold !important;">Between :</span>
+                    <label class="print-font"> {{startDate|dateformat}} And {{endDate|dateformat}}</label>
+                </div>
+            </div>
+            <div class="">
+                <ngx-datatable #myTable class='material expandable table' [rows]='gridView' [headerHeight]="50"
+                    [rowHeight]="50" [groupRowsBy]="'ptransactiondate'" [groupExpansionDefault]="false">
+
+                    <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggle($event)">
+                        <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                            <div style="padding-left:5px;">
+                                <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+                                    title="Expand/Collapse Group" (click)="toggleExpandGroup(group)">
+                                    <b>{{ group.value[0].ptransactiondate|dateformat }} </b>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-group-header>
+                    <!-- <ngx-datatable-column prop="ptransactiondate" name="Transaction Date"
+                                    [hidden]="hdnTranDate">
+                                    <ng-template  let-row="row" ngx-datatable-cell-template>
+                                        <div *ngIf="row.ptransactiondate == ''">--NA--</div>
+                                           <div *ngIf="row.ptransactiondate !== ''">
+                                               <span titlte="{{row.ptransactiondate | dateformat}}">{{row.ptransactiondate | dateformat}}</span></div>
+                                       </ng-template>
+                                </ngx-datatable-column> -->
+                    <ngx-datatable-column prop="ptransactionno" name="Transaction No." [cellClass]="'cell-center'"
+                        [headerClass]="'header-center'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <!-- {{dataItem.ptransactionno}} -->
+                            <div *ngIf="row.ptransactionno == '0'">--NA--</div>
+                            <div *ngIf="row.ptransactionno !== '0'">
+                                <a (click)="click(row)"> {{row.ptransactionno}}</a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column prop="pparticulars" name="Particulars"></ngx-datatable-column>
+                    <ngx-datatable-column prop="pdescription" name="Narration">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.pdescription == ''">--NA--</div>
+                            <div *ngIf="row.pdescription !== ''">
+                                {{row.pdescription}}</div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Receipts" [cellClass]="'cell-right'" [headerClass]="'header-right'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.pdebitamount == 0"></div>
+                            <div *ngIf="row.pdebitamount !== 0">{{currencysymbol}}
+                                {{row.pdebitamount.toFixed(2) | currencypipe}}
+                            </div>
+                        </ng-template>
+
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Payments" [cellClass]="'cell-right'" [headerClass]="'header-right'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.pcreditamount == 0"></div>
+                            <div *ngIf="row.pcreditamount !== 0">
+                                {{currencysymbol}} {{row.pcreditamount.toFixed(2) | currencypipe}}
+                            </div>
+
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Balance" [cellClass]="'cell-right'" [headerClass]="'header-right'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            <div *ngIf="row.pBalanceType == 'Cr'">
+                                <p style="font-size: 11px !important; font-weight: bold !important;color: #fe0000;">
+                                    {{currencysymbol}} {{row.popeningbal.toFixed(2) | currencypipe }}
+                                    {{row.pBalanceType}}
+                                </p>
+                            </div>
+                            <div *ngIf="row.pBalanceType == 'Dr'">
+                                <p style="font-size: 11px !important; font-weight: bold !important;">
+                                    {{currencysymbol}} {{row.popeningbal.toFixed(2) | currencypipe }}
+                                    {{row.pBalanceType}}
+                                </p>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer *ngIf="gridView">
+                        <ng-template ngx-datatable-footer-template let-rowCount="rowCount">
+                            <div style="padding: 5px 10px" *ngIf="gridView.length>0">
+                                <!-- <div>{{ pageCriteria.currentPageRows }} {{pageCriteria.footerMessagetext1}}
+                                    {{ pageCriteria.totalrows }} {{pageCriteria.footerMessagetext2}}</div> -->
+                            </div>
+                            <!-- <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
+                                [pagerRightArrowIcon]="'datatable-icon-right'"
+                                [pagerPreviousIcon]="'datatable-icon-prev'" [pagerNextIcon]="'datatable-icon-skip'"
+                                [page]="curPage" [size]="pageCriteria.pageSize" [count]="rowCount"
+                                (change)="onFooterPageChange($event)">
+                            </datatable-pager> -->
+                        </ng-template>
+                    </ngx-datatable-footer>
+                </ngx-datatable>
+            </div>
+        </div>
+        <!-- row end -->
+
+    </div>
+</div>
