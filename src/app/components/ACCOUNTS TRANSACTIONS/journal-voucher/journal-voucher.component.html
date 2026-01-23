@@ -1,4 +1,13 @@
 <!-- [formGroup]="paymentVoucherForm"  -->
+
+<div class="screen-container">
+    <div class="screen-card">
+      <div  class="screen-header">
+        <h2>Journal Voucher</h2>
+      </div>
+      <div class="screen-content">
+
+
 <form [formGroup]="paymentVoucherForm" autocomplete="off">
 
     <div class="section-content">
@@ -131,17 +140,18 @@
                             src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
                             appButtonDoubleClick [debounceTime]="500">Clear</a> -->
                     <!-- [debounceTime]="500" -->
-                    <a class="btn btn-g-icon mr-4 px-3 border-0" appButtonDoubleClick
+                    <a class="btn btn-primary mr-4 px-3 border-0" appButtonDoubleClick
                         (debounceClick)="clearPaymentDetails()">
 
-                        <img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3">
+                        <!-- <img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"> -->
 
                         Clear
                     </a>
 
-                    <a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot"
-                        aria-selected="false" appButtonDoubleClick (debounceClick)="addPaymentDetails()"><img
-                            src="assets/images/icon-add-blue.svg" width="20px" height="20px" class="mr-3">Add</a>
+                    <a data-toggle="tab" class="btn btn-secondary px-3 border-0" role="tab" aria-controls="hot"
+                        aria-selected="false" appButtonDoubleClick (debounceClick)="addPaymentDetails()">
+                        <!-- <img src="assets/images/icon-add-blue.svg" width="20px" height="20px" class="mr-3"> -->
+                        Add</a>
                 </div>
             </div>
 
@@ -552,8 +562,8 @@
                             <input type="text" class="form-control" placeholder="" [value]="imageResponse?.name"
                                 [disabled]="isDisabled" formControlName="pDocStorePath">
                             <div class="input-group-append">
-                                <button class="btn btn-lg-icon px-2 p-0" (click)="fileInput.click()">
-                                    <img src="assets/images/icon-upload-blue.svg" class="" width="18px" height="18px">
+                                <button class="btn btn-primary px-2 p-0" (click)="fileInput.click()">
+                                    <!-- <img src="assets/images/icon-upload-blue.svg" class="" width="18px" height="18px"> -->
                                 </button>
                                 <!-- to uplaod the image -->
                                 <!-- <input style="display: none" type="file"
@@ -580,9 +590,10 @@
     <div class="col-md-12 col-xl-12">
         <div class="d-flex justify-content-end">
             <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
-            <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()"><img
-                    src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
-                    appButtonDoubleClick>Clear</a>
+            <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()" appButtonDoubleClick>
+                <!-- <img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
+                    appButtonDoubleClick> -->
+                    Clear</a>
             <!-- <button (click)="saveJournalVoucher()" class="btn btn-b-icon px-3 border-0"
                     [disabled]="disablesavebutton">
                     <i class="fa"
@@ -590,9 +601,9 @@
                     {{savebutton}}
                 </button> -->
 
-            <button (click)="saveJournalVoucher()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
-                <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                    *ngIf="!disablesavebutton">
+            <button (click)="saveJournalVoucher()" class="btn btn-secondary px-3 border-0" [disabled]="disablesavebutton">
+                <!-- <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
+                    *ngIf="!disablesavebutton"> -->
                 <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
             </button>
 
@@ -600,14 +611,7 @@
         </div>
     </div>
 </div>
-<!------------- save Buttons ------------>
-<div class="screen-container">
-    <div class="screen-card">
-      <div  class="screen-header">
-        <h2>Journal Voucher</h2>
-      </div>
-      <div class="screen-content">
-<p>journal-voucher works!</p>
+
 </div>
 </div>
 </div>

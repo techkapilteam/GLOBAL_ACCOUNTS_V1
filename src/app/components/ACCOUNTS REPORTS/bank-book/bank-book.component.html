@@ -41,8 +41,8 @@
                             <option *ngFor="let bankDataDetails of bankData;" [value]="bankDataDetails.pbankaccountid">
                                 {{bankDataDetails.pbankname}}</option>
                         </select>
-                        <div *ngIf="submitted &&f.pbankname.errors?.required" class="invalid-feedback">Select Bank
-                        </div>
+                        <!-- <div *ngIf="submitted &&f.pbankname.errors?.required" class="invalid-feedback">Select Bank
+                        </div> -->
                     </div>
                 </div>
             </div>
