@@ -87,6 +87,7 @@ export class NavigationService {
             { id: 'day-book', name: 'Day Book', route: '/dashboard/accounts/accounts-reports/day-book' },
             { id: 'jv-list', name: 'JV List', route: '/dashboard/accounts/accounts-reports/jv-list' },
             { id: 'brs', name: 'BRS', route: '/dashboard/accounts/accounts-reports/brs' },
+             { id: 'schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
             { id: 'brs-statements', name: 'BRS Statements', route: '/dashboard/accounts/accounts-reports/brs-statements' },
             { id: 'account-summary', name: 'Account Summary', route: '/dashboard/accounts/accounts-reports/account-summary' },
             { id: 'trial-balance', name: 'Trial Balance', route: '/dashboard/accounts/accounts-reports/trial-balance' },
@@ -102,7 +103,7 @@ export class NavigationService {
             { id: 're-print', name: 'Re-Print', route: '/dashboard/accounts/accounts-reports/re-print' },
             { id: 'pending-transfer', name: 'Pending Transfer', route: '/dashboard/accounts/accounts-reports/pending-transfer' },
             { id: 'online-settlement-report', name: 'Online Settlement Report', route: '/dashboard/accounts/accounts-reports/online-settlement-report' },
-            { id: ' schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
+           
           ]
         }
       ]

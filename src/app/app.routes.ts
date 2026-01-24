@@ -47,6 +47,7 @@ import { PaymentVoucherViewComponent } from './components/ACCOUNTS TRANSACTIONS/
 import { GeneralReceiptViewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-view/general-receipt-view.component';
 import { PettyCashViewComponent } from './components/ACCOUNTS TRANSACTIONS/petty-cash-view/petty-cash-view.component';
 import { GeneralReceiptNewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-new/general-receipt-new.component';
+import { ScheduleTbComponent } from './components/ACCOUNTS REPORTS/schedule-tb/schedule-tb.component';
 
 export const routes: Routes = [
   {
@@ -179,6 +180,10 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-reports/brs-statements',
         component: BrsStatementsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/schedule-tb',
+        component: ScheduleTbComponent
       },
       {
         path: 'accounts/accounts-reports/trial-balance',
