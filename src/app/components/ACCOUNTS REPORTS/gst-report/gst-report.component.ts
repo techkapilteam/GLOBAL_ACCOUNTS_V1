@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-gst-report',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,NgxDatatableModule],
   templateUrl: './gst-report.component.html',
   styleUrl: './gst-report.component.css',
 })
@@ -40,5 +41,6 @@ export class GstReportComponent {
     console.log('GST Summary clicked');
   }
 
+gstPaymentRows = [];
 
 }
