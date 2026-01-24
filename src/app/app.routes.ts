@@ -35,9 +35,18 @@ import { ChequeReturnComponent } from './components/ACCOUNTS REPORTS/cheque-retu
 import { IssuedChequeComponent } from './components/ACCOUNTS REPORTS/issued-cheque/issued-cheque.component';
 import { CashBookComponent } from './components/ACCOUNTS REPORTS/cash-book/cash-book.component';
 import { AccountLedgerComponent } from './components/ACCOUNTS REPORTS/account-ledger/account-ledger.component';
+import { JournalVoucherViewComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher-view/journal-voucher-view.component';
 import { BankBookComponent } from './components/ACCOUNTS REPORTS/bank-book/bank-book.component';
 import { DayBookComponent } from './components/ACCOUNTS REPORTS/day-book/day-book.component';
 import { ChequesInbankComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-inbank/cheques-inbank.component';
+import { GeneralReceiptComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt/general-receipt.component';
+import { PaymentVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/payment-voucher/payment-voucher.component';
+import { PettyCashComponent } from './components/ACCOUNTS TRANSACTIONS/petty-cash/petty-cash.component';
+import { OnlineSettlementComponent } from './components/ACCOUNTS TRANSACTIONS/online-settlement/online-settlement.component';
+import { PaymentVoucherViewComponent } from './components/ACCOUNTS TRANSACTIONS/payment-voucher-view/payment-voucher-view.component';
+import { GeneralReceiptViewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-view/general-receipt-view.component';
+import { PettyCashViewComponent } from './components/ACCOUNTS TRANSACTIONS/petty-cash-view/petty-cash-view.component';
+import { GeneralReceiptNewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-new/general-receipt-new.component';
 
 export const routes: Routes = [
   {
@@ -79,9 +88,46 @@ export const routes: Routes = [
         component: GeneralReceiptCancelComponent
       },
       {
+        path: 'accounts/accounts-transactions/general-receipt',
+        component: GeneralReceiptComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/payment-voucher',
+        component: PaymentVoucherComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/payment-voucher-view',
+        component: PaymentVoucherViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/general-receipt-new',
+        component: GeneralReceiptNewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/petty-cash-view',
+        component: PettyCashViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/general-receipt-view',
+        component: GeneralReceiptViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/online-settlement',
+        component: OnlineSettlementComponent
+      },
+      
+      {
+        path: 'accounts/accounts-transactions/petty-cash',
+        component: PettyCashComponent
+      },
+      
+      
+    
+      {
         path: 'accounts/accounts-transactions/cheques-issued',
         component: ChequesIssuedComponent
       },
+      
       {
         path: 'accounts/accounts-transactions/cheques-onhand',
         component: ChequesOnhandComponent
@@ -109,6 +155,10 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-transactions/cash-onhand',
         component: CashOnhandComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/journal-voucher-view',
+        component: JournalVoucherViewComponent
       },
       {
         path: 'accounts/accounts-transactions/journal-voucher',

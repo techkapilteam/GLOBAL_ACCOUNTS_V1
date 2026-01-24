@@ -1,0 +1,111 @@
+<div class="screen-container">
+    <div class="screen-card">
+      <div  class="screen-header">
+        <h2>Journal Voucher View</h2>
+      </div>
+      <div class="screen-content">
+        
+    <div class="row">
+
+            <div class="col d-flex flex-wrap align-items-center">
+                 <!-- [routerLink]="['/Transactions','journalvochernew']" -->
+                <a class="btn btn-primary border-0" 
+                 routerLink="/journalvochernew">
+                    New
+                </a>
+    
+            </div>
+        </div>
+    <div class="row mt-3">
+        <div class="col-md-12 col-xl-12">
+            <div class="row ">
+                <div class="col-md-6 col-xl-6">
+                    <div class="form-group mr-0 custom-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control" (keyup)="filterDatatable($event)">
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-md-6 col-xl-6">
+            <div class="d-flex justify-content-end">
+              <a href="" class="export-icons"><img class="" src="assets/images/pdf-icon-blue.svg " title="pdf"
+                  width="18px"></a>
+              <a href="" class="export-icons"><img class="" src="assets/images/icon-excel.svg " title="Excel"
+                  width="18px"></a>
+              <a href="" class="export-icons"><img class="" src="assets/images/print-icon-blue.svg " title="Print"
+                  width="18px"></a>
+            </div>
+          </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12 col-xl-12">
+            <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force" [headerHeight]="50"
+            [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize"
+            >
+
+            <!-- <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force" [scrollbarH]="true"
+                [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize">
+                
+                 -->
+                <ngx-datatable-column name="Actions" prop="" editable="true" [width]="100" title="View" [cellClass]="'cell-center'"
+                [headerClass]="'header-center'"  >
+                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row"
+                        let-group="group">
+                        <label for="View{{ rowIndex }}">
+                            <div id="icon-view" (click)="viewHandler($event, row)"></div>
+                        </label>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Date" prop="pjvdate" [cellClass]="'cell-center'"
+                    [headerClass]="'header-center'"  >
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="JV No." prop="pjvnumber" [cellClass]="'cell-center'"
+                    [headerClass]="'header-center'" >
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Amount" prop="ptotalpaidamount" [cellClass]="'cell-right'"
+                    [headerClass]="'header-right'" [width]="200" >
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span title="{{currencySymbol}} {{row.ptotalpaidamount }}">
+                            
+                            {{currencySymbol}} {{row.ptotalpaidamount.toFixed(2) }}</span>
+
+                            <!-- <span
+      [title]="row.ptotalpaidamount | currency:currencyCode:'symbol':'1.2-2'">
+      {{ row.ptotalpaidamount | currency:currencyCode:'symbol':'1.2-2' }}
+    </span> -->
+
+
+
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Narration" prop="pnarration"  [width]="500">
+
+                </ngx-datatable-column>
+                <!-- <ngx-datatable-footer *ngIf="Journalvoucherlist">
+                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                      let-selectedCount="selectedCount" let-curPage="curPage" let-offset="pageCriteria.offset"
+                      let-isVisible=" ">
+                      <div style="padding: 5px 10px" *ngIf="Journalvoucherlist.length>0">
+                        <div>Page {{pageCriteria.CurrentPage}} of {{pageCriteria.TotalPages}} ({{ pageCriteria.totalrows }} items) </div>
+                      </div>
+                      <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
+                        [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+                        [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+                        (change)="onFooterPageChange($event)" [hidden]="!((rowCount / pageSize) > 0)"  >
+                      </datatable-pager>
+                    </ng-template>
+                  </ngx-datatable-footer> -->
+
+            </ngx-datatable>
+
+        </div>
+    </div>
+</div>
+</div>
+</div>

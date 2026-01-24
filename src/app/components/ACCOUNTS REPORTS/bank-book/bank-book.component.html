@@ -1,28 +1,13 @@
-<div class="my-container">
-    <ng-template #customLoadingTemplate>
-        <div class="custom-class">
-
-
-        </div>
-    </ng-template>
-    <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
-    </ngx-loading> -->
-
-</div>
-<div class="section-content">
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Bank Book</h2>
+    </div>
+    <div class="screen-content">  
     <form [formGroup]="BanknBookReportForm" autocomplete="off">
         <div class="row">
-            <div class="col-md-12 col-xl-12">
-                <!-- <p class="bc-2">Bank Book</p> -->
-                <!-- <h2>Bank Name</h2> -->
-                <div class="screen-header">
-                    <h2>Bank Book</h2>
-                </div><br/>
-            </div>
-            <div class="col-xs-4 col-md-4 pl-0">
-                <div class="d-flex">
-                    <div class="col-md-6 col-xl-6 ">
-                        <div class="form-group">
+            <div class="col-md-3">
+                  <div class="form-group">
                             <label>From Date</label>
                             <!-- <input type="text" class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true }" [maxDate]="startDate" formControlName="fromDate" [ngClass]="{ 'is-invalid': f.fromDate.errors }"> -->
                             <input type="text" class="form-control" formControlName="fromDate"
@@ -32,8 +17,8 @@
                                                 <div *ngIf="f.fromDate.errors.required">Select From Date</div>
                                             </div> -->
                         </div>
-                    </div>
-                    <div class="col-md-6 col-xl-6">
+            </div>
+             <div class="col-md-3">
                         <div class="form-group">
                             <label>To Date</label>
                             <input type="text" class="form-control" formControlName="toDate"
@@ -44,9 +29,7 @@
                                             </div> -->
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-xs-6 col-6 col-md-4 ">
+            <div class="col-md-3">
 
                 <div class="ml-3 mb-3 pl-2 prHDFC-2 ">
                     <div class="form-group">
@@ -58,27 +41,18 @@
                             <option *ngFor="let bankDataDetails of bankData;" [value]="bankDataDetails.pbankaccountid">
                                 {{bankDataDetails.pbankname}}</option>
                         </select>
-                        <div *ngIf="submitted &&f.pbankname.errors?.required" class="invalid-feedback">Select Bank
-                        </div>
+                        <!-- <div *ngIf="submitted &&f.pbankname.errors?.required" class="invalid-feedback">Select Bank
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <div class="col-xs-4 col-md-4 form-group mt-3 pt-2">
-                <!-- <a aria-controls="hot" aria-selected="false" class="btn btn-b-icon px-3 border-0" data-toggle="tab" role="tab" (click)="getbankBookReports()"><img class="mr-3" height="20px" src="assets/images/reports-white.svg" width="20px">Generate Report</a> -->
-
-                <!-- <a aria-controls="hot" aria-selected="false" class="btn btn-b-icon px-3 border-0" data-toggle="tab"
-                        role="tab" (click)="getbankBookReports()">
-                        <i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading}"></i>
-                        <span *ngIf="!isLoading"><img class="mr-3" height="20px" src="assets/images/reports-white.svg"
-                                width="20px"></span> {{savebutton}}
-                    </a> -->
+            <div class="col-xs-3 col-md-3 form-group mt-3 pt-2">
                 <button class="btn btn-primary px-3 border-0" (click)="getbankBookReports()">
                     <i class="fa"></i> {{isLoading ? 'Processing':'Generate Report'}}
                 </button>
             </div>
         </div>
     </form>
-</div>
 <div id="template" class="section-content mt-2" [hidden]="Showhide">
     <!-- <div class="d-flex justify-content-end mr-3 mt-4">
         <ul class="temp-ul">
@@ -218,4 +192,7 @@
         <!-- row end -->
 
     </div>
+</div>
+</div>
+</div>
 </div>

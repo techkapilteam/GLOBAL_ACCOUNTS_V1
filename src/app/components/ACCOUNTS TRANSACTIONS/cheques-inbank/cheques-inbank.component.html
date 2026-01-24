@@ -1,8 +1,10 @@
-<form>
-  <div class="section-content">
-    <div  class="screen-header">
+<div class="screen-container">
+    <div class="screen-card">
+      <div  class="screen-header">
         <h2>Cheques In Bank</h2>
-      </div><br/>
+      </div>
+    <div class="screen-content">
+<form>
     <div class="row">
       <div class="col-md-2 col-xl-2">
         <div class="form-group">
@@ -58,8 +60,7 @@
         </div>
       </div>
     </div>
-  </div>
-
+  
   <div class="section-content mt-2">
     <div class="row">
       <div class="col-md-4">
@@ -73,16 +74,23 @@
       </div>
     </div>
 
-    <!-- Tabs unchanged -->
-    <ul class="nav filtered-tab nav-tabs mb-4">
-      <li class="active"><a href="#">All <span class="badge badge-warning ml-2">0</span></a></li>
-      <li><a href="#">Cheques Deposited <span class="badge badge-secondary ml-2">0</span></a></li>
-      <li><a href="#">Online Receipts <span class="badge badge-primary ml-2">0</span></a></li>
-      <li><a href="#">Cleared <span class="badge badge-success ml-2">0</span></a></li>
-      <li><a href="#">Returned <span class="badge badge-danger ml-2">0</span></a></li>
-    </ul>
+    <nav>
+  <div class="nav nav-tabs mt-4" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">All</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Cheques Received</button>
+    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Online Receipts</button>
+    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Deposited</button>
+    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Cancelled</button>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"></div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
+   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"> </div>
+</div>
 
-    <!-- Table 1 -->
     <table class="material expandable table">
       <!-- <thead>
         <tr>
@@ -148,3 +156,6 @@
     <button class="btn">Save</button>
   </div> -->
 </form>
+</div>
+</div>
+</div>

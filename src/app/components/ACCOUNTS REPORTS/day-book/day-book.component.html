@@ -1,62 +1,37 @@
-<div class="my-container">
-    <ng-template #customLoadingTemplate>
-        <div class="custom-class">
-
-        </div>
-    </ng-template>
-    <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
-    </ngx-loading> -->
-
-</div>
-<div class="section-content">
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Day Book</h2>
+    </div>
+    <div class="screen-content">  
     <form [formGroup]="Daybook">
         <div class="row">
-            <div class="col-md-12 col-xl-12">
-                <!-- <p class="bc-2">Day Book</p> -->
-                 <div class="screen-header">
-                    <h2>Day Book</h2>
-                </div><br/>
-            </div>
             <div class="col-xl-2 col-md-2 mt-4">
                 <div class="form-check form-check-inline check-btn-secondary">
                     <input class="form-check-input" id="asdate" type="checkbox" formControlName="date" (change)="checkox($event)">
-                    <label class="mt-2" for="asdate"> Date :</label>
+                    <label class="" for="asdate"> Date :</label>
                 </div>
             </div>
 
             <div class="col-xl-2 col-md-2 form-group ">
                 <label>From Date</label>
-                <input type="text" class="form-control" id="fromdate" readonly [bsConfig]="dpConfig" formControlName="dfromdate" (ngModelChange)="checkingfrommdate()" bsDatepicker #dp="bsDatepicker">
+                <input type="date" class="form-control" id="fromdate"  [bsConfig]="dpConfig" formControlName="dfromdate" (ngModelChange)="checkingfrommdate()" bsDatepicker #dp="bsDatepicker">
 
             </div>
             <div class=" col-xl-2 col-md-2 form-group">
-                <div *ngIf="datepicker">
+                
                     <label>To Date</label>
-                    <input type="text" class="form-control" id="todate" readonly [bsConfig]="dppConfig" formControlName="dtodate" (ngModelChange)="checkdatevalidation()" bsDatepicker #dp="bsDatepicker">
+                    <input type="date" class="form-control" id="todate" [bsConfig]="dppConfig" formControlName="dtodate" (ngModelChange)="checkdatevalidation()" bsDatepicker #dp="bsDatepicker">
 
-                    <div *ngIf="validation" class="text-danger">
+                    <!-- <div *ngIf="validation" class="text-danger">
                         please select a valid date
-                    </div>
-                </div>
+                    </div> -->
             </div>
             <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-                <!-- <label></label>
-              <button aria-controls="hot" aria-selected="false" class="btn btn-b-icon  border-0"
-                class="btn btn-b-icon  border-0" data-toggle="tab" (click)="getdaybookdata()" role="tab">
-  
-                <i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading}"></i>
-                <span *ngIf="!isLoading"><img class="mr-3" height="20px" src="assets/images/reports-white.svg"
-                    width="20px"></span> {{savebutton}}
-              </button> -->
-
               
-                <!-- <button class="btn btn-s-icon px-3 border-0" (click)="getdaybookdata()">
-                    <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"  *ngIf="!disablesavebutton">
-                    <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
-                </button> -->
 
                  <button class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
-                    <i class="fa"></i> {{isLoading ? 'Processing':'Generate Report'}}
+                    <i class="fa"></i> Generate
                 </button>
 
 
@@ -68,7 +43,7 @@
                     <i class="fa" ></i>Cheques On Hand
                 </button> -->
                   <button class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">
-                    <i class="fa"></i> {{isLoading ? 'Processing':'Cheques On Hand'}}
+                    <i class="fa"></i> Cheques On Hand
                 </button>
 
             </div>
@@ -77,13 +52,13 @@
             <div class="col-xl-2 col-md-2 mt-4">
                 <div class="form-check form-check-inline check-btn-secondary">
                     <input class="form-check-input" id="kgms" type="checkbox" (change)="checkboxx($event)">
-                    <label class="mt-2" for="kgms"> kgms :</label>
+                    <label class="" for="kgms"> kgms :</label>
                 </div>
             </div>
             <div class="col-xl-4 col-md-4">
-                <div *ngIf="kgms">
+                <div >
                     <label>Branch:</label>
-                   <ng-select id="kgmsbranchschema" [items]="kgmsBranchList" title="Branch" formControlName="branch_code" bindLabel="branch_name" bindValue="branch_code" [multiple]="false" placeholder="Select" [searchable]="true" dropdownPosition="bottom" (change)="branch_change($event)"></ng-select>
+                   <select id="kgmsbranchschema" class="form-control" title="Branch" formControlName="branch_code" bindLabel="branch_name" bindValue="branch_code" [multiple]="false" placeholder="Select" dropdownPosition="bottom" ></select>
 
 
                 </div>
@@ -93,15 +68,14 @@
                     {{generateReport}}
                 </button> -->
                 <button class="btn btn-primary px-3 border-0" (click)="getsummaryReport()">
-                    <i class="fa"></i> {{isLoading ? 'Processing':'Generate Report'}}
+                    <i class="fa"></i> Generate Report
                 </button>
             </div>
         </div>
     </form>
-</div>
 
-
-<div id="template" class="section-content mt-2">
+    
+<div id="template" class="section-content mt-2 d-none">
     <div class="d-flex justify-content-end mr-3 mt-4" *ngIf="showicons">
         <ul class="temp-ul">
             <li class="temp-ico ml-2">
@@ -266,3 +240,8 @@
     <!-- row end -->
    
 </div>
+
+</div>
+</div>
+</div>
+
