@@ -70,8 +70,7 @@ export class BankBookComponent implements OnInit {
   public loading = false;
   public Showhide = true;
   public currencysymbol = '₹';
-
-  
+ 
   public pageCriteria = {
     pageSize: 10,
     offset: 0,
