@@ -14,6 +14,39 @@ import { OnlineReceiptsComponent } from './components/ACCOUNTS TRANSACTIONS/onli
 import { PettycashReceiptCancelComponent } from './components/ACCOUNTS TRANSACTIONS/pettycash-receipt-cancel/pettycash-receipt-cancel.component';
 import { ChequesIssuedComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-issued/cheques-issued.component';
 import { BankTransferComponent } from './components/ACCOUNTS TRANSACTIONS/bank-transfer/bank-transfer.component';
+import { BrsComponent } from './components/ACCOUNTS REPORTS/brs/brs.component';
+import { BrsStatementsComponent } from './components/ACCOUNTS REPORTS/brs-statements/brs-statements.component';
+import { TrialBalanceComponent } from './components/ACCOUNTS REPORTS/trial-balance/trial-balance.component';
+import { ChequesOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-onhand/cheques-onhand.component';
+import { AccountSummaryComponent } from './components/ACCOUNTS REPORTS/account-summary/account-summary.component';
+import { TdsJvComponent } from './components/ACCOUNTS TRANSACTIONS/tds-jv/tds-jv.component';
+import { CashOnhandComponent } from './components/ACCOUNTS TRANSACTIONS/cash-onhand/cash-onhand.component';
+import { JournalVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher/journal-voucher.component';
+import { ReceiptsAndPaymentsComponent } from './components/ACCOUNTS REPORTS/receipts-and-payments/receipts-and-payments.component';
+import { ChequeCancelComponent } from './components/ACCOUNTS REPORTS/cheque-cancel/cheque-cancel.component';
+import { ChequeEnquiryComponent } from './components/ACCOUNTS REPORTS/cheque-enquiry/cheque-enquiry.component';
+import { GstReportComponent } from './components/ACCOUNTS REPORTS/gst-report/gst-report.component';
+import { TdsReportComponent } from './components/ACCOUNTS REPORTS/tds-report/tds-report.component';
+import { RePrintComponent } from './components/ACCOUNTS REPORTS/re-print/re-print.component';
+import { PendingTransferComponent } from './components/ACCOUNTS REPORTS/pending-transfer/pending-transfer.component';
+import { OnlineSettlementReportComponent } from './components/ACCOUNTS REPORTS/online-settlement-report/online-settlement-report.component';
+import { ComparisonTbComponent } from './components/ACCOUNTS REPORTS/comparison-tb/comparison-tb.component';
+import { ChequeReturnComponent } from './components/ACCOUNTS REPORTS/cheque-return/cheque-return.component';
+import { IssuedChequeComponent } from './components/ACCOUNTS REPORTS/issued-cheque/issued-cheque.component';
+import { CashBookComponent } from './components/ACCOUNTS REPORTS/cash-book/cash-book.component';
+import { AccountLedgerComponent } from './components/ACCOUNTS REPORTS/account-ledger/account-ledger.component';
+import { JournalVoucherViewComponent } from './components/ACCOUNTS TRANSACTIONS/journal-voucher-view/journal-voucher-view.component';
+import { BankBookComponent } from './components/ACCOUNTS REPORTS/bank-book/bank-book.component';
+import { DayBookComponent } from './components/ACCOUNTS REPORTS/day-book/day-book.component';
+import { ChequesInbankComponent } from './components/ACCOUNTS TRANSACTIONS/cheques-inbank/cheques-inbank.component';
+import { GeneralReceiptComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt/general-receipt.component';
+import { PaymentVoucherComponent } from './components/ACCOUNTS TRANSACTIONS/payment-voucher/payment-voucher.component';
+import { PettyCashComponent } from './components/ACCOUNTS TRANSACTIONS/petty-cash/petty-cash.component';
+import { OnlineSettlementComponent } from './components/ACCOUNTS TRANSACTIONS/online-settlement/online-settlement.component';
+import { PaymentVoucherViewComponent } from './components/ACCOUNTS TRANSACTIONS/payment-voucher-view/payment-voucher-view.component';
+import { GeneralReceiptViewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-view/general-receipt-view.component';
+import { PettyCashViewComponent } from './components/ACCOUNTS TRANSACTIONS/petty-cash-view/petty-cash-view.component';
+import { GeneralReceiptNewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-new/general-receipt-new.component';
 
 export const routes: Routes = [
   {
@@ -55,8 +88,53 @@ export const routes: Routes = [
         component: GeneralReceiptCancelComponent
       },
       {
+        path: 'accounts/accounts-transactions/general-receipt',
+        component: GeneralReceiptComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/payment-voucher',
+        component: PaymentVoucherComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/payment-voucher-view',
+        component: PaymentVoucherViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/general-receipt-new',
+        component: GeneralReceiptNewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/petty-cash-view',
+        component: PettyCashViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/general-receipt-view',
+        component: GeneralReceiptViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/online-settlement',
+        component: OnlineSettlementComponent
+      },
+      
+      {
+        path: 'accounts/accounts-transactions/petty-cash',
+        component: PettyCashComponent
+      },
+      
+      
+    
+      {
         path: 'accounts/accounts-transactions/cheques-issued',
         component: ChequesIssuedComponent
+      },
+      
+      {
+        path: 'accounts/accounts-transactions/cheques-onhand',
+        component: ChequesOnhandComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/cheques-inbank',
+        component: ChequesInbankComponent
       },
       {
         path: 'accounts/accounts-transactions/pettycash-receipt-cancel',
@@ -71,6 +149,22 @@ export const routes: Routes = [
         component: BankTransferComponent
       },
       {
+        path: 'accounts/accounts-transactions/tds-jv',
+        component: TdsJvComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/cash-onhand',
+        component: CashOnhandComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/journal-voucher-view',
+        component: JournalVoucherViewComponent
+      },
+      {
+        path: 'accounts/accounts-transactions/journal-voucher',
+        component: JournalVoucherComponent
+      },
+      {
         path: 'accounts/accounts-transactions/:screen',
         component: ScreenViewComponent
       },
@@ -79,9 +173,82 @@ export const routes: Routes = [
         component: JvListComponent
       },
       {
-        path: 'accounts/accounts-reports/:screen',
-        component: ScreenViewComponent
+        path: 'accounts/accounts-reports/account-ledger',
+        component: AccountLedgerComponent
       },
+      {
+        path: 'accounts/accounts-reports/brs-statements',
+        component: BrsStatementsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/trial-balance',
+        component: TrialBalanceComponent
+      },
+      {
+        path: 'accounts/accounts-reports/brs',
+        component: BrsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/account-summary',
+        component: AccountSummaryComponent
+      }, 
+      {
+        path: 'accounts/accounts-reports/receipts-and-payments',
+        component: ReceiptsAndPaymentsComponent
+      },
+      {
+        path: 'accounts/accounts-reports/cheque-cancel',
+        component: ChequeCancelComponent
+      },
+      {
+        path: 'accounts/accounts-reports/cheque-enquiry',
+        component: ChequeEnquiryComponent
+      },
+      {
+        path: 'accounts/accounts-reports/gst-report',
+        component: GstReportComponent
+      },
+      {
+        path: 'accounts/accounts-reports/tds-report',
+        component: TdsReportComponent
+      },
+      {
+        path: 'accounts/accounts-reports/re-print',
+        component: RePrintComponent
+      },
+      {
+        path: 'accounts/accounts-reports/pending-transfer',
+        component: PendingTransferComponent
+      },
+      {
+        path: 'accounts/accounts-reports/online-settlement-report',
+        component: OnlineSettlementReportComponent
+      },
+      {
+        path: 'accounts/accounts-reports/cash-book',
+        component: CashBookComponent
+      },
+      {
+        path: 'accounts/accounts-reports/comparison-tb',
+        component: ComparisonTbComponent
+      },
+      {
+        path: 'accounts/accounts-reports/cheque-return',
+        component: ChequeReturnComponent
+      },
+      {
+        path: 'accounts/accounts-reports/issued-cheque',
+        component: IssuedChequeComponent
+      },
+       {
+        path: 'accounts/accounts-reports/bank-book',
+        component: BankBookComponent
+      },
+      {
+        path: 'accounts/accounts-reports/day-book',
+        component: DayBookComponent
+      },
+
       {
         path: 'accounts/accounts-reports/:screen',
         component: ScreenViewComponent

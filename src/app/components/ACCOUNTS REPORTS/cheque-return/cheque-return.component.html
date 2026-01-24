@@ -1,0 +1,79 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Cheque Return</h2>
+    </div>
+    <div class="screen-content">    
+      <form autocomplete="off">
+
+        <div class="row g-3 align-items-end">
+
+          <div class="col-md-3">
+            <label class="form-label">From Date</label>
+            <input
+              type="date"
+              class="form-control"
+              placeholder="Select date"
+             
+            />
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">To Date</label>
+            <input
+              type="date"
+              class="form-control"
+              placeholder="Select date"
+             
+            />
+          </div>
+
+          <div class="col-md-4">
+            <button
+              type="button"
+              class="btn btn-primary px-4">
+              <i class="fa fa-search me-2"></i>
+              Generate Report
+            </button>
+          </div>
+
+        </div>
+
+      </form>
+   
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <strong>Between:</strong>
+            <span class="ms-2">DD-MM-YYYY And DD-MM-YYYY</span>
+          </div>
+        </div>
+
+        <table class="table table-bordered table-striped mt-3">
+          <thead class="table-light">
+            <tr>
+              <th>Return Date</th>
+              <th>Cheque No.</th>
+              <th class="text-end">Cheque Amt.</th>
+              <th>Bank Name</th>
+              <th>Receipt No.</th>
+              <th>Receipt Date</th>
+              <th>Particulars</th>
+              <th>Referred By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DD-MM-YYYY</td>
+              <td>123456</td>
+              <td class="text-end">$1,000.00</td>
+              <td>Bank ABC</td>
+              <td>R001</td>
+              <td>DD-MM-YYYY</td>
+              <td>Payment Particulars</td>
+              <td>Branch XYZ</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+</div>
+</div>

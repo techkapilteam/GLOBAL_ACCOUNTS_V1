@@ -1,0 +1,56 @@
+
+
+<div class="section-content">
+  <form [formGroup]="DocumentsForm" autocomplete="off">
+
+    <div class="row">
+
+      <!-- Checkbox -->
+      <div class="col-xl-2 col-md-2 mt-4">
+        <div class="form-check form-check-inline check-btn-secondary">
+          <input
+            class="form-check-input"
+            id="asdate"
+            type="checkbox"
+            checked
+            disabled
+            (change)="checkox($event)"
+          >
+          <label class="mt-2" for="asdate"> Date :</label>
+        </div>
+      </div>
+
+      <!-- Date Picker -->
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label class="required-field">Date</label>
+          <fieldset [disabled]="disabletransactiondate">
+            <input
+              class="form-control"
+              readonly
+              type="text"
+              bsDatepicker
+              [bsConfig]="dpConfig"
+              formControlName="todate"
+            >
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <div class="col-md-3 col-xl-3">
+        <div class="d-flex justify-content-start mt-4">
+          <button
+            type="button"
+            class="btn btn-primary px-3 border-0"
+            (click)="onCLick()"
+          >
+            {{ savebutton }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+</div>

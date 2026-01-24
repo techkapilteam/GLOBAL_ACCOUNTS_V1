@@ -1,0 +1,75 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Issued Cheque</h2>
+    </div>
+    <div class="screen-content">  
+  <form [formGroup]="FormReceiptsandPaymentsGroup">
+    <div class="row g-3">
+
+      <div class="col-md-3">
+        <label class="required-field">Group Code</label>
+        <ng-select [items]="GroupCodes()" bindLabel="groupcode" bindValue="groupcode" formControlName="groupcode"
+          class="form-control" placeholder="Select Group Code" (change)="GroupChange()"
+          [ngClass]="{'is-invalid': formErrors()['groupcode']}">
+        </ng-select>
+        
+
+        @if (formErrors()['groupcode']) {
+        <div class="invalid-feedback d-block">
+          {{ formErrors()['groupcode'] }}
+        </div>
+        }
+      </div>
+
+      <div class="col-md-3">
+        <label>From Date</label>
+        <input class="form-control" readonly bsDatepicker [bsConfig]="dpConfig" formControlName="fromdate">
+      </div>
+
+      <div class="col-md-3">
+        <label>To Date</label>
+        <input class="form-control" readonly bsDatepicker [bsConfig]="dpConfig" formControlName="todate">
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary w-100" type="button" (click)="Show()" [disabled]="disablesavebutton()">
+          {{ savebutton() }}
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+  <hr class="my-4">
+
+
+  <form [formGroup]="FormReceiptsandPaymentsGroup1">
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label class="required-field">Extract Code</label>
+        <ng-select [items]="ExtractCodes()" bindLabel="pparticulars" bindValue="pparticulars"
+          class="form-control" formControlName="extractcode" placeholder="Select Extract Code"
+          [ngClass]="{'is-invalid': formErrors1()['extractcode']}">
+        </ng-select>
+
+        @if (formErrors1()['extractcode']) {
+        <div class="invalid-feedback d-block">
+          {{ formErrors1()['extractcode'] }}
+        </div>
+        }
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary w-100" type="button" (click)="ShowExtract()" [disabled]="disablesavebutton1()">
+          {{ savebutton1() }}
+        </button>
+      </div>
+
+    </div>
+  </form>
+
+</div>
+</div>
+</div>

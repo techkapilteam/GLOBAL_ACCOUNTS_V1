@@ -1,0 +1,387 @@
+<div class="screen-container">
+    <div class="screen-card">
+      <div  class="screen-header">
+        <h2>BRS Reconciliation</h2>
+      </div>
+  <div class="screen-content">
+        <form [formGroup]="BRStatmentForm" autocomplete="off">
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="required-field">Bank Name</label>
+                    <select class="form-control" id="pbankname" title="Bank Name" formControlName="pbankname"
+                        [ngClass]="{ 'is-invalid': f['pbankname'].errors && submitted }">
+                        <option value="" ng-selected="selected">Select</option>
+                        <option *ngFor="let bankDataDetails of bankData;" [value]="bankDataDetails.pbankaccountid">
+                            {{bankDataDetails.pbankname}}</option>
+                    </select>
+
+                    <div *ngIf="submitted && f['pbankname'].errors?.['required']" class="invalid-feedback">
+                        Select Bank Name
+                    </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xs-2 col-md-2 form-group">
+                        <div class=" mt-4">
+                            <div class="form-check form-check-inline check-btn-secondary">
+                                <input class="form-check-input" id="Cheques" value="true" type="checkbox"
+                                    (change)="ChequesInfo($event)">
+                                <label class="" for="Cheques"> Cheques Info </label>
+                            </div>
+                        </div>
+                </div>
+
+                <div class="col-md-4">
+                <div class="row">
+                     <div *ngIf="chequesInfo">
+                        <div class="row">
+                            <div class="col-md-6 col-xl-6 ">
+                                <div class="form-group">
+                                    <label>From Date</label>
+                                    <!-- <input type="text" class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true }" [maxDate]="startDate" formControlName="fromDate" [ngClass]="{ 'is-invalid': f.fromDate.errors }"> -->
+                                    <input type="text" class="form-control" formControlName="fromDate"
+                                        placeholder="Date picker here" (ngModelChange)="fromdateChange($event)"
+                                        [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                                        readonly>
+                                    <!-- <div *ngIf="submitted &&f.fromDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.fromDate.errors.required">Select From Date</div>
+                                            </div> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-6">
+                                <div class="form-group">
+                                    <label>To Date</label>
+                                    <input type="text" class="form-control" formControlName="toDate" id="toDate"
+                                        placeholder="Date picker here" [bsConfig]="dpConfig1" #dp="bsDatepicker"
+                                        bsDatepicker placement="bottom" readonly>
+                                    <!-- <div *ngIf="submitted &&f.toDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.toDate.errors.required">Select To Date</div>
+                                            </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    <div class="col-xs-6 col-md-6 form-group" *ngIf="!chequesInfo">
+                        <label>As on Date</label>
+                        <div class="input-group">
+                            <!-- <input type="text" class="form-control" bsDatepicker [bsConfig]="{ isAnimated: true }" [maxDate]="startDate" formControlName="fromDate" [ngClass]="{ 'is-invalid': f.fromDate.errors }"> -->
+                            <input type="text" class="form-control w-auto" formControlName="fromDate"
+                                placeholder="Date picker here" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker
+                                placement="bottom" readonly>
+                            <!-- <div *ngIf="submitted &&f.fromDate.errors" class="invalid-feedback">
+                                                <div *ngIf="f.fromDate.errors.required">Select From Date</div>
+                                            </div> -->
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                 <div class="col-xs- col-md-3 pt-4 mt-1">
+                        <div class="example-wrapper">
+                          
+                            <button class="btn btn-primary px-3 border-0" (click)="getBRStatmentReports()"> {{savebutton}}
+                            </button>
+                        </div>
+                    </div>
+                <!-- </form>  -->
+            </div>
+
+            <div id="template" [hidden]="Showhide" class="section-content mt-2">
+                <div class="d-flex justify-content-end mr-3 mt-4">
+                    <ul class="temp-ul">
+                        <!-- <li class="temp-ico ml-2">
+                    <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf"
+                        style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
+                </li> -->
+                        <li class="temp-ico ml-2">
+                            <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
+                                style="cursor: pointer;" (click)="pdfOrprint('Pdf')" />
+
+                        </li>
+                        <li class="temp-ico ml-2">
+                            <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print"
+                                (click)="pdfOrprint('Print')" style="cursor: pointer;" />
+                        </li>
+                        <!-- <li class="temp-ico ml-2">
+                    <img src="assets/images/icon-excel.svg " width="18px" class="pt-2" title="Excel"
+                        (click)="export()" style="cursor: pointer;" />
+                </li> -->
+
+                    </ul>
+
+                </div>
+
+                <div id="temp-box">
+
+                    <div class="mt-2 border rounded shadow-sm bg-white">
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <!-- <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details> -->
+
+                                <div class="report-head">
+                                    <p class="font-16 text-dark text-center m-0">
+                                        Bank Reconciliation
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <span class="font-14 text-left m-0 mr-4" style="font-size: 14px !important;
+					font-weight: bold !important;">As on :</span>
+                                <label class="print-font">{{ startDate | date:'dd-MM-yyyy' }}</label>
+
+                            </div>
+                            <div class="col-md-6">
+                                <p class="font-14 text-right m-0" style="font-size: 14px !important;
+					font-weight: bold !important;">{{bankname}}</p>
+                            </div>
+                        </div>
+
+
+
+                        <ngx-datatable #myTable class='material expandable table' [rows]='gridView' [headerHeight]="50"
+                            [rowHeight]="50" [groupRowsBy]="'pGroupType'" [groupExpansionDefault]="true"
+                            [columnMode]="'force'" [scrollbarH]="true">
+
+                            <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader
+                                (toggle)="onDetailToggle($event)">
+                                <ng-template let-group="group" let-expanded="expanded"
+                                    ngx-datatable-group-header-template>
+                                    <div style="padding-left:5px;">
+                                        <a [class.datatable-icon-right]="!expanded"
+                                            [class.datatable-icon-down]="expanded" title="Expand/Collapse Group"
+                                            (click)="toggleExpandGroup(group)">
+                                            <b>{{ group.value[0].pGroupType }} </b>
+                                        </a>
+
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-group-header>
+
+                            <ngx-datatable-row-detail [rowHeight]="75" #myDetailRow>
+                                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                                    <div>
+                                        <table id="example" class="table text-center border"
+                                            style="table-layout: fixed;">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 10px;overflow: hidden;"></td>
+                                                    <td style="width: 10px;overflow: hidden;"></td>
+                                                    <td style="width: 10px;overflow: hidden;"></td>
+                                                    <td style="width: 10px;overflow: hidden;"></td>
+                                                    <td style="width: 10px;overflow: hidden;text-align: center;">
+                                                        <strong> Total :</strong>
+                                                    </td>
+
+                                                    <td style="width: 10px;overflow: hidden;text-align:center;"
+                                                        *ngIf="row.value[0].pGroupType=='CHEQUES DEPOSITED BUT NOT CREDITED'">
+                                                        <strong>
+                                                            {{ chequesdepositedbutnotcredited |
+                                                            currency:currencysymbol:true:'1.2-2' }}
+                                                        </strong>
+
+                                                    </td>
+                                                    <td style="width: 10px;overflow: hidden;text-align:center;"
+                                                        *ngIf="row.value[0].pGroupType=='CHEQUES ISSUED BUT NOT CLEARED'">
+                                                        <strong>
+                                                            {{ CHEQUESISSUEDBUTNOTCLEARED |
+                                                            currency:currencysymbol:true:'1.2-2' }}
+                                                        </strong>
+
+                                                    </td>
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-row-detail>
+                            <ngx-datatable-column name="Transaction Date" prop="ptransactiondate"
+                                [cellClass]="'cell-left'" [headerClass]="'header-left'">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{ row.ptransactiondate | date:'dd-MM-yyyy' }}
+                                </ng-template>
+
+                            </ngx-datatable-column>
+                            <ngx-datatable-column prop="pChequeNumber" name="Cheque No." [cellClass]="'cell-center'"
+                                [headerClass]="'header-center'"></ngx-datatable-column>
+                            <ngx-datatable-column prop="pparticulars" name="Particulars" [cellClass]="'cell-left'"
+                                [headerClass]="'header-left'">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <div *ngIf="row.pparticulars == ''">--NA--</div>
+                                    <div *ngIf="row.pparticulars != ''">
+                                        {{row.pparticulars}}
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <!-- <ngx-datatable-column prop="pGroupType" name="Group Type" hidden="true">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{row.pGroupType}}
+                                </ng-template>
+                            </ngx-datatable-column> -->
+                            <ngx-datatable-column name="Amount" [cellClass]="'cell-right'"
+                                [headerClass]="'header-right'">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    <div *ngIf="row.ptotalreceivedamount == 0">{{currencysymbol}} 0.00</div>
+                                    <div *ngIf="row.ptotalreceivedamount !== 0">
+                                        {{ row.ptotalreceivedamount | currency:currencysymbol:true:'1.2-2' }}
+                                    </div>
+
+                                </ng-template>
+                                <!-- <ng-template kendoGridGroupFooterTemplate let-group="group" let-aggregates="aggregates">
+                                    <p class="bc-2 text-right">
+                                        {{currencysymbol}} {{ aggregates.ptotalreceivedamount.sum.toFixed(2) |currencypipe }}</p>
+                                </ng-template> -->
+                            </ngx-datatable-column>
+                            <ngx-datatable-footer *ngIf="gridView">
+                                <ng-template ngx-datatable-footer-template let-rowCount="rowCount"
+                                    let-selectedCount="selectedCount" let-curPage="curPage">
+                                    <div style="padding: 5px 10px" *ngIf="gridView.length>0">
+                                        <!-- <div>{{ pageCriteria.currentPageRows }} {{pageCriteria.footerMessagetext1}}
+                                    {{ pageCriteria.totalrows }} {{pageCriteria.footerMessagetext2}}</div> -->
+                                    </div>
+                                    <!-- <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
+                                        *ngIf="gridView.length>0" [pagerRightArrowIcon]="'datatable-icon-right'"
+                                        [pagerPreviousIcon]="'datatable-icon-prev'"
+                                        [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage"
+                                        [size]="pageCriteria.pageSize" [count]="rowCount"
+                                        (change)="onFooterPageChange($event)">
+                                    </datatable-pager> -->
+                                </ng-template>
+                            </ngx-datatable-footer>
+                        </ngx-datatable>
+                        <div class="temp-box-inner border rounded shadow-sm bg-white p-3 mt-4"
+                            style="overflow:hidden; height:auto !important;" *ngIf="show">
+                            <div class="row">
+                                <div class="col-12">
+                                </div>
+                            </div>
+
+                            <div [formGroup]="BRStatmentForm" class="row">
+                                <div class="col-8 pl-0">
+                                    <p class="m-0"><label class="font-weight-bold col-md-4 pl-0">Balance as per bank
+                                            book</label>
+                                        <label class="print-font" *ngIf="pBankBookBalance==0">: {{currencysymbol}}
+                                            0.00</label>
+                                        <label class="print-font" *ngIf="pBankBookBalance != 0">
+                                            {{ pBankBookBalance | currency:currencysymbol:true:'1.2-2' }}
+                                        </label>
+
+                                    </p>
+                                    <p class="m-0">
+                                        <label class="font-weight-bold col-md-4 pl-0">
+                                            Less: Cheques deposited
+                                            but
+                                            not
+                                            credited
+                                        </label>
+                                        <label class="print-font" *ngIf="chequesdepositedbutnotcredited==0">:
+                                            {{currencysymbol}}
+                                            0.00
+                                        </label>
+                                        <label class="print-font" *ngIf="chequesdepositedbutnotcredited != 0">
+                                            {{ chequesdepositedbutnotcredited | currency:currencysymbol:true:'1.2-2' }}
+                                        </label>
+
+                                    </p>
+                                    <p class="m-0"><label class="font-weight-bold col-md-4 pl-0">Add: cheques issued but
+                                            not
+                                            cleared</label>
+                                        <label class="print-font" *ngIf="CHEQUESISSUEDBUTNOTCLEARED==0">:
+                                            {{currencysymbol}}
+                                            0.00</label>
+
+                                        <label class="print-font" *ngIf="CHEQUESISSUEDBUTNOTCLEARED != 0">
+                                            {{ CHEQUESISSUEDBUTNOTCLEARED | currency:currencysymbol:true:'1.2-2' }}
+                                        </label>
+
+                                    </p>
+                                    <p class="m-0"><label class="font-weight-bold col-md-4 pl-0">Balance as per pass
+                                            book / statement</label>
+
+                                        <label class="print-font" *ngIf="Balanceasperbankbook==0">: {{currencysymbol}}
+                                            0.00</label>
+                                        <label class="print-font" *ngIf="Balanceasperbankbook != 0">
+                                            {{ Balanceasperbankbook | currency:currencysymbol:true:'1.2-2' }}
+                                        </label>
+
+                                    </p>
+                                    <p class="m-0"><label class="font-weight-bold col-md-4 pl-0">Bank Balance</label>
+                                        <label class="print-font form-group"><input type="text" class="form-control"
+                                                formControlName="pbankbalance"></label>
+                                    </p>
+                                </div>
+                                <div class="col-md-4" style="margin-top: 141px;">
+                                    <div class="form-group">
+                                        <label>Upload Document</label>
+                                        <div class="custom-file">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" formControlName="pFilename"
+                                                    placeholder="" readonly>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-lg-icon" (click)="fileInput.click()"> <img
+                                                            src="assets/images/icon-upload-blue.svg" class=""
+                                                            width="18px" height="18px"></button>
+                                                    <input id="documentUpload" style="display: none" type="file"
+                                                        (change)="uploadAndProgress($event,fileInput.files)" #fileInput>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2 ml-1" *ngIf="BRStatmentForm['controls']['pbankbalance'].value != 0 ">
+                                <div class="col-md-12 col-xl-12">
+                                    <div class="col-md-12 col-xl-12 p-0">
+                                        <div class="d-flex justify-content-end mt-4">
+                                            <button appButtonDoubleClick (debounceClick)="saveWithPrint()"
+                                                data-toggle="tab" class="btn btn-s-icon px-3 border-0" role="tab"
+                                                aria-controls="hot" aria-selected="false" [disabled]="isLoading">
+                                                <img src="assets/images/icon-check-white.svg" width="20px" height="20px"
+                                                    class="mr-3" />
+                                                <span *ngIf="!isLoading">
+                                                </span>Save</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+            </form>
+            </div>
+            </div>
+            </div>

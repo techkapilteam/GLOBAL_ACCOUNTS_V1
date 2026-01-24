@@ -1,1 +1,552 @@
-<p>general-receipt works!</p>
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>General Receipt</h2>
+    </div>
+    <div class="screen-content">  
+<form autocomplete="off">
+  <div class="section-content">
+    <div class="row">
+      <div class="col-md-12 col-xl-12">
+      </div>
+
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label class="required-field">Date</label>
+          <fieldset>
+            <input type="text" class="form-control w-auto" placeholder="Date picker here" readonly>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-content mt-2">
+    <div class="row mt-2">
+      <div class="col-12">
+        <p class="bc-2">Mode of Receipt</p>
+
+        <div class="form-group mt-2 pl-0">
+          <div class="form-check form-check-inline radio-btn border rounded">
+            <input class="form-check-input" type="radio" name="pmodofreceipt" id="CASH" value="CASH" checked>
+            <label class="w-m-100 text-center" for="CASH">Cash - ₹ 10,000</label>
+          </div>
+
+          <div class="form-check form-check-inline radio-btn border rounded">
+            <input class="form-check-input" type="radio" name="pmodofreceipt" id="BANK" value="BANK">
+            <label class="w-m-100 text-center" for="BANK">Bank - ₹ 25,000</label>
+          </div>
+
+          <div class="form-check form-check-inline radio-btn" hidden>
+            <input class="form-check-input" type="radio" name="pmodofreceipt" id="wallet" value="wallet">
+            <label class="w-m-100 text-center" for="wallet">Wallet - ₹ 2,500</label>
+          </div>
+        </div>
+
+        <div class="wallet" style="display:none;">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Select Wallet</label>
+                <div class="input-group">
+                  <select class="form-control">
+                    <option>PayTM</option>
+                    <option>Phone Pay</option>
+                    <option>Airtel Money</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-lg-icon px-2 p-0">
+                      <img src="assets/images/icon-add-blue.svg" width="20px" height="20px">
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Reference No.</label>
+                <input class="form-control" type="text" placeholder="Reference No">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Transaction Date</label>
+                <input class="form-control" type="text" placeholder="Transaction Date">
+              </div>
+            </div>
+
+            <div class="col-md-12 col-xl-12 mb-2">
+              <div id="sbi-bal" class="collapse">
+                <span class="badge-success badge p-1 font-weight-light">Bank Book - 60,000 Dr</span>
+                <span class="badge-warning badge p-1 font-weight-light">Pass Book - 1,00,000 Dr</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="BANK">
+          <div class="row mt-3">
+            <div class="ml-3 mb-3 rounded border pl-2 pr-2 badge-light">
+              <div class="form-check form-check-inline radio-btn-secondary">
+                <input class="form-check-input" type="radio" id="cheque" value="Cheque" checked>
+                <label class="" for="cheque">Cheque</label>
+              </div>
+
+              <div class="form-check form-check-inline radio-btn-secondary">
+                <input class="form-check-input" type="radio" id="net" value="Online">
+                <label class="" for="net">Online</label>
+              </div>
+
+              <div class="form-check form-check-inline radio-btn-secondary">
+                <input class="form-check-input" type="radio" id="debit" value="Debit Card">
+                <label class="" for="debit">Debit Card</label>
+              </div>
+
+              <div class="form-check form-check-inline radio-btn-secondary">
+                <input class="form-check-input" type="radio" id="Credit" value="Credit Card">
+                <label class="" for="Credit">Credit Card</label>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-xl-12">
+              <div class="debit">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="required-field">Debit Card</label>
+                      <input class="form-control" type="text" placeholder="XXXX XXXX XXXX 3066" maxlength="16">
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label>Bank / Financial Services</label>
+                      <input class="form-control" type="text" placeholder="SBI-Master Card" maxlength="30">
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="required-field">Reference No.</label>
+                      <input class="form-control" type="text" placeholder="Reference No" maxlength="100">
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="required-field">Deposited Bank Name</label>
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>SBI</option>
+                        <option>HDFC</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 col-xl-12 mb-2">
+                    <div id="sbi-bal">
+                      <span class="badge-success badge p-1 font-weight-light">Bank Book - 1,00,000</span>
+                      <span class="badge-warning badge p-1 font-weight-light">Pass Book - 90,000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="credit" style="display:none;">
+                <!-- Same as debit section -->
+              </div>
+
+              <div class="cheque" style="display:none;">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Bank Name</label>
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>SBI</option>
+                        <option>HDFC</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Branch Name</label>
+                      <input class="form-control" type="text" placeholder="Branch Name">
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Account Number</label>
+                      <input class="form-control" type="text" placeholder="Account Number" maxlength="50">
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="required-field">Cheque No.</label>
+                      <input class="form-control" type="text" placeholder="Cheque No" maxlength="10">
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="required-field">Cheque Date</label>
+                      <input class="form-control" type="text" placeholder="Cheque Date" readonly>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="net" style="display:none;">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Bank Name</label>
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>SBI</option>
+                        <option>HDFC</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="required-field">Type of Payment</label>
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>NEFT</option>
+                        <option>RTGS</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>UPI</label>
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>Google Pay</option>
+                        <option>PhonePe</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="required-field">Reference No.</label>
+                      <input class="form-control" type="text" placeholder="Reference No" maxlength="100">
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="required-field">Transaction Date</label>
+                      <input class="form-control" type="text" placeholder="Transaction Date" readonly>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Deposited Bank Name</label>
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>SBI</option>
+                        <option>HDFC</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 col-xl-12 mb-2">
+                    <div id="sbi-bal">
+                      <span class="badge-success badge p-1 font-weight-light">Bank Book - 1,00,000</span>
+                      <span class="badge-warning badge p-1 font-weight-light">Pass Book - 90,000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="section-content mt-2">
+    <div class="row">
+      <div class="col-md-6 col-xl-4">
+        <div class="form-group">
+          <label class="required-field">Party</label>
+          <select class="form-control">
+            <option>Select</option>
+            <option>Party A</option>
+            <option>Party B</option>
+          </select>
+          <span class="position-absolute font-italic" style="right:-160px; top:30px;">Balance: ₹ 5,000</span>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-xl-4">
+        <div class="form-group">
+          <label class="required-field">Ledger</label>
+          <select class="form-control">
+            <option>Select</option>
+            <option>Ledger A</option>
+            <option>Ledger B</option>
+          </select>
+          <span class="position-absolute font-italic" style="right:-160px; top:35px;">Balance: ₹ 12,000</span>
+        </div>
+
+      </div>
+      <div class="col-md-3 col-xl-4">
+        <div class="form-group">
+          <label class="required-field">Amount Received</label>
+          <input class="form-control border-warning sec-head-bold" style="text-align:right;" type="text" placeholder="">
+        </div>
+        </div>
+      <div class="col-md-6 col-xl-6 pt-2">
+        <div class="form-group">
+          <div class="border rounded p-2 mt-3">
+            <div class="col-md-12 col-xl-12 mt-2 mb-2">
+              <div class="material-switch">
+                <span class="mr-2">GST</span>
+                <input id="gst-switch" type="checkbox">
+                <label for="gst-switch" class="badge-success"></label>
+              </div>
+
+              <div id="gst" style="display:none;">
+                <div class="row">
+                  <div class="col-md-12 col-xl-12">
+                    <div class="form-check form-check-inline mr-4">
+                      <input class="form-check-input" type="radio" name="pgstcalculationtype" value="INCLUDE">
+                      <label class="mt-1">Include</label>
+                    </div>
+                    <div class="form-check form-check-inline mr-4 mb-2 mt-2">
+                      <input class="form-check-input" type="radio" name="pgstcalculationtype" value="EXCLUDE">
+                      <label class="mt-1">Exclude</label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-12 col-xl-12">
+                    <div class="row">
+                      <div class="form-group col-md-4">
+                        <label class="required-field">State</label>
+                        <select class="form-control">
+                          <option>Select</option>
+                          <option>State A</option>
+                          <option>State B</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-4">
+                        <label>GST No.</label>
+                        <input type="text" class="form-control" readonly>
+                      </div>
+
+                      <div class="form-group col-md-4">
+                        <label class="required-field">GST(%)</label>
+                        <select class="form-control">
+                          <option>Select</option>
+                          <option>5</option>
+                          <option>12</option>
+                          <option>18</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-8">
+                        <label>Amount</label>
+                        <label class="form-control col-md-12 text-right pt-2">₹ 0.00</label>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label>IGST(0%)</label>
+                        <label class="col-md-12 p-0">₹ 0.00</label>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label>CGST(0%)</label>
+                        <label class="col-md-12 p-0">₹ 0.00</label>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label>SGST(0%)</label>
+                        <label class="col-md-12 p-0">₹ 0.00</label>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label>UTGST(0%)</label>
+                        <label class="col-md-12 p-0">₹ 0.00</label>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+          <div class="d-flex justify-content-end mt-4">
+          <a class="btn btn-primary mr-4 px-3 border-0">
+            Clear</a>
+          <a class="btn btn-primary ms-2 px-3 border-0">
+            Add</a>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-12 col-xl-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Actions</th>
+                <th>Ledger Name</th>
+                <th>Sub Ledger Name</th>
+                <th>Amount</th>
+                <th>GST Calculation Type</th>
+                <th>GST Type</th>
+                <th>GST(%)</th>
+                <th>GST Amount</th>
+                <th>Total Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><button class="btn btn-danger btn-sm">Delete</button></td>
+                <td>Ledger A</td>
+                <td>Sub Ledger 1</td>
+                <td class="text-right">₹ 1,000.00</td>
+                <td class="text-center">EXCLUDE</td>
+                <td class="text-center">CGST+SGST</td>
+                <td class="text-center">18</td>
+                <td class="text-right">₹ 180.00</td>
+                <td class="text-right">₹ 1,180.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-content mt-2">
+    <div class="row">
+      <div class="col-md-6 col-xl-6">
+        <div class="form-group">
+          <div class="border rounded p-2 mt-3">
+            <div class="col-md-12 col-xl-12 mt-2 mb-2">
+              <div class="material-switch">
+                <span class="mr-2">TDS</span>
+                <input id="tds-switch" type="checkbox">
+                <label for="tds-switch" class="badge-success"></label>
+              </div>
+
+              <div id="tds" style="display:none;">
+                <div class="row">
+                  <div class="col-md-12 col-xl-12">
+                    <div class="form-check form-check-inline radio-btn-secondary mr-4">
+                      <input class="form-check-input" type="radio" value="INCLUDE">
+                      <label class="mt-1">Include</label>
+                    </div>
+                    <div class="form-check form-check-inline radio-btn-secondary mr-4 mb-2 mt-2">
+                      <input class="form-check-input" type="radio" value="EXCLUDE">
+                      <label class="mt-1">Exclude</label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 col-xl-4">
+                    <label class="required-field">Section</label>
+                    <select class="form-control">
+                      <option>Select</option>
+                      <option>92B</option>
+                      <option>6</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-4 col-xl-4">
+                    <label class="required-field">Percentage</label>
+                    <select class="form-control">
+                      <option>Select</option>
+                      <option>1</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-4 col-xl-4">
+                    <label>Amount</label>
+                    <label class="form-control col-md-12 text-right pt-2">₹ 0.00</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="border mt-2 rounded">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Particulars</th>
+                <th class="text-right">Dr</th>
+                <th class="text-right">Cr</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Account A</td>
+                <td class="text-right">₹ 0.00</td>
+                <td class="text-right">₹ 1,000.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div class="col-md-6 col-xl-6 mt-2 pt-2">
+        <div class="form-group col-md-6 pl-0">
+          <label>Upload Attachment</label>
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="" readonly>
+            <div class="input-group-append">
+              <button class="btn btn-secondary">
+               Upload
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group mt-2">
+          <label class="required-field">Narration</label>
+          <textarea class="form-control" rows="4" maxlength="250"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-xl-12">
+      <div class="d-flex justify-content-end mt-3">
+        <a class="btn btn-primary mr-4 px-3 border-0">
+          Clear</a>
+
+        <button class="btn btn-primary px-3 border-0 ms-2">
+         Save
+        </button>
+      </div>
+    </div>
+  </div>
+
+</form>
+</div>
+</div>
+</div>

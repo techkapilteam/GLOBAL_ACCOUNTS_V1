@@ -1,0 +1,132 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Issued Cheque</h2>
+    </div>
+    <div class="screen-content">  
+      <form>
+
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label required-field">Bank Name</label>
+            <select class="form-select">
+              <option value="">Select Bank</option>
+              <option>Bank A</option>
+              <option>Bank B</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label required-field">Cheque No.</label>
+            <select class="form-select">
+              <option value="">Select Cheque No.</option>
+              <option>1001-1010</option>
+              <option>1011-1020</option>
+            </select>
+          </div>
+
+        </div>
+
+      </form>
+
+  <div class="card shadow-sm mt-4">
+    <div class="card-header bg-light">
+      <h6 class="mb-0">Unused Cheques</h6>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered text-center mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Cancel</th>
+              <th>Cheque No.</th>
+              <th>Bank Name</th>
+              <th>Cheque Book ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>1001</td>
+              <td>Bank A</td>
+              <td>CHB001</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox"></td>
+              <td>1002</td>
+              <td>Bank A</td>
+              <td>CHB001</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer text-end">
+      <button class="btn btn-primary px-4" type="button">Cancel Selected</button>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-outline-danger me-2"><i class="fa fa-file-pdf-o">PDF</i></button>
+        <button class="btn btn-outline-dark me-2"><i class="fa fa-print">Print</i></button>
+        <button class="btn btn-outline-success"><i class="fa fa-file-excel-o">Excel</i></button>
+      </div>
+
+      <div class="border rounded p-3 bg-white shadow-sm">
+        <h5 class="text-center mt-2">Issued Cheque Details</h5>
+
+        <div class="table-responsive">
+          <table class="table table-bordered text-center mt-3">
+            <thead class="table-light">
+              <tr>
+                <th>Cheque No.</th>
+                <th>Payment ID</th>
+                <th>Particulars</th>
+                <th>Payment Date</th>
+                <th>Cleared Date</th>
+                <th>Paid Amt.</th>
+                <th>Bank Name</th>
+                <th>Cheque Book ID</th>
+                <th>Cheque Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1001</td>
+                <td>PID001</td>
+                <td>Payment to Vendor</td>
+                <td>01-01-2026</td>
+                <td>05-01-2026</td>
+                <td class="text-end">5,000.00</td>
+                <td>Bank A</td>
+                <td>CHB001</td>
+                <td>Issued</td>
+              </tr>
+              <tr>
+                <td>1002</td>
+                <td>PID002</td>
+                <td>Payment to Vendor</td>
+                <td>02-01-2026</td>
+                <td>06-01-2026</td>
+                <td class="text-end">7,500.00</td>
+                <td>Bank A</td>
+                <td>CHB001</td>
+                <td>Issued</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+  </div>
+  </div>
+

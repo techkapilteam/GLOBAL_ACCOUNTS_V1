@@ -1,0 +1,288 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Trial Balance</h2>
+    </div>
+<div class="screen-content">
+  <form [formGroup]="TrialBalanceForm">
+    <div class="row">
+      <div class="col-xl-2 col-md-2 mt-4">
+        <div class="form-check form-check-inline check-btn-secondary">
+          <input class="form-check-input" id="asdate" type="checkbox" (change)="checkboxChecked($event)">
+          <label class="" for="asdate"> As On :</label>
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-2 form-group ">
+        <label>{{datelabel}}</label>
+        <input type="text" class="form-control" id="fromdate" readonly [bsConfig]="dpConfig" formControlName="fromdate"
+          bsDatepicker #dp="bsDatepicker" (ngModelChange)="DateChange($event)">
+
+      </div>
+      <div class=" col-xl-2 col-md-2 form-group">
+        <div *ngIf="showhideason">
+          <label>To Date</label>
+          <input type="text" class="form-control" id="todate" readonly [bsConfig]="dppConfig" formControlName="todate"
+            bsDatepicker #dp="bsDatepicker">
+        </div>
+      </div>
+      <div class="col-xl-2 col-md-2 mt-4">
+        <div class="form-check form-check-inline check-btn-secondary">
+          <input class="form-check-input" id="grouping" value="true" type="checkbox" (change)="withGrouping($event)">
+          <label class="" for="grouping"> With Grouping </label>
+        </div>
+      </div>
+      <div class="col-xl-4 col-md-4 form-group mt-2 pt-3">
+        <!-- <label></label>
+            <button aria-controls="hot" aria-selected="false" class="btn btn-b-icon  border-0"
+              class="btn btn-b-icon  border-0" data-toggle="tab" (click)="getdaybookdata()" role="tab">
+
+              <i class="fa" [ngClass]="{'fa-spin fa-spinner': isLoading}"></i>
+              <span *ngIf="!isLoading"><img class="mr-3" height="20px" src="assets/images/reports-white.svg"
+                  width="20px"></span> {{savebutton}}
+            </button> -->
+        <button class="btn btn-primary px-3 border-0" (click)="GenerateReport()">
+         {{savebutton}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="section-content mt-2">
+  <div *ngIf="showhidetable" class="d-flex justify-content-end mt-4 mr-3">
+    <ul *ngIf="!TrialBalanceDifference" class="temp-ul">
+      <li class="temp-ico ml-2">
+        <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" name="pdf" style="cursor: pointer;"
+          kendo-button (click)="pdfOrprint('Pdf')" />
+      </li>
+      <li class="temp-ico ml-2">
+        <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" name="print"
+          (click)="pdfOrprint('Print')" style="cursor: pointer;" />
+
+      </li>
+      <!-- Excel implimentation by Harsha 23-09-21 -->
+      <li class="temp-ico ml-2">
+        <img src="assets/images/icon-excel.svg " width="18px" class="pt-2" title="Excel" style="cursor: pointer;"
+          (click)="export()" />
+      </li>
+
+    </ul>
+
+  </div>
+  <div *ngIf="dataisempty" class="d-none">No Records to Display</div>
+
+
+  <!-- <ngx-datatable-pdf-export #pdf paperSize="A4" [allPages]="true" [repeatHeaders]="true" [landscape]="true"
+    margin="0.5cm" [scale]="0.7"> -->
+
+    <div *ngIf="showhidetable" id="temp-box">
+      <div class="mt-2 border rounded shadow-sm bg-white">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details> -->
+
+            <div class="report-head">
+              <p class="font-16 text-dark text-center m-0">
+                Trial Balance
+              </p>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="row">
+
+          <div class="col-md-6">
+            <div *ngIf="ShowAsOn">
+              <span class="font-14 text-left m-0 mr-4" style="font-size: 14px !important;
+                      font-weight: bold !important;">As On:</span>
+              <label class="print-font">
+                &nbsp;{{ fromdate | date:'dd/MM/yyyy' }}&nbsp;And&nbsp;{{ todate | date:'dd/MM/yyyy' }}
+              </label>
+            </div>
+            <div *ngIf="ShowBetween">
+              <span class="font-14 text-left m-0 mr-4" style="font-size: 14px !important;
+                        font-weight: bold !important;">Between:</span>
+              <label class="print-font">
+                &nbsp;{{ fromdate | date:'dd/MM/yyyy' }}&nbsp;And&nbsp;{{ todate | date:'dd/MM/yyyy' }}
+              </label>
+
+            </div>
+          </div>
+        </div>
+
+        <ngx-datatable [headerHeight]="50" #table [rowHeight]="50" class="material expandable table d-none" [summaryRow]="true"
+          [summaryHeight]="50" [summaryPosition]="'bottom'" [rows]="Trialbalancelst" [scrollbarH]="true">
+          <!-- <ngx-datatable-group-header  [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggleGroup($event)">
+              <ng-template let-group="group"  let-expanded="expanded" ngx-datatable-group-header-template>
+                <div style="padding-left:5px;">
+                  <a
+                    [class.datatable-icon-right]="!expanded"
+                    [class.datatable-icon-down]="expanded"
+                    title="Expand/Collapse Group"
+                    
+                    (click)="toggleExpandGroup(group)">
+                    <b>{{ group.value[0].pparentname}}</b>
+                 </a>
+                   
+                </div>
+              </ng-template>
+            </ngx-datatable-group-header> -->
+          <ngx-datatable-row-detail [rowHeight]="getRowHeight" (toggle)="onDetailToggle1($event)">
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+              <ngx-datatable [headerHeight]="50" #table1 [rowHeight]="50" class="material expandable table"
+                [rows]="ledgersummarydetails">
+                <!-- <ngx-datatable-row-detail [rowHeight]="'auto'" (toggle)="onDetailToggle1($event)"> -->
+                <ngx-datatable-row-detail [rowHeight]="getRowHeight" (toggle)="onDetailToggle1($event)">
+
+                  <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                    <ngx-datatable [headerHeight]="50" [rowHeight]="50" class="material expandable table"
+                      [rows]="accountledgerdetails">
+                      <ngx-datatable-column width="140" prop="ptransactiondate" name="Transaction Date"
+                        [headerClass]="'header-center'" [cellClass]="'cell-center'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          {{ row.ptransactiondate | date:'dd/MM/yyyy' }}
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column width="140" prop="ptransactionno" name="Transaction No."
+                        [headerClass]="'header-left'" [cellClass]="'cell-left'">
+                      </ngx-datatable-column>
+                      <ngx-datatable-column width="280" prop="pparticulars" name="Particulars"
+                        [headerClass]="'header-left'" [cellClass]="'cell-left'">
+                      </ngx-datatable-column>
+                      <ngx-datatable-column width="170" prop="pdebitamount" name="Debit" [headerClass]="'header-right'"
+                        [cellClass]="'cell-right'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div *ngIf="row.pdebitamount==0"></div>
+                          <div *ngIf="row.pdebitamount!=0">{{currencysymbol}} {{ row.pdebitamount |
+                            currency:currencysymbol:true:'1.2-2' }}
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column width="170" prop="pcreditamount" name="Credit"
+                        [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div *ngIf="row.pcreditamount==0"></div>
+                          <div *ngIf="row.pcreditamount!=0">{{currencysymbol}} {{row.pcreditamount.toFixed(2)
+                            }}</div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column width="170" prop="popeningbal" name="Balance" [headerClass]="'header-right'"
+                        [cellClass]="'cell-right'">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                          <div *ngIf="row.popeningbal==0"></div>
+                          <div *ngIf="row.popeningbal!=0">{{currencysymbol}} {{row.popeningbal.toFixed(2)
+                            }} {{row.pBalanceType}}</div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                    </ngx-datatable>
+                  </ng-template>
+                </ngx-datatable-row-detail>
+                <ngx-datatable-column>
+                  <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                    <a *ngIf="!expanded" (click)="toggleExpandRow1(row)">+</a>
+                    <!-- <a *ngIf="expanded" (click)="toggleCollapseRow1(row)">-</a> -->
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="!showhideledgercolumns" width="420" prop="paccountname" name="Particulars">
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="!showhideledgercolumns" width="260" prop="pdebitamount" name="Debit Amount"
+                  [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="row.pdebitamount==0"></div>
+                    <div *ngIf="row.pdebitamount!=0">{{currencysymbol}} {{row.pdebitamount.toFixed(2) }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="!showhideledgercolumns" width="260" prop="pcreditamount"
+                  name="Credit Amount" [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="row.pcreditamount==0"></div>
+                    <div *ngIf="row.pcreditamount!=0">{{currencysymbol}} {{row.pcreditamount.toFixed(2)}}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="showhideledgercolumns" width="270" prop="paccountname" name="Particulars">
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="showhideledgercolumns" width="170" prop="popeningbal"
+                  name="Opening Balance" [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="row.popeningbal==0"></div>
+                    <div *ngIf="row.popeningbal!=0">{{currencysymbol}} {{row.popeningbal.toFixed(2) }}
+                      {{row.openingBalanceType}}</div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="showhideledgercolumns" width="170" prop="pdebitamount" name="Debit Amount"
+                  [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="row.pdebitamount==0"></div>
+                    <div *ngIf="row.pdebitamount!=0">{{currencysymbol}} {{row.pdebitamount.toFixed(2) }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="showhideledgercolumns" width="170" prop="pcreditamount"
+                  name="Credit Amount" [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="row.pcreditamount==0"></div>
+                    <div *ngIf="row.pcreditamount!=0">{{currencysymbol}} {{row.pcreditamount.toFixed(2)}}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column *ngIf="showhideledgercolumns" width="170" prop="pclosingbal"
+                  name="Closing Balance" [headerClass]="'header-right'" [cellClass]="'cell-right'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div *ngIf="row.pclosingbal==0"></div>
+                    <div *ngIf="row.pclosingbal!=0">{{currencysymbol}} {{row.pclosingbal.toFixed(2) }}
+                      {{row.closingBalanceType}}</div>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </ng-template>
+          </ngx-datatable-row-detail>
+          <ngx-datatable-column>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+              <a *ngIf="!expanded" (click)="toggleExpandRow(row)">+</a>
+              <!-- <a *ngIf="expanded" (click)="toggleCollapseRow(row)">-</a> -->
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column width="200" prop="pparentname" name="Type" [cellClass]="'cell-left'"
+            [headerClass]="'header-left'"></ngx-datatable-column>
+          <ngx-datatable-column width="350" prop="paccountname" name="Particulars" [cellClass]="'cell-left'"
+            [headerClass]="'header-left'"></ngx-datatable-column>
+          <ngx-datatable-column width="200" prop="pdebitamount" name="Debit" [cellClass]="'cell-right'"
+            [headerClass]="'header-right'" [summaryTemplate]="TotalDebitAmount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div *ngIf="row.pdebitamount==0"></div>
+              <div *ngIf="row.pdebitamount!=0">{{currencysymbol}} {{row.pdebitamount.toFixed(2) }}</div>
+            </ng-template>
+            <ng-template #TotalDebitAmount>
+              {{currencysymbol}} {{totaldebitamount.toFixed(2) }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column width="200" prop="pcreditamount" name="Credit" [cellClass]="'cell-right'"
+            [headerClass]="'header-right'" [summaryTemplate]="TotalCreditAmount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <div *ngIf="row.pcreditamount==0"></div>
+              <div *ngIf="row.pcreditamount!=0">{{currencysymbol}} {{row.pcreditamount.toFixed(2) }}</div>
+            </ng-template>
+            <ng-template #TotalCreditAmount>
+              <!-- {{currencysymbol}} {{totalcreditamount.toFixed(2) | currencypipe}} -->
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+        <div *ngIf="TrialBalanceDifference" class="text-center" style="color:red">
+          <!-- Trial Balance Difference = {{currencyFormat}} {{difference | mycurrencypipe}} -->
+        </div>
+      </div>
+    </div>
+  <!-- </ngx-datatable-pdf-export> -->
+  <!-- row end -->
+  <!------------- save Buttons ------------>
+</div>
+</div>
+</div>
+

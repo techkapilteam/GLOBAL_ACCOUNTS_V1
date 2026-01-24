@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "@ng-select/ng-select/themes/default.theme.css";
 
 * {
   margin: 0;
@@ -27,17 +28,18 @@ html, body {
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+  border: 1px solid #ccc;
 }
 
 .screen-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 30px;
+  padding: 10px 30px 1px 30px;
 }
 
 .screen-header h2 {
   margin: 0 0 10px 0;
-  font-size: 28px;
+  font-size:22px;
 }
 
 .screen-breadcrumb {
@@ -258,4 +260,251 @@ textarea.form-control:disabled {
 .btn-primary:focus {
   box-shadow: 0 0 8px rgba(92, 124, 250, 0.25);
   outline: none;
+}
+
+ /* ACTIVE TAB FULL COLOR */
+ .nav-tabs .nav-link.active {
+  background-color: var(--bs-primary);
+  color: #fff;
+  border-color: var(--bs-primary) var(--bs-primary) #fff;
+}
+
+/* HOVER */
+.nav-tabs .nav-link, .nav-tabs .nav-link:hover {
+  border-color: var(--bs-primary);
+}
+
+.ngx-datatable.material {
+  box-shadow: none !important;
+  /*0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12) !important; */
+  /* background: #fff; */
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, .12);
+  /* box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),
+   0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12) !important; */
+}
+.ngx-datatable.material .datatable-footer .page-count {
+  line-height: 50px;
+  height: 50px;
+  padding: 0 1.2rem;
+}
+
+.ngx-datatable.material .datatable-footer {
+  border-top: none !important;
+}
+
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell,
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-group-cell {
+  text-align: left;
+  padding: .9rem 1.2rem;
+  vertical-align: top;
+  border-top: 0;
+  color: rgba(0, 0, 0, .87);
+  transition: width .3s ease;
+  font-size: 12px !important;
+  font-weight: 400;
+  /* border-right: 1px solid #d7dddc; */
+}
+
+.ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* min-width: 150px; */
+}
+
+.ngx-datatable.material .datatable-header,
+.datatable-row-center .datatable-row-group {
+  border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+.ngx-datatable.material .datatable-header .datatable-header-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* min-width: 150px; */
+  text-align: left;
+  padding: .9rem 1.2rem;
+  background-color: #f5fcfa;
+  color: #162246 !important;
+  vertical-align: bottom;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ngx-datatable .datatable-body-row {
+  border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+.ngx-datatable.material .empty-row {
+  text-align: center !important;
+  padding: 50px !important;
+}
+
+.datatable-row-group.datatable-row-left {
+  z-index: 99 !important;
+  background: #f5fcfa;
+}
+
+/*Data table cell alignments*/
+
+datatable-body-cell.datatable-body-cell.cell-center,
+datatable-header-cell.datatable-header-cell.header-center {
+  text-align: center !important;
+}
+
+datatable-body-cell.datatable-body-cell.cell-right,
+datatable-header-cell.datatable-header-cell.header-right {
+  text-align: right !important;
+}
+
+datatable-body-cell.datatable-body-cell.cell-left,
+datatable-header-cell.datatable-header-cell.header-left {
+  text-align: left !important;
+}
+
+
+/*Data table cell alignments*/
+.ng-dropdown-panel .scroll-host {
+  overflow: auto !important;
+}
+
+.datatable-body-cell-label,
+.datatable-body-cell-label div {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.datatable-body-cell-label input,
+.datatable-body-cell-label select,
+.datatable-body-cell-label .input-group button {
+  height: 30px !important;
+}
+
+.ngx-datatable .datatable-footer .selected-count .datatable-pager {
+  flex: 1 1 100% !important;
+}
+
+
+/*sprint 3 css*/
+.panel-arrow {
+  float: right;
+  position: relative;
+  display: block;
+  right: 0px;
+}
+
+.panel-arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #b7c7d1;
+  margin-bottom: 0px;
+}
+
+.panel-arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 8px solid #b7c7d1;
+  margin-bottom: 0px;
+}
+.ngx-datatable.material.single-selection .datatable-body-row.active,
+.ngx-datatable.material.single-selection .datatable-body-row.active .datatable-row-group,
+.ngx-datatable.material.multi-selection .datatable-body-row.active,
+.ngx-datatable.material.multi-selection .datatable-body-row.active .datatable-row-group,
+.ngx-datatable.material.multi-click-selection .datatable-body-row.active,
+.ngx-datatable.material.multi-click-selection .datatable-body-row.active .datatable-row-group,
+.ngx-datatable.material.single-selection .datatable-body-row.active span {
+  background: #d3d3d3 !important;
+  color: rgb(10, 10, 10);
+}
+.datatable-icon-down {
+  font-weight: 500;
+  font-size: 12px;
+  color: #162246 !important;
+}
+
+table.table.td-secondchild-bold td {
+  width: 50% !important;
+  overflow: hidden;
+  white-space: normal;
+}
+
+/* data tree button styles */
+
+.datatable-tree-button {
+  background: none;
+  border: none !important;
+  height: auto;
+}
+
+.datatable-tree-button:focus {
+  outline: none;
+}
+
+.datatable-checkbox input[type='checkbox']:after,
+.datatable-checkbox input[type='checkbox']:before {
+  margin-top: 0.5rem;
+}
+
+.ngx-datatable.material .datatable-body .datatable-group-header {
+  backface-visibility: hidden !important;
+  transform: translate3d(0px, 0px, 0px) !important;
+  padding: 10px !important;
+}
+
+.ngx-datatable .datatable-body .datatable-scroll,
+.datatable-body-row {
+  min-width: 100% !important;
+}
+.ngx-datatable input[type="checkbox"],
+.ngx-datatable input[type="radio"] {
+  margin: -7px 0px;
+}
+.ngx-datatable.device-chit-r.scroll-horz .datatable-body {
+  margin: 0px 3px !important;
+}
+
+
+
+ng-select.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 1px #dc3545;
+}
+.ng-select .ng-select-container .ng-value-container .ng-input>input {
+  border: none !important;
+  height: auto;
+  color: #0F0F0F !important;
+  font-size: 14px !important;
+  font-family: 'rubik', sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02rem;
+}
+.ng-select .ng-arrow-wrapper .ng-arrow {
+  border-color: #0F0F0F transparent transparent !important;
+  border-style: solid !important;
+  border-width: 5px 3px 2.5px !important;
+}
+.ng-select .ng-select-container {
+  min-height: 38px;
+}
+ng-select.ng-select.form-control {
+  border: none !important;
+  height: auto;
+  color: #0F0F0F !important;
+  font-size: 14px !important;
+  font-family: 'rubik', sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.02rem;
+  padding: 0px;
+}
+.ng-select.ng-select-single .ng-select-container {
+  height: 38px !important;
+}
+.custom-ng-select .ng-dropdown-panel {
+  min-width: max-content !important;
 }

@@ -1,0 +1,175 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div  class="screen-header">
+      <h2>Cheque Enquiry</h2>
+    </div>
+    <div class="screen-content">  
+<form class="container py-3">
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <label class="bc-2">Select Cheques Type</label>
+    </div>
+
+    <div class="col-12 d-flex gap-4">
+      <div class="form-check radio-btn-secondary">
+        <input class="form-check-input" type="radio" name="chequetype" checked />
+        <label>Issued</label>
+      </div>
+
+      <div class="form-check radio-btn-secondary">
+        <input class="form-check-input" type="radio" name="chequetype" />
+        <label>Received</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-3">
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input
+          type="search"
+          class="form-control"
+          placeholder="Search by Cheque / Reference No (min 3 chars)" />
+      </div>
+
+      <div class="col-md-6">
+        <div class="spinner-border text-muted d-none"></div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mt-3">
+      <li class="nav-item">
+        <a class="nav-link active">
+          Cheques
+          <span class="badge bg-dark ms-2">2</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="table-responsive mt-3">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th class="text-center">Cheque Status</th>
+            <th class="text-center">Cheque / Reference No</th>
+            <th class="text-end">Amount</th>
+            <th class="text-center">Payment Id</th>
+            <th class="text-center">Payment Date</th>
+            <th class="text-center">Cleared Date</th>
+            <th class="text-center">Returned Date</th>
+            <th class="text-center">Cancelled Date</th>
+            <th class="text-center">Transaction Mode</th>
+            <th>Party</th>
+            <th>Account No</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td class="text-center">Cleared</td>
+            <td class="text-center">CHQ00123</td>
+            <td class="text-end">₹ 10,500.00</td>
+            <td class="text-center">RCPT1001</td>
+            <td class="text-center">10-01-2026</td>
+            <td class="text-center">12-01-2026</td>
+            <td class="text-center">--</td>
+            <td class="text-center">--</td>
+            <td class="text-center">CHEQUE</td>
+            <td>ABC Traders</td>
+            <td>1234567890</td>
+          </tr>
+
+          <tr>
+            <td class="text-center">Returned</td>
+            <td class="text-center">CHQ00456</td>
+            <td class="text-end">₹ 5,750.00</td>
+            <td class="text-center">RCPT1020</td>
+            <td class="text-center">15-01-2026</td>
+            <td class="text-center">--</td>
+            <td class="text-center">18-01-2026</td>
+            <td class="text-center">--</td>
+            <td class="text-center">CHEQUE</td>
+            <td>XYZ Stores</td>
+            <td>9876543210</td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr>
+            <td colspan="11" class="text-end fw-bold">
+              Total Amount: ₹ 16,250.00
+            </td>
+          </tr>
+        </tfoot>
+
+      </table>
+    </div>
+
+  </div>
+
+  <div class="mt-5">
+
+    <div class="row mb-3 align-items-center">
+      <div class="col-md-6">
+        <input
+          type="search"
+          class="form-control"
+          placeholder="Search by Cheque / Reference No (min 3 chars)" />
+      </div>
+
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Cheque Status</th>
+            <th>Cheque / Reference No</th>
+            <th>Branch</th>
+            <th>Amount</th>
+            <th>Receipt Id</th>
+            <th>Receipt Date</th>
+            <th>Deposited Date</th>
+            <th>Cleared Date</th>
+            <th>Returned Date</th>
+            <th>Transaction Mode</th>
+            <th>Cheque Bank Name</th>
+            <th>Party</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Cleared</td>
+            <td>RCV00123</td>
+            <td>Main Branch</td>
+            <td>₹ 9,000.00</td>
+            <td>REC1001</td>
+            <td>05-01-2026</td>
+            <td>06-01-2026</td>
+            <td>08-01-2026</td>
+            <td>--</td>
+            <td>CHEQUE</td>
+            <td>ICICI</td>
+            <td>LMN Enterprises</td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+  <div class="d-flex justify-content-end mt-4">
+    <button type="button" class="btn btn-danger">
+      Clear
+    </button>
+  </div>
+
+</form>
+</div>
+</div>
+</div>
+
