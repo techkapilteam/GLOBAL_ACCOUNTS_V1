@@ -1,92 +1,111 @@
-<div class="screen-container">
+<div class="container mt-3">
   <div class="screen-card">
+
     <div class="screen-header">
       <h2>Bank Book</h2>
     </div>
 
     <div class="screen-content">
+
       <form>
+        <div class="row g-3">
 
-        <div class="section-content">
-          <div class="row g-3">
-
-            <!-- From Date -->
-            <div class="col-md-3 col-xl-3">
-              <div class="form-group">
-                <label class="required-field">From Date</label>
-                <input type="date" class="form-control" [(ngModel)]="fromDate" name="fromDate">
-              </div>
-            </div>
-
-            <!-- To Date -->
-            <div class="col-md-3 col-xl-3">
-              <div class="form-group">
-                <label class="required-field">To Date</label>
-                <input type="date" class="form-control" [(ngModel)]="toDate" name="toDate">
-              </div>
-            </div>
-
-            <!-- Bank Name -->
-            <div class="col-md-3 col-xl-3">
-              <div class="form-group">
-                <label>Bank Name</label>
-                <select class="form-control" [(ngModel)]="bankName" name="bankName">
-                  <option value="">Select</option>
-                  <option>State Bank</option>
-                  <option>HDFC Bank</option>
-                  <option>ICICI Bank</option>
-                </select>
-              </div>
-            </div>
-
-            <!-- Generate Report Button -->
-            <div class="col-md-3 col-xl-3">
-              <div class="d-flex justify-content-start mt-4 gap-2">
-                <button type="button" class="btn btn-primary px-3" (click)="generateReport()">
-                  Generate Report
-                </button>
-              </div>
-            </div>
-
+          <div class="col-md-3">
+            <label class="form-label">From Date</label>
+            <input type="date" class="form-control" [(ngModel)]="fromDate" name="fromDate">
           </div>
 
-          <br>
-
-          <!-- Export Buttons -->
-          <div class="d-flex justify-content-end mb-2" *ngIf="showTable">
-            <a href="javascript:void(0)" class="me-2" (click)="exportPDF()">
-              <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF">
-            </a>
-            <a href="javascript:void(0)" class="me-2" (click)="printReport()">
-              <img src="assets/images/print-icon-blue.svg" width="18" title="Print">
-            </a>
-            <a href="javascript:void(0)" (click)="exportExcel()">
-              <img src="assets/images/icon-excel.svg" width="18" title="Excel">
-            </a>
+          <div class="col-md-3">
+            <label class="form-label">To Date</label>
+            <input type="date" class="form-control" [(ngModel)]="toDate" name="toDate">
           </div>
 
-          <!-- ngx-datatable Table -->
-          <ngx-datatable
-            class="bootstrap"
-            *ngIf="showTable"
-            [rows]="rows"
-            [columns]="columns"
-            [columnMode]="'force'"
-            [headerHeight]="50"
-            [footerHeight]="50"
-            [rowHeight]="'auto'"
-            [limit]="10">
-            
-            <ngx-datatable-column name="Balance" prop="balance">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                ₹ {{ row.balance | number:'1.2-2' }}
-              </ng-template>
-            </ngx-datatable-column>
+          <div class="col-md-3">
+            <label class="form-label">Bank Name</label>
+            <select class="form-control" [(ngModel)]="bankName" name="bankName">
+              <option value="">Select</option>
+              <option>State Bank</option>
+              <option>HDFC Bank</option>
+              <option>ICICI Bank</option>
+            </select>
+          </div>
 
-          </ngx-datatable>
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="button" class="btn btn-primary" (click)="generateReport()">Generate Report</button>
+          </div>
 
         </div>
       </form>
+
+    
+      <form *ngIf="showTable" class="mt-4 p-3 border" style="background-color:white;">
+
+       
+        <div class="text-center mb-3">
+          <h4 class="mb-1">KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
+          <p class="mb-1">Above TVS Showroom, 1st Floor, Opp:R&B Guest House, Old NK-07, Kamareddy</p>
+          <p class="mb-1">CIN : U65992TG2008PTC060803</p>
+          <p class="mb-1" style="text-align:right;"><b>Branch : Ca-hyderabad-co</b></p>
+
+          <h5 style="text-align:center; margin-top:10px; margin-bottom:5px;">
+            Bank Book - {{ bankName }}
+          </h5>
+          <p style="text-align:left; margin-bottom:5px;">
+            <b>Between :</b> {{ fromDate }} And {{ toDate }}
+          </p>
+        </div>
+
+       
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
+          <button type="button" (click)="exportPDF()" style="background:none; border:none; cursor:pointer;">
+            <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF" title="PDF">
+          </button>
+
+          <button type="button" (click)="printReport()" style="background:none; border:none; cursor:pointer;">
+            <img src="assets/images/print-icon-blue.svg" width="18" alt="Print" title="Print">
+          </button>
+
+          <button type="button" (click)="exportExcel()" style="background:none; border:none; cursor:pointer;">
+            <img src="assets/images/icon-excel.svg" width="18" alt="Excel" title="Excel">
+          </button>
+        </div>
+
+       
+        <ngx-datatable
+          class="bootstrap"
+          [rows]="rows"
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="'auto'"
+          [limit]="10">
+
+          <ngx-datatable-column name="Transaction No" prop="txnNo"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars" prop="particulars"></ngx-datatable-column>
+          <ngx-datatable-column name="Narration" prop="narration"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Receipts" prop="receipts">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹ {{ row.receipts | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Payments" prop="payments">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹ {{ row.payments | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Balance" prop="balance">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹ {{ row.balance | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+        </ngx-datatable>
+
+      </form>
+
     </div>
   </div>
 </div>
