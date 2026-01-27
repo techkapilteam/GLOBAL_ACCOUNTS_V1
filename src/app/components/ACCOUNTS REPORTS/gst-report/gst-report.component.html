@@ -62,7 +62,7 @@
             <button type="button" class="btn btn-outline-primary" (click)="showSummary()">GST Summary</button>
           </div>
           <div class="table-responsive mt-4">
-            <ngx-datatable class="bootstrap gst-payments-table" [rows]="gstPaymentRows" [columnMode]="'force'"
+            <ngx-datatable class="material striped" [rows]="gstPaymentRows" [columnMode]="'force'"
               [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
 
               <ngx-datatable-column name="GST Voucher No." prop="voucherNo"></ngx-datatable-column>

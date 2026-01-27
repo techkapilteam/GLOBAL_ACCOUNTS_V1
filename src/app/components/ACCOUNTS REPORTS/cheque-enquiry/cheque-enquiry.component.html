@@ -45,7 +45,7 @@
           </ul>
 
           <div class="mt-3" *ngIf="chequeType === 'issued'">
-            <ngx-datatable class="bootstrap cheque-enquiry-issued" [rows]="issuedChequeRows" [columnMode]="'force'"
+            <ngx-datatable class="material striped" [rows]="issuedChequeRows" [columnMode]="'force'"
               [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
 
               <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>
@@ -74,7 +74,7 @@
               </button>
             </div>
 
-            <ngx-datatable class="bootstrap cheque-enquiry-received" [rows]="receivedChequeRows" [columnMode]="'force'"
+            <ngx-datatable class="material striped" [rows]="receivedChequeRows" [columnMode]="'force'"
               [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
 
               <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>

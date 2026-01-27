@@ -4,57 +4,47 @@
       <h2>Re Print</h2>
     </div>
     <div class="screen-content">
-      <form>
+      <form [formGroup]="reprintForm">
 
         <div class="row g-3">
 
           <div class="col-md-3 mb-3">
             <label class="required-field">Transaction Type</label>
-            <select class="form-control">
+            <select class="form-control" formControlName="transactionType">
               <option value="">Select</option>
               <option>Type 1</option>
               <option>Type 2</option>
             </select>
+            <small class="text-danger" *ngIf="submitted && f['transactionType']?.errors">
+              Transaction Type is required
+            </small>
           </div>
 
           <div class="col-md-3 mb-3">
             <label class="required-field">Transaction No.</label>
-            <input type="text" class="form-control" placeholder="Enter Transaction No">
+            <input type="text" class="form-control" formControlName="transactionNo" placeholder="Enter Transaction No">
+            <small class="text-danger" *ngIf="submitted && f['transactionNo']?.errors">
+              Transaction Number is required
+            </small>
           </div>
-
-          <!-- <div class="col-md-3 mb-3">
-            <label class="required-field">PAN No.</label>
-            <input type="text" class="form-control" placeholder="Enter PAN No">
-          </div>
-
-          <div class="col-md-3 mb-3">
-            <label class="required-field">CAO</label>
-            <select class="form-control">
-              <option value="">Select CAO</option>
-              <option>Branch A</option>
-              <option>Branch B</option>
-            </select>
-          </div> -->
 
           <div class="col-md-3 d-flex align-items-end mb-3">
-            <button type="button" class="btn btn-primary w-100">
+            <button type="button" class="btn btn-primary w-100" (click)="generateReport()">
               Generate Report
             </button>
           </div>
 
         </div>
-
       </form>
 
       <!-- Report Table Card -->
-      <div class="card shadow-sm">
+      <div class="card shadow-sm mt-3" *ngIf="showTable">
         <div class="card-body">
 
-          <!-- Search Input -->
           <div class="row mb-3">
             <div class="col-md-4">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" class="form-control" placeholder="Search" (input)="updateFilter($event)">
                 <button class="btn btn-outline-secondary">
                   <i class="fa fa-search"></i> Search
                 </button>
@@ -62,10 +52,13 @@
             </div>
           </div>
 
-          <!-- Table -->
           <div class="mt-2">
-            <ngx-datatable class="bootstrap reprint-table" [rows]="reprintRows" [columnMode]="'force'"
-              [headerHeight]="45" [footerHeight]="50" [rowHeight]="'auto'">
+            <ngx-datatable class="material striped"
+              [rows]="filteredRows"
+              [columnMode]="'force'"
+              [headerHeight]="45"
+              [footerHeight]="50"
+              [rowHeight]="'auto'">
 
               <ngx-datatable-column name="T/R Receipt No." prop="trReceiptNo">
                 <ng-template let-row="row" ngx-datatable-cell-template>
@@ -97,13 +90,9 @@
             </ngx-datatable>
           </div>
 
-
-          <!-- No Data Message -->
-          <!-- <div class="text-center text-muted mt-3">
-        No Records to Display
-      </div> -->
-
         </div>
       </div>
+
     </div>
   </div>
+</div>

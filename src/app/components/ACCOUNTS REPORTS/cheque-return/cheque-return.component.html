@@ -46,7 +46,7 @@
           {{ fromDate | date:'dd-MMM-yyyy' }} And {{ toDate | date:'dd-MMM-yyyy' }}
         </div>
 
-        <ngx-datatable class="bootstrap cheque-return-table" [rows]="chequeReturnRows" [columnMode]="'force'"
+        <ngx-datatable class="material striped" [rows]="chequeReturnRows" [columnMode]="'force'"
           [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
 
           <ngx-datatable-column name="Return Date" prop="returnDate"></ngx-datatable-column>
