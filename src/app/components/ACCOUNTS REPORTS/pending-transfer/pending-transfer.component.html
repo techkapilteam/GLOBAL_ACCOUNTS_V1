@@ -1,121 +1,96 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+    <div class="screen-header">
       <h2>Pending Transfer Report</h2>
     </div>
-    <div class="screen-content"> 
-      <form>
+
+    <div class="screen-content">
+      <form [formGroup]="reportForm">
 
         <div class="row g-3">
 
           <div class="col-md-4">
             <label class="required-field">Branch</label>
-            <select class="form-control">
+            <select class="form-control" formControlName="branch">
               <option value="">Select Branch</option>
               <option>Branch A</option>
               <option>Branch B</option>
             </select>
+            <div class="text-danger" *ngIf="submitted && f['branch'].errors">
+              Branch is required
+            </div>
           </div>
 
           <div class="col-md-4">
             <label class="required-field">Type of Payment</label>
-            <select class="form-control">
+            <select class="form-control" formControlName="paymentType">
               <option value="">Select</option>
               <option>Cash</option>
               <option>Cheque</option>
               <option>Online</option>
             </select>
+            <div class="text-danger" *ngIf="submitted && f['paymentType'].errors">
+              Payment type is required
+            </div>
           </div>
 
           <div class="col-md-4 text-end">
-            <button type="button" class="btn btn-primary mt-4">Generate Report</button>
+            <button type="button" class="btn btn-primary mt-4" (click)="generateReport()">Generate Report</button>
           </div>
 
         </div>
 
       </form>
-  <div class="card shadow-sm mt-4">
-    <div class="card-body">
 
-      <div class="row mb-3 align-items-center">
+      <div class="card shadow-sm mt-4" *ngIf="showTable">
+        <div class="card-body">
 
-        <div class="col-md-5 offset-md-7">
-          <input type="text" class="form-control" placeholder="Pending Days Filter">
+          <div class="row mb-3 align-items-center">
+            <div class="col-md-5 offset-md-7">
+              <input type="text" class="form-control" placeholder="Pending Days Filter" [(ngModel)]="pendingDaysFilter" (input)="applyFilter()">
+            </div>
+          </div>
+
+          <div class="mt-2">
+            <ngx-datatable
+              class="material striped"
+              [rows]="filteredRows"
+              [columnMode]="'force'"
+              [headerHeight]="45"
+              [footerHeight]="50"
+              [rowHeight]="'auto'">
+
+              <ngx-datatable-column name="Branch Name" prop="branchName"></ngx-datatable-column>
+              <ngx-datatable-column name="Chit No." prop="chitNo"></ngx-datatable-column>
+              <ngx-datatable-column name="Subscriber Name" prop="subscriberName"></ngx-datatable-column>
+              <ngx-datatable-column name="Chit Status" prop="chitStatus"></ngx-datatable-column>
+              <ngx-datatable-column name="Receipt No." prop="receiptNo"></ngx-datatable-column>
+              <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Tr Date" prop="trDate"></ngx-datatable-column>
+
+              <ngx-datatable-column name="Receipt Amount" prop="amount">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="text-end">{{ row.amount | number:'1.2-2' }}</div>
+                </ng-template>
+                <ng-template ngx-datatable-footer-template>
+                  <div class="text-end fw-bold pe-2">
+                    Total: ₹ {{ totalPendingAmount | number:'1.2-2' }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Pending Days" prop="pendingDays"></ngx-datatable-column>
+              <ngx-datatable-column name="Due Months" prop="dueMonths"></ngx-datatable-column>
+              <ngx-datatable-column name="Reference Number" prop="referenceNo"></ngx-datatable-column>
+              <ngx-datatable-column name="Reference Date" prop="referenceDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Bank Name" prop="bankName"></ngx-datatable-column>
+
+            </ngx-datatable>
+          </div>
+
         </div>
-
-    
       </div>
-
-      <div class="table-responsive">
-        <table class="table table-bordered text-center">
-          <thead class="table-light">
-            <tr>
-              <th>Branch Name</th>
-              <th>Chit No.</th>
-              <th>Subscriber Name</th>
-              <th>Chit Status</th>
-              <th>Receipt No.</th>
-              <th>Receipt Date</th>
-              <th>Tr Date</th>
-              <th>Receipt Amount</th>
-              <th>Pending Days</th>
-              <th>Due Months</th>
-              <th>Reference Number</th>
-              <th>Reference Date</th>
-              <th>Bank Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Branch A</td>
-              <td>CHT001</td>
-              <td>John Doe</td>
-              <td>Active</td>
-              <td>R001</td>
-              <td>01-01-2026</td>
-              <td>02-01-2026</td>
-              <td class="text-end">₹ 10,000.00</td>
-              <td>5</td>
-              <td>1</td>
-              <td>REF001</td>
-              <td>03-01-2026</td>
-              <td>Bank A</td>
-            </tr>
-            <tr>
-              <td>Branch B</td>
-              <td>CHT002</td>
-              <td>Jane Smith</td>
-              <td>Pending</td>
-              <td>R002</td>
-              <td>02-01-2026</td>
-              <td>03-01-2026</td>
-              <td class="text-end">₹ 15,500.00</td>
-              <td>3</td>
-              <td>1</td>
-              <td>REF002</td>
-              <td>04-01-2026</td>
-              <td>Bank B</td>
-            </tr>
-
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="7" class="text-end fw-bold">Total</td>
-              <td class="text-end fw-bold">₹ 25,500.00</td>
-              <td colspan="5"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      <!-- <div class="text-center text-muted mt-3">
-        No Records to Display
-      </div> -->
 
     </div>
   </div>
-
-</div>
-
-</div>
 </div>

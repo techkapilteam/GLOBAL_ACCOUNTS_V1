@@ -35,11 +35,9 @@ export class ChequesInbankComponent implements OnInit {
   activeTab: string = '';
   showTable: boolean = false;
   transactionDate: string = new Date().toISOString().split('T')[0];
-  chequesclearDate: string = new Date().toISOString().split('T')[0];
-
-  brsFromDate: string = '';
-  brsToDate: string = '';
-
+  chequesclearDate: string = new Date().toISOString().split('T')[0];  
+  brsFromDate: string = new Date().toISOString().split('T')[0];
+  brsToDate: string = new Date().toISOString().split('T')[0];
   headerCheckbook: boolean = false;
 
   allCheques: Cheque[] = [
@@ -56,10 +54,12 @@ export class ChequesInbankComponent implements OnInit {
 
   filteredCheques: Cheque[] = [];
 
+  
   ngOnInit(): void {
-    this.showTable = false;
-  }
-
+  this.showTable = true;           
+  this.filteredCheques = [...this.allCheques];  
+  this.activeTab = 'All';        
+}
   filterTab(tab: string) {
     this.activeTab = tab;
     this.showTable = false;
@@ -108,4 +108,3 @@ export class ChequesInbankComponent implements OnInit {
   }
   
 }
-// 555

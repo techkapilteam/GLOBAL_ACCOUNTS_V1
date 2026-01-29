@@ -1,134 +1,197 @@
 <div class="screen-container">
     <div class="screen-card">
-      <div  class="screen-header">
-        <h2>Cheques On Hand</h2>
-      </div>
-    <div class="screen-content">
-<form [formGroup]="ChequesOnHandForm">
-    <!-- <app-loading [loading]="gridLoading"></app-loading> -->
-    <div class="section-content">
-        <div class="row">
-            <div class="col-md-12 col-xl-12">
-                <!-- <p class="bc-2">Bank Pay-in (Cheques On Hand)</p> -->
-            </div>
+        <div class="screen-header">
+            <h2>Cheques On Hand</h2>
         </div>
+        <div class="screen-content">
+            <form>
+                <div class="mt-2 border rounded shadow-sm bg-white">
 
-        <div class="row">
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label class="required-field">Date</label>
-                    <input class="form-control" type="text" title="Date" id="ptransactiondate"
-                        [disabled]="!pdatepickerenablestatus" formControlName="ptransactiondate" placeholder="" readonly
-                        [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                        [ngClass]="{ 'is-invalid': ChequesOnHandValidation.ptransactiondate }"
-                        (ngModelChange)="change_date($event)">
-                    <!-- 
-                    <app-validation-message [messgae]="ChequesOnHandValidation?.ptransactiondate">
-                    </app-validation-message> -->
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="required-field">Bank</label>
-                    <select class="form-control" (change)="SelectBank($event)" id="bankname" formControlName="bankname"
-                        title="Bank" [ngClass]="{ 'is-invalid': ChequesOnHandValidation.bankname }">
-                        <option value="">Select</option>
-                        <option *ngFor="let bank of BanksList" [value]="bank.pdepositbankname">{{bank.pdepositbankname}}
-                        </option>
+                    <div class="section-content">
 
-                    </select>
-                    <!-- <app-validation-message [messgae]="ChequesOnHandValidation?.bankname"></app-validation-message> -->
-                    <!-- <div *ngIf="ShowBankErrorMsg" style="color:red">Select Bank</div> -->
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="border rounded  shadow-sm bg-light p-3">
-                    <span *ngIf="banknameshowhide" class="sec-head-bold mt-0 font-16 overflow-hidden">{{bankname}}
-                        <hr class="mt-0 mb-0">
-                    </span>
-                    <div class="form-group mb-0">
-                        <h4 style="color: #26408A;"><u>Cheques on Hand </u></h4>
-                    </div>
-                    <div class="form-group mb-0">
-                        <label>Balance: </label>
-                        <label class="sec-head-bold ml-2">
-                            <div *ngIf="bankbalancetype === 'Dr'">
-                                {{ bankbalance | currency:currencySymbol:'symbol':'1.2-2' }}
-                                {{ bankbalancetype }}
+                        <div class="row align-items-end g-3">
+
+                            <div class="col-md-2">
+                                <label>Date</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Bank</label>
+                                <select class="form-control">
+                                    <option>Union Bank Of India</option>
+                                    <option>SBI</option>
+                                    <option>HDFC Bank</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="border rounded bg-light p-3">
+                                    <h5 class="text-primary mb-2">
+                                        <u>Cheques on Hand</u>
+                                    </h5>
+                                    <strong>
+                                        Balance: ₹ 15,74,94,468 Dr
+                                        &nbsp;&nbsp;&nbsp;
+                                        BRS Date: 05-Dec-2025
+                                    </strong>
+                                </div>
                             </div>
 
-                            <div *ngIf="bankbalancetype === 'Cr'">
-                                {{ bankbalance | currency:currencySymbol:'symbol':'1.2-2' }}
-                                {{ bankbalancetype }}
-                            </div>
-
-                            <div *ngIf="bankbalancetype==''">{{currencySymbol}} 0.00</div>
-                        </label>
-                        <label class="ml-4">BRS Date: </label><label class="sec-head-bold ml-2">{{brsdate}}</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </form>
 
-    </div>
+            <form>
+                <div class="section-content mt-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <input type="search" class="form-control" placeholder="Search for cheque number">
+                        </div>
 
-    <div class="section-content mt-2">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group mr-0 custom-search">
-                    <input (input)="onSearch($event.target.value)" type="search" #search id="search"
-                        class="form-control" placeholder="Search for cheque number" aria-label="Search"
-                        aria-describedby="basic-addon1">
-                </div>
-            </div>
-        </div>
-        <br />
+                        <div class="col-md-3 text-end">
 
-        <nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">All</button>
-    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Cheques Received</button>
-    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Online Receipts</button>
-    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Deposited</button>
-    <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Cancelled</button>
-  </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"></div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
-  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
-   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab"></div>
-  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"> </div>
-</div>
+                            <span class="mx-3 cursor-pointer">
+                                <img src="assets/pdf.svg" width="18" class="me-1">
+                                <small>PDF</small>
+                            </span>
 
+                            <span class="mx-3 cursor-pointer">
+                                <img src="assets/print.svg" width="18" class="me-1">
+                                <small>Print</small>
+                            </span>
 
-    </div>
+                            <span class="mx-1 cursor-pointer">
+                                <img src="assets/excel.svg" width="18" class="me-1">
+                                <small>Excel</small>
+                            </span>
 
- 
-
-    <!-- The Modal -->
-    <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
-        <div class="modal-dialog" style="margin-right:0px !important; ">
-            <div class="model-cst modal-content">
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <div class="form-group">
-                        <label for="">Enter The Cancel Amount Charges For The Cheque:{{chequenumber}}</label>
-                        <input type="text" class="form-control" style="text-align:right;" name="cancelcharges"
-                            maxlength="3" id="cancelcharges" #ref appNumbersonly appMycurrencyFormatter>
-                    </div>
-                    <div class="d-flex justify-content-end mt-4">
-                        <a (click)="CancelChargesOk(ref.value)" data-toggle="tab"
-                            class="btn btn-b-icon px-3 border-0 mr-3" role="tab" aria-controls="hot"
-                            aria-selected="false"><img src="assets/images/icon-check-white.svg" class="mr-3"
-                                width="20px" height="20px">Ok</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</form>
-</div>
-</div>
-</div>
+            </form>
+
+            <form>
+                <ul class="nav nav-tabs mt-4">
+                    <li class="nav-item">
+                        <button class="nav-link active" (click)="setTab('ALL')">
+                            All
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('CHEQUE')">
+                            Cheques Received
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('ONLINE')">
+                            Online Receipts
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('DEPOSITED')">
+                            Deposited
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('CANCELLED')">
+                            Cancelled
+                        </button>
+                    </li>
+                </ul>
+
+                <div *ngIf="activeTab === 'DEPOSITED' || activeTab === 'CANCELLED'" class="row mt-3">
+
+                    <div class="col-md-3">
+                        <label>BRS From Date</label>
+                        <input type="date" class="form-control" value="2025-12-05">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>BRS To Date</label>
+                        <input type="date" class="form-control" value="2025-12-05">
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary">
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section-content mt-3">
+                    <ngx-datatable class="material striped" [rows]="gridData" [headerHeight]="45" [rowHeight]="45"
+                        [columnMode]="'force'" [scrollbarH]="true">
+
+                        <ngx-datatable-column [width]="40" *ngIf="showActionColumns">
+                            <ng-template ngx-datatable-header-template>
+                                <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)" />
+                            </ng-template>
+
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <input type="checkbox" [(ngModel)]="row.selected" />
+                            </ng-template>
+
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Deposit" [width]="90" *ngIf="showActionColumns">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <input type="checkbox" [(ngModel)]="row.deposit" [disabled]="row.mode === 'ONLINE'" />
+                            </ng-template>
+
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Cancel" [width]="90" *ngIf="showActionColumns">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <input type="checkbox" [(ngModel)]="row.cancel" />
+                            </ng-template>
+
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Cheque / Reference" prop="cheque"></ngx-datatable-column>
+
+                        <ngx-datatable-column name="Branch Name" prop="branch"></ngx-datatable-column>
+
+                        <ngx-datatable-column name="Amount">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                ₹ {{ row.amount | number:'1.2-2' }}
+                            </ng-template>
+
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Party" prop="party"></ngx-datatable-column>
+                        <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
+                        <ngx-datatable-column name="Cheque Date" prop="chequeDate"></ngx-datatable-column>
+
+
+                        <ngx-datatable-column *ngIf="activeTab === 'DEPOSITED'" name="Deposited Date"
+                            prop="depositedDate">
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column *ngIf="activeTab === 'CANCELLED'" name="Cancelled Date"
+                            prop="cancelledDate">
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Receipt No" prop="receiptNo"></ngx-datatable-column>
+                        <ngx-datatable-column name="Receipt Id" prop="receiptId"></ngx-datatable-column>
+                        <ngx-datatable-column name="Transaction Mode" prop="mode"></ngx-datatable-column>
+                        <ngx-datatable-column name="Cheque Bank Name" prop="bank"></ngx-datatable-column>
+
+                    </ngx-datatable>
+
+                    <div class="section-content mt-4">
+                        <div class="d-flex justify-content-end gap-3">
+
+                            <button type="button" class="btn btn-secondary">Clear</button>
+
+                            <button type="button" class="btn btn-primary">Save</button>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </form>

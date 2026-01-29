@@ -28,8 +28,7 @@
         <div class="mt-3">
           <div class="row mb-3">
             <div class="col-md-6">
-              <input type="search" class="form-control"
-                placeholder="Search by Cheque / Reference No (min 3 chars)" />
+              <input type="search" class="form-control" placeholder="Search by Cheque / Reference No (min 3 chars)" />
             </div>
             <div class="col-md-6">
               <div class="spinner-border text-muted d-none"></div>
@@ -45,33 +44,28 @@
             </li>
           </ul>
 
-          <div class="table-responsive mt-3" *ngIf="chequeType === 'issued'">
-            <table class="table table-bordered table-striped align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th class="text-center">Cheque Status</th>
-                  <th class="text-center">Cheque / Reference No</th>
-                  <th class="text-end">Amount</th>
-                  <th class="text-center">Payment Id</th>
-                  <th class="text-center">Payment Date</th>
-                  <th class="text-center">Cleared Date</th>
-                  <th class="text-center">Returned Date</th>
-                  <th class="text-center">Cancelled Date</th>
-                  <th class="text-center">Transaction Mode</th>
-                  <th>Party</th>
-                  <th>Account No</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="11" class="text-center">No data to display</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="mt-3" *ngIf="chequeType === 'issued'">
+            <ngx-datatable class="material striped" [rows]="issuedChequeRows" [columnMode]="'force'"
+              [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
+
+              <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>
+              <ngx-datatable-column name="Cheque / Reference No" prop="chequeRefNo"></ngx-datatable-column>
+              <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
+              <ngx-datatable-column name="Payment Id" prop="paymentId"></ngx-datatable-column>
+              <ngx-datatable-column name="Payment Date" prop="paymentDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Returned Date" prop="returnedDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Cancelled Date" prop="cancelledDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Transaction Mode" prop="transactionMode"></ngx-datatable-column>
+              <ngx-datatable-column name="Party" prop="party"></ngx-datatable-column>
+              <ngx-datatable-column name="Account No" prop="accountNo"></ngx-datatable-column>
+
+            </ngx-datatable>
           </div>
 
-          <div class="table-responsive mt-3" *ngIf="chequeType === 'received'">
-            <div class="d-flex justify-content-end gap-3 mt-3">
+          <div class="mt-3" *ngIf="chequeType === 'received'">
+
+            <div class="d-flex justify-content-end gap-3 mb-2">
               <button type="button" class="btn btn-outline-danger btn-sm">
                 <i class="bi bi-file-earmark-pdf">PDF</i>
               </button>
@@ -79,29 +73,24 @@
                 <i class="bi bi-printer">Print</i>
               </button>
             </div>
-            <table class="table table-bordered table-striped align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th>Cheque Status</th>
-                  <th>Cheque / Reference No</th>
-                  <th>Branch</th>
-                  <th>Amount</th>
-                  <th>Receipt Id</th>
-                  <th>Receipt Date</th>
-                  <th>Deposited Date</th>
-                  <th>Cleared Date</th>
-                  <th>Returned Date</th>
-                  <th>Transaction Mode</th>
-                  <th>Cheque Bank Name</th>
-                  <th>Party</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="12" class="text-center">No data to display</td>
-                </tr>
-              </tbody>
-            </table>
+
+            <ngx-datatable class="material striped" [rows]="receivedChequeRows" [columnMode]="'force'"
+              [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
+
+              <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>
+              <ngx-datatable-column name="Cheque / Reference No" prop="chequeRefNo"></ngx-datatable-column>
+              <ngx-datatable-column name="Branch" prop="branch"></ngx-datatable-column>
+              <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
+              <ngx-datatable-column name="Receipt Id" prop="receiptId"></ngx-datatable-column>
+              <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Deposited Date" prop="depositedDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Returned Date" prop="returnedDate"></ngx-datatable-column>
+              <ngx-datatable-column name="Transaction Mode" prop="transactionMode"></ngx-datatable-column>
+              <ngx-datatable-column name="Cheque Bank Name" prop="bankName"></ngx-datatable-column>
+              <ngx-datatable-column name="Party" prop="party"></ngx-datatable-column>
+
+            </ngx-datatable>
           </div>
 
         </div>

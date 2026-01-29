@@ -17,32 +17,39 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 })
 export class BankBookComponent implements OnInit {
 
-  fromDate: string = '';
-  toDate: string = '';
-  bankName: string = '';
 
-  showTable: boolean = false; 
+  fromDate: string = new Date().toISOString().split('T')[0];
+  toDate: string   = new Date().toISOString().split('T')[0];
+
+  bankName: string = '';
+  showTable: boolean = false;
 
   rows = [
-    { txnNo: 'TXN001', particulars: '01-01-2026', narration: 'CR001', receipts: 1000, payments: 0, balance: 5000 },
-    { txnNo: 'TXN002', particulars: '02-01-2026', narration: 'CR002', receipts: 0, payments: 500, balance: 4500 },
-    { txnNo: 'TXN003', particulars: '03-01-2026', narration: 'CR003', receipts: 2000, payments: 0, balance: 6500 },
-    { txnNo: 'TXN004', particulars: '04-01-2026', narration: 'CR004', receipts: 0, payments: 1000, balance: 5500 }
+    { txnNo: 'TXN001', particulars: '2026-01-01', narration: 'CR001', receipts: 1000, payments: 0, balance: 5000 },
+    { txnNo: 'TXN002', particulars: '2026-01-02', narration: 'CR002', receipts: 0, payments: 500, balance: 4500 },
+    { txnNo: 'TXN003', particulars: '2026-01-03', narration: 'CR003', receipts: 2000, payments: 0, balance: 6500 },
+    { txnNo: 'TXN004', particulars: '2026-01-04', narration: 'CR004', receipts: 0, payments: 1000, balance: 5500 }
   ];
 
-  constructor() { }
-
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   generateReport() {
     if (!this.fromDate || !this.toDate || !this.bankName) {
-      alert('Please select From Date, To Date, and Bank Name.');
+      alert('Please Select From Date, To Date And Bank Name.');
       return;
     }
     this.showTable = true;
   }
 
-  exportPDF() { console.log('Export PDF clicked'); }
-  printReport() { window.print(); }
-  exportExcel() { console.log('Export Excel clicked'); }
+  exportPDF() {
+    console.log('Export PDF clicked');
+  }
+
+  printReport() {
+    window.print();
+  }
+
+  exportExcel() {
+    console.log('Export Excel clicked');
+  }
 }

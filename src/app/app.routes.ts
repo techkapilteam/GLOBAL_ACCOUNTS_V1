@@ -252,12 +252,7 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-reports/day-book',
         component: DayBookComponent
-      },
-
-      {
-        path: 'accounts/accounts-reports/:screen',
-        component: ScreenViewComponent
-      },
+      },    
       {
         path: 'transactions/deposits/:screen',
         component: ScreenViewComponent
@@ -288,6 +283,10 @@ export const routes: Routes = [
       },
       {
         path: 'settings/system-config/:screen',
+        component: ScreenViewComponent
+      },
+       {
+        path: 'accounts/accounts-reports/:screen',
         component: ScreenViewComponent
       }
     ]

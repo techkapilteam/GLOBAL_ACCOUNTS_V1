@@ -2,7 +2,7 @@
   <div class="screen-card">
 
     <div class="screen-header">
-      TDS Report
+      <h2>TDS Report</h2>
     </div>
 
     <div class="screen-content">
@@ -23,7 +23,7 @@
 
           <div class="col-xl-5 col-md-5">
             <label class="form-label">Section Name</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" readonly>
           </div>
         </div>
 
@@ -51,7 +51,7 @@
             <label class="form-label">Date</label>
             <input type="date" class="form-control">
           </div>
-        </div> 
+        </div>
         <div class="row g-3 align-items-end mt-2">
           <div class="col-xl-2 col-md-3 d-flex align-items-center mt-4">
             <input type="checkbox" class="form-check-input me-2">
@@ -59,14 +59,49 @@
           </div>
 
           <div class="col-xl-2 col-md-3 mt-3 text-end">
-            <button type="button" class="btn btn-primary px-4">Show</button>
+            <button type="button" class="btn btn-primary px-4"  (click)="onShow()">Show</button>
           </div>
-        </div>      
+        </div>
 
       </form>
-      
+      <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="showTable">
+        <button class="btn btn-danger btn-sm" >PDF</button>
+        <button class="btn btn-secondary btn-sm" >Print</button>
+        <button class="btn btn-success btn-sm" >Excel</button>
+      </div>
+
+      <div class="mt-2" *ngIf="showTable">
+        <ngx-datatable class="material striped" [rows]="rows" [columnMode]="'force'" [headerHeight]="45"
+          [footerHeight]="45" [rowHeight]="'auto'" [limit]="10">
+
+          <ngx-datatable-column name="PAN Number" prop="pan"></ngx-datatable-column>
+          <ngx-datatable-column name="Agent Name" prop="agentName"></ngx-datatable-column>
+          <ngx-datatable-column name="Agent Code" prop="agentCode"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Paid Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹{{ row.paidAmount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="TDS Calculated">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹{{ row.tdsAmount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹{{ row.netAmount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+        </ngx-datatable>
+      </div>
+
+
     </div>
-    
+
 
   </div>
 </div>

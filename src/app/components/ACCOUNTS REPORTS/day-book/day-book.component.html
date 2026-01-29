@@ -8,101 +8,123 @@
     <div class="screen-content">
       <form [formGroup]="Daybook">
 
-        <!-- ================= FILTER FORM ================= -->
         <div class="row">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="asdate" type="checkbox" formControlName="date" (change)="checkox($event)">
+              <input
+                class="form-check-input"
+                id="asdate"
+                type="checkbox"
+                formControlName="date"
+                (change)="checkox($event)">
               <label for="asdate"> Date :</label>
             </div>
           </div>
 
           <div class="col-xl-2 col-md-2 form-group">
             <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
-            <input type="date" class="form-control" formControlName="dfromdate">
+            <input
+              type="date"
+              class="form-control"
+              formControlName="dfromdate">
           </div>
 
           <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
             <label>To Date</label>
-            <input type="date" class="form-control" formControlName="dtodate">
+            <input
+              type="date"
+              class="form-control"
+              formControlName="dtodate">
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">Generate Report</button>
+            <button
+              type="button"
+              class="btn btn-primary px-3 border-0"
+              (click)="getdaybookdata()">
+              Generate Report
+            </button>
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">Cheques On Hand</button>
+            <button
+              type="button"
+              class="btn btn-primary px-3 border-0"
+              (click)="GetChequeonHandDetails()">
+              Cheques On Hand
+            </button>
           </div>
         </div>
 
-        <!-- KGMS FILTER -->
         <div class="row mt-2">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="kgms" type="checkbox" #kgmsChk (change)="checkboxx($event)">
-              <label for="kgms"> kgms :</label>
+              <input
+                class="form-check-input"
+                id="kgms"
+                type="checkbox"
+                #kgmsChk
+                (change)="checkboxx($event)">
+              <label for="kgms"> Kgms :</label>
             </div>
           </div>
 
           <div class="col-xl-4 col-md-4" [hidden]="!kgmsChk.checked">
-            <label>Branch:</label>
-            <select class="form-control" formControlName="branch">
-              <option value="">Select</option>
-              <option value="KGMS1">KGMS Branch 1</option>
-              <option value="KGMS2">KGMS Branch 2</option>
-              <option value="KGMS3">KGMS Branch 3</option>
-            </select>
+            <label>Branch</label>
+            <div class="custom-select-wrapper">
+              <select class="form-control custom-select" formControlName="branch">
+                <option value="">Select</option>
+                <option value="KGMS1">KGMS Branch 1</option>
+                <option value="KGMS2">KGMS Branch 2</option>
+                <option value="KGMS3">KGMS Branch 3</option>
+              </select>
+            </div>
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary px-3 border-0" (click)="getsummaryReport()">Generate Report</button>
+            <button
+              type="button"
+              class="btn btn-primary px-3 border-0"
+              (click)="getsummaryReport()">
+              Generate Report
+            </button>
           </div>
         </div>
+
       </form>
 
-      <!-- ================= HEADER AND ICONS ================= -->
       <form *ngIf="showGrid" class="mt-4 p-3 border" style="background-color:white;">
+        <div class="d-flex justify-content-end gap-2 mb-2">
+          <button type="button" (click)="exportPDF()" class="btn btn-link p-0">
+            <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF">
+          </button>
+          <button type="button" (click)="printReport()" class="btn btn-link p-0">
+            <img src="assets/images/print-icon-blue.svg" width="18" alt="Print">
+          </button>
+        </div>
 
         <div class="text-center mb-3">
-          <h4 class="mb-1">KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
-          <p class="mb-1">Above TVS Showroom, 1st Floor, Opp:R&B Guest House, Old NK-07, Kamareddy</p>
-          <p class="mb-1">CIN : U65992TG2008PTC060803</p>
-          <p class="mb-1" style="text-align:right;">
+          <h4>KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
+          <p class="text-end">
             <b>Branch : {{ Daybook.value.branch || 'Main Branch' }}</b>
           </p>
-
-          <h5 style="text-align:center; margin-top:10px; margin-bottom:5px;">
-            Day Book
-          </h5>
-
-          <!-- ================= SINGLE DATE ================= -->
-          <p style="text-align:left; margin-bottom:5px;">
-            <b>Date:</b> {{ Daybook.value.dfromdate | date:'dd-MMM-yyyy' }}
+          <h5>Day Book</h5>
+          <p class="text-start">
+            <b>Date :</b>
+            {{ Daybook.value.dfromdate | date:'dd-MMM-yyyy' }}
           </p>
         </div>
 
-        <!-- PDF / Print / Excel Icons -->
-        <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:10px;">
-          <button type="button" (click)="exportPDF()" style="background:none; border:none; cursor:pointer;">
-            <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF" title="PDF">
-          </button>
-
-          <button type="button" (click)="printReport()" style="background:none; border:none; cursor:pointer;">
-            <img src="assets/images/print-icon-blue.svg" width="18" alt="Print" title="Print">
-          </button>
-
-          <button type="button" (click)="exportExcel()" style="background:none; border:none; cursor:pointer;">
-            <img src="assets/images/icon-excel.svg" width="18" alt="Excel" title="Excel">
-          </button>
-        </div>
-
-        <!-- ================= DAY BOOK TABLE ================= -->
-        <ngx-datatable class="bootstrap" [rows]="transactions" [headerHeight]="40" [rowHeight]="40" [columnMode]="'force'">
+        <ngx-datatable
+          class="bootstrap"
+          [rows]="transactions"
+          [headerHeight]="40"
+          [rowHeight]="40"
+          [columnMode]="'force'">
           <ngx-datatable-column name="Transaction No" prop="rTxn"></ngx-datatable-column>
           <ngx-datatable-column name="Particulars" prop="rPart"></ngx-datatable-column>
           <ngx-datatable-column name="Type" prop="rType"></ngx-datatable-column>
-          <ngx-datatable-column name="Amount" prop="amount">
+          <ngx-datatable-column name="Amount">
             <ng-template let-row="row" ngx-datatable-cell-template>
               ₹ {{ row.amount | number:'1.2-2' }}
             </ng-template>
@@ -112,7 +134,12 @@
           <ngx-datatable-column name="Type" prop="pType"></ngx-datatable-column>
         </ngx-datatable>
 
-        <ngx-datatable class="bootstrap mt-4" [rows]="bankSummary" [headerHeight]="40" [rowHeight]="40" [columnMode]="'force'">
+        <ngx-datatable
+          class="bootstrap mt-4"
+          [rows]="bankSummary"
+          [headerHeight]="40"
+          [rowHeight]="40"
+          [columnMode]="'force'">
           <ngx-datatable-column name="Bank Name" prop="bank"></ngx-datatable-column>
           <ngx-datatable-column name="Opening Balance" prop="opening"></ngx-datatable-column>
           <ngx-datatable-column name="Receipts" prop="receipts"></ngx-datatable-column>
@@ -121,7 +148,30 @@
         </ngx-datatable>
 
       </form>
-
     </div>
   </div>
 </div>
+
+<style>
+.custom-select-wrapper {
+  position: relative;
+}
+
+.custom-select-wrapper::after {
+  content: '▾';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 16px;
+  color: #555;
+}
+
+.custom-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 30px;
+}
+</style>
