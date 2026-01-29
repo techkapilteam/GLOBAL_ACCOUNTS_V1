@@ -8,7 +8,9 @@ import { ToastrService } from 'ngx-toastr';
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../envir/environment.prod';
-import * as jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -316,7 +318,7 @@ export class CommonService {
     debugger;
     let address = this.getcompanyaddress();
     let Companyreportdetails = this._getCompanyDetails();
-   // let doc = new jsPDF(pagetype);
+     const doc = new jsPDF('p', 'mm', 'a4');
     // let doc = new jsPDF('lanscape');
     let totalPagesExp = '{total_pages_count_string}'
     let today = this.pdfProperties("Date");
@@ -352,12 +354,13 @@ export class CommonService {
     //     let pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
     //     let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
     //     // Header
-    //     doc.setFontStyle('normal');
-    //     if (doc.internal.getNumberOfPages() == 1) {
+    //     doc.setFont('helvetica', 'bold');
+    //     if (doc.getNumberOfPages() === 1) {
     //       debugger;
     //       doc.setFontSize(15);
     //       if (pagetype == "a4") {
-    //         doc.addImage(kapil_logo, 'JPEG', 10, 5)
+    //         doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
+
     //         doc.setTextColor('black');
     //         doc.text(Companyreportdetails.pCompanyName, 60, 10);
     //         doc.setFontSize(8);
@@ -447,17 +450,66 @@ export class CommonService {
     //   },
 
     // });
-    // if (typeof doc.putTotalPages === 'function') {
-    //   debugger;
-    //   doc.putTotalPages(totalPagesExp);
+    autoTable(doc, {
+  columns: gridheaders,
+  body: gridData,
+  theme: 'grid',
+  rowPageBreak: 'avoid',
 
-    // }
-    // if (printorpdf == "Pdf") {
-    //   doc.save('' + reportName + '.pdf');
-    // }
-    // if (printorpdf == "Print") {
-    //   this.setiFrameForPrint(doc);
-    // }
+headStyles: {
+  fillColor: this.pdfProperties("Header Color"),
+  halign: this.pdfProperties("Header Alignment") as 'left' | 'center' | 'right',
+  fontSize: Number(this.pdfProperties("Header Fontsize"))
+},
+
+ styles: {
+  cellWidth: 'wrap',
+  fontSize: Number(this.pdfProperties("Cell Fontsize")),
+ 
+  overflow: 'linebreak'
+},
+
+
+  columnStyles: colWidthHeight,
+  startY: 48,
+  showHead: 'everyPage',
+  showFoot: 'lastPage',
+
+  didDrawPage: (data) => {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+
+    doc.setFont('helvetica', 'bold');
+
+    if (doc.getNumberOfPages() === 1) {
+      doc.setFontSize(15);
+
+      doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
+      doc.text(Companyreportdetails.pCompanyName, 60, 10);
+
+      doc.setFontSize(14);
+      doc.text(reportName, 87, 30);
+
+      doc.line(10, 45, pageWidth - rMargin, 45);
+    }
+
+    const page = `Page ${doc.getNumberOfPages()}`;
+    doc.setFontSize(10);
+    doc.text("Printed on : " + today, data.settings.margin.left, pageHeight - 5);
+    doc.text(page, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+  }
+});
+    if (typeof doc.putTotalPages === 'function') {
+      debugger;
+      doc.putTotalPages(totalPagesExp);
+
+    }
+    if (printorpdf == "Pdf") {
+      doc.save('' + reportName + '.pdf');
+    }
+    if (printorpdf == "Print") {
+      this.setiFrameForPrint(doc);
+    }
 
   }
    setiFrameForPrint(doc:any) {
@@ -469,6 +521,7 @@ export class CommonService {
     iframe.setAttribute('style', 'display: none;');
     document.body.appendChild(iframe);
     // iframe.contentWindow.print();
+     iframe.contentWindow?.print();
   }
 }
 
