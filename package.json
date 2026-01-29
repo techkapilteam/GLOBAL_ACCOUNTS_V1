@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^20.3.16",
     "@angular/common": "^20.3.16",
     "@angular/compiler": "^20.3.16",
     "@angular/core": "^20.3.16",
@@ -20,7 +21,11 @@
     "@ng-select/ng-select": "^20.4.0",
     "@swimlane/ngx-datatable": "^22.0.0",
     "bootstrap": "^5.3.8",
+    "jspdf": "^4.0.0",
+    "jspdf-autotable": "^5.0.7",
     "ngx-bootstrap": "^20.0.2",
+    "ngx-cookie-service": "^20.1.1",
+    "ngx-toastr": "^19.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

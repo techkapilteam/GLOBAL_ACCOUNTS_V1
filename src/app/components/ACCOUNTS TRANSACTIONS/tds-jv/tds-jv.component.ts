@@ -647,7 +647,7 @@ export class TdsJvComponent implements OnInit {
   SelectionType = SelectionType;
   ColumnMode = ColumnMode;
 
-  showhidetable = true;
+  showhidetable = false;
   dataisempty = false;
 
   disablesavebutton = false;
@@ -669,7 +669,6 @@ export class TdsJvComponent implements OnInit {
     footerPageHeight: 50
   };
 
-  /** ---------------- STATIC DATA ---------------- */
 
   tdsledgeraccountslist = [
     { pledgername: 'TDS Payable' },
@@ -705,7 +704,6 @@ export class TdsJvComponent implements OnInit {
     }
   ];
 
-  /** ------------------------------------------------ */
 
   constructor(private fb: FormBuilder) {}
 
@@ -734,7 +732,6 @@ export class TdsJvComponent implements OnInit {
     );
   }
 
-  /** -------- EVENT HANDLERS -------- */
 
   click_jvtype(event: any) {
     console.log('Debit Ledger changed:', event);

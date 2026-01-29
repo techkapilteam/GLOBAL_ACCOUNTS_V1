@@ -1,92 +1,124 @@
 <div class="screen-container">
-    <div class="screen-card">
-      <div  class="screen-header">
-        <h2>Account Ledger</h2>
-      </div>
-      <div class="screen-content">
-<form>
+  <div class="screen-card">
 
-    <div class="row">
-  
-      <!-- From Date -->
-      <div class="col-xl-3 col-md-3 form-group">
-        <label>From Date</label>
-        <input type="date"
-               class="form-control"
-               placeholder="Select From Date"
-                />
-      </div>
-  
-      <!-- To Date -->
-      <div class="col-xl-3 col-md-3 form-group">
-        <label>To Date</label>
-        <input type="date"
-               class="form-control"
-               placeholder="Select To Date"
-             />
-      </div>
-  
-      <!-- Narration -->
-      <div class="col-xl-3 col-md-3 form-group">
-        <div class="d-inline-flex align-items-center">
-          <input type="checkbox" id="WithNarration" />
-          <label for="WithNarration" class="ml-2">With Narration</label>
-        </div>
-      </div>
-      <!-- Narration -->
-      <div class="col-xl-3 col-md-3 form-group">
-        <button type="button" class="btn btn-primary px-3 border-0 ">
-            Generate
-          </button>
-      </div>
-
-  
+    <div class="screen-header">
+      <h2>Account Ledger</h2>
     </div>
-  
-  </form>
-  
-  <!-- Report Section -->
-  <div class="section-content mt-2">
-  
-    <!-- Static Table (Replacement for ngx-datatable) -->
-    <div class="table-responsive mt-3">
-      <table class="table table-bordered table-striped">
-        <thead class="thead-light">
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Debit</th>
-            <th>Credit</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>01-01-2026</td>
-            <td>Opening Balance</td>
-            <td>0.00</td>
-            <td>0.00</td>
-            <td>10,000.00</td>
-          </tr>
-          <tr>
-            <td>05-01-2026</td>
-            <td>Sales Entry</td>
-            <td>0.00</td>
-            <td>2,500.00</td>
-            <td>12,500.00</td>
-          </tr>
-          <tr>
-            <td>10-01-2026</td>
-            <td>Purchase Entry</td>
-            <td>1,200.00</td>
-            <td>0.00</td>
-            <td>11,300.00</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>  
+
+    <div class="screen-content">
+
+      <form [formGroup]="AccountLedger">
+
+        <div class="row">
+
+          <!-- Ledger -->
+          <div class="col-xl-3 col-md-3 form-group">
+            <label>Ledger</label>
+
+            <ng-select [items]="ledgeraccountslist" bindLabel="pledgername" bindValue="pledgerid"
+              placeholder="Select Ledger" formControlName="pledgerid" (change)="ledgerName_Change($event)">
+            </ng-select>
+
+            <div class="text-danger">{{ LedgerValidationErrors?.pledgerid }}</div>
+          </div>
+
+          <!-- Sub Ledger -->
+          <div class="col-xl-3 col-md-3 form-group">
+            <label>Sub Ledger</label>
+
+            <ng-select [items]="subledgeraccountslist" bindLabel="psubledgername" bindValue="psubledgerid"
+              placeholder="Select Sub Ledger" formControlName="psubledgerid" (change)="subledgerName_Change($event)"
+              [disabled]="!AccountLedger.controls['pledgerid'].value">
+            </ng-select>
+
+            <div class="text-danger" *ngIf="!AccountLedger.controls['pledgerid'].value">
+              Please select Ledger first
+            </div>
+          </div>
+
+          <!-- From Date -->
+          <!-- From Date -->
+          <!-- From Date -->
+          <div class="col-xl-3 col-md-3 form-group">
+            <label>From Date</label>
+
+            <div class="input-group">
+              <input type="text" class="form-control" formControlName="fromDate" bsDatepicker #fromDp="bsDatepicker"
+                [bsConfig]="dpConfig" (bsValueChange)="FromDateChange($event)" readonly
+                (keydown)="$event.preventDefault()" />
+
+              <span class="input-group-text" (click)="fromDp.toggle()">
+                <i class="fa-solid fa-calendar-days"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- To Date -->
+          <div class="col-xl-3 col-md-3 form-group">
+            <label>To Date</label>
+
+            <div class="input-group">
+              <input type="text" class="form-control" formControlName="toDate" bsDatepicker #toDp="bsDatepicker"
+                [bsConfig]="dpConfig1" (bsValueChange)="ToDateChange($event)" readonly
+                (keydown)="$event.preventDefault()" />
+
+              <span class="input-group-text" (click)="toDp.toggle()">
+                <i class="fa-solid fa-calendar-days"></i>
+              </span>
+            </div>
+          </div>
+
+
+
+          <!-- Narration -->
+          <div class="col-xl-3 col-md-3 form-group">
+            <div class="d-inline-flex align-items-center">
+              <input type="checkbox" id="WithNarration" (change)="CheckNarration($event)" />
+              <label for="WithNarration" class="ml-2">With Narration</label>
+            </div>
+          </div>
+
+          <!-- Generate Button -->
+          <div class="col-xl-3 col-md-3 form-group">
+            <button type="button" class="btn btn-primary" (click)="GenerateReport()">
+              {{ savebutton }}
+            </button>
+          </div>
+
+        </div>
+      </form>
+
+      <!-- REPORT SECTION -->
+      <div class="section-content mt-2" [hidden]="Showhide">
+
+        <div class="d-flex justify-content-end mr-3 mt-4">
+          <button class="icon-btn" (click)="pdfOrprint('Pdf')" title="PDF">
+            <i class="fa-solid fa-file-pdf"></i>
+          </button>
+
+          <button class="icon-btn" (click)="pdfOrprint('Print')" title="Print">
+            <i class="fa-solid fa-print"></i>
+          </button>
+
+          <button class="icon-btn" (click)="exportExcel()" title="Excel">
+            <i class="fa-solid fa-file-excel"></i>
+          </button>
+        </div>
+
+        <div class="report-header">
+          <h3>Account Ledger - {{ LedgerName }} ({{ SubLedgerName }})</h3>
+          <div>
+            Between : {{ startDatesReport | dateformat }} And {{ endDatesReport | dateformat }}
+          </div>
+        </div>
+
+        <ngx-datatable class="material expandable" [rows]="gridView" [headerHeight]="50" [rowHeight]="50"
+          [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
+          [groupRowsBy]="'ptransactiondate'" [groupExpansionDefault]="true">
+        </ngx-datatable>
+
+      </div>
+
+    </div>
   </div>
-  </div>
-  </div>
-  </div>
-  
+</div>
