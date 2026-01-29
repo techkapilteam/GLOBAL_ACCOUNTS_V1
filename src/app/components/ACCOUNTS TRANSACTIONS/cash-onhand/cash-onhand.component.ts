@@ -2,24 +2,29 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+declare var $: any;
 @Component({
   selector: 'app-cash-onhand',
-   imports: [
-     CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     NgxDatatableModule,
-     BsDatepickerModule,
-    
-    
+    BsDatepickerModule,
+
+
   ],
-  standalone:true,
+  standalone: true,
   templateUrl: './cash-onhand.component.html',
   styleUrl: './cash-onhand.component.css',
 })
 
 
-export class CashOnhandComponent  {
+export class CashOnhandComponent {
+
+  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  public fromdate: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  public todate: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
   CashOnHandForm!: FormGroup;
 
@@ -40,9 +45,11 @@ export class CashOnhandComponent  {
   datelable = 'To Date';
 
   currencySymbol = '₹';
-
+  FromDate = 'From Date';
+  showTodate: boolean = true;
+  today:Date=new Date()
   /** ---------------- VALIDATION FLAGS (STATIC) ---------------- */
-  CashOnHandValidation: any = {};
+  // CashOnHandValidation: any = {};
 
   /** ---------------- STATIC DROPDOWN DATA ---------------- */
 
@@ -86,15 +93,32 @@ export class CashOnhandComponent  {
 
   amounttotal = 0;
 
-  /** ---------------- MODAL DATA ---------------- */
+
   chequenumber = 'CHQ-123456';
 
-  /** ---------------- DATE PICKER CONFIG (STATIC) ---------------- */
-  dpConfig = { dateInputFormat: 'DD-MM-YYYY' };
-  fromdate = { dateInputFormat: 'DD-MM-YYYY' };
-  todate = { dateInputFormat: 'DD-MM-YYYY' };
 
-  constructor(private fb: FormBuilder) {}
+  //  .dpConfig = { dateInputFormat: 'DD-MM-YYYY' };
+  //   fromdate = { dateInputFormat: 'DD-MM-YYYY' };
+  //   todate = { dateInputFormat: 'DD-MM-YYYY' };
+
+  constructor(private fb: FormBuilder) {
+    this.fromdate.maxDate = new Date();
+    this.fromdate.containerClass = 'theme-dark-blue';
+    this.fromdate.dateInputFormat = 'DD-MM-YYYY';
+    this.fromdate.showWeekNumbers = false;
+
+    this.todate.maxDate = new Date();
+    this.todate.containerClass = 'theme-dark-blue';
+    this.todate.dateInputFormat = 'DD-MM-YYYY';
+    this.todate.showWeekNumbers = false;
+
+    this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+
+  }
+
 
   ngOnInit(): void {
     this.createForm();
@@ -106,24 +130,36 @@ export class CashOnhandComponent  {
   createForm(): void {
     this.CashOnHandForm = this.fb.group({
       banknameForLegal: [''],
-      asondate: [false],
-      fromdate: [''],
-      todate: ['', Validators.required],
+      asondate: [''],
+      fromdate: [this.today],
+      todate: [this.today],
       bankname: [''],
-      ptransactiondate: ['', Validators.required]
+      ptransactiondate: [this.today],
+
     });
   }
 
   /** ---------------- CALCULATIONS ---------------- */
 
   calculateTotal(): void {
-    this.amounttotal = this.gridData.reduce(
-      (sum, row) => sum + row.ptotalreceivedamount,
-      0
-    );
+    // this.amounttotal = this.gridData.reduce(
+    //   (sum, row) => sum + row.ptotalreceivedamount,
+    //   0
+    // );
   }
 
-  /** ---------------- EVENTS (DUMMY) ---------------- */
+  asOnChange($event: any) {
+    debugger
+    if ($event.target.checked) {
+      this.FromDate = 'Date'
+      this.showTodate = false;
+
+    } else {
+      this.FromDate = 'From Date'
+      this.showTodate = true;
+    }
+  }
+
 
   BankChange(event: any): void {
     console.log('Bank changed:', event.target.value);

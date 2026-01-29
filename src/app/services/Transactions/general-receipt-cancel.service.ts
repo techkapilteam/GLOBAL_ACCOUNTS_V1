@@ -1,9 +1,3 @@
-
-//saveFixedDeposit
-//getreceiptdata
-//getReceiptNumber
-//getEmployeeName
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -40,3 +34,8 @@ export class GeneralReceiptCancelService {
     return this.http.post<any>(`${this.baseUrl}/cancelreceipt`, payload);
   }
 }
+
+//saveFixedDeposit
+//getreceiptdata
+//getReceiptNumber
+//getEmployeeName
