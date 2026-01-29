@@ -1,247 +1,177 @@
-<div class="screen-container">
+<div class="container mt-3">
   <div class="screen-card">
-    <div  class="screen-header">
+
+    <div class="screen-header">
       <h2>Day Book</h2>
     </div>
-    <div class="screen-content">  
-    <form [formGroup]="Daybook">
+
+    <div class="screen-content">
+      <form [formGroup]="Daybook">
+
         <div class="row">
-            <div class="col-xl-2 col-md-2 mt-4">
-                <div class="form-check form-check-inline check-btn-secondary">
-                    <input class="form-check-input" id="asdate" type="checkbox" formControlName="date" (change)="checkox($event)">
-                    <label class="" for="asdate"> Date :</label>
-                </div>
+          <div class="col-xl-2 col-md-2 mt-4">
+            <div class="form-check form-check-inline check-btn-secondary">
+              <input
+                class="form-check-input"
+                id="asdate"
+                type="checkbox"
+                formControlName="date"
+                (change)="checkox($event)">
+              <label for="asdate"> Date :</label>
             </div>
+          </div>
 
-            <div class="col-xl-2 col-md-2 form-group ">
-                <label>From Date</label>
-                <input type="date" class="form-control" id="fromdate"  [bsConfig]="dpConfig" formControlName="dfromdate" (ngModelChange)="checkingfrommdate()" bsDatepicker #dp="bsDatepicker">
+          <div class="col-xl-2 col-md-2 form-group">
+            <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="dfromdate">
+          </div>
 
-            </div>
-            <div class=" col-xl-2 col-md-2 form-group">
-                
-                    <label>To Date</label>
-                    <input type="date" class="form-control" id="todate" [bsConfig]="dppConfig" formControlName="dtodate" (ngModelChange)="checkdatevalidation()" bsDatepicker #dp="bsDatepicker">
+          <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
+            <label>To Date</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="dtodate">
+          </div>
 
-                    <!-- <div *ngIf="validation" class="text-danger">
-                        please select a valid date
-                    </div> -->
-            </div>
-            <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-              
+          <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
+            <button
+              type="button"
+              class="btn btn-primary px-3 border-0"
+              (click)="getdaybookdata()">
+              Generate Report
+            </button>
+          </div>
 
-                 <button class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
-                    <i class="fa"></i> Generate
-                </button>
-
-
-            </div>
-            <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-
-                <!-- <button class="btn btn-s-icon px-3 border-0" (click)="GetChequeonHandDetails()">
-                    <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px">
-                    <i class="fa" ></i>Cheques On Hand
-                </button> -->
-                  <button class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">
-                    <i class="fa"></i> Cheques On Hand
-                </button>
-
-            </div>
+          <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
+            <button
+              type="button"
+              class="btn btn-primary px-3 border-0"
+              (click)="GetChequeonHandDetails()">
+              Cheques On Hand
+            </button>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-xl-2 col-md-2 mt-4">
-                <div class="form-check form-check-inline check-btn-secondary">
-                    <input class="form-check-input" id="kgms" type="checkbox" (change)="checkboxx($event)">
-                    <label class="" for="kgms"> kgms :</label>
-                </div>
-            </div>
-            <div class="col-xl-4 col-md-4">
-                <div >
-                    <label>Branch:</label>
-                   <select id="kgmsbranchschema" class="form-control" title="Branch" formControlName="branch_code" bindLabel="branch_name" bindValue="branch_code" [multiple]="false" placeholder="Select" dropdownPosition="bottom" ></select>
 
+        <div class="row mt-2">
+          <div class="col-xl-2 col-md-2 mt-4">
+            <div class="form-check form-check-inline check-btn-secondary">
+              <input
+                class="form-check-input"
+                id="kgms"
+                type="checkbox"
+                #kgmsChk
+                (change)="checkboxx($event)">
+              <label for="kgms"> Kgms :</label>
+            </div>
+          </div>
 
-                </div>
+          <div class="col-xl-4 col-md-4" [hidden]="!kgmsChk.checked">
+            <label>Branch</label>
+            <div class="custom-select-wrapper">
+              <select class="form-control custom-select" formControlName="branch">
+                <option value="">Select</option>
+                <option value="KGMS1">KGMS Branch 1</option>
+                <option value="KGMS2">KGMS Branch 2</option>
+                <option value="KGMS3">KGMS Branch 3</option>
+              </select>
             </div>
-            <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-                <!-- <button class="btn btn-s-icon px-3 border-0" (click)="getsummaryReport()" [disabled]="chkbox2">
-                    {{generateReport}}
-                </button> -->
-                <button class="btn btn-primary px-3 border-0" (click)="getsummaryReport()">
-                    <i class="fa"></i> Generate Report
-                </button>
-            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
+            <button
+              type="button"
+              class="btn btn-primary px-3 border-0"
+              (click)="getsummaryReport()">
+              Generate Report
+            </button>
+          </div>
         </div>
-    </form>
 
-    
-<div id="template" class="section-content mt-2 d-none">
-    <div class="d-flex justify-content-end mr-3 mt-4" *ngIf="showicons">
-        <ul class="temp-ul">
-            <li class="temp-ico ml-2">
-                <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf" style="cursor: pointer;" (click)="pdfOrprint('Pdf')" />
-            </li>
-            <li class="temp-ico ml-2">
-                <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print" style="cursor: pointer;" (click)="pdfOrprint('Print')" />
-            </li>
-        </ul>
+      </form>
+
+      <form *ngIf="showGrid" class="mt-4 p-3 border" style="background-color:white;">
+        <div class="d-flex justify-content-end gap-2 mb-2">
+          <button type="button" (click)="exportPDF()" class="btn btn-link p-0">
+            <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF">
+          </button>
+          <button type="button" (click)="printReport()" class="btn btn-link p-0">
+            <img src="assets/images/print-icon-blue.svg" width="18" alt="Print">
+          </button>
+        </div>
+
+        <div class="text-center mb-3">
+          <h4>KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
+          <p class="text-end">
+            <b>Branch : {{ Daybook.value.branch || 'Main Branch' }}</b>
+          </p>
+          <h5>Day Book</h5>
+          <p class="text-start">
+            <b>Date :</b>
+            {{ Daybook.value.dfromdate | date:'dd-MMM-yyyy' }}
+          </p>
+        </div>
+
+        <ngx-datatable
+          class="bootstrap"
+          [rows]="transactions"
+          [headerHeight]="40"
+          [rowHeight]="40"
+          [columnMode]="'force'">
+          <ngx-datatable-column name="Transaction No" prop="rTxn"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars" prop="rPart"></ngx-datatable-column>
+          <ngx-datatable-column name="Type" prop="rType"></ngx-datatable-column>
+          <ngx-datatable-column name="Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹ {{ row.amount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Transaction No" prop="pTxn"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars" prop="pPart"></ngx-datatable-column>
+          <ngx-datatable-column name="Type" prop="pType"></ngx-datatable-column>
+        </ngx-datatable>
+
+        <ngx-datatable
+          class="bootstrap mt-4"
+          [rows]="bankSummary"
+          [headerHeight]="40"
+          [rowHeight]="40"
+          [columnMode]="'force'">
+          <ngx-datatable-column name="Bank Name" prop="bank"></ngx-datatable-column>
+          <ngx-datatable-column name="Opening Balance" prop="opening"></ngx-datatable-column>
+          <ngx-datatable-column name="Receipts" prop="receipts"></ngx-datatable-column>
+          <ngx-datatable-column name="Payments" prop="payments"></ngx-datatable-column>
+          <ngx-datatable-column name="Closing Balance" prop="closing"></ngx-datatable-column>
+        </ngx-datatable>
+
+      </form>
     </div>
-
-
-
-    <div id="temp-box">
-        <div class="mt-2 border rounded shadow-sm bg-white">
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details> -->
-
-                    <div class="report-head">
-                        <p class="font-16 text-dark text-center m-0">
-                            Day Book
-                        </p>
-
-                    </div>
-                    
-
-                </div>
-            </div>
-        </div>
-        <div class="section-card">
-            <div class="row">
-
-                <div class="col-md-6">
-                    <label class="print-font" style="font-weight: bold !important;">
-                        {{showdate}}:
-                        {{betweenfromdate|dateformat}} {{betweendates}} {{betweentodate |dateformat}}
-                    </label>
-                </div>
-            </div>
-
-            <table class="table mt-2" style="width:100%">
-                <thead>
-                    <tr>
-                        <th class="text-center border-bot" colspan="3">Receipts</th>
-                        <th class="text-center" colspan="6">Payments</th>
-                    </tr>
-                </thead>
-            </table>
-            <ngx-datatable #myTable class='material expandable table' [rows]='gridData' [headerHeight]="50" [rowHeight]="50" [columnMode]="'force'" [scrollbarH]="true" [groupRowsBy]="'prcpttransactiondate'" [groupExpansionDefault]="true">
-
-                <ngx-datatable-group-header [rowHeight]="50" #myGroupHeader (toggle)="onDetailToggle($event)">
-                    <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
-                        <div style="padding-left:5px;">
-                            <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded" title="Expand/Collapse Group" (click)="toggleExpandGroup(group)">
-                                <b>{{ group.value[0].prcpttransactiondate|dateformat }} </b>
-                            </a>
-
-                        </div>
-                    </ng-template>
-                </ngx-datatable-group-header>
-                <ngx-datatable-column prop="prcpttransactionno" name="Transaction No."></ngx-datatable-column>
-                <!-- <ngx-datatable-column [hidden]="hidedate" prop="prcpttransactiondate" name="Date">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <div>
-                                    <span titlte="{{row.prcpttransactiondate | dateformat}}">{{row.prcpttransactiondate | dateformat}}</span>
-                                </div>
-                            </ng-template>
-                        </ngx-datatable-column> -->
-
-                <ngx-datatable-column prop="prcptparticulars" name="Particulars"></ngx-datatable-column>
-
-                <ngx-datatable-column prop="prcptaccountname" name="Type"></ngx-datatable-column>
-                <ngx-datatable-column prop="prcptdebitamount" name="Amount" [headerClass]="'header-right'" [cellClass]="'cell-right'">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div *ngIf="row.prcptdebitamount == 0"></div>
-                        <div *ngIf="row.prcptdebitamount !== 0">
-                            {{currencysymbol}} {{row.prcptdebitamount.toFixed(2) | currencypipe}}
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column prop="ptransactionno" name="Transaction No." class="border-left p-4">
-                </ngx-datatable-column>
-                <ngx-datatable-column prop="pparticulars" name="Particulars"></ngx-datatable-column>
-                <ngx-datatable-column prop="paccountname" name="Type"></ngx-datatable-column>
-                <ngx-datatable-column prop="pcreditamount" name="Amount" [headerClass]="'header-right'" [cellClass]="'cell-right'">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div *ngIf="row.pcreditamount == 0"></div>
-                        <div *ngIf="row.pcreditamount !== 0">
-                            {{currencysymbol}} {{row.pcreditamount.toFixed(2) | currencypipe}}
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-                <!--  <ngx-datatable-footer *ngIf="gridData">
-                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount"
-                        let-pageSize="pageCriteria.pageSize" let-selectedCount="selectedCount" let-curPage="curPage"
-                        let-offset="pageCriteria.offset" let-isVisible="isVisible">
-                        <div style="padding: 5px 10px" *ngIf="gridData.length>0">
-                           <div>{{ pageCriteria.currentPageRows }} {{pageCriteria.footerMessagetext1}}
-                                {{ pageCriteria.totalrows }} {{pageCriteria.footerMessagetext2}}</div>
-                        </div>
-                        <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
-                            [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
-                            [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageCriteria.pageSize"
-                            [count]="rowCount" (change)="onFooterPageChange($event)">
-                        </datatable-pager>
-                    </ng-template>
-                </ngx-datatable-footer> -->
-            </ngx-datatable>
-
-
-
-
-            <div class="row" *ngIf="hideRow">
-                <div class="col-md-6 text-right font-weight-bold text-danger mt-2">
-                    Received Amount : {{currencysymbol}} {{Receiptsamount.toFixed(2) |currencypipe}}
-                </div>
-                <div class="col-md-6 text-right font-weight-bold text-danger  mt-2">
-                    Paid Amount :{{currencysymbol}} {{paymentsamount.toFixed(2) |currencypipe}}
-                </div>
-            </div>
-            <ngx-datatable [columnMode]="'force'" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" class="material expandable table" [rows]="totalbalancegrid">
-                <ngx-datatable-column prop="paccountname" name="Bank Name"></ngx-datatable-column>
-                <ngx-datatable-column prop="popeningbal" name="Opening Balance" [headerClass]="'header-right'" [cellClass]="'cell-right'">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div *ngIf="row.popeningbal == ' '||row.popeningbal==0"></div>
-                        <div *ngIf="row.popeningbal != 0">
-                            {{currencysymbol}} {{row.popeningbal | currencypipe}}
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column prop="pdebitamount" name="Receipts" [headerClass]="'header-right'" [cellClass]="'cell-right'">
-
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div *ngIf="row.pdebitamount == 0"></div>
-                        <div *ngIf="row.pdebitamount !== 0">
-                            {{currencysymbol}} {{row.pdebitamount.toFixed(2) | currencypipe}}
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column prop="pcreditamount" name="Payments" [headerClass]="'header-right'" [cellClass]="'cell-right'">
-
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div *ngIf="row.pcreditamount == 0"></div>
-                        <div *ngIf="row.pcreditamount !== 0">
-                            {{currencysymbol}} {{row.pcreditamount.toFixed(2) | currencypipe}}
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column prop="pclosingbal" name="Closing Balance" [headerClass]="'header-right'" [cellClass]="'cell-right'">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div *ngIf="row.pclosingbal == 0"></div>
-                        <div *ngIf="row.pclosingbal != 0">
-                            {{currencysymbol}} {{row.pclosingbal | currencypipe}}
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-            </ngx-datatable>
-        </div>
-    </div>
-
-    <!-- row end -->
-   
+  </div>
 </div>
 
-</div>
-</div>
-</div>
+<style>
+.custom-select-wrapper {
+  position: relative;
+}
 
+.custom-select-wrapper::after {
+  content: '▾';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 16px;
+  color: #555;
+}
+
+.custom-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 30px;
+}
+</style>
