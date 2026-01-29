@@ -1,41 +1,51 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+// // import { Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class GeneralReceiptCancelService {
+// // @Injectable({
+// //   providedIn: 'root',
+// // })
+// // export class GeneralReceiptCancelService {
+  
+// // }
+// import { Injectable } from '@angular/core';
+// import { CommonService } from '../common.service';
+// import { HttpParams } from '@angular/common/http';
 
-  private baseUrl = 'YOUR_API_BASE_URL';  // <-- Change this
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class GeneralReceiptCancelService {
 
-  constructor(private http: HttpClient) {}
+//   constructor(private _commonservice:CommonService) { }
 
-  // GET RECEIPT NUMBER
-  getReceiptNumber(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/receiptnumbers`);
-  }
+//   getReceiptNumber()
+//   {
+//     debugger  
+//     const params=new HttpParams().set("LocalSchema",this._commonservice.getschemaname());
+//     return this._commonservice.getAPI("/GeneralReceiptCancel/getReceiptNumber", params, 'YES');
+//   }
 
-  // GET RECEIPT DATA
-  getreceiptdata(receiptId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/receiptdata/${receiptId}`);
-  }
+//    /** 
+//    * Getting Employee details
+//   */
+//  getEmployeeName(searchtype:any) {    
+//   debugger
+//   const params = new HttpParams().set('localSchema', this._commonservice.getschemaname()).set("searchtype",searchtype);
+//   return this._commonservice.getAPI("/Subscriber/GetSubInterducedDetails", params, 'YES');
+// }
 
-  // SEARCH EMPLOYEE NAME
-  getEmployeeName(term: string): Observable<any[]> {
-    if (!term) {
-      return of([]);
-    }
-    return this.http.get<any[]>(`${this.baseUrl}/employees?search=${term}`);
-  }
+//   getreceiptdata(receiptno:any)
+//   {
+//     debugger  
+//     const params=new HttpParams().set("LocalSchema",this._commonservice.getschemaname()).set("receiptno",receiptno);
+//     return this._commonservice.getAPI("/GeneralReceiptCancel/getgeneralreceiptdata", params, 'YES');
+//   }
+//   saveFixedDeposit(GeneralReceiptCancelData:any)
+//   {
+//     return this._commonservice.postAPI("/GeneralReceiptCancel/saveGeneralReceiptCancel",GeneralReceiptCancelData);
+//   }
 
-  // SAVE CANCEL RECEIPT
-  saveFixedDeposit(payload: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/cancelreceipt`, payload);
-  }
-}
-
-//saveFixedDeposit
-//getreceiptdata
-//getReceiptNumber
-//getEmployeeName
+//   savepettycashcancel(pettycashReceiptCancelData:any)
+//   {
+//     return this._commonservice.postAPI("/GeneralReceiptCancel/savepettycashReceiptCancel",pettycashReceiptCancelData);
+//   }
+// }
