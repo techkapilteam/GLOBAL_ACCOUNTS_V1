@@ -50,6 +50,12 @@
   </div>
 
   <hr>
+  
+      <div class="col-md-12 col-xl-12" *ngIf="showhidetable">
+        <div class="d-flex justify-content-end">
+          <a class="export-icons" ><img src="assets/images/icon-excel.svg " title="Excel" width="18px"></a>
+        </div>
+
 
   <ngx-datatable class="material" [rows]="tdsJvDetailsGrid" [columnMode]="ColumnMode.force" [headerHeight]="50"
     [rowHeight]="50" [selectionType]="SelectionType.checkbox" [selected]="selected1" (select)="onSelect($event)">
@@ -69,6 +75,7 @@
     </ngx-datatable-column>
 
   </ngx-datatable>
+  
 
   <div class="mt-3">
     <label class="required-field">Narration</label>
@@ -81,7 +88,7 @@
       {{ savebutton }}
     </button>
   </div>
-
+  </div>
 </form>
 </div>
 </div>
