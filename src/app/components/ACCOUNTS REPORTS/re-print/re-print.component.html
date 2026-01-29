@@ -1,113 +1,98 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+    <div class="screen-header">
       <h2>Re Print</h2>
     </div>
-    <div class="screen-content"> 
-      <form>
+    <div class="screen-content">
+      <form [formGroup]="reprintForm">
 
         <div class="row g-3">
 
           <div class="col-md-3 mb-3">
             <label class="required-field">Transaction Type</label>
-            <select class="form-control">
+            <select class="form-control" formControlName="transactionType">
               <option value="">Select</option>
               <option>Type 1</option>
               <option>Type 2</option>
             </select>
+            <small class="text-danger" *ngIf="submitted && f['transactionType']?.errors">
+              Transaction Type is required
+            </small>
           </div>
 
           <div class="col-md-3 mb-3">
             <label class="required-field">Transaction No.</label>
-            <input type="text" class="form-control" placeholder="Enter Transaction No">
-          </div>
-
-          <div class="col-md-3 mb-3">
-            <label class="required-field">PAN No.</label>
-            <input type="text" class="form-control" placeholder="Enter PAN No">
-          </div>
-
-          <div class="col-md-3 mb-3">
-            <label class="required-field">CAO</label>
-            <select class="form-control">
-              <option value="">Select CAO</option>
-              <option>Branch A</option>
-              <option>Branch B</option>
-            </select>
+            <input type="text" class="form-control" formControlName="transactionNo" placeholder="Enter Transaction No">
+            <small class="text-danger" *ngIf="submitted && f['transactionNo']?.errors">
+              Transaction Number is required
+            </small>
           </div>
 
           <div class="col-md-3 d-flex align-items-end mb-3">
-            <button type="button" class="btn btn-primary w-100">
+            <button type="button" class="btn btn-primary w-100" (click)="generateReport()">
               Generate Report
             </button>
           </div>
 
         </div>
-
       </form>
-      
-  <!-- Report Table Card -->
-  <div class="card shadow-sm">
-    <div class="card-body">
 
-      <!-- Search Input -->
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search">
-            <button class="btn btn-outline-secondary">
-              <i class="fa fa-search"></i> Search
-            </button>
+      <!-- Report Table Card -->
+      <div class="card shadow-sm mt-3" *ngIf="showTable">
+        <div class="card-body">
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search" (input)="updateFilter($event)">
+                <button class="btn btn-outline-secondary">
+                  <i class="fa fa-search"></i> Search
+                </button>
+              </div>
+            </div>
           </div>
+
+          <div class="mt-2">
+            <ngx-datatable class="material striped"
+              [rows]="filteredRows"
+              [columnMode]="'force'"
+              [headerHeight]="45"
+              [footerHeight]="50"
+              [rowHeight]="'auto'">
+
+              <ngx-datatable-column name="T/R Receipt No." prop="trReceiptNo">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="#" class="bc-2">{{ row.trReceiptNo }}</a>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
+
+              <ngx-datatable-column name="Receipt No." prop="receiptNo">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a href="#" class="bc-2">{{ row.receiptNo }}</a>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Chit No." prop="chitNo"></ngx-datatable-column>
+
+              <ngx-datatable-column name="Receipt Amount" prop="amount">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="text-end">{{ row.amount }}</div>
+                </ng-template>
+                <ng-template ngx-datatable-footer-template>
+                  <div class="text-end fw-bold pe-2">
+                    Total: ₹ {{ totalAmount }}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+            </ngx-datatable>
+          </div>
+
         </div>
       </div>
 
-      <!-- Table -->
-      <div class="table-responsive">
-        <table class="table table-bordered text-center">
-          <thead class="table-light">
-            <tr>
-              <th>T/R Receipt No.</th>
-              <th>Receipt Date</th>
-              <th>Receipt No.</th>
-              <th>Chit No.</th>
-              <th>Receipt Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><a href="#" class="bc-2">TR001</a></td>
-              <td>01/01/2026</td>
-              <td><a href="#" class="bc-2">R001</a></td>
-              <td>CHT001</td>
-              <td class="text-end">₹ 10,000.00</td>
-            </tr>
-            <tr>
-              <td><a href="#" class="bc-2">TR002</a></td>
-              <td>02/01/2026</td>
-              <td><a href="#" class="bc-2">R002</a></td>
-              <td>CHT002</td>
-              <td class="text-end">₹ 15,500.00</td>
-            </tr>
-            <!-- Add more rows as needed -->
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4" class="text-end fw-bold">Total</td>
-              <td class="text-end fw-bold">₹ 25,500.00</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      <!-- No Data Message -->
-      <div class="text-center text-muted mt-3">
-        No Records to Display
-      </div>
-
     </div>
   </div>
-    </div>
-  </div>
-
-
+</div>

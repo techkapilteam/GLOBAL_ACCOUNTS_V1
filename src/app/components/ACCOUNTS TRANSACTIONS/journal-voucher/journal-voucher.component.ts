@@ -1,17 +1,5 @@
-// import { Component } from '@angular/core';
 
-// @Component({
-//   selector: 'app-journal-voucher',
-//   imports: [],
-//   templateUrl: './journal-voucher.component.html',
-//   styleUrl: './journal-voucher.component.css',
-// })
-// export class JournalVoucherComponent {
-
-// }
-
-
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, NgIf } from '@angular/common';
 import { Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,14 +15,15 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
     ReactiveFormsModule,
     NgxDatatableModule,
     NgSelectModule,
+    NgIf,
     // CustomCurrencyPipe,
     BsDatepickerModule,
-],
+  ],
   templateUrl: './journal-voucher.component.html',
   styleUrl: './journal-voucher.component.css',
 })
 
-export class JournalVoucherComponent  {
+export class JournalVoucherComponent {
   showModeofPayment = false;
   showTypeofPayment = false;
   showtranstype = false;
@@ -68,9 +57,79 @@ export class JournalVoucherComponent  {
   banklist: any;
   modeoftransactionslist: any;
   typeofpaymentlist: any;
-  ledgeraccountslist: any;
-  subledgeraccountslist: any;
-  partylist: any;
+  // ledgeraccountslist: any;
+
+  ledgeraccountslist = [
+    {
+      pledgerid: 1,
+      pledgername: 'Cash Account',
+      pAccounttype: 'Assets',
+      accountbalance: 25000
+    },
+    {
+      pledgerid: 2,
+      pledgername: 'Bank Account',
+      pAccounttype: 'Assets',
+      accountbalance: 150000
+    },
+    {
+      pledgerid: 3,
+      pledgername: 'Sales Account',
+      pAccounttype: 'Income',
+      accountbalance: 0
+    },
+    {
+      pledgerid: 4,
+      pledgername: 'Purchase Account',
+      pAccounttype: 'Expenses',
+      accountbalance: 5000
+    }
+  ];
+
+  // subledgeraccountslist: any;
+
+  subledgeraccountslist = [
+    {
+      psubledgerid: 1,
+      psubledgername: 'Petty Cash',
+      accountbalance: 5000
+    },
+    {
+      psubledgerid: 2,
+      psubledgername: 'Main Branch',
+      accountbalance: 12000
+    },
+    {
+      psubledgerid: 3,
+      psubledgername: 'Online Sales',
+      accountbalance: 8000
+    }
+  ];
+
+
+  // partylist: any;
+
+
+  partylist = [
+    {
+      ppartyid: 1,
+      ppartyname: 'ABC Traders',
+      ppartyreferenceid: 'REF001',
+      ppartyreftype: 'Vendor',
+      ppartypannumber: 'ABCDE1234F',
+      accountbalance: 25000
+    },
+    {
+      ppartyid: 2,
+      ppartyname: 'XYZ Enterprises',
+      ppartyreferenceid: 'REF002',
+      ppartyreftype: 'Customer',
+      ppartypannumber: 'PQRSX5678L',
+      accountbalance: 15000
+    }
+  ];
+
+
   gstlist: any;
   tdslist: any;
   tdssectionlist: any;
@@ -80,7 +139,7 @@ export class JournalVoucherComponent  {
   chequenumberslist: any;
   upinameslist: any;
   upiidlist: any;
-  paymentslist: any;
+  paymentslist: any[] = [];
   debittotalamount: any;
   credittotalamount: any;
   cashBalance: any;
@@ -89,7 +148,8 @@ export class JournalVoucherComponent  {
   bankBalance: any;
 
 
-  bankbookBalance: any;;
+  bankbookBalance: any;
+  subledgerName: any;
   bankpassbookBalance: any;;
   ledgerBalance: any;;
   subledgerBalance: any;;
@@ -108,22 +168,22 @@ export class JournalVoucherComponent  {
   // };
   disabletransactiondate = false;
   // public selectableSettings: SelectableSettings;
-   public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
-    public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
   constructor(
     private _FormBuilder: FormBuilder,
-     private datepipe: DatePipe, 
-     private zone: NgZone,
-      // private _commonService: CommonService,
-       private _routes: Router,
-        // private _AccountingTransactionsService: AccountingTransactionsService,
-         private router: Router, 
-        //  private _SubscriberJVService: SubscriberJVService
-        ) {
+    private datepipe: DatePipe,
+    private zone: NgZone,
+    // private _commonService: CommonService,
+    private _routes: Router,
+    // private _AccountingTransactionsService: AccountingTransactionsService,
+    private router: Router,
+    //  private _SubscriberJVService: SubscriberJVService
+  ) {
     // this.ppaymentdateConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
     // this.ppaymentdateConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
-     this.ppaymentdateConfig.maxDate = new Date();
+    this.ppaymentdateConfig.maxDate = new Date();
     // this.dpConfig.maxDate = new Date();
     // this.ppaymentdateConfig = { ...this.dpConfig };
     // this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
@@ -143,7 +203,7 @@ export class JournalVoucherComponent  {
     //   this.disabletransactiondate=false
     // }
     console.log(this.disabletransactiondate);
-      // this.disabletransactiondate = this._commonService.comapnydetails.pdatepickerenablestatus; 
+    // this.disabletransactiondate = this._commonService.comapnydetails.pdatepickerenablestatus; 
     this.paymentslist = [];
     this.formValidationMessages = {};
     this.hidefootertemplate = true;
@@ -169,7 +229,7 @@ export class JournalVoucherComponent  {
       // pipaddress: [this._commonService.getipaddress()],
       // pStatusname: [this._commonService.pStatusname],
       // ptypeofoperation: [this._commonService.ptypeofoperation],
-  pCreatedby: [''],
+      pCreatedby: [''],
       pipaddress: [''],
       pStatusname: [''],
       ptypeofoperation: [''],
@@ -239,7 +299,7 @@ export class JournalVoucherComponent  {
     })
   }
 
-  BlurEventAllControll(fromgroup: FormGroup):void {
+  BlurEventAllControll(fromgroup: FormGroup): void {
 
     try {
 
@@ -250,10 +310,10 @@ export class JournalVoucherComponent  {
     }
     catch (e) {
       // this._commonService.showErrorMessage(e);
-     // return false;
+      // return false;
     }
   }
-  setBlurEvent(fromgroup: FormGroup, key: string):void {
+  setBlurEvent(fromgroup: FormGroup, key: string): void {
 
     try {
       let formcontrol;
@@ -270,18 +330,18 @@ export class JournalVoucherComponent  {
         //   if (formcontrol.validator)
         //     fromgroup.get(key).valueChanges.subscribe((data) => { this.GetValidationByControl(fromgroup, key, true) })
         // }
-        else{
-           if (formcontrol.validator) 
-        formcontrol.valueChanges.subscribe(() => {
-          this.GetValidationByControl(fromgroup, key, true);
-        });
+        else {
+          if (formcontrol.validator)
+            formcontrol.valueChanges.subscribe(() => {
+              this.GetValidationByControl(fromgroup, key, true);
+            });
         }
       }
 
     }
     catch (e) {
       // this._commonService.showErrorMessage(e);
-    //  return false;
+      //  return false;
     }
 
 
@@ -372,48 +432,48 @@ export class JournalVoucherComponent  {
   // }
   setBalances(balancetype: string, balanceamount: number | string): void {
 
-  let balancedetails: string = '';
+    let balancedetails: string = '';
 
-  const amount = Number(balanceamount);
+    const amount = Number(balanceamount);
 
-  // if (amount < 0) {
-  //   balancedetails =
-  //      this._commonService.currencyFormat(Math.abs(amount).toFixed(2)) + ' Cr';
-  // } else {
-  //   balancedetails =
-  //      this._commonService.currencyFormat(amount.toFixed(2)) + ' Dr';
-  // }
+    // if (amount < 0) {
+    //   balancedetails =
+    //      this._commonService.currencyFormat(Math.abs(amount).toFixed(2)) + ' Cr';
+    // } else {
+    //   balancedetails =
+    //      this._commonService.currencyFormat(amount.toFixed(2)) + ' Dr';
+    // }
 
-  switch (balancetype) {
-    case 'CASH':
-      this.cashBalance = balancedetails;
-      break;
+    switch (balancetype) {
+      case 'CASH':
+        this.cashBalance = balancedetails;
+        break;
 
-    case 'BANK':
-      this.bankBalance = balancedetails;
-      break;
+      case 'BANK':
+        this.bankBalance = balancedetails;
+        break;
 
-    case 'BANKBOOK':
-      this.bankbookBalance = balancedetails;
-      break;
+      case 'BANKBOOK':
+        this.bankbookBalance = balancedetails;
+        break;
 
-    case 'PASSBOOK':
-      this.bankpassbookBalance = balancedetails;
-      break;
+      case 'PASSBOOK':
+        this.bankpassbookBalance = balancedetails;
+        break;
 
-    case 'LEDGER':
-      this.ledgerBalance = `${this.currencySymbol} ${balancedetails}`;
-      break;
+      case 'LEDGER':
+        this.ledgerBalance = `${this.currencySymbol} ${balancedetails}`;
+        break;
 
-    case 'SUBLEDGER':
-      this.subledgerBalance = `${this.currencySymbol} ${balancedetails}`;
-      break;
+      case 'SUBLEDGER':
+        this.subledgerBalance = `${this.currencySymbol} ${balancedetails}`;
+        break;
 
-    case 'PARTY':
-      this.partyBalance = `${this.currencySymbol} ${balancedetails}`;
-      break;
+      case 'PARTY':
+        this.partyBalance = `${this.currencySymbol} ${balancedetails}`;
+        break;
+    }
   }
-}
 
 
 
@@ -557,118 +617,118 @@ export class JournalVoucherComponent  {
   //   this.istdsapplicableChange();
   // }
   isgstapplicable_Checked(event: Event): void {
-  const checked = (event.target as HTMLInputElement).checked;
+    const checked = (event.target as HTMLInputElement).checked;
 
-  this.paymentVoucherForm
-    .get('ppaymentsslistcontrols.pisgstapplicable')
-    ?.setValue(checked);
+    this.paymentVoucherForm
+      .get('ppaymentsslistcontrols.pisgstapplicable')
+      ?.setValue(checked);
 
-  this.istdsapplicableChange();
-}
-
-istdsapplicable_Checked(event: Event): void {
-  const checked = (event.target as HTMLInputElement).checked;
-
-  this.paymentVoucherForm
-    .get('ppaymentsslistcontrols.pistdsapplicable')
-    ?.setValue(checked);
-
-  this.istdsapplicableChange();
-}
-
-isgstapplicableChange(): void {
-  const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!group) return;
-
-  const data = group.get('pisgstapplicable')?.value;
-
-  const gstCalculationControl = group.get('pgstcalculationtype');
-  const gstpercentageControl = group.get('pgstpercentage');
-  const stateControl = group.get('pState');
-  const gstamountControl = group.get('pgstamount');
-
-  if (!gstCalculationControl || !gstpercentageControl || !stateControl || !gstamountControl) {
-    return;
+    this.istdsapplicableChange();
   }
 
-  if (data) {
-    this.showgst = true;
+  istdsapplicable_Checked(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
 
-    if (!this.disablegst) {
-      gstCalculationControl.setValue('INCLUDE');
-    }
+    this.paymentVoucherForm
+      .get('ppaymentsslistcontrols.pistdsapplicable')
+      ?.setValue(checked);
 
-    gstCalculationControl.setValidators(Validators.required);
-    gstpercentageControl.setValidators(Validators.required);
-    stateControl.setValidators(Validators.required);
-    gstamountControl.setValidators(Validators.required);
-  } else {
-    this.showgst = false;
-
-    if (!this.disablegst) {
-      gstCalculationControl.setValue('');
-    }
-
-    gstCalculationControl.clearValidators();
-    gstpercentageControl.clearValidators();
-    stateControl.clearValidators();
-    gstamountControl.clearValidators();
+    this.istdsapplicableChange();
   }
 
-  gstCalculationControl.updateValueAndValidity();
-  gstpercentageControl.updateValueAndValidity();
-  stateControl.updateValueAndValidity();
-  gstamountControl.updateValueAndValidity();
+  isgstapplicableChange(): void {
+    const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!group) return;
 
-  this.claculategsttdsamounts();
-}
+    const data = group.get('pisgstapplicable')?.value;
 
-istdsapplicableChange(): void {
+    const gstCalculationControl = group.get('pgstcalculationtype');
+    const gstpercentageControl = group.get('pgstpercentage');
+    const stateControl = group.get('pState');
+    const gstamountControl = group.get('pgstamount');
 
-  const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!group) return;
-
-  const data = group.get('pistdsapplicable')?.value;
-
-  const tdsCalculationControl = group.get('ptdscalculationtype');
-  const tdsPercentageControl = group.get('pTdsPercentage');
-  const sectionControl = group.get('pTdsSection');
-  const tdsAmountControl = group.get('ptdsamount');
-
-  if (data) {
-    this.showtds = true;
-
-    if (!this.disabletds) {
-      tdsCalculationControl?.setValue('INCLUDE');
+    if (!gstCalculationControl || !gstpercentageControl || !stateControl || !gstamountControl) {
+      return;
     }
 
-    tdsCalculationControl?.setValidators(Validators.required);
-    tdsPercentageControl?.setValidators(Validators.required);
-    sectionControl?.setValidators(Validators.required);
-    tdsAmountControl?.setValidators(Validators.required);
+    if (data) {
+      this.showgst = true;
 
-  } else {
-    this.showtds = false;
+      if (!this.disablegst) {
+        gstCalculationControl.setValue('INCLUDE');
+      }
 
-    if (!this.disabletds) {
-      tdsCalculationControl?.setValue('');
+      gstCalculationControl.setValidators(Validators.required);
+      gstpercentageControl.setValidators(Validators.required);
+      stateControl.setValidators(Validators.required);
+      gstamountControl.setValidators(Validators.required);
+    } else {
+      this.showgst = false;
+
+      if (!this.disablegst) {
+        gstCalculationControl.setValue('');
+      }
+
+      gstCalculationControl.clearValidators();
+      gstpercentageControl.clearValidators();
+      stateControl.clearValidators();
+      gstamountControl.clearValidators();
     }
 
-    tdsCalculationControl?.clearValidators();
-    tdsPercentageControl?.clearValidators();
-    sectionControl?.clearValidators();
-    tdsAmountControl?.clearValidators();
+    gstCalculationControl.updateValueAndValidity();
+    gstpercentageControl.updateValueAndValidity();
+    stateControl.updateValueAndValidity();
+    gstamountControl.updateValueAndValidity();
+
+    this.claculategsttdsamounts();
   }
 
-  // Update validity for all controls
-  tdsCalculationControl?.updateValueAndValidity();
-  tdsPercentageControl?.updateValueAndValidity();
-  sectionControl?.updateValueAndValidity();
-  tdsAmountControl?.updateValueAndValidity();
+  istdsapplicableChange(): void {
 
-  // Recalculate GST/TDS amounts
-  this.claculategsttdsamounts();
-}
+    const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!group) return;
+
+    const data = group.get('pistdsapplicable')?.value;
+
+    const tdsCalculationControl = group.get('ptdscalculationtype');
+    const tdsPercentageControl = group.get('pTdsPercentage');
+    const sectionControl = group.get('pTdsSection');
+    const tdsAmountControl = group.get('ptdsamount');
+
+    if (data) {
+      this.showtds = true;
+
+      if (!this.disabletds) {
+        tdsCalculationControl?.setValue('INCLUDE');
+      }
+
+      tdsCalculationControl?.setValidators(Validators.required);
+      tdsPercentageControl?.setValidators(Validators.required);
+      sectionControl?.setValidators(Validators.required);
+      tdsAmountControl?.setValidators(Validators.required);
+
+    } else {
+      this.showtds = false;
+
+      if (!this.disabletds) {
+        tdsCalculationControl?.setValue('');
+      }
+
+      tdsCalculationControl?.clearValidators();
+      tdsPercentageControl?.clearValidators();
+      sectionControl?.clearValidators();
+      tdsAmountControl?.clearValidators();
+    }
+
+    // Update validity for all controls
+    tdsCalculationControl?.updateValueAndValidity();
+    tdsPercentageControl?.updateValueAndValidity();
+    sectionControl?.updateValueAndValidity();
+    tdsAmountControl?.updateValueAndValidity();
+
+    // Recalculate GST/TDS amounts
+    this.claculategsttdsamounts();
+  }
 
   // isgstapplicableChange() {
 
@@ -788,11 +848,11 @@ istdsapplicableChange(): void {
   // }
 
 
-gettypeofpaymentdata(): any[] {
-  return this.modeoftransactionslist.filter(
-    (payment: any) => payment.ptranstype === payment.ptypeofpayment
-  );
-}
+  gettypeofpaymentdata(): any[] {
+    return this.modeoftransactionslist.filter(
+      (payment: any) => payment.ptranstype === payment.ptypeofpayment
+    );
+  }
 
 
 
@@ -845,93 +905,145 @@ gettypeofpaymentdata(): any[] {
   //   }
   // }
   getbankname(cardnumber: string): any {
-  const data = this.debitcardlist.find(
-    (debit: any) => debit.pCardNumber === cardnumber
-  );
+    const data = this.debitcardlist.find(
+      (debit: any) => debit.pCardNumber === cardnumber
+    );
 
-  if (!data) return null;
+    if (!data) return null;
 
-  this.setBalances('BANKBOOK', data.pbankbookbalance);
-  this.setBalances('PASSBOOK', data.ppassbookbalance);
+    this.setBalances('BANKBOOK', data.pbankbookbalance);
+    this.setBalances('PASSBOOK', data.ppassbookbalance);
 
-  return data;
-}
+    return data;
+  }
+
+  // ledgerName_Change($event: any): void {
+  //   debugger
+  //   const pledgerid = $event.pledgerid;
+  //   this.subledgeraccountslist = [];
+
+  //   this.paymentVoucherForm
+  //     .get('ppaymentsslistcontrols.psubledgerid')
+  //     ?.setValue(null);
+
+  //   this.paymentVoucherForm
+  //     .get('ppaymentsslistcontrols.psubledgername')
+  //     ?.setValue('');
+
+  //   this.ledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
+  //   this.subledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
+  //   if (pledgerid && pledgerid != '') {
+  //     const ledgername = $event.pledgername;
+  //     let data = this.ledgeraccountslist.filter(function (ledger: { pledgerid: any; }) {
+  //       return ledger.pledgerid == pledgerid;
+  //     })[0];
+  //     this.setBalances('LEDGER', data.accountbalance);
+  //     this.GetSubLedgerData(pledgerid);
+  //     this.paymentVoucherForm
+  //       .get('ppaymentsslistcontrols.pledgername')
+  //       ?.setValue(ledgername);
+
+  //   }
+  //   else {
+  //     this.setBalances('LEDGER', 0);
+  //     this.paymentVoucherForm
+  //       .get('ppaymentsslistcontrols.pledgername')
+  //       ?.setValue('');
+
+  //   }
+  // }
+
 
   ledgerName_Change($event: any): void {
-    debugger
-    const pledgerid = $event.pledgerid;
+
+    let pledgerid = $event?.pledgerid || null;
+
+    // Reset balances
+    this.ledgerBalance = this.currencySymbol + ' 0.00 Dr';
+    this.subledgerBalance = this.currencySymbol + ' 0.00 Dr';
+
+    // Clear sub-ledger selection
+    let group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    group.patchValue({
+      psubledgerid: null,
+      psubledgername: ''
+    });
+
+    // Clear sub-ledger list BEFORE loading new one
     this.subledgeraccountslist = [];
 
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].setValue(null);
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue('');
-    
-    this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.psubledgerid')
-  ?.setValue(null);
+    if (pledgerid) {
 
-this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.psubledgername')
-  ?.setValue('');
-
-    this.ledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
-    this.subledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
-    if (pledgerid && pledgerid != '') {
       const ledgername = $event.pledgername;
-      let data = this.ledgeraccountslist.filter(function(ledger: { pledgerid: any; }) {
-        return ledger.pledgerid == pledgerid;
-      })[0];
-      this.setBalances('LEDGER', data.accountbalance);
+
+      const data = this.ledgeraccountslist.find(
+        (ledger: any) => ledger.pledgerid === pledgerid
+      );
+
+      if (data) {
+        this.setBalances('LEDGER', data.accountbalance);
+      }
       this.GetSubLedgerData(pledgerid);
-       this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.pledgername')
-  ?.setValue(ledgername);
-      //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pledgername'].setValue(ledgername);
-    }
-    else {
+
+      group.get('pledgername')?.setValue(ledgername);
+
+    } else {
+
       this.setBalances('LEDGER', 0);
-       this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.pledgername')
-  ?.setValue('');
-      //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pledgername'].setValue('');
+      group.get('pledgername')?.setValue('');
     }
   }
 
-  GetSubLedgerData(pledgerid: any) {
-    debugger
-    // this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(json => {
+  GetSubLedgerData(pledgerid: number) {
 
-    //   //console.log(json)
-    //   if (json != null) {
+    let allSubLedgers = [
+      { psubledgerid: 1, psubledgername: 'Petty Cash', pledgerid: 1, accountbalance: 5000 },
+      { psubledgerid: 2, psubledgername: 'Main Branch', pledgerid: 1, accountbalance: 12000 },
+      { psubledgerid: 3, psubledgername: 'Online Sales', pledgerid: 2, accountbalance: 8000 }
+    ];
 
-    //     this.subledgeraccountslist = json;
-
-    //     let subLedgerControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'];
-    //     if (this.subledgeraccountslist.length > 0) {
-    //       this.showsubledger = true;
-    //       subLedgerControl.setValidators(Validators.required);
-
-    //     }
-    //     else {
-    //       subLedgerControl.clearValidators();
-
-    //       this.showsubledger = false;
-    //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].setValue(pledgerid);
-    //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue(this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pledgername').value);
-    //       this.formValidationMessages['psubledgername'] = '';
-    //     }
-    //     subLedgerControl.updateValueAndValidity();
-    //     //this.lstLoanTypes = json
-    //     //this.titleDetails = json as string
-    //     //this.titleDetails = eval("(" + this.titleDetails + ')');
-    //     //this.titleDetails = this.titleDetails.FT;
-    //   }
-    // },
-    //   (error) => {
-
-    //     this._commonService.showErrorMessage(error);
-    //   });
+    this.subledgeraccountslist = allSubLedgers.filter(
+      x => x.pledgerid === pledgerid
+    );
   }
-  subledger_Change($event:any) {
+
+  // GetSubLedgerData(pledgerid: any) {
+  //   debugger
+  //   // this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(json => {
+
+  //   //   //console.log(json)
+  //   //   if (json != null) {
+
+  //   //     this.subledgeraccountslist = json;
+
+  //   //     let subLedgerControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'];
+  //   //     if (this.subledgeraccountslist.length > 0) {
+  //   //       this.showsubledger = true;
+  //   //       subLedgerControl.setValidators(Validators.required);
+
+  //   //     }
+  //   //     else {
+  //   //       subLedgerControl.clearValidators();
+
+  //   //       this.showsubledger = false;
+  //   //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].setValue(pledgerid);
+  //   //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue(this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pledgername').value);
+  //   //       this.formValidationMessages['psubledgername'] = '';
+  //   //     }
+  //   //     subLedgerControl.updateValueAndValidity();
+  //   //     //this.lstLoanTypes = json
+  //   //     //this.titleDetails = json as string
+  //   //     //this.titleDetails = eval("(" + this.titleDetails + ')');
+  //   //     //this.titleDetails = this.titleDetails.FT;
+  //   //   }
+  //   // },
+  //   //   (error) => {
+
+  //   //     this._commonService.showErrorMessage(error);
+  //   //   });
+  // }
+  subledger_Change($event: any) {
+    debugger
 
     let psubledgerid
     if ($event != undefined) {
@@ -939,14 +1051,14 @@ this.paymentVoucherForm
     }
     this.subledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
     if (psubledgerid && psubledgerid != '') {
-      const subledgername = $event.psubledgername;
-
+      let subledgername = $event.psubledgername;
+      this.subledgerName = $event.psubledgername
       // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue(subledgername);
 
-         this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.psubledgername')
-  ?.setValue('');
-      let data = this.subledgeraccountslist.filter(function(ledger: { psubledgerid: any; }) {
+      this.paymentVoucherForm
+        .get('ppaymentsslistcontrols.psubledgername')
+        ?.setValue('');
+      let data = this.subledgeraccountslist.filter(function (ledger: { psubledgerid: any; }) {
         return ledger.psubledgerid == psubledgerid;
       })[0];
       this.setBalances('SUBLEDGER', data.accountbalance);
@@ -955,9 +1067,8 @@ this.paymentVoucherForm
     else {
 
       this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.psubledgername')
-  ?.setValue('');
-      // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue('');
+        .get('ppaymentsslistcontrols.psubledgername')
+        ?.setValue('');
       this.setBalances('SUBLEDGER', 0);
     }
     this.GetValidationByControl(this.paymentVoucherForm, 'psubledgername', true);
@@ -982,7 +1093,7 @@ this.paymentVoucherForm
     this.GetValidationByControl(this.paymentVoucherForm, 'pUpiid', true);
 
   }
-  GetBankDetailsbyId(pbankid:any) {
+  GetBankDetailsbyId(pbankid: any) {
 
     // this._AccountingTransactionsService.GetBankDetailsbyId(pbankid).subscribe(json => {
 
@@ -1010,8 +1121,8 @@ this.paymentVoucherForm
     //   return bank.pbankid == pbankid;
     // });
     let data = this.banklist.filter(
-  (bank: any) => bank.pbankid === pbankid
-);
+      (bank: any) => bank.pbankid === pbankid
+    );
 
     this.paymentVoucherForm['controls']['pbranchname'].setValue(data[0].pbranchname);
     this.setBalances('BANKBOOK', data[0].pbankbalance);
@@ -1020,11 +1131,11 @@ this.paymentVoucherForm
 
   tdsSection_Change($event: any): void {
 
-    const ptdssection = $event.target.value;
+    let ptdssection = $event.target.value;
     this.tdspercentagelist = [];
-     this.paymentVoucherForm
-  .get('ppaymentsslistcontrols.pTdsPercentage')
-  ?.setValue('');
+    this.paymentVoucherForm
+      .get('ppaymentsslistcontrols.pTdsPercentage')
+      ?.setValue('');
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsPercentage'].setValue('');
     if (ptdssection && ptdssection != '') {
 
@@ -1033,14 +1144,14 @@ this.paymentVoucherForm
     }
     this.GetValidationByControl(this.paymentVoucherForm, 'pTdsSection', true);
   }
-  gettdsPercentage(ptdssection:any) {
+  gettdsPercentage(ptdssection: any) {
 
     // this.tdspercentagelist = this.tdslist.filter(function(tds) {
     //   return tds.pTdsSection == ptdssection;
     // });
-this.tdspercentagelist = this.tdslist.filter(
-  (item: any) => item.pTdsSection === ptdssection
-);
+    this.tdspercentagelist = this.tdslist.filter(
+      (item: any) => item.pTdsSection === ptdssection
+    );
 
     this.claculategsttdsamounts();
   }
@@ -1051,19 +1162,19 @@ this.tdspercentagelist = this.tdslist.filter(
   }
   gst_Change($event: any): void {
 
-    const gstpercentage = $event.target.value;
+    let gstpercentage = $event.target.value;
 
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pigstpercentage'].setValue('');
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcgstpercentage'].setValue('');
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psgstpercentage'].setValue('');
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['putgstpercentage'].setValue('');
 
-let group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    let group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-group.get('pigstpercentage')?.setValue('');
-group.get('pcgstpercentage')?.setValue('');
-group.get('psgstpercentage')?.setValue('');
-group.get('putgstpercentage')?.setValue('');
+    group.get('pigstpercentage')?.setValue('');
+    group.get('pcgstpercentage')?.setValue('');
+    group.get('psgstpercentage')?.setValue('');
+    group.get('putgstpercentage')?.setValue('');
 
 
     if (gstpercentage && gstpercentage != '') {
@@ -1074,30 +1185,30 @@ group.get('putgstpercentage')?.setValue('');
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstpercentage', true);
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstamount', true);
   }
-  getgstPercentage(gstpercentage:any) {
+  getgstPercentage(gstpercentage: any) {
 
     // let data = this.gstlist.filter(function(tds) {
     //   return tds.pgstpercentage == gstpercentage;
     // });
-  let data = this.gstlist.filter(
-  (item: any) => item.pTdsSection === gstpercentage
-);
+    let data = this.gstlist.filter(
+      (item: any) => item.pTdsSection === gstpercentage
+    );
 
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pigstpercentage'].setValue(data[0].pigstpercentage);
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcgstpercentage'].setValue(data[0].pcgstpercentage);
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psgstpercentage'].setValue(data[0].psgstpercentage);
     // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['putgstpercentage'].setValue(data[0].putgstpercentage);
-   const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-const gstData = data[0];
+    let group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    let gstData = data[0];
 
-if (group && gstData) {
-  group.get('pigstpercentage')?.setValue(gstData.pigstpercentage);
-  group.get('pcgstpercentage')?.setValue(gstData.pcgstpercentage);
-  group.get('psgstpercentage')?.setValue(gstData.psgstpercentage);
-  group.get('putgstpercentage')?.setValue(gstData.putgstpercentage);
-}
+    if (group && gstData) {
+      group.get('pigstpercentage')?.setValue(gstData.pigstpercentage);
+      group.get('pcgstpercentage')?.setValue(gstData.pcgstpercentage);
+      group.get('psgstpercentage')?.setValue(gstData.psgstpercentage);
+      group.get('putgstpercentage')?.setValue(gstData.putgstpercentage);
+    }
 
-   
+
     this.claculategsttdsamounts();
 
   }
@@ -1112,49 +1223,37 @@ if (group && gstData) {
     this.tdssectionlist = [];
     this.tdspercentagelist = [];
     this.paymentVoucherForm.get('ppaymentsslistcontrols.pStateId')?.setValue('');
-this.paymentVoucherForm.get('ppaymentsslistcontrols.pState')?.setValue('');
-this.paymentVoucherForm.get('ppaymentsslistcontrols.pTdsSection')?.setValue('');
-this.paymentVoucherForm.get('ppaymentsslistcontrols.pTdsPercentage')?.setValue('');
-this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartyreferenceid')?.setValue('');
-this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartyreftype')?.setValue('');
-this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartypannumber')?.setValue('');
+    this.paymentVoucherForm.get('ppaymentsslistcontrols.pState')?.setValue('');
+    this.paymentVoucherForm.get('ppaymentsslistcontrols.pTdsSection')?.setValue('');
+    this.paymentVoucherForm.get('ppaymentsslistcontrols.pTdsPercentage')?.setValue('');
+    this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartyreferenceid')?.setValue('');
+    this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartyreftype')?.setValue('');
+    this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartypannumber')?.setValue('');
 
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pStateId'].setValue('');
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pState'].setValue('');
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsSection'].setValue('');
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsPercentage'].setValue('');
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreferenceid'].setValue('');
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreftype'].setValue('');
-    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartypannumber'].setValue('');
+
     this.partyBalance = this.currencySymbol + ' 0.00' + ' Dr';
     if (ppartyid && ppartyid != '') {
-      //const ledgername = $event.target.options[$event.target.selectedIndex].text;
-      //this.getPartyDetailsbyid(ppartyid);
-      //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyname'].setValue(ledgername);
+
       const partynamename = $event.ppartyname;
-      // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyname'].setValue(partynamename);
-      // let data = (this.partylist.filter(x => x.ppartyid == ppartyid))[0];
-      // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreferenceid'].setValue(data.ppartyreferenceid);
-      // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreftype'].setValue(data.ppartyreftype);
-      // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartypannumber'].setValue(data.ppartypannumber);
 
 
-const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-group.get('ppartyname')?.setValue(partynamename);
+      let group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-const data = this.partylist.find((x: { ppartyid: any; }) => x.ppartyid === ppartyid);
+      group.get('ppartyname')?.setValue(partynamename);
 
-if (data) {
-  group.get('ppartyreferenceid')?.setValue(data.ppartyreferenceid);
-  group.get('ppartyreftype')?.setValue(data.ppartyreftype);
-  group.get('ppartypannumber')?.setValue(data.ppartypannumber);
-} else {
-  
-  group.get('ppartyreferenceid')?.setValue('');
-  group.get('ppartyreftype')?.setValue('');
-  group.get('ppartypannumber')?.setValue('');
-}
+      let data = this.partylist.find((x: { ppartyid: any; }) => x.ppartyid === ppartyid);
+
+      if (data) {
+        group.get('ppartyreferenceid')?.setValue(data.ppartyreferenceid);
+        group.get('ppartyreftype')?.setValue(data.ppartyreftype);
+        group.get('ppartypannumber')?.setValue(data.ppartypannumber);
+      } else {
+
+        group.get('ppartyreferenceid')?.setValue('');
+        group.get('ppartyreftype')?.setValue('');
+        group.get('ppartypannumber')?.setValue('');
+      }
 
       this.getPartyDetailsbyid(ppartyid, partynamename);
       this.setenableordisabletdsgst(partynamename, 'PARTYCHANGE');
@@ -1162,7 +1261,7 @@ if (data) {
     else {
       this.setBalances('PARTY', 0);
       // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyname'].setValue('');
-          this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartyname')?.setValue('');
+      this.paymentVoucherForm.get('ppaymentsslistcontrols.ppartyname')?.setValue('');
 
     }
   }
@@ -1199,36 +1298,36 @@ if (data) {
   // }
   setenableordisabletdsgst(ppartyname: string, changetype: string) {
 
-  const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!group) return;
+    const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!group) return;
 
-  // Reset TDS/GST flags
-  group.get('pistdsapplicable')?.setValue(false);
-  group.get('pisgstapplicable')?.setValue(false);
+    // Reset TDS/GST flags
+    group.get('pistdsapplicable')?.setValue(false);
+    group.get('pisgstapplicable')?.setValue(false);
 
-  // Find the payment data for the party
-  const data = this.paymentslist.find((x: { ppartyname: string; }) => x.ppartyname === ppartyname);
+    // Find the payment data for the party
+    const data = this.paymentslist.find((x: { ppartyname: string; }) => x.ppartyname === ppartyname);
 
-  if (data) {
-    this.disablegst = true;
-    this.disabletds = true;
+    if (data) {
+      this.disablegst = true;
+      this.disabletds = true;
 
-    group.get('pistdsapplicable')?.setValue(data.pistdsapplicable);
-    group.get('pisgstapplicable')?.setValue(data.pisgstapplicable);
-    group.get('pgstcalculationtype')?.setValue(data.pgstcalculationtype);
-    group.get('ptdscalculationtype')?.setValue(data.ptdscalculationtype);
+      group.get('pistdsapplicable')?.setValue(data.pistdsapplicable);
+      group.get('pisgstapplicable')?.setValue(data.pisgstapplicable);
+      group.get('pgstcalculationtype')?.setValue(data.pgstcalculationtype);
+      group.get('ptdscalculationtype')?.setValue(data.ptdscalculationtype);
 
-  } else {
-    this.disablegst = false;
-    this.disabletds = false;
+    } else {
+      this.disablegst = false;
+      this.disabletds = false;
+    }
+
+    // Call change handlers only if type is PARTYCHANGE
+    if (changetype === 'PARTYCHANGE') {
+      this.isgstapplicableChange();
+      this.istdsapplicableChange();
+    }
   }
-
-  // Call change handlers only if type is PARTYCHANGE
-  if (changetype === 'PARTYCHANGE') {
-    this.isgstapplicableChange();
-    this.istdsapplicableChange();
-  }
-}
 
   getPartyDetailsbyid(ppartyid: any, partynamename: any) {
 
@@ -1262,7 +1361,7 @@ if (data) {
   gsno_change() {
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstno', true);
   }
-  state_change(event:any) {
+  state_change(event: any) {
 
     const pstateid = event.target.value;
     //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pgstpercentage'].setValue('');
@@ -1270,7 +1369,7 @@ if (data) {
 
 
       const statename = event.target.options[event.target.selectedIndex].text;
-       this.paymentVoucherForm.get('ppaymentsslistcontrols.pState')?.setValue(statename);
+      this.paymentVoucherForm.get('ppaymentsslistcontrols.pState')?.setValue(statename);
       // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pState'].setValue(statename);
       //let gstnoControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pgstno'];
 
@@ -1308,25 +1407,40 @@ if (data) {
     else {
 
       // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pState'].setValue('');
-            this.paymentVoucherForm.get('ppaymentsslistcontrols.pgsttype')?.setValue('');
+      this.paymentVoucherForm.get('ppaymentsslistcontrols.pgsttype')?.setValue('');
 
     }
     this.GetValidationByControl(this.paymentVoucherForm, 'pState', true);
     this.formValidationMessages['pigstpercentage'] = '';
     this.claculategsttdsamounts();
   }
-GetStatedetailsbyId(pstateid: any): any {
-  return this.statelist.find((tds: { pStateId: any; }) => tds.pStateId === pstateid);
-}
+  GetStatedetailsbyId(pstateid: any): any {
+    return this.statelist.find((tds: { pStateId: any; }) => tds.pStateId === pstateid);
+  }
 
   pamount_change() {
 
-    //let paidamount = parseFloat(this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pamount').value);
+    const paidAmountControl = this.paymentVoucherForm
+      .get('ppaymentsslistcontrols.pamount');
 
-    //if (isNaN(paidamount))
+    const actualPaidAmountControl = this.paymentVoucherForm
+      .get('ppaymentsslistcontrols.pactualpaidamount');
+
+    let paidAmount = parseFloat(paidAmountControl?.value);
+
+    if (isNaN(paidAmount)) {
+      paidAmount = 0;
+    }
+
+    actualPaidAmountControl?.setValue(paidAmount);
+
+
+    // let paidamount = parseFloat(this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pamount').value);
+
+    // if (isNaN(paidamount))
     //  paidamount = 0;
 
-    //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pactualpaidamount'].setValue(paidamount);
+    // this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pactualpaidamount'].setValue(paidamount);
     debugger;
     this.claculategsttdsamounts();
   }
@@ -1516,105 +1630,105 @@ GetStatedetailsbyId(pstateid: any): any {
   //   }
   // }
   claculategsttdsamounts(): void {
-  try {
-    const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-    if (!group) return;
+    try {
+      const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+      if (!group) return;
 
-    // Get paid amount
-    let paidAmountStr = this.amounttype === 'Debit'
-      ? group.get('pdebitamount')?.value
-      : group.get('pcreditamount')?.value;
+      // Get paid amount
+      let paidAmountStr = this.amounttype === 'Debit'
+        ? group.get('pdebitamount')?.value
+        : group.get('pcreditamount')?.value;
 
-    let paidAmount = paidAmountStr && !isNullOrEmptyString(paidAmountStr)
-      ? parseFloat(paidAmountStr.toString().replace(/,/g, ''))
-      : 0;
+      let paidAmount = paidAmountStr && !isNullOrEmptyString(paidAmountStr)
+        ? parseFloat(paidAmountStr.toString().replace(/,/g, ''))
+        : 0;
 
-      
-    if (isNaN(paidAmount)) paidAmount = 0;
 
-    let actualPaidAmount = paidAmount;
+      if (isNaN(paidAmount)) paidAmount = 0;
 
-    // GST values
-    const isGstApplicable = group.get('pisgstapplicable')?.value;
-    const gstType = group.get('pgsttype')?.value;
-    const gstCalcType = group.get('pgstcalculationtype')?.value;
+      let actualPaidAmount = paidAmount;
 
-    const igstPercentage = parseFloat(group.get('pigstpercentage')?.value ?? '0');
-    const cgstPercentage = parseFloat(group.get('pcgstpercentage')?.value ?? '0');
-    const sgstPercentage = parseFloat(group.get('psgstpercentage')?.value ?? '0');
-    const utgstPercentage = parseFloat(group.get('putgstpercentage')?.value ?? '0');
+      // GST values
+      const isGstApplicable = group.get('pisgstapplicable')?.value;
+      const gstType = group.get('pgsttype')?.value;
+      const gstCalcType = group.get('pgstcalculationtype')?.value;
 
-    let gstAmount = 0, igstAmount = 0, cgstAmount = 0, sgstAmount = 0, utgstAmount = 0;
+      const igstPercentage = parseFloat(group.get('pigstpercentage')?.value ?? '0');
+      const cgstPercentage = parseFloat(group.get('pcgstpercentage')?.value ?? '0');
+      const sgstPercentage = parseFloat(group.get('psgstpercentage')?.value ?? '0');
+      const utgstPercentage = parseFloat(group.get('putgstpercentage')?.value ?? '0');
 
-    if (isGstApplicable) {
-      if (gstCalcType === 'INCLUDE') {
-        if (gstType === 'IGST') {
-          igstAmount = Math.round((paidAmount * igstPercentage) / (100 + igstPercentage));
-          actualPaidAmount -= igstAmount;
-          gstAmount = igstAmount;
-        } else if (gstType === 'CGST,SGST') {
-          cgstAmount = Math.round((paidAmount * cgstPercentage) / (100 + igstPercentage));
-          sgstAmount = Math.round((paidAmount * sgstPercentage) / (100 + igstPercentage));
-          actualPaidAmount -= (cgstAmount + sgstAmount);
-          gstAmount = cgstAmount + sgstAmount;
-        } else if (gstType === 'CGST,UTGST') {
-          cgstAmount = Math.round((paidAmount * cgstPercentage) / (100 + igstPercentage));
-          utgstAmount = Math.round((paidAmount * utgstPercentage) / (100 + igstPercentage));
-          actualPaidAmount -= (cgstAmount + utgstAmount);
-          gstAmount = cgstAmount + utgstAmount;
+      let gstAmount = 0, igstAmount = 0, cgstAmount = 0, sgstAmount = 0, utgstAmount = 0;
+
+      if (isGstApplicable) {
+        if (gstCalcType === 'INCLUDE') {
+          if (gstType === 'IGST') {
+            igstAmount = Math.round((paidAmount * igstPercentage) / (100 + igstPercentage));
+            actualPaidAmount -= igstAmount;
+            gstAmount = igstAmount;
+          } else if (gstType === 'CGST,SGST') {
+            cgstAmount = Math.round((paidAmount * cgstPercentage) / (100 + igstPercentage));
+            sgstAmount = Math.round((paidAmount * sgstPercentage) / (100 + igstPercentage));
+            actualPaidAmount -= (cgstAmount + sgstAmount);
+            gstAmount = cgstAmount + sgstAmount;
+          } else if (gstType === 'CGST,UTGST') {
+            cgstAmount = Math.round((paidAmount * cgstPercentage) / (100 + igstPercentage));
+            utgstAmount = Math.round((paidAmount * utgstPercentage) / (100 + igstPercentage));
+            actualPaidAmount -= (cgstAmount + utgstAmount);
+            gstAmount = cgstAmount + utgstAmount;
+          }
+        } else if (gstCalcType === 'EXCLUDE') {
+          if (gstType === 'IGST') igstAmount = Math.round((paidAmount * igstPercentage) / 100);
+          else if (gstType === 'CGST,SGST') {
+            cgstAmount = Math.round((paidAmount * cgstPercentage) / 100);
+            sgstAmount = Math.round((paidAmount * sgstPercentage) / 100);
+          } else if (gstType === 'CGST,UTGST') {
+            cgstAmount = Math.round((paidAmount * cgstPercentage) / 100);
+            utgstAmount = Math.round((paidAmount * utgstPercentage) / 100);
+          }
+          gstAmount = igstAmount + cgstAmount + sgstAmount + utgstAmount;
         }
-      } else if (gstCalcType === 'EXCLUDE') {
-        if (gstType === 'IGST') igstAmount = Math.round((paidAmount * igstPercentage) / 100);
-        else if (gstType === 'CGST,SGST') {
-          cgstAmount = Math.round((paidAmount * cgstPercentage) / 100);
-          sgstAmount = Math.round((paidAmount * sgstPercentage) / 100);
-        } else if (gstType === 'CGST,UTGST') {
-          cgstAmount = Math.round((paidAmount * cgstPercentage) / 100);
-          utgstAmount = Math.round((paidAmount * utgstPercentage) / 100);
+      }
+
+
+      const isTdsApplicable = group.get('pistdsapplicable')?.value;
+      const tdsCalcType = group.get('ptdscalculationtype')?.value;
+      const tdsPercentage = parseFloat(group.get('pTdsPercentage')?.value?.toString().replace(/,/g, '') ?? '0');
+      let tdsAmount = 0;
+
+      if (isTdsApplicable && tdsPercentage > 0) {
+        if (tdsCalcType === 'INCLUDE') {
+          tdsAmount = gstCalcType === 'INCLUDE'
+            ? Math.round((actualPaidAmount * tdsPercentage) / (100 + tdsPercentage))
+            : Math.round((paidAmount * tdsPercentage) / (100 + tdsPercentage));
+          actualPaidAmount -= tdsAmount;
+        } else if (tdsCalcType === 'EXCLUDE') {
+          tdsAmount = Math.round((paidAmount * tdsPercentage) / 100);
         }
-        gstAmount = igstAmount + cgstAmount + sgstAmount + utgstAmount;
       }
+
+
+      const totalAmount = actualPaidAmount + igstAmount + cgstAmount + sgstAmount + utgstAmount + tdsAmount;
+
+
+      group.get('pamount')?.setValue(actualPaidAmount > 0 ? actualPaidAmount : '');
+      group.get('pgstamount')?.setValue(gstAmount);
+      group.get('pigstamount')?.setValue(igstAmount);
+      group.get('pcgstamount')?.setValue(cgstAmount);
+      group.get('psgstamount')?.setValue(sgstAmount);
+      group.get('putgstamount')?.setValue(utgstAmount);
+      group.get('ptdsamount')?.setValue(tdsAmount);
+      group.get('ptotalamount')?.setValue(totalAmount);
+
+      if (this.amounttype === 'Debit') group.get('ptotaldebitamount')?.setValue(totalAmount);
+      if (this.amounttype === 'Credit') group.get('ptotalcreditamount')?.setValue(totalAmount);
+
+      this.formValidationMessages['pamount'] = '';
+
+    } catch (e) {
+      // this._commonService.showErrorMessage(e);
     }
-
-    
-    const isTdsApplicable = group.get('pistdsapplicable')?.value;
-    const tdsCalcType = group.get('ptdscalculationtype')?.value;
-    const tdsPercentage = parseFloat(group.get('pTdsPercentage')?.value?.toString().replace(/,/g, '') ?? '0');
-    let tdsAmount = 0;
-
-    if (isTdsApplicable && tdsPercentage > 0) {
-      if (tdsCalcType === 'INCLUDE') {
-        tdsAmount = gstCalcType === 'INCLUDE'
-          ? Math.round((actualPaidAmount * tdsPercentage) / (100 + tdsPercentage))
-          : Math.round((paidAmount * tdsPercentage) / (100 + tdsPercentage));
-        actualPaidAmount -= tdsAmount;
-      } else if (tdsCalcType === 'EXCLUDE') {
-        tdsAmount = Math.round((paidAmount * tdsPercentage) / 100);
-      }
-    }
-
-
-    const totalAmount = actualPaidAmount + igstAmount + cgstAmount + sgstAmount + utgstAmount + tdsAmount;
-
-  
-    group.get('pamount')?.setValue(actualPaidAmount > 0 ? actualPaidAmount : '');
-    group.get('pgstamount')?.setValue(gstAmount);
-    group.get('pigstamount')?.setValue(igstAmount);
-    group.get('pcgstamount')?.setValue(cgstAmount);
-    group.get('psgstamount')?.setValue(sgstAmount);
-    group.get('putgstamount')?.setValue(utgstAmount);
-    group.get('ptdsamount')?.setValue(tdsAmount);
-    group.get('ptotalamount')?.setValue(totalAmount);
-
-    if (this.amounttype === 'Debit') group.get('ptotaldebitamount')?.setValue(totalAmount);
-    if (this.amounttype === 'Credit') group.get('ptotalcreditamount')?.setValue(totalAmount);
-
-    this.formValidationMessages['pamount'] = '';
-
-  } catch (e) {
-    // this._commonService.showErrorMessage(e);
   }
-}
 
   validateaddPaymentDetails(): boolean {
     debugger;
@@ -1691,7 +1805,7 @@ GetStatedetailsbyId(pstateid: any): any {
   //     //       debugger;
   //     //       this.debittotalamount = 0;
   //     //        this.credittotalamount = 0;
-            
+
   //     //        if (amount <= parseFloat(result['balanceamount'].toString()) && Boolean(result['balancecheckstatus'].toString()) || amount <= parseFloat(result['balanceamount'].toString()) || ((result['balancecheckstatus'].toString()))=='false') {
   //     //         //ADDED ON 19.05.2023
   //     //       //if (amount <= parseFloat(result['balanceamount'].toString()) || Boolean(result['balancecheckstatus'].toString())) {
@@ -1746,99 +1860,156 @@ GetStatedetailsbyId(pstateid: any): any {
   //     this.showhidegrid = false;
   //   }
   // }
-  addPaymentDetails() {
-  debugger;
-  const control = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+  // addPaymentDetails() {
+  //   debugger;
+  //   let control = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-  if (!this.validateaddPaymentDetails()) {
-    this.showhidegrid = false;
-    return;
+  //   if (!this.validateaddPaymentDetails()) {
+  //     this.showhidegrid = false;
+  //     return;
+  //   }
+
+
+  //   let ledgerId = control.get('pledgerid')?.value;
+  //   let subledgerId = control.get('psubledgerid')?.value;
+
+  //   if (!control.get('pStateId')?.value) {
+  //     control.get('pStateId')?.setValue(0);
+  //   }
+  //   if (!control.get('pTdsPercentage')?.value) {
+  //     control.get('pTdsPercentage')?.setValue(0);
+  //   }
+  //   if (!control.get('pgstpercentage')?.value) {
+  //     control.get('pgstpercentage')?.setValue(0);
+  //   }
+
+  //   let debitAmount = control.get('ptotaldebitamount')?.value;
+  //   if (!debitAmount || debitAmount === 0) {
+  //     control.get('ptotaldebitamount')?.setValue('');
+  //   }
+  //   const creditAmount = control.get('ptotalcreditamount')?.value;
+  //   if (!creditAmount || creditAmount === 0) {
+  //     control.get('ptotalcreditamount')?.setValue('');
+  //   } 
+  // }
+
+  addPaymentDetails(): void {
+    debugger
+
+    const control = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+
+    if (!this.validateaddPaymentDetails()) {
+      this.showhidegrid = false;
+      return;
+    }
+
+    // Prepare row object
+    let row = {
+      ppartyid: control.get('ppartyid')?.value,
+      ppartyname: control.get('ppartyname')?.value,
+
+      pledgerid: control.get('pledgerid')?.value,
+      pledgername: control.get('pledgername')?.value,
+
+      psubledgerid: control.get('psubledgerid')?.value,
+      psubledgername: this.subledgerName,
+
+      ptotaldebitamount: Number(control.get('ptotaldebitamount')?.value) || 0,
+      ptotalcreditamount: Number(control.get('ptotalcreditamount')?.value) || 0
+    };
+
+
+    this.paymentslist = [...this.paymentslist, row];
+
+    console.log('grid data:', this.paymentslist);
+
+    this.calculateTotals();
+
+
+    this.showhidegrid = true;
+
+    control.reset({
+      pStateId: 0,
+      pTdsPercentage: 0,
+      pgstpercentage: 0
+    });
+  }
+
+  calculateTotals() {
+    this.debittotalamount = this.paymentslist.reduce(
+      (sum: any, x: { ptotaldebitamount: any; }) => sum + (x.ptotaldebitamount || 0),
+      0
+    );
+
+    this.credittotalamount = this.paymentslist.reduce(
+      (sum: any, x: { ptotalcreditamount: any; }) => sum + (x.ptotalcreditamount || 0),
+      0
+    );
   }
 
 
-  let ledgerId = control.get('pledgerid')?.value;
-  let subledgerId = control.get('psubledgerid')?.value;
 
-  if (!control.get('pStateId')?.value) {
-    control.get('pStateId')?.setValue(0);
-  }
-  if (!control.get('pTdsPercentage')?.value) {
-    control.get('pTdsPercentage')?.setValue(0);
-  }
-  if (!control.get('pgstpercentage')?.value) {
-    control.get('pgstpercentage')?.setValue(0);
-  }
 
-  let debitAmount = control.get('ptotaldebitamount')?.value;
-  if (!debitAmount || debitAmount === 0) {
-    control.get('ptotaldebitamount')?.setValue('');
-  }
-  const creditAmount = control.get('ptotalcreditamount')?.value;
-  if (!creditAmount || creditAmount === 0) {
-    control.get('ptotalcreditamount')?.setValue('');
-  }
-
-  
   /*
-  this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subledgerId).subscribe(res => {
-    debugger;
-    const creditStatus = res[0].credit_restriction_status;
-    const debitStatus = res[0].debit_restriction_status;
-
-    if ((debitAmount > 0 && !debitStatus) || (creditAmount > 0 && !creditStatus)) {
-      this._SubscriberJVService.GetdebitchitCheckbalance(ledgerId, "", subledgerId).subscribe(result => {
+      this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subledgerId).subscribe(res => {
         debugger;
-        this.debittotalamount = 0;
-        this.credittotalamount = 0;
-
-        // You might want to define and fetch 'amount' properly here
-        if (amount <= parseFloat(result['balanceamount'].toString()) && 
-            (Boolean(result['balancecheckstatus'].toString()) || (result['balancecheckstatus'].toString() === 'false'))) {
-          // Add current payment control value to payments list
-          const data = control.value;
-          this.paymentslist = [...this.paymentslist, data];
-
-          // Calculate totals
-          this.paymentslist.forEach(item => {
-            if (item.ptotalcreditamount) {
-              let credit = this._commonService.removeCommasForEntredNumber(item.ptotalcreditamount);
-              credit = parseFloat(credit);
-              this.credittotalamount += credit;
-            }
-            if (item.ptotaldebitamount) {
-              let debit = this._commonService.removeCommasForEntredNumber(item.ptotaldebitamount);
-              debit = parseFloat(debit);
-              this.debittotalamount += debit;
+        const creditStatus = res[0].credit_restriction_status;
+        const debitStatus = res[0].debit_restriction_status;
+    
+        if ((debitAmount > 0 && !debitStatus) || (creditAmount > 0 && !creditStatus)) {
+          this._SubscriberJVService.GetdebitchitCheckbalance(ledgerId, "", subledgerId).subscribe(result => {
+            debugger;
+            this.debittotalamount = 0;
+            this.credittotalamount = 0;
+    
+            // You might want to define and fetch 'amount' properly here
+            if (amount <= parseFloat(result['balanceamount'].toString()) && 
+                (Boolean(result['balancecheckstatus'].toString()) || (result['balancecheckstatus'].toString() === 'false'))) {
+              // Add current payment control value to payments list
+              const data = control.value;
+              this.paymentslist = [...this.paymentslist, data];
+    
+              // Calculate totals
+              this.paymentslist.forEach(item => {
+                if (item.ptotalcreditamount) {
+                  let credit = this._commonService.removeCommasForEntredNumber(item.ptotalcreditamount);
+                  credit = parseFloat(credit);
+                  this.credittotalamount += credit;
+                }
+                if (item.ptotaldebitamount) {
+                  let debit = this._commonService.removeCommasForEntredNumber(item.ptotaldebitamount);
+                  debit = parseFloat(debit);
+                  this.debittotalamount += debit;
+                }
+              });
+    
+              console.log("Total Debit amount is:" + this.debittotalamount);
+              console.log("Total Credit amount is:" + this.credittotalamount);
+    
+              this.getpartyJournalEntryData();
+              this.clearPaymentDetails1();
+              this.getPaymentListColumnWisetotals();
+              this.disableamounttype('');
+              this.validateDebitCreditAmounts();
+              this.showhidegrid = true;
+            } else {
+              this._commonService.showWarningMessage("Insufficient balance ");
             }
           });
-
-          console.log("Total Debit amount is:" + this.debittotalamount);
-          console.log("Total Credit amount is:" + this.credittotalamount);
-
-          this.getpartyJournalEntryData();
-          this.clearPaymentDetails1();
-          this.getPaymentListColumnWisetotals();
-          this.disableamounttype('');
-          this.validateDebitCreditAmounts();
-          this.showhidegrid = true;
         } else {
-          this._commonService.showWarningMessage("Insufficient balance ");
+          if (debitAmount > 0) {
+            this._commonService.showWarningMessage("Debit Transaction Not Allowed ");
+          }
+          if (creditAmount > 0) {
+            this._commonService.showWarningMessage("Credit Transaction Not Allowed ");
+          }
         }
       });
-    } else {
-      if (debitAmount > 0) {
-        this._commonService.showWarningMessage("Debit Transaction Not Allowed ");
-      }
-      if (creditAmount > 0) {
-        this._commonService.showWarningMessage("Credit Transaction Not Allowed ");
-      }
-    }
-  });
-  */
-}
+      */
+
 
   getPaymentListColumnWisetotals() {
-    
+
 
     let totaladebitmount = 0;
     this.hidefootertemplate = false;
@@ -1912,34 +2083,34 @@ GetStatedetailsbyId(pstateid: any): any {
   // }
 
   clearPaymentDetails() {
-  const formControl = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    const formControl = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-  formControl.reset();
+    formControl.reset();
 
-  this.showsubledger = true;
+    this.showsubledger = true;
 
-  formControl.get('pistdsapplicable')?.setValue(false);
-  formControl.get('pisgstapplicable')?.setValue(false);
+    formControl.get('pistdsapplicable')?.setValue(false);
+    formControl.get('pisgstapplicable')?.setValue(false);
 
-  formControl.get('pledgerid')?.setValue(null);
-  formControl.get('psubledgerid')?.setValue(null);
-  formControl.get('ppartyid')?.setValue(null);
-  formControl.get('pStateId')?.setValue('');
-  formControl.get('pgstpercentage')?.setValue('');
-  formControl.get('pTdsSection')?.setValue('');
-  formControl.get('pTdsPercentage')?.setValue('');
+    formControl.get('pledgerid')?.setValue(null);
+    formControl.get('psubledgerid')?.setValue(null);
+    formControl.get('ppartyid')?.setValue(null);
+    formControl.get('pStateId')?.setValue('');
+    formControl.get('pgstpercentage')?.setValue('');
+    formControl.get('pTdsSection')?.setValue('');
+    formControl.get('pTdsPercentage')?.setValue('');
 
-  this.setBalances('LEDGER', 0);
-  this.setBalances('SUBLEDGER', 0);
-  this.setBalances('PARTY', 0);
+    this.setBalances('LEDGER', 0);
+    this.setBalances('SUBLEDGER', 0);
+    this.setBalances('PARTY', 0);
 
-  this.isgstapplicableChange();
-  this.istdsapplicableChange();
+    this.isgstapplicableChange();
+    this.istdsapplicableChange();
 
-  this.formValidationMessages = {};
+    this.formValidationMessages = {};
 
-  
-}
+
+  }
 
 
   // clearPaymentDetails1() {
@@ -1972,39 +2143,39 @@ GetStatedetailsbyId(pstateid: any): any {
   //   this.formValidationMessages = {};
 
   // }
-clearPaymentDetails1() {
-  const formControl = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+  clearPaymentDetails1() {
+    const formControl = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-  this.showsubledger = true;
+    this.showsubledger = true;
 
-  formControl.get('pistdsapplicable')?.setValue(false);
-  formControl.get('pisgstapplicable')?.setValue(false);
+    formControl.get('pistdsapplicable')?.setValue(false);
+    formControl.get('pisgstapplicable')?.setValue(false);
 
-  // Leave pledgerid intact (commented out in original)
-  // formControl.get('pledgerid')?.setValue(null);
+    // Leave pledgerid intact (commented out in original)
+    // formControl.get('pledgerid')?.setValue(null);
 
-  formControl.get('psubledgerid')?.setValue(null);
-  formControl.get('ppartyid')?.setValue(null);
-  formControl.get('pStateId')?.setValue('');
-  formControl.get('pgstpercentage')?.setValue('');
-  formControl.get('pTdsSection')?.setValue('');
-  formControl.get('pTdsPercentage')?.setValue('');
-  formControl.get('pdebitamount')?.setValue('');
-  formControl.get('pcreditamount')?.setValue('');
+    formControl.get('psubledgerid')?.setValue(null);
+    formControl.get('ppartyid')?.setValue(null);
+    formControl.get('pStateId')?.setValue('');
+    formControl.get('pgstpercentage')?.setValue('');
+    formControl.get('pTdsSection')?.setValue('');
+    formControl.get('pTdsPercentage')?.setValue('');
+    formControl.get('pdebitamount')?.setValue('');
+    formControl.get('pcreditamount')?.setValue('');
 
-  // this.setBalances('LEDGER', 0); // commented out intentionally
-  this.setBalances('SUBLEDGER', 0);
-  this.setBalances('PARTY', 0);
+    // this.setBalances('LEDGER', 0); // commented out intentionally
+    this.setBalances('SUBLEDGER', 0);
+    this.setBalances('PARTY', 0);
 
-  this.isgstapplicableChange();
-  this.istdsapplicableChange();
+    this.isgstapplicableChange();
+    this.istdsapplicableChange();
 
-  this.formValidationMessages = {};
+    this.formValidationMessages = {};
 
 
-  // const date = new Date();
-  // this.paymentVoucherForm.get('pjvdate')?.setValue(date);
-}
+    // const date = new Date();
+    // this.paymentVoucherForm.get('pjvdate')?.setValue(date);
+  }
 
 
   validatesaveJournalVoucher(): boolean {
@@ -2076,16 +2247,16 @@ clearPaymentDetails1() {
 
         // commented on 05-03-2025 by Uday for vijayanagar issue start
         //this.paymentslist.reduce((acc, item) => {
-          //totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(item.ptotaldebitamount.replace(/,/g, ""));
-          //totalacreditmount += isNullOrEmptyString(item.ptotalcreditamount) ? parseFloat('0') : parseFloat(item.ptotalcreditamount.replace(/,/g, ""));
-          //totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(this._commonService.removeCommasInAmount(item.ptotaldebitamount).toString());
-          //totalacreditmount += isNullOrEmptyString(item.ptotalcreditamount) ? parseFloat('0') : parseFloat(this._commonService.removeCommasInAmount(item.ptotalcreditamount).toString());
-         
+        //totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(item.ptotaldebitamount.replace(/,/g, ""));
+        //totalacreditmount += isNullOrEmptyString(item.ptotalcreditamount) ? parseFloat('0') : parseFloat(item.ptotalcreditamount.replace(/,/g, ""));
+        //totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(this._commonService.removeCommasInAmount(item.ptotaldebitamount).toString());
+        //totalacreditmount += isNullOrEmptyString(item.ptotalcreditamount) ? parseFloat('0') : parseFloat(this._commonService.removeCommasInAmount(item.ptotalcreditamount).toString());
+
         //}, 0);
         // commented on 05-03-2025 by Uday for vijayanagar issue end
         // added on 05-03-2025 by Uday for vijayanagar issue start
-        let totaladebitmount = Number(parseFloat(this.paymentslist.reduce((sum: number,item: { ptotaldebitamount: any; })=> sum + Number(item.ptotaldebitamount),0)).toFixed(2));
-        let totalacreditmount = Number(parseFloat(this.paymentslist.reduce((sum: number,item: { ptotalcreditamount: any; })=> sum + Number(item.ptotalcreditamount),0)).toFixed(2));
+        let totaladebitmount = Number(parseFloat(this.paymentslist.reduce((sum: number, item: { ptotaldebitamount: any; }) => sum + Number(item.ptotaldebitamount), 0)).toFixed(2));
+        let totalacreditmount = Number(parseFloat(this.paymentslist.reduce((sum: number, item: { ptotalcreditamount: any; }) => sum + Number(item.ptotalcreditamount), 0)).toFixed(2));
         // added on 05-03-2025 by Uday for vijayanagar issue end
 
 
@@ -2199,57 +2370,57 @@ clearPaymentDetails1() {
   //   this.validateDebitCreditAmounts();
   // }
   disableamounttype(Amounttype: string) {
-  const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-  const debitamount = paymentControls.get('pdebitamount')?.value;
-  const creditamount = paymentControls.get('pcreditamount')?.value;
+    const debitamount = paymentControls.get('pdebitamount')?.value;
+    const creditamount = paymentControls.get('pcreditamount')?.value;
 
-  const debitControl = paymentControls.get('pdebitamount');
-  const creditControl = paymentControls.get('pcreditamount');
-  const transtypeControl = paymentControls.get('ptranstype');
-  const amountControl = paymentControls.get('pamount');
+    const debitControl = paymentControls.get('pdebitamount');
+    const creditControl = paymentControls.get('pcreditamount');
+    const transtypeControl = paymentControls.get('ptranstype');
+    const amountControl = paymentControls.get('pamount');
 
-  if (!isNullOrEmptyString(debitamount)) {
-    this.amounttype = Amounttype;
-    this.readonlydebit = false;
-    this.readonlycredit = true;
+    if (!isNullOrEmptyString(debitamount)) {
+      this.amounttype = Amounttype;
+      this.readonlydebit = false;
+      this.readonlycredit = true;
 
-    transtypeControl?.setValue('Debit');
-    amountControl?.setValue(debitamount);
+      transtypeControl?.setValue('Debit');
+      amountControl?.setValue(debitamount);
 
-    creditControl?.clearValidators();
-    creditControl?.updateValueAndValidity();
-    this.formValidationMessages['pcreditamount'] = '';
+      creditControl?.clearValidators();
+      creditControl?.updateValueAndValidity();
+      this.formValidationMessages['pcreditamount'] = '';
 
-  } else if (!isNullOrEmptyString(creditamount)) {
-    this.amounttype = Amounttype;
-    this.readonlydebit = true;
-    this.readonlycredit = false;
+    } else if (!isNullOrEmptyString(creditamount)) {
+      this.amounttype = Amounttype;
+      this.readonlydebit = true;
+      this.readonlycredit = false;
 
-    transtypeControl?.setValue('Credit');
-    amountControl?.setValue(creditamount);
+      transtypeControl?.setValue('Credit');
+      amountControl?.setValue(creditamount);
 
-    debitControl?.clearValidators();
-    debitControl?.updateValueAndValidity();
-    this.formValidationMessages['pdebitamount'] = '';
+      debitControl?.clearValidators();
+      debitControl?.updateValueAndValidity();
+      this.formValidationMessages['pdebitamount'] = '';
 
-  } else {
-    // Both amounts empty: enable both inputs and set validators
-    this.readonlydebit = false;
-    this.readonlycredit = false;
+    } else {
+      // Both amounts empty: enable both inputs and set validators
+      this.readonlydebit = false;
+      this.readonlycredit = false;
 
-    transtypeControl?.setValue('');
-    amountControl?.setValue('');
+      transtypeControl?.setValue('');
+      amountControl?.setValue('');
 
-    debitControl?.setValidators(Validators.required);
-    debitControl?.updateValueAndValidity();
+      debitControl?.setValidators(Validators.required);
+      debitControl?.updateValueAndValidity();
 
-    creditControl?.setValidators(Validators.required);
-    creditControl?.updateValueAndValidity();
+      creditControl?.setValidators(Validators.required);
+      creditControl?.updateValueAndValidity();
+    }
+
+    this.validateDebitCreditAmounts();
   }
-
-  this.validateDebitCreditAmounts();
-}
 
   // validateDebitCreditAmounts() {
 
@@ -2289,46 +2460,46 @@ clearPaymentDetails1() {
   // }
   validateDebitCreditAmounts(): void {
 
-  let debitamountcount = 0;
-  let creditamountcount = 0;
-  const griddata = this.paymentslist;
+    let debitamountcount = 0;
+    let creditamountcount = 0;
+    const griddata = this.paymentslist;
 
-  try {
-    // Count how many debit and credit entries are non‑empty
-    griddata.forEach((item: { pdebitamount: any; pcreditamount: any; }) => {
-      if (!isNullOrEmptyString(item.pdebitamount)) {
-        debitamountcount++;
+    try {
+      // Count how many debit and credit entries are non‑empty
+      griddata.forEach((item: { pdebitamount: any; pcreditamount: any; }) => {
+        if (!isNullOrEmptyString(item.pdebitamount)) {
+          debitamountcount++;
+        }
+        if (!isNullOrEmptyString(item.pcreditamount)) {
+          creditamountcount++;
+        }
+      });
+
+      const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+      const debitControl = paymentControls.get('pdebitamount');
+      const creditControl = paymentControls.get('pcreditamount');
+
+      if (debitamountcount > 1 && creditamountcount === 1) {
+        this.readonlydebit = false;
+        this.readonlycredit = true;
+
+        // Clear validators on credit field
+        creditControl?.clearValidators();
+        creditControl?.updateValueAndValidity();
+
+      } else if (creditamountcount > 1 && debitamountcount === 1) {
+        this.readonlydebit = true;
+        this.readonlycredit = false;
+
+        // Clear validators on debit field
+        debitControl?.clearValidators();
+        debitControl?.updateValueAndValidity();
       }
-      if (!isNullOrEmptyString(item.pcreditamount)) {
-        creditamountcount++;
-      }
-    });
 
-    const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-    const debitControl = paymentControls.get('pdebitamount');
-    const creditControl = paymentControls.get('pcreditamount');
-
-    if (debitamountcount > 1 && creditamountcount === 1) {
-      this.readonlydebit = false;
-      this.readonlycredit = true;
-
-      // Clear validators on credit field
-      creditControl?.clearValidators();
-      creditControl?.updateValueAndValidity();
-
-    } else if (creditamountcount > 1 && debitamountcount === 1) {
-      this.readonlydebit = true;
-      this.readonlycredit = false;
-
-      // Clear validators on debit field
-      debitControl?.clearValidators();
-      debitControl?.updateValueAndValidity();
+    } catch (e) {
+      console.error(e); // Log error instead of failing silently
     }
-
-  } catch (e) {
-    console.error(e); // Log error instead of failing silently
   }
-}
 
   public removeHandler(row: any, rowIndex: number) {
     debugger;
@@ -2351,10 +2522,10 @@ clearPaymentDetails1() {
         if (data.ptotaldebitamount != "") {
           // data.ptotaldebitamount = this._commonService.removeCommasForEntredNumber(data.ptotaldebitamount);
           // data.ptotaldebitamount = parseFloat(data.ptotaldebitamount);
-                    data.ptotaldebitamount = data.ptotaldebitamount;
+          data.ptotaldebitamount = data.ptotaldebitamount;
           data.ptotaldebitamount = data.ptotaldebitamount
           //this.debittotalamount = parseFloat(this.paymentslist.reduce((sub, c) => sub + c.ptotaldebitamount, 0));
-          this.debittotalamount= this.debittotalamount + data.ptotaldebitamount;
+          this.debittotalamount = this.debittotalamount + data.ptotaldebitamount;
         }
       })
     }
@@ -2422,48 +2593,48 @@ clearPaymentDetails1() {
   //   }
   // }
 
-uploadAndProgress(event: any) {
-  const files: FileList | null = event.target.files;
-  if (!files || files.length === 0) return;
+  uploadAndProgress(event: any) {
+    const files: FileList | null = event.target.files;
+    if (!files || files.length === 0) return;
 
-  const file = files[0];
-  const extension = file.name.split('.').pop()?.toLowerCase();
+    const file = files[0];
+    const extension = file.name.split('.').pop()?.toLowerCase();
 
-  // if (!this.validateFile(file.name)) {
-  //   // optional warning
-  //   return;
-  // }
+    // if (!this.validateFile(file.name)) {
+    //   // optional warning
+    //   return;
+    // }
 
-  // Build imageResponse directly
-  const reader = new FileReader();
-  reader.onload = () => {
-    this.imageResponse = {
-      name: file.name,
-      fileType: 'imageResponse',
-      contentType: file.type,
-      size: file.size
+    // Build imageResponse directly
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageResponse = {
+        name: file.name,
+        fileType: 'imageResponse',
+        contentType: file.type,
+        size: file.size
+      };
     };
-  };
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
 
-  const formData = new FormData();
-  for (let i = 0; i < files.length; i++) {
-    const f = files[i];
-    formData.append(f.name, f);
-    formData.append(
-      'NewFileName',
-      `Journal Voucher.${f.name.split('.').pop()}`
-    );
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      const f = files[i];
+      formData.append(f.name, f);
+      formData.append(
+        'NewFileName',
+        `Journal Voucher.${f.name.split('.').pop()}`
+      );
+    }
+
+    // TODO: Upload code
+    // this._commonService.fileUploadS3('Account', formData).subscribe(...)
   }
-
-  // TODO: Upload code
-  // this._commonService.fileUploadS3('Account', formData).subscribe(...)
-}
 
   /*
   *Validating the type of file uploaded
   */
-  validateFile(fileName: string | undefined):void {
+  validateFile(fileName: string | undefined): void {
     try {
       debugger
       if (fileName == undefined || fileName == "") {
@@ -2473,10 +2644,10 @@ uploadAndProgress(event: any) {
         var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
         if (ext.toLowerCase() == 'jpg' || ext.toLowerCase() == 'png' || ext.toLowerCase() == 'jpeg') {
 
-         // return true
+          // return true
         }
       }
-    //  return false
+      //  return false
     }
     catch (e) {
       this.showErrorMessage('');

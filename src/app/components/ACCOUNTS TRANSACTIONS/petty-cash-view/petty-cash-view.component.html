@@ -1,85 +1,98 @@
 
-<div class="screen-container">
-    <div class="screen-card">
-      <div  class="screen-header">
-        <h2>Petty Cash View</h2>
+<div class="section-content">
+  <div class="row">
+    <div class="col-8 d-flex flex-wrap align-items-center">
+      <a 
+       routerLink="/dashboard/accounts/accounts-transactions/petty-cash"
+      class="btn btn-primary border-0">New</a>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 col-xl-12">
+      <div class="row mb-4">
+        <div class="col-md-6 col-xl-6">
+          <div class="form-group mr-0 custom-search">
+            <div class="input-group">
+              <input type="text" class="form-control" (keyup)="filterDatatable($event)">
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="screen-content">
 
+      <ngx-datatable
+        class="material expandable table"
+        [rows]="gridView"
+        [columnMode]="'force'"
+        [headerHeight]="50"
+        [scrollbarH]="false"
+        [footerHeight]="pageCriteria.footerPageHeight"
+        [rowHeight]="'auto'"
+        [limit]="pageCriteria.pageSize"
+      >
 
-<div class="container mt-4">
+        <ngx-datatable-column name="Actions" [cellClass]="'cell-center'" [headerClass]="'header-center'">
+          <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+            <button class="btn btn-sm btn-primary" (click)="viewRow()">View</button>
+          </ng-template>
+        </ngx-datatable-column>
 
-  <!-- Search -->
-  <div class="mb-3">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Search petty cash..."
-    />
-  </div>
+        <ngx-datatable-column name="Receipt Date" prop="preceiptdate" [cellClass]="'cell-left'" [headerClass]="'header-left'">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <span title="{{row.preceiptdate}}">{{row.preceiptdate}}</span>
+          </ng-template>
+        </ngx-datatable-column>
 
-  <!-- Table -->
-  <table class="table table-bordered table-striped">
-    <thead class="table-light">
-      <tr>
-        <th class="text-center">S.No</th>
-        <th>Voucher No</th>
-        <th class="text-center">Date</th>
-        <th>Description</th>
-        <th class="text-end">Amount</th>
-        <th class="text-center">Action</th>
-      </tr>
-    </thead>
+        <ngx-datatable-column name="Receipt No." prop="preceiptid" [cellClass]="'cell-center'" [headerClass]="'header-center'">
+        </ngx-datatable-column>
 
-    <tbody>
-      <tr>
-        <td class="text-center">1</td>
-        <td>PC-1001</td>
-        <td class="text-center">05-01-2026</td>
-        <td>Office Supplies</td>
-        <td class="text-end">₹ 1,200.00</td>
-        <td class="text-center">
-          <button class="btn btn-danger btn-sm">Remove</button>
-        </td>
-      </tr>
+        <ngx-datatable-column name="Payment Details" prop="pmodofreceipt" [cellClass]="'cell-left'" [headerClass]="'header-left'">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <div *ngIf="row.pmodofreceipt === 'CASH'">
+              {{row.pmodofreceipt}}
+            </div>
+            <div *ngIf="row.pmodofreceipt !== 'CASH'">
+              {{row.pmodofreceipt}} ({{row.ptypeofpayment}} - {{row.pChequenumber}})
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
 
-      <tr>
-        <td class="text-center">2</td>
-        <td>PC-1002</td>
-        <td class="text-center">06-01-2026</td>
-        <td>Travel Expense</td>
-        <td class="text-end">₹ 850.00</td>
-        <td class="text-center">
-          <button class="btn btn-danger btn-sm">Remove</button>
-        </td>
-      </tr>
+        <ngx-datatable-column name="Received Amount" prop="ptotalreceivedamount" [cellClass]="'cell-right'" [headerClass]="'header-right'">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            {{currencySymbol}} {{row.ptotalreceivedamount |currency }}
+          </ng-template>
+        </ngx-datatable-column>
 
-      <tr>
-        <td class="text-center">3</td>
-        <td>PC-1003</td>
-        <td class="text-center">07-01-2026</td>
-        <td>Snacks</td>
-        <td class="text-end">₹ 450.00</td>
-        <td class="text-center">
-          <button class="btn btn-danger btn-sm">Remove</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <ngx-datatable-column name="Narration" prop="pnarration" [cellClass]="'cell-left'" [headerClass]="'header-left'" [width]="400">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            <div *ngIf="row.pnarration === ''">-- NA --</div>
+            <div *ngIf="row.pnarration !== ''" title="{{row.pnarration}}">
+              {{row.pnarration}}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
 
-  <!-- Footer -->
-  <div class="d-flex justify-content-between align-items-center mt-3">
-    <div>
-      Page 1 of 1 (3 items)
+        <ngx-datatable-footer *ngIf="gridView">
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-curPage="curPage">
+            <div style="padding: 5px 10px" *ngIf="gridView.length > 0">
+              <!-- <div>Page {{pageCriteria.CurrentPage}} of {{pageCriteria.TotalPages}} ({{ pageCriteria.totalrows }} items)</div> -->
+            </div>
+            <!-- <datatable-pager
+              [pagerLeftArrowIcon]="'datatable-icon-left'"
+              [pagerRightArrowIcon]="'datatable-icon-right'"
+              [pagerPreviousIcon]="'datatable-icon-prev'"
+              [pagerNextIcon]="'datatable-icon-skip'"
+          
+             
+              
+              (change)="onFooterPageChange($event)"
+              [hidden]="!((rowCount / pageSize) > 0)"
+            >
+            </datatable-pager> -->
+          </ng-template>
+        </ngx-datatable-footer>
+
+      </ngx-datatable>
     </div>
-    <div>
-      <button class="btn btn-outline-secondary btn-sm me-2">Previous</button>
-      <button class="btn btn-outline-secondary btn-sm">Next</button>
-    </div>
   </div>
-
-</div>
-
-</div>
-</div>
 </div>

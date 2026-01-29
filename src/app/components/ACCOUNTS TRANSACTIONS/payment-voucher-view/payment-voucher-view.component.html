@@ -1,80 +1,538 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
-      <h2>Payment Voucher View</h2>
+    <div class="screen-header">
+      <h2>Payment Voucher</h2>
     </div>
-    <div class="screen-content">  
 
+    <div class="screen-content">
+      <form [formGroup]="paymentVoucherForm">
 
-
-  <div class="row">
-    <div class="col-8 d-flex flex-wrap align-items-center">
-      <a class="btn btn-primary border-0" href="#">
-        New
-      </a>
-    </div>
-  </div>
-
-  <div class="row mt-3">
-    <div class="col-md-12 col-xl-12">
-
-      <div class="row">
-        <div class="col-md-12 col-xl-12">
-          <div class="row mb-4">
-            <div class="col-md-6 col-xl-6">
-              <div class="form-group mr-0 custom-search">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Search...">
-                </div>
+        <!-- DATE -->
+        <div class="section-content">
+          <div class="row">
+            <div class="col-md-6 col-xl-4">
+              <div class="form-group">
+                <label class="required-field">Date</label>
+                <fieldset>
+                  <input class="form-control" type="date" [value]="today" readonly>
+                </fieldset>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- MODE OF PAYMENT -->
+        <div class="section-content mt-2">
+          <p class="bc-2">Mode of Payment</p>
+
+          <div class="form-group mt-2 pl-0" id="pmodofpayment" title="Mode of Payment">
+            <div class="form-check form-check-inline radio-btn">
+              <input class="form-check-input" type="radio" name="pmodofpayment" [checked]="paymentMode === 'CASH'"
+                (change)="setPaymentMode('CASH')">
+              <label class="mt-1 w-m-100 text-center"> Cash - ₹ 10,000 </label>
+            </div>
+            <div class="form-check form-check-inline radio-btn">
+              <input class="form-check-input" type="radio" name="pmodofpayment" [checked]="paymentMode === 'BANK'"
+                (change)="setPaymentMode('BANK')">
+              <label class="mt-1 w-m-100 text-center"> Bank - ₹ 10,000 </label>
+            </div>
+          </div>
+
+          <!-- BANK DETAILS -->
+          <div class="Instrument" *ngIf="paymentMode === 'BANK'">
+            <div class="row">
+              <div class="ml-3 mb-3 rounded border pl-2 pr-2 badge-light" id="ptranstype">
+                <div class="form-check form-check-inline radio-btn-secondary">
+                  <input class="form-check-input" type="radio" name="ptranstype" [checked]="bankType === 'CHEQUE'"
+                    (change)="setBankType('CHEQUE')">
+                  <label class="mt-1"> Cheque </label>
+                </div>
+                <div class="form-check form-check-inline radio-btn-secondary">
+                  <input class="form-check-input" type="radio" name="ptranstype" [checked]="bankType === 'ONLINE'"
+                    (change)="setBankType('ONLINE')">
+                  <label class="mt-1"> Online </label>
+                </div>
+                <div class="form-check form-check-inline radio-btn-secondary">
+                  <input class="form-check-input" type="radio" name="ptranstype" [checked]="bankType === 'DEBIT'"
+                    (change)="setBankType('DEBIT')">
+                  <label class="mt-1"> Debit Card </label>
+                </div>
+                <div class="form-check form-check-inline radio-btn-secondary">
+                  <input class="form-check-input" type="radio" name="ptranstype" [checked]="bankType === 'CREDIT'"
+                    (change)="setBankType('CREDIT')">
+                  <label class="mt-1"> Credit Card </label>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-xl-12">
+                <!-- CHEQUE -->
+                <div class="cheque" *ngIf="bankType === 'CHEQUE'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Bank Name</label>
+                        <select class="form-control">
+                          <option>Select</option>
+                          <option>SBI</option>
+                          <option>HDFC</option>
+                          <option>ICICI</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Type of Payment</label>
+                        <select class="form-control">
+                          <option>Select</option>
+                          <option>CHEQUE</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Branch Name</label>
+                        <input class="form-control" type="text" readonly value="Main Branch">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Bank / Financial Services</label>
+                        <input class="form-control" type="text" readonly value="SBI Bank">
+                      </div>
+                    </div>
+                    <div class="col-md-3 cheque">
+                      <div class="form-group">
+                        <label>Cheque No</label>
+                        <input class="form-control" type="text" placeholder="Enter Cheque Number">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ONLINE -->
+                <div class="online" *ngIf="bankType === 'ONLINE'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Bank Name</label>
+                        <select class="form-control">
+                          <option>Select</option>
+                          <option>SBI</option>
+                          <option>HDFC</option>
+                          <option>ICICI</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Type of Payment</label>
+                        <select class="form-control">
+                          <option>Select</option>
+                          <option>ONLINE</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Reference No</label>
+                        <input class="form-control" type="text" placeholder="Enter Reference No">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Transaction Date</label>
+                        <input class="form-control" type="date">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DEBIT -->
+                <div class="debit" *ngIf="bankType === 'DEBIT'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Debit Card No</label>
+                        <input class="form-control" type="text" placeholder="XXXX XXXX XXXX 1234">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Bank</label>
+                        <input class="form-control" type="text" placeholder="SBI Bank">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Reference No</label>
+                        <input class="form-control" type="text" placeholder="Enter Reference No">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CREDIT -->
+                <div class="credit" *ngIf="bankType === 'CREDIT'">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Credit Card No</label>
+                        <input class="form-control" type="text" placeholder="XXXX XXXX XXXX 5678">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Bank</label>
+                        <input class="form-control" type="text" placeholder="HDFC Bank">
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label>Reference No</label>
+                        <input class="form-control" type="text" placeholder="Enter Reference No">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- PAYMENT DETAILS -->
+        <div class="section-content mt-2">
+          <div class="row">
+            <div class="col-md-6 col-xl-4">
+              <div class="form-group">
+                <label class="required-field" title="Party">Party</label>
+                <select class="form-control">
+                  <option>Select</option>
+                  <option>Party A</option>
+                  <option>Party B</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="required-field" title="Ledger">Ledger</label>
+                <select class="form-control">
+                  <option>Select</option>
+                  <option>Ledger A</option>
+                  <option>Ledger B</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="required-field" title="Sub Ledger">Sub Ledger</label>
+                <select class="form-control">
+                  <option>Select</option>
+                  <option>Sub Ledger A</option>
+                  <option>Sub Ledger B</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="required-field">Amount Paid</label>
+                <input class="form-control border-warning sec-head-bold" style="text-align:right;" type="text"
+                  [value]="payment.amountPaid">
+              </div>
+            </div>
+
+            <!-- GST + TDS SECTION -->
+            <div class="col-md-6 col-xl-6 offset-2 pt-2">
+
+              <!-- GST -->
+              <div class="form-group">
+                <div class="border rounded p-2 mt-3">
+                  <div class="col-md-12 col-xl-12 mt-2 mb-2">
+                    <fieldset>
+                      <div class="material-switch">
+                        <span class="mr-2" title="GST"> GST </span>
+                        <input id="gst-switch" type="checkbox" formControlName="pisgstapplicable"
+                          (change)="isgstapplicable_Checked()">
+                        <label for="gst-switch" class="badge-success"></label>
+                      </div>
+                    </fieldset>
+
+                    <div id="gst" *ngIf="gstEnabled">
+                      <div class="row">
+                        <fieldset>
+                          <div class="col-md-12 col-xl-12" id="pgstcalculationtype">
+                            <div class="form-check form-check-inline radio-btn-secondary mr-4">
+                              <input class="form-check-input" type="radio" formControlName="pgstcalculationtype"
+                                name="pgstcalculationtype" value="INCLUDE" (change)="claculategsttdsamounts()">
+                              <label class="mt-1"> Include</label>
+                            </div>
+                            <div class="form-check form-check-inline radio-btn-secondary mr-4 mb-2 mt-2">
+                              <input class="form-check-input" type="radio" formControlName="pgstcalculationtype"
+                                name="pgstcalculationtype" value="EXCLUDE" (change)="claculategsttdsamounts()">
+                              <label class="mt-1"> Exclude </label>
+                            </div>
+                          </div>
+                        </fieldset>
+
+                        <div class="col-md-12 col-xl-12">
+                          <div class="row">
+                            <div class="form-group col-md-4">
+                              <label class="required-field">State</label>
+                              <select class="form-control" formControlName="pStateId">
+                                <option value="">Select</option>
+                                <option value="1">Maharashtra</option>
+                                <option value="2">Delhi</option>
+                              </select>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                              <label>GST No.</label>
+                              <input type="text" class="form-control" maxlength="15" formControlName="pgstno">
+                            </div>
+
+                            <div class="form-group col-md-4">
+                              <label class="required-field">GST(%)</label>
+                              <select class="form-control" formControlName="pgstpercentage"
+                                (change)="claculategsttdsamounts()">
+                                <option value="0">Select</option>
+                                <option value="5">5</option>
+                                <option value="12">12</option>
+                                <option value="18">18</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="form-group col-md-8">
+                              <label>Amount</label>
+                              <label class="form-control col-md-12 text-right pt-2">
+                                ₹ {{ paymentVoucherForm.get('pgstamount')?.value | number:'1.2-2' }}
+                              </label>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label>IGST({{ paymentVoucherForm.get('pigstpercentage')?.value }}%)</label>
+                              <label class="col-md-12">
+                                ₹ {{ paymentVoucherForm.get('pigstamount')?.value | number:'1.2-2' }}
+                              </label>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label>CGST({{ paymentVoucherForm.get('pcgstpercentage')?.value }}%)</label>
+                              <label class="col-md-12">
+                                ₹ {{ paymentVoucherForm.get('pcgstamount')?.value | number:'1.2-2' }}
+                              </label>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label>SGST({{ paymentVoucherForm.get('psgstpercentage')?.value }}%)</label>
+                              <label class="col-md-12">
+                                ₹ {{ paymentVoucherForm.get('psgstamount')?.value | number:'1.2-2' }}
+                              </label>
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label>UTGST({{ paymentVoucherForm.get('putgstpercentage')?.value }}%)</label>
+                              <label class="col-md-12">
+                                ₹ {{ paymentVoucherForm.get('putgstamount')?.value | number:'1.2-2' }}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- TDS -->
+              <div class="form-group">
+                <div class="border rounded p-2 mt-3">
+                  <div class="col-md-12 col-xl-12 mt-2 mb-2">
+                    <div class="material-switch">
+                      <span class="mr-2" title="TDS"> TDS </span>
+                      <input id="tds-switch" type="checkbox" formControlName="pistdsapplicable"
+                        (change)="istdsapplicable_Checked()">
+                      <label for="tds-switch" class="badge-success"></label>
+                    </div>
+
+                    <div id="tds" *ngIf="tdsEnabled">
+                      <div class="row">
+                        <fieldset>
+                          <div class="col-md-12 col-xl-12" id="ptdscalculationtype">
+                            <div class="form-check form-check-inline radio-btn-secondary mr-4">
+                              <input class="form-check-input" type="radio" value="INCLUDE"
+                                formControlName="ptdscalculationtype" name="ptdscalculationtype"
+                                (change)="claculategsttdsamounts()">
+                              <label class="mt-1"> Include</label>
+                            </div>
+                            <div class="form-check form-check-inline radio-btn-secondary mr-4 mb-2 mt-2">
+                              <input class="form-check-input" type="radio" value="EXCLUDE"
+                                formControlName="ptdscalculationtype" name="ptdscalculationtype"
+                                (change)="claculategsttdsamounts()">
+                              <label class="mt-1"> Exclude</label>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4 col-xl-4">
+                          <label class="required-field">Section</label>
+                          <select class="form-control" formControlName="pTdsSection"
+                            (change)="claculategsttdsamounts()">
+                            <option value="">Select</option>
+                            <option value="194C">194C</option>
+                            <option value="194J">194J</option>
+                          </select>
+                        </div>
+
+                        <div class="col-md-4 col-xl-4">
+                          <label class="required-field">Percentage</label>
+                          <select class="form-control" formControlName="pTdsPercentage"
+                            (change)="claculategsttdsamounts()">
+                            <option value="0">Select</option>
+                            <option value="1">1%</option>
+                            <option value="2">2%</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4 col-xl-4">
+                          <label>Amount</label>
+                          <label class="form-control col-md-12 text-right pt-2">
+                            ₹ {{ paymentVoucherForm.get('ptdsamount')?.value | number:'1.2-2' }}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Buttons -->
+              <div class="d-flex justify-content-end mt-4">
+                <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentDetails()">Clear</a>
+                <button class="btn btn-b-icon px-3 border-0" (click)="addPaymentDetails()">
+                  <i class="fa fa-plus"></i> Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- DATATABLE -->
+<div class="section-content mt-2">
+  <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
+    [footerHeight]="50" [rowHeight]="50" [limit]="5" [scrollbarH]="true">
+    <ngx-datatable-column name="Actions" prop="" frozenLeft="True">
+      <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+        <label for="delete{{ rowIndex }}">
+          <div id="icon-delete" (click)="removeHandler(rowIndex)"></div>
+        </label>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Party Name" prop="ppartyname"></ngx-datatable-column>
+    <ngx-datatable-column name="Ledger Name" prop="pledgername"></ngx-datatable-column>
+    <ngx-datatable-column name="Sub Ledger Name" prop="psubledgername"></ngx-datatable-column>
+    <ngx-datatable-column name="Total Paid Amount" prop="ptotalamount">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        ₹ {{ row.ptotalamount | number:'1.2-2' }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Paid Amount" prop="pamount">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        ₹ {{ row.pamount | number:'1.2-2' }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="GST Type" prop="pgstcalculationtype">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div *ngIf="row.pgstcalculationtype==''">-- NA --</div>
+        <div *ngIf="row.pgstcalculationtype!=''">{{row.pgstcalculationtype}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="TDS Section" prop="pTdsSection">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div *ngIf="row.pTdsSection==''">-- NA --</div>
+        <div *ngIf="row.pTdsSection!=''">{{row.pTdsSection}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="GST Percentage" prop="pgstpercentage">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div *ngIf="row.pgstpercentage==0">-- NA --</div>
+        <div *ngIf="row.pgstpercentage!=0">{{row.pgstpercentage}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="TDS Amount" prop="ptdsamount">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div *ngIf="row.ptdsamount==0">-- NA --</div>
+        <div *ngIf="row.ptdsamount!=0">₹ {{row.ptdsamount | number:'1.2-2'}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+
+<!-- JOURNAL ENTRY -->
+<div class="section-content mt-2">
+  <div class="row">
+    <div class="col-md-6 col-xl-6 mt-4" style="height: 400;">
+      <ngx-datatable class="material expandable table" [rows]="partyjournalentrylist" columnMode="force"
+        [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="5">
+        <ngx-datatable-column name="Particulars" prop="accountname"></ngx-datatable-column>
+        <ngx-datatable-column name="Dr" prop="debitamount">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.debitamount!=0">₹ {{row.debitamount | number:'1.2-2'}}</div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Cr" prop="creditamount">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.creditamount!=0">₹ {{row.creditamount | number:'1.2-2'}}</div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group mt-2">
+        <label class="required-field">Narration</label>
+        <textarea class="form-control" rows="4" id="pnarration" title="Narration" formControlName="pnarration"
+          maxlength="250"></textarea>
       </div>
+    </div>
 
-      <!-- Static Table -->
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Actions</th>
-            <th>Payment Date</th>
-            <th>Voucher No.</th>
-            <th>Payment Details</th>
-            <th>Bank Name</th>
-            <th>Paid Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Sample Row 1 -->
-          <tr>
-            <td><a href="#">View</a></td>
-            <td>2024-01-01</td>
-            <td>PV-001</td>
-            <td>CASH</td>
-            <td>-- NA --</td>
-            <td>$ 1,000.00</td>
-          </tr>
 
-          <!-- Sample Row 2 -->
-          <tr>
-            <td><a href="#">View</a></td>
-            <td>2024-01-05</td>
-            <td>PV-002</td>
-            <td>BANK (CHEQUE - 123456)</td>
-            <td>HDFC Bank</td>
-            <td>$ 2,500.00</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="form-group col-md-6 pl-0">
+      <label id="pDocStorePath" title="Upload Document">Upload Document</label>
 
-      <!-- Footer -->
-      <div style="padding: 5px 10px">
-        Page 1 of 1 (2 items)
+      <div class="input-group">
+        <input type="text" class="form-control" formControlName="pDocStorePath" readonly>
+
+        <div class="input-group-append">
+          <button type="button" class="btn btn-primary" (click)="fileInput.click()">
+            Upload
+          </button>
+        </div>
+
+        <input type="file" #fileInput style="display:none" (change)="uploadAndProgress($event)">
       </div>
+    </div>
+
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="row mt-3">
+  <div class="col-md-12 col-xl-12">
+    <div class="d-flex justify-content-end">
+      <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
+      <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()" appButtonDoubleClick>
+        Clear</a>
+      <button (click)="saveJournalVoucher()" class="btn btn-primary px-3 border-0">
+
+        save
+      </button>
 
     </div>
   </div>
-
-</div>
-</div>
 </div>

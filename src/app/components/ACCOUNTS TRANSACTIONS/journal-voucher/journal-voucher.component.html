@@ -54,8 +54,8 @@
                         </ng-select>
 
 
-                        <span class=" position-absolute font-italic" style="right:-160px; top:35px;">{{ledgerBalance
-                            }}</span>
+                        <!-- <span class=" position-absolute font-italic" style="right:-160px; top:35px;">{{ledgerBalance
+                            }}</span> -->
                     </div>
                     <!-- <app-validation-message [messgae]="formValidationMessages?.pledgername"></app-validation-message> -->
 
@@ -73,8 +73,8 @@
                         <!--<div class="input-group-append">
           <button class="btn btn-lg-icon rounded-right px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
         </div>-->
-                        <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{subledgerBalance
-                            }}</span>
+                        <!-- <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{subledgerBalance
+                            }}</span> -->
                     </div>
                     <!-- <app-validation-message [messgae]="formValidationMessages?.psubledgername"></app-validation-message> -->
 
@@ -99,8 +99,8 @@
           <button class="btn btn-lg-icon px-2 rounded-right p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
         </div>-->
                         <!-- <app-validation-message [messgae]="formValidationMessages?.ppartyname"></app-validation-message> -->
-                        <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{partyBalance
-                            }}</span>
+                        <!-- <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{partyBalance
+                            }}</span> -->
                     </div>
 
                 </div>
@@ -149,7 +149,7 @@
                     </a>
 
                     <a data-toggle="tab" class="btn btn-secondary px-3 border-0" role="tab" aria-controls="hot"
-                        aria-selected="false" appButtonDoubleClick (debounceClick)="addPaymentDetails()">
+                        aria-selected="false" appButtonDoubleClick (click)="addPaymentDetails()">
                         <!-- <img src="assets/images/icon-add-blue.svg" width="20px" height="20px" class="mr-3"> -->
                         Add</a>
                 </div>
@@ -562,8 +562,9 @@
                             <input type="text" class="form-control" placeholder="" [value]="imageResponse?.name"
                                 [disabled]="isDisabled" formControlName="pDocStorePath">
                             <div class="input-group-append">
-                                <button class="btn btn-primary px-2 p-0" (click)="fileInput.click()">
+                                <button class="btn btn-primary px-2 p-0 ms-2" (click)="fileInput.click()">
                                     <!-- <img src="assets/images/icon-upload-blue.svg" class="" width="18px" height="18px"> -->
+                                     Upload
                                 </button>
                                 <!-- to uplaod the image -->
                                 <!-- <input style="display: none" type="file"

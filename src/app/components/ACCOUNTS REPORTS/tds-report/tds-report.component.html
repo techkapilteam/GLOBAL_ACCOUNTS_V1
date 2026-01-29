@@ -1,46 +1,107 @@
 <div class="screen-container">
-    <div class="screen-card">
-      <div  class="screen-header">
-        <h2>TDS Report</h2>
-      </div>
-      <div class="screen-content"> 
-            <form>
+  <div class="screen-card">
 
-                <div class="row g-3">
+    <div class="screen-header">
+      <h2>TDS Report</h2>
+    </div>
 
-                    <div class="col-xl-3 col-md-4">
-                        <label class="form-label">Section</label>
-                        <select class="form-control" id="pTdsSection" title="Section">
-                            <option value="" disabled selected>Select</option>
-                            <option>194A</option>
-                            <option>194C</option>
-                            <option>194H</option>
-                        </select>
-                    </div>
+    <div class="screen-content">
+      <form>
 
-                    <div class="col-xl-3 col-md-3">
-                        <label class="form-label">From Date</label>
-                        <input type="date" class="form-control" placeholder="Select date">
-                    </div>
+        <h5 class="section-title">Section wise report</h5>
 
-                    <div class="col-xl-3 col-md-3">
-                        <label class="form-label">To Date</label>
-                        <input type="date" class="form-control" placeholder="Select date">
-                    </div>
+        <div class="row g-3 mb-2">
+          <div class="col-xl-3 col-md-4">
+            <label class="form-label">Section <span class="text-danger">*</span></label>
+            <select class="form-control">
+              <option value="" disabled selected>Select</option>
+              <option>194A</option>
+              <option>194C</option>
+              <option>194H</option>
+            </select>
+          </div>
 
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="button"
-                                class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
-                           
-                            Generate Report
-                        </button>
-                    </div>
-
-                </div>
-
-            </form>
-
+          <div class="col-xl-5 col-md-5">
+            <label class="form-label">Section Name</label>
+            <input type="text" class="form-control" readonly>
+          </div>
         </div>
-    </div>
+
+        <div class="row mb-3">
+          <div class="col-md-2 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" [(ngModel)]="asOn" name="ason">
+            <label class="form-check-label">As On</label>
+          </div>
+        </div>
+
+        <div class="row g-3 align-items-end" *ngIf="!asOn">
+          <div class="col-xl-3 col-md-4">
+            <label class="form-label">From Date</label>
+            <input type="date" class="form-control">
+          </div>
+
+          <div class="col-xl-3 col-md-4">
+            <label class="form-label">To Date</label>
+            <input type="date" class="form-control">
+          </div>
+        </div>
+
+        <div class="row g-3 align-items-end" *ngIf="asOn">
+          <div class="col-xl-3 col-md-4">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control">
+          </div>
+        </div>
+        <div class="row g-3 align-items-end mt-2">
+          <div class="col-xl-2 col-md-3 d-flex align-items-center mt-4">
+            <input type="checkbox" class="form-check-input me-2">
+            <label class="form-check-label">Summary</label>
+          </div>
+
+          <div class="col-xl-2 col-md-3 mt-3 text-end">
+            <button type="button" class="btn btn-primary px-4"  (click)="onShow()">Show</button>
+          </div>
+        </div>
+
+      </form>
+      <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="showTable">
+        <button class="btn btn-danger btn-sm" >PDF</button>
+        <button class="btn btn-secondary btn-sm" >Print</button>
+        <button class="btn btn-success btn-sm" >Excel</button>
+      </div>
+
+      <div class="mt-2" *ngIf="showTable">
+        <ngx-datatable class="material striped" [rows]="rows" [columnMode]="'force'" [headerHeight]="45"
+          [footerHeight]="45" [rowHeight]="'auto'" [limit]="10">
+
+          <ngx-datatable-column name="PAN Number" prop="pan"></ngx-datatable-column>
+          <ngx-datatable-column name="Agent Name" prop="agentName"></ngx-datatable-column>
+          <ngx-datatable-column name="Agent Code" prop="agentCode"></ngx-datatable-column>
+
+          <ngx-datatable-column name="Paid Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹{{ row.paidAmount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="TDS Calculated">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹{{ row.tdsAmount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Amount">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              ₹{{ row.netAmount | number:'1.2-2' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+        </ngx-datatable>
+      </div>
+
+
     </div>
 
+
+  </div>
+</div>
