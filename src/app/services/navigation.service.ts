@@ -57,11 +57,11 @@ export class NavigationService {
           screens: [
             { id: 'general-receipt', name: 'General Receipt', route: '/dashboard/accounts/accounts-transactions/general-receipt' },
             { id: 'payment-voucher', name: 'Payment Voucher', route: '/dashboard/accounts/accounts-transactions/payment-voucher' },
-            { id: 'payment-voucher-view', name: 'Payment Voucher view', route: '/dashboard/accounts/accounts-transactions/payment-voucher-view' },
+          //  { id: 'payment-voucher-view', name: 'Payment Voucher view', route: '/dashboard/accounts/accounts-transactions/payment-voucher-view' },
              { id: 'general-receipt-new', name: 'General receipt New', route: '/dashboard/accounts/accounts-transactions/general-receipt-new' },
-            { id: 'general-receipt-view', name: 'General receipt View', route: '/dashboard/accounts/accounts-transactions/general-receipt-view' },
+            //{ id: 'general-receipt-view', name: 'General receipt View', route: '/dashboard/accounts/accounts-transactions/general-receipt-view' },
             { id: 'petty-cash', name: 'Petty Cash', route: '/dashboard/accounts/accounts-transactions/petty-cash' },
-            { id: 'petty-cash-view', name: 'Petty Cash View', route: '/dashboard/accounts/accounts-transactions/petty-cash-view' },
+           // { id: 'petty-cash-view', name: 'Petty Cash View', route: '/dashboard/accounts/accounts-transactions/petty-cash-view' },
             { id: 'cheques-onhand', name: 'Cheques On Hand', route: '/dashboard/accounts/accounts-transactions/cheques-onhand' },
             { id: 'cheques-inbank', name: 'Cheques In Bank', route: '/dashboard/accounts/accounts-transactions/cheques-inbank' },
             { id: 'cheques-issued', name: 'Cheques Issued', route: '/dashboard/accounts/accounts-transactions/cheques-issued' },
@@ -95,15 +95,14 @@ export class NavigationService {
             { id: 'cheque-cancel', name: 'Cheque Cancel', route: '/dashboard/accounts/accounts-reports/cheque-cancel' },
             { id: 'cheque-return', name: 'Cheque Return', route: '/dashboard/accounts/accounts-reports/cheque-return' },
             { id: 'issued-cheque', name: 'Issued Cheque', route: '/dashboard/accounts/accounts-reports/issued-cheque' },
-            {id: 'receipts-and-payments', name: 'Receipts and Payments', route: '/dashboard/accounts/accounts-reports/receipts-and-payments' },
+            { id: 'receipts-and-payments', name: 'Receipts and Payments', route: '/dashboard/accounts/accounts-reports/receipts-and-payments' },
             { id: 'cheque-enquiry', name: 'Cheque Enquiry', route: '/dashboard/accounts/accounts-reports/cheque-enquiry' },
             { id: 'gst-report', name: 'GST Report', route: '/dashboard/accounts/accounts-reports/gst-report' },
             //{ id: 'trial-balance', name: 'Trial Balance', route: '/dashboard/accounts/accounts-reports/trial-balance' },
-            { id: 'tds-report', name: 'TDS Report', route: '/dashboard/accounts/accounts-reports/tds-report' },
-            { id: 're-print', name: 'Re-Print', route: '/dashboard/accounts/accounts-reports/re-print' },
-            { id: 'pending-transfer', name: 'Pending Transfer', route: '/dashboard/accounts/accounts-reports/pending-transfer' },
             { id: 'online-settlement-report', name: 'Online Settlement Report', route: '/dashboard/accounts/accounts-reports/online-settlement-report' },
-           
+            { id: 'pending-transfer', name: 'Pending Transfer', route: '/dashboard/accounts/accounts-reports/pending-transfer' },
+            { id: 'tds-report', name: 'TDS Report', route: '/dashboard/accounts/accounts-reports/tds-report' },
+            { id: 're-print', name: 'Re-Print', route: '/dashboard/accounts/accounts-reports/re-print' }           
           ]
         }
       ]
