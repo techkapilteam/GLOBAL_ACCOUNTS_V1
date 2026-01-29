@@ -10,7 +10,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
   ],
   templateUrl: './day-book.component.html'
 })
