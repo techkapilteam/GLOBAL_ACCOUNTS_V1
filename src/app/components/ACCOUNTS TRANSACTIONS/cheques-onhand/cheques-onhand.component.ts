@@ -7,30 +7,30 @@ import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-cheques-onhand',
-  imports: [FormsModule,ReactiveFormsModule,NgxDatatableModule,CommonModule,BsDatepickerModule],
-  standalone:true,
-  providers:[DatePipe],
+  imports: [FormsModule, ReactiveFormsModule, NgxDatatableModule, CommonModule, BsDatepickerModule],
+  standalone: true,
+  providers: [DatePipe],
   templateUrl: './cheques-onhand.component.html',
   styleUrl: './cheques-onhand.component.css',
 
 })
 export class ChequesOnhandComponent {
 
-    
+
   activeTab: string = 'ALL';
   showCheckbox: boolean = true;
   gridData: any[] = [];
   ngOnInit(): void {
-    this.setTab('ALL'); 
+    this.setTab('ALL');
   }
 
- 
+
   setTab(tab: string): void {
-    this.activeTab = tab;    
+    this.activeTab = tab;
     this.gridData = [];
     this.showCheckbox = true;
 
-   
+
     if (tab === 'ALL' || tab === 'CHEQUE') {
       this.showCheckbox = true;
 
@@ -50,13 +50,13 @@ export class ChequesOnhandComponent {
       ];
     }
 
-   
+
     if (tab === 'ONLINE') {
       this.showCheckbox = true;
-      this.gridData = []; 
+      this.gridData = [];
     }
 
-    
+
     if (tab === 'DEPOSITED') {
       this.showCheckbox = false;
 
@@ -98,19 +98,19 @@ export class ChequesOnhandComponent {
     }
   }
 
- get showActionColumns(): boolean {
-  return this.activeTab !== 'DEPOSITED' && this.activeTab !== 'CANCELLED';
-}
+  get showActionColumns(): boolean {
+    return this.activeTab !== 'DEPOSITED' && this.activeTab !== 'CANCELLED';
+  }
 
-isAllSelected(): boolean {
-  return this.gridData?.length > 0 &&
-         this.gridData.every(row => row.selected);
-}
+  isAllSelected(): boolean {
+    return this.gridData?.length > 0 &&
+      this.gridData.every(row => row.selected);
+  }
 
-toggleAll(event: Event): void {
-  const checked = (event.target as HTMLInputElement).checked;
-  this.gridData.forEach(row => row.selected = checked);
-}
+  toggleAll(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.gridData.forEach(row => row.selected = checked);
+  }
 }
 
 
