@@ -10,7 +10,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../envir/environment.prod';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 @Injectable({
   providedIn: 'root',
 })
@@ -226,7 +227,7 @@ export class CommonService {
     return raw ? JSON.parse(raw) : null;
   }
 
-  showErrorMessage(errormsg: string){
+  showErrorMessage(errormsg: string) {
 
     this.toastr.error(errormsg, "Error!", { timeOut: this.messageShowTimeOut });
   }
@@ -318,7 +319,7 @@ export class CommonService {
     debugger;
     let address = this.getcompanyaddress();
     let Companyreportdetails = this._getCompanyDetails();
-     const doc = new jsPDF('p', 'mm', 'a4');
+    const doc = new jsPDF('p', 'mm', 'a4');
     // let doc = new jsPDF('lanscape');
     let totalPagesExp = '{total_pages_count_string}'
     let today = this.pdfProperties("Date");
@@ -451,54 +452,54 @@ export class CommonService {
 
     // });
     autoTable(doc, {
-  columns: gridheaders,
-  body: gridData,
-  theme: 'grid',
-  rowPageBreak: 'avoid',
+      columns: gridheaders,
+      body: gridData,
+      theme: 'grid',
+      rowPageBreak: 'avoid',
 
-headStyles: {
-  fillColor: this.pdfProperties("Header Color"),
-  halign: this.pdfProperties("Header Alignment") as 'left' | 'center' | 'right',
-  fontSize: Number(this.pdfProperties("Header Fontsize"))
-},
+      headStyles: {
+        fillColor: this.pdfProperties("Header Color"),
+        halign: this.pdfProperties("Header Alignment") as 'left' | 'center' | 'right',
+        fontSize: Number(this.pdfProperties("Header Fontsize"))
+      },
 
- styles: {
-  cellWidth: 'wrap',
-  fontSize: Number(this.pdfProperties("Cell Fontsize")),
- 
-  overflow: 'linebreak'
-},
+      styles: {
+        cellWidth: 'wrap',
+        fontSize: Number(this.pdfProperties("Cell Fontsize")),
+
+        overflow: 'linebreak'
+      },
 
 
-  columnStyles: colWidthHeight,
-  startY: 48,
-  showHead: 'everyPage',
-  showFoot: 'lastPage',
+      columnStyles: colWidthHeight,
+      startY: 48,
+      showHead: 'everyPage',
+      showFoot: 'lastPage',
 
-  didDrawPage: (data) => {
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
+      didDrawPage: (data) => {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
 
-    doc.setFont('helvetica', 'bold');
+        doc.setFont('helvetica', 'bold');
 
-    if (doc.getNumberOfPages() === 1) {
-      doc.setFontSize(15);
+        if (doc.getNumberOfPages() === 1) {
+          doc.setFontSize(15);
 
-      doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
-      doc.text(Companyreportdetails.pCompanyName, 60, 10);
+          doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
+          doc.text(Companyreportdetails.pCompanyName, 60, 10);
 
-      doc.setFontSize(14);
-      doc.text(reportName, 87, 30);
+          doc.setFontSize(14);
+          doc.text(reportName, 87, 30);
 
-      doc.line(10, 45, pageWidth - rMargin, 45);
-    }
+          doc.line(10, 45, pageWidth - rMargin, 45);
+        }
 
-    const page = `Page ${doc.getNumberOfPages()}`;
-    doc.setFontSize(10);
-    doc.text("Printed on : " + today, data.settings.margin.left, pageHeight - 5);
-    doc.text(page, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
-  }
-});
+        const page = `Page ${doc.getNumberOfPages()}`;
+        doc.setFontSize(10);
+        doc.text("Printed on : " + today, data.settings.margin.left, pageHeight - 5);
+        doc.text(page, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+      }
+    });
     if (typeof doc.putTotalPages === 'function') {
       debugger;
       doc.putTotalPages(totalPagesExp);
@@ -512,7 +513,7 @@ headStyles: {
     }
 
   }
-   setiFrameForPrint(doc:any) {
+  setiFrameForPrint(doc: any) {
     debugger;
     const iframe = document.createElement('iframe');
     iframe.id = "iprint";
@@ -521,12 +522,42 @@ headStyles: {
     iframe.setAttribute('style', 'display: none;');
     document.body.appendChild(iframe);
     // iframe.contentWindow.print();
-     iframe.contentWindow?.print();
+    iframe.contentWindow?.print();
   }
+
+
+
+
+
+
+  public exportAsExcelFile(json: any[], excelFileName: string): void {
+
+  let myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+
+  let myworkbook: XLSX.WorkBook = { Sheets: { 'data': myworksheet }, SheetNames: ['data'] };
+  let excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
+  this.saveAsExcelFile(excelBuffer, excelFileName);
+
+
+}
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+
+    let EXCEL_TYPE =
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+
+let EXCEL_EXTENSION = '.xlsx';
+  let data: Blob = new Blob([buffer], {
+    type: EXCEL_TYPE
+  });
+  FileSaver.saveAs(data, fileName + '_Excel' + EXCEL_EXTENSION);
 }
 
 
 
+
+
+}
 
 function isNullOrEmptyString(pCinNo: any) {
   throw new Error('Function not implemented.');
