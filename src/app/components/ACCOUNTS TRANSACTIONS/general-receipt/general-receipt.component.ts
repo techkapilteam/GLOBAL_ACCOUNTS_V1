@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { RouterModule } from '@angular/router';
-import { Currencypipe } from '../../ACCOUNTS REPORTS/day-book/day-book.component';
 
 @Component({
   selector: 'app-general-receipt',
   standalone: true,
-  imports: [CommonModule, NgxDatatableModule, RouterModule],
-  providers:[Currencypipe],
+  imports: [CommonModule, NgxDatatableModule, RouterModule,CurrencyPipe],
   templateUrl: './general-receipt.component.html'
 })
 export class GeneralReceiptComponent {
