@@ -5,7 +5,7 @@
     </div>
 
     <div class="screen-content">
-      <form class="container py-3">
+      <form [formGroup]="ChequesIssuedForm" class="container py-3">
 
         <div class="row mb-3">
           <div class="col-12">
@@ -14,24 +14,29 @@
 
           <div class="col-12 d-flex gap-4">
             <div class="form-check radio-btn-secondary">
-              <input class="form-check-input" type="radio" name="chequetype" [(ngModel)]="chequeType" value="issued">
-              <label>Issued</label>
+              <input class="form-check-input" type="radio" name="pchequestype" formControlName="pchequestype"
+                value="Issued" (change)="selectChequesType('Issued')" />
+              <label class="mt-1">Issued</label>
             </div>
 
             <div class="form-check radio-btn-secondary">
-              <input class="form-check-input" type="radio" name="chequetype" [(ngModel)]="chequeType" value="received">
-              <label>Received</label>
+              <input class="form-check-input" type="radio" name="pchequestype" formControlName="pchequestype"
+                value="Received" (change)="selectChequesType('Received')" />
+              <label class="mt-1">Received</label>
             </div>
           </div>
         </div>
 
-        <div class="mt-3">
+        <div *ngIf="showOrHideIssuedCheques" class="mt-3">
+
           <div class="row mb-3">
             <div class="col-md-6">
-              <input type="search" class="form-control" placeholder="Search by Cheque / Reference No (min 3 chars)" />
+              <input type="search" class="form-control" placeholder="Search by Cheque / Reference No (min 3 chars)"
+                (input)="onSearchForCheque($event.target.value)" />
             </div>
+
             <div class="col-md-6">
-              <div class="spinner-border text-muted d-none"></div>
+              <div *ngIf="spinner" class="spinner-border text-muted"></div>
             </div>
           </div>
 
@@ -39,64 +44,180 @@
             <li class="nav-item">
               <a class="nav-link active">
                 Cheques
-                <span class="badge bg-dark ms-2">0</span>
+                <span class="badge bg-danger ms-2">
+                  {{ displayAllChequesDataBasedOnForm.length }}
+                </span>
               </a>
             </li>
           </ul>
 
-          <div class="mt-3" *ngIf="chequeType === 'issued'">
-            <ngx-datatable class="material striped" [rows]="issuedChequeRows" [columnMode]="'force'"
-              [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
+          <ngx-datatable class="material table mt-3" [rows]="displayAllChequesDataBasedOnForm" columnMode="force"
+            [headerHeight]="50" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
+            [footerHeight]="pageCriteria.footerPageHeight" [scrollbarH]="true" [summaryRow]="true" [summaryHeight]="50">
 
-              <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>
-              <ngx-datatable-column name="Cheque / Reference No" prop="chequeRefNo"></ngx-datatable-column>
-              <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
-              <ngx-datatable-column name="Payment Id" prop="paymentId"></ngx-datatable-column>
-              <ngx-datatable-column name="Payment Date" prop="paymentDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Returned Date" prop="returnedDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Cancelled Date" prop="cancelledDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Transaction Mode" prop="transactionMode"></ngx-datatable-column>
-              <ngx-datatable-column name="Party" prop="party"></ngx-datatable-column>
-              <ngx-datatable-column name="Account No" prop="accountNo"></ngx-datatable-column>
+            <ngx-datatable-column name="Cheque Status" prop="chequeStatus" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+            </ngx-datatable-column>
 
-            </ngx-datatable>
-          </div>
+            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+            </ngx-datatable-column>
 
-          <div class="mt-3" *ngIf="chequeType === 'received'">
+            <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" [cellClass]="'text-end'"
+              [headerClass]="'text-end'">
 
-            <div class="d-flex justify-content-end gap-3 mb-2">
-              <button type="button" class="btn btn-outline-danger btn-sm">
-                <i class="bi bi-file-earmark-pdf">PDF</i>
-              </button>
-              <button type="button" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-printer">Print</i>
-              </button>
+              <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+                {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+              </ng-template>
+
+              <ng-template ngx-datatable-summary-template>
+                {{ currencySymbol }} {{ totalamount | number:'1.2-2' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Payment Id" prop="preceiptid" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Payment Date" prop="preceiptdate" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Cleared Date" prop="pdepositeddate" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <span *ngIf="row.ptypeofpayment === 'CHEQUE' && row.pchequestatus === 'P'">
+                  {{ row.pdepositeddate | date:'dd-MM-yyyy' }}
+                </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Returned Date" prop="pCleardate" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <span *ngIf="row.pchequestatus === 'R'">
+                  {{ row.pCleardate | date:'dd-MM-yyyy' }}
+                </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Cancelled Date" prop="pCleardate" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                <span *ngIf="row.pchequestatus === 'C'">
+                  {{ row.pCleardate | date:'dd-MM-yyyy' }}
+                </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" [cellClass]="'text-center'"
+              [headerClass]="'text-center'">
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Party" prop="ppartyname" [cellClass]="'text-start'"
+              [headerClass]="'text-start'">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.ppartyname || '--NA--' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Account No" prop="pAccountnumber" [cellClass]="'text-start'"
+              [headerClass]="'text-start'">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.pAccountnumber || '--NA--' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-footer>
+              <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                let-curPage="curPage">
+
+                <div *ngIf="rowCount > 0">
+                  Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }}
+                  ({{ pageCriteria.totalrows }} items)
+                </div>
+
+                <!-- <datatable-pager
+            [page]="curPage"
+            [size]="pageSize"
+            [count]="rowCount"
+            (change)="onFooterPageChange($event)">
+          </datatable-pager> -->
+              </ng-template>
+            </ngx-datatable-footer>
+
+          </ngx-datatable>
+        </div>
+
+        <div *ngIf="showOrHideReceivedCheques" class="mt-3">
+
+          <div class="row mb-3 align-items-center">
+            <div class="col-md-6">
+              <input type="search" class="form-control" placeholder="Search by Cheque / Reference No (min 3 chars)"
+                (input)="onSearchForChequeReceived($event.target.value)" />
             </div>
 
-            <ngx-datatable class="material striped" [rows]="receivedChequeRows" [columnMode]="'force'"
-              [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
-
-              <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>
-              <ngx-datatable-column name="Cheque / Reference No" prop="chequeRefNo"></ngx-datatable-column>
-              <ngx-datatable-column name="Branch" prop="branch"></ngx-datatable-column>
-              <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
-              <ngx-datatable-column name="Receipt Id" prop="receiptId"></ngx-datatable-column>
-              <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Deposited Date" prop="depositedDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Returned Date" prop="returnedDate"></ngx-datatable-column>
-              <ngx-datatable-column name="Transaction Mode" prop="transactionMode"></ngx-datatable-column>
-              <ngx-datatable-column name="Cheque Bank Name" prop="bankName"></ngx-datatable-column>
-              <ngx-datatable-column name="Party" prop="party"></ngx-datatable-column>
-
-            </ngx-datatable>
+            <div class="col-md-6 text-end d-flex justify-content-end gap-3">
+              <img src="images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')" />
+              <img src="images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')" />
+            </div>
           </div>
 
+          <ngx-datatable class="material table mt-3" [rows]="displayGridDataBasedOnForm" columnMode="force"
+            [headerHeight]="50" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
+            [footerHeight]="pageCriteria.footerPageHeight">
+
+            <ngx-datatable-column name="Cheque Status" prop="chequeStatus"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Branch" prop="pbranchname"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Amount" prop="ptotalreceivedamount">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Receipt Id" prop="preceiptid"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Receipt Date" prop="preceiptdate">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.preceiptdate | date:'dd-MM-yyyy' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Deposited Date" prop="pdepositeddate">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.pdepositeddate | date:'dd-MM-yyyy' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Cleared Date" prop="pCleardate">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.pCleardate | date:'dd-MM-yyyy' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Returned Date" prop="pCleardate">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.pchequestatus === 'R' ? (row.pCleardate | date:'dd-MM-yyyy') : '' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Cheque Bank Name" prop="pbankname"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Party" prop="ppartyname"></ngx-datatable-column>
+
+          </ngx-datatable>
         </div>
 
         <div class="d-flex justify-content-end mt-4">
-          <button type="button" class="btn btn-danger">Clear</button>
+          <button type="button" class="btn btn-danger" (click)="Clear()">
+            Clear
+          </button>
         </div>
 
       </form>

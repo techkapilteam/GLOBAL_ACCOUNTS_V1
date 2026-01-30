@@ -174,6 +174,10 @@ export const routes: Routes = [
         component: JvListComponent
       },
       {
+        path: 'accounts/accounts-reports/cheque-cancel',
+        component: ChequeCancelComponent
+      },
+      {
         path: 'accounts/accounts-reports/account-ledger',
         component: AccountLedgerComponent
       },
@@ -201,10 +205,7 @@ export const routes: Routes = [
         path: 'accounts/accounts-reports/receipts-and-payments',
         component: ReceiptsAndPaymentsComponent
       },
-      {
-        path: 'accounts/accounts-reports/cheque-cancel',
-        component: ChequeCancelComponent
-      },
+     
       {
         path: 'accounts/accounts-reports/cheque-enquiry',
         component: ChequeEnquiryComponent
