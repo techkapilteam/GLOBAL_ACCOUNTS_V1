@@ -5,7 +5,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PageCriteria } from '../../../Models/pageCriteria';
-import { DateformatPipe } from '../day-book/day-book.component';
+import { DateformatPipe } from './dateformat.pipe';
 
 @Component({
   selector: 'app-comparison-tb',
@@ -51,6 +51,9 @@ export class ComparisonTbComponent {
 
   constructor() {
     this.currencysymbol = String(this.commonService.datePickerPropertiesSetup('currencysymbol'));
+     this.dpConfig.maxDate = new Date();
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY'
+    // this.dpConfig.maxDate = new Date();
 
     this.dpConfig = {
       dateInputFormat: String(this.commonService.datePickerPropertiesSetup('dateInputFormat')),
