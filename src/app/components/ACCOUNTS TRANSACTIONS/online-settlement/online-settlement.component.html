@@ -1,673 +1,147 @@
-<div class="screen-container">
-  <div class="screen-card">
-    <div  class="screen-header">
-      <h2>Online Settelments</h2>
-    </div>
-    <div class="screen-content">  
-<!-- <form [formGroup]="ChequesInBankForm">
-    <app-loading [loading]="gridLoading"></app-loading>
+<div class="container mt-3 ">
+
     <div class="section-content">
         <div class="row">
-            <div class="col-md-12 col-xl-12">
-            </div>
-        </div>
-        <div class="row">
+
             <div class="col-md-4 col-xl-4">
-                <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
-                    <label class="required-field"> Transaction Date</label>
-                    <fieldset [disabled]="!disabletransactiondate">
-                        <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate" formControlName="ptransactiondate" [bsConfig]="ptransactiondateConfig" #dp="bsDatepicker" readonly bsDatepicker placement="bottom" [ngClass]="{ 'is-invalid': ChequesInBankValidation.ptransactiondate }" >
-                    </fieldset>
+                <div class="form-group">
+                    <label class="required-field">Transaction Date</label>
+                    <input type="text" class="form-control" [value]="today" readonly />
                 </div>
-                <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
+
+
+                <div class="form-group">
                     <label class="required-field">Receipt Date</label>
-                    <input class="form-control w-auto" type="text" title="Clear Date" id="pchequereceiptdate" formControlName="pchequereceiptdate" [bsConfig]="pchequecleardateConfig" #dp="bsDatepicker" readonly bsDatepicker placement="bottom" [ngClass]="{ 'is-invalid': ChequesInBankValidation.pchequereceiptdate }" (ngModelChange)="Receipt_change_date($event)">
-                    <app-validation-message [messgae]="ChequesInBankValidation?.pchequereceiptdate">
-                    </app-validation-message>
+                    <input type="text" class="form-control" bsDatepicker name="receiptDate" [(ngModel)]="receiptDate"
+                        [bsConfig]="dateConfig" readonlyInput>
                 </div>
-                <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
+
+                <div class="form-group">
                     <label class="required-field">Clear Date</label>
-                    <input class="form-control w-auto" type="text" title="Clear Date" id="pchequecleardate" formControlName="pchequecleardate" [bsConfig]="pchequecleardateConfig" #dp="bsDatepicker" readonly bsDatepicker placement="bottom" [ngClass]="{ 'is-invalid': ChequesInBankValidation.pchequecleardate }" (ngModelChange)="change_date($event)">
-                    <app-validation-message [messgae]="ChequesInBankValidation?.pchequecleardate">
-                    </app-validation-message>
+                    <input type="text" class="form-control" bsDatepicker name="clearDate" [(ngModel)]="clearDate"
+                        [bsConfig]="dateConfig" readonlyInput>
                 </div>
-                <div class="">
+
+
                 <div class="form-group">
                     <label>Bank</label>
-                    <select class="form-control" (change)="SelectBank($event)" id="bankname" formControlName="bankname" title="Bank" [ngClass]="{ 'is-invalid': ChequesInBankValidation.bankname }">
+                    <select class="form-control">
                         <option value="">Select</option>
-                        <option *ngFor="let bank of BanksList" [value]="bank.paccountid">{{bank.pdepositbankname}}
-                        </option>
+                        <option>SBI</option>
+                        <option>HDFC</option>
+                        <option>ICICI</option>
                     </select>
-                    <app-validation-message [messgae]="ChequesInBankValidation?.bankname"></app-validation-message>
                 </div>
-          
+
                 <div class="form-group">
                     <label>Online Account</label>
-                    <select class="form-control" (change)="SelectPaytm($event)" id="paytmname" formControlName="paytmname" title="Online Account" [ngClass]="{ 'is-invalid': ChequesInBankValidation.paytmname }">
+                    <select class="form-control">
                         <option value="">Select</option>
-                        <option *ngFor="let bank of PaytmList" [value]="bank.paccountid">{{bank.pdepositbankname}}
-                        </option>
+                        <option>Paytm</option>
+                        <option>PhonePe</option>
+                        <option>Google Pay</option>
                     </select>
-                    <app-validation-message [messgae]="ChequesInBankValidation?.paytmname"></app-validation-message>
                 </div>
             </div>
-            </div>
 
-            <div class="col-md-6 col-xl-6">
-                <div class="border rounded  shadow-sm bg-light p-3">
-                    <h2 *ngIf="banknameshowhide" class="sec-head-bold-blue mt-2 font-18 overflow-hidden">{{bankname}}
-                        <hr>
-                    </h2>
-
-                    <div class="form-group">
-                        <label>Balance: </label> <label class="sec-head-bold ml-2">
-                            <div *ngIf="bankbalancetype=='Dr'">{{currencySymbol}} {{bankbalance | currencypipe}}
-                                {{bankbalancetype}}
-                            </div>
-                            <div *ngIf="bankbalancetype=='Cr'">{{currencySymbol}} {{bankbalance | currencypipe}}
-                                {{bankbalancetype}}
-                            </div>
-                            <div *ngIf="bankbalancetype==''">{{currencySymbol}} 0.00</div>
-                        </label>
+            <div class="col-md-8 col-xl-8">
+                <div class="border rounded shadow-sm bg-light p-3 mb-3">
+                    <!-- <h5 class="mb-2 text-primary">SBI</h5> -->
+                    <hr class="mt-2 mb-3" />
+                    <div class="form-group mb-2">
+                        <label class="mb-0">Balance: </label>
+                        <span class="ml-2 font-weight-bold">₹ 25,000.00 Dr</span>
                     </div>
-                    <div class="form-group m-0">
-                        <label>BRS Date: </label> <label class="sec-head-bold ml-2">{{brsdate}}</label>
+                    <div class="form-group mb-0">
+                        <label class="mb-0">BRS Date: </label>
+                        <span class="ml-2 font-weight-bold">23/01/2026</span>
                     </div>
                 </div>
-                <br>
-                <div class="border rounded  shadow-sm bg-light p-3" *ngIf="paytmshowhide">
-                    <h2  class="sec-head-bold-blue mt-2 font-18 overflow-hidden">{{paytmname}}
-                        <hr>
-                    </h2>
 
-                    <div class="form-group">
-                        <label>Balance: </label> <label class="sec-head-bold ml-2">
-                            <div *ngIf="bankbalancetype=='Dr'">{{currencySymbol}} {{paytmbalance | currencypipe}}
-                                {{bankbalancetype}}
-                            </div>
-                            <div *ngIf="bankbalancetype=='Cr'">{{currencySymbol}} {{paytmbalance | currencypipe}}
-                                {{bankbalancetype}}
-                            </div>
-                            <div *ngIf="bankbalancetype==''">{{currencySymbol}} 0.00</div>
-                        </label>
-                    </div>
-                    
-                </div>
+
             </div>
 
         </div>
     </div>
+
+
 
     <div class="section-content mt-2">
         <div class="row">
             <div class="col-md-12 col-xl-12">
-                <div class="col-md-6 col-xl-6">
-                    <div class="form-check form-check-inline radio-btn-secondary">
-                        <input class="form-check-input " type="radio" name="chequeintype" id="all" value="A" formControlName="chequeintype" (change)="chequeintypeChange($event.target.value)">
-                        <label class="mt-1" for="all"> All </label>
-                    </div>
-                    <div class="form-check form-check-inline radio-btn-secondary ml-5">
-                        <input class="form-check-input" type="radio" id="deposited" value="D" formControlName="chequeintype" name="chequeintype" (change)="chequeintypeChange($event.target.value)">
-                        <label class=" mt-1 " for="deposited"> Cleared </label>
-                    </div>
-                    <div class="form-check form-check-inline radio-btn-secondary ml-5">
-                        <input class="form-check-input" type="radio" id="notdeposited" value="ND" formControlName="chequeintype" name="chequeintype" (change)="chequeintypeChange($event.target.value)">
-                        <label class=" mt-1 " for="notdeposited"> Pending </label>
-                    </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="chequeintype" id="all" checked>
+                    <label class="form-check-label" for="all">All</label>
+                </div>
+                <div class="form-check form-check-inline ml-5">
+                    <input class="form-check-input" type="radio" name="chequeintype" id="cleared">
+                    <label class="form-check-label" for="cleared">Cleared</label>
+                </div>
+                <div class="form-check form-check-inline ml-5">
+                    <input class="form-check-input" type="radio" name="chequeintype" id="pending">
+                    <label class="form-check-label" for="pending">Pending</label>
                 </div>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row mt-3">
             <div class="col-md-6 col-xl-6">
-                <div class="form-group mr-0 custom-search">
-                    <input (input)="onSearch($event.target.value)" type="search" #search id="search" formControlName="searchtext" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-6">
-                <div class="d-flex justify-content-end mr-3 mt-4" *ngIf="showicons">
-                    <ul class="temp-ul">
-                        <li class="temp-ico ml-2">
-                            <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf" style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
-                        </li>
-                        <li class="temp-ico ml-2">
-                            <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print" (click)="pdfOrprint('Print')" style="cursor: pointer;" />
-                        </li>
-                        <li class="temp-ico ml-2">
-                            <img src="assets/images/icon-excel.svg " width="18px" class="pt-2" title="excel" (click)="export()" style="cursor: pointer;" />
-                        </li>
-                    </ul>
-    
-                </div>
-            </div>
-         
-        </div>
-
-        <ul class="nav filtered-tab nav-tabs mb-4">
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName" class="active"> <a class="active" id="allcss" (click)="All()" data-toggle="tab" href="#all" role="tab" aria-controls="fresh" aria-selected="true">All <span
-                        class="badge badge-warning ml-2">{{all}}</span></a>
-            </li>
-
-            
-
-        </ul>
-
-        <div *ngIf="brsdateshowhidecleared" class="row">
-            <div class="col-md-6 col-xl-4">
                 <div class="form-group">
-                    <label>BRS From Date</label>
-                    <input class="form-control w-auto" type="text" formControlName="pfrombrsdate" title="frombrsdate" readonly [bsConfig]="brsfromConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-4">
-                <div class="form-group">
-                    <label>BRS To Date</label>
-                    <input class="form-control w-auto" type="text" formControlName="ptobrsdate" title="tobrsdate" readonly [bsConfig]="brstoConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
-                    <div *ngIf="validatebrsdateclear" style="color:red">Brs To Date Should Be Greater Than From Date
-                    </div>
-                </div>
+                    <input type="search" class="form-control" placeholder="Search" />
 
+
+                </div>
+                <div class="col-md-4 col-xl-4 d-flex align-items-center">
+                    <button type="button" class="btn btn-primary mt-2">
+                        ALL
+                    </button>
+                </div>
             </div>
-            <div class=" justify-content-end mt-4">
-                <a (click)="ShowBrsClear()" data-toggle="tab" class="btn btn-b-icon " role="tab" aria-controls="hot" aria-selected="false">Show</a>
-            </div>
+
         </div>
 
-        <form [formGroup]="BrsDateForm">
-            <div *ngIf="brsdateshowhidereturned" class="row">
-                <div class="col-md-6 col-xl-4">
-                    <div class="form-group">
-                        <label>BRS From Date</label>
-                        <input class="form-control w-auto" type="text" readonly formControlName="frombrsdate" placeholder="" [bsConfig]="brsfromConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                    <div class="form-group">
-                        <label>BRS To Date</label>
-                        <input class="form-control w-auto" type="text" readonly formControlName="tobrsdate" placeholder="" [bsConfig]="brstoConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
-                        <div *ngIf="validatebrsdatereturn" style="color:red">Brs To Date Should Be Greater Than From Date
-                        </div>
-                    </div>
-                </div>
-                <div class=" justify-content-end mt-4">
-                    <a (click)="ShowBrsReturn()" data-toggle="tab" class="btn btn-b-icon " role="tab" aria-controls="hot" aria-selected="false">Show</a>
-                </div>
-            </div>
-        </form>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade active show " id="all" role="tabpanel" aria-labelledby="fresh-tab">
-                <div class="row">
-                    <div class="col-md-12 col-xl-12">
-                        
-                           
-                        <ngx-datatable  class="material expandable table" [rows]="gridData" [columnMode]="ColumnMode.force"
-                            [headerHeight]="50" [scrollbarH]="true" rowHeight="auto" [selected]="selected"
-                            [selectionType]="SelectionType.checkbox"  (select)="onSelect($event)" *ngIf="displayGridBasedOnFormName"
-                            [rowHeight]="43" [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize"
-                            [offset]="pageCriteria.offset" [summaryRow]="true" [sorts]="[{prop: 'preceiptdate', dir: 'asc'}]"
-                            [summaryHeight]="40" [summaryPosition]="'bottom'">
-                            <ngx-datatable-column frozenLeft="True" [sortable]="false" [canAutoResize]="false" [draggable]="false"
-                                [resizeable]="false" [width]="60">
-                                <ng-template ngx-datatable-header-template let-value="value" let-allRowsSelected="allRowsSelected"
-                                    let-selectFn="selectFn" let-row="row">
-                                    <div *ngIf="checkuncheckbool">
-                                        <input type="checkbox" [checked]="allRowsSelected" (change)="selectFn(!allRowsSelected)" />
-                                    </div>
-                                </ng-template>
-                                <ng-template class="column-fixed" ngx-datatable-cell-template let-value="value" let-isSelected="isSelected"
-                                    let-row="row" let-onCheckboxChangeFn="onCheckboxChangeFn">
-                                    <div *ngIf="row.checkuncheck">
-                                        <input type="checkbox" [checked]="isSelected" (change)="onCheckboxChangeFn($event,row)" />
-                                    </div>
-                                </ng-template>
-                            </ngx-datatable-column>
+        <ngx-datatable ngSkipHydration class="bootstrap mt-3" style="height: 200px" [rows]="rows" [columnMode]="'force'"
+            [headerHeight]="45" [rowHeight]="45" [footerHeight]="0" [selectionType]="SelectionType.checkbox"
+            [selected]="selected" (select)="onSelect($event)">
 
-                            <ngx-datatable-column name="Chit Receipt No" prop="chitReceiptNo" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-                        
-                            <ngx-datatable-column name="Reference No." prop="pChequenumber" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'">
-                            </ngx-datatable-column>
+            <ngx-datatable-column [width]="60" [checkboxable]="true" [headerCheckboxable]="true">
+            </ngx-datatable-column>
 
-                            <ngx-datatable-column name="Branch Name" prop="pbranchname" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                                    <div *ngIf="row.pbranchname==''||row.pbranchname==null">--NA--</div>
-                                    <div *ngIf="row.pbranchname!=''">{{row.pbranchname}}</div>
-                                </ng-template>
-                            </ngx-datatable-column>
-                        
-                            <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" [cellClass]="'cell-right'"
-                                [headerClass]="'header-right'" [summaryTemplate]="Amount">
-                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                                    <span title="{{currencySymbol}} {{row.ptotalreceivedamount | currencypipe}}">{{currencySymbol}}
-                                        {{row.ptotalreceivedamount | currencypipe}}</span>
-                                </ng-template>
-                                <ng-template #Amount>
-                                    {{currencySymbol}} {{amounttotal.toFixed(2) | currencypipe}}
-                                </ng-template>
-                            </ngx-datatable-column>
+            <ngx-datatable-column name="Chit Receipt No" prop="receiptNo"></ngx-datatable-column>
+            <ngx-datatable-column name="Reference No." prop="referenceNo"></ngx-datatable-column>
+            <ngx-datatable-column name="Branch Name" prop="branch"></ngx-datatable-column>
 
-                            <ngx-datatable-column name="Party" prop="ppartyname" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                            </ngx-datatable-column>
+            <ngx-datatable-column name="Amount" prop="amount">
+                <ng-template ngx-datatable-cell-template let-value="value">
+                    ₹ {{ value | number:'1.2-2' }}
+                </ng-template>
+            </ngx-datatable-column>
 
-                            <ngx-datatable-column name="Receipt Date" prop="preceiptdate" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <span title="{{row.preceiptdate}}">{{row.preceiptdate | dateformat}}</span>
-                                </ng-template>
-                            </ngx-datatable-column>
+            <ngx-datatable-column name="Party" prop="party"></ngx-datatable-column>
+            <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
+            <ngx-datatable-column name="Deposited Date" prop="depositedDate"></ngx-datatable-column>
+            <ngx-datatable-column name="Clear Date" prop="clearDate"></ngx-datatable-column>
+            <ngx-datatable-column name="Receipt Id" prop="receiptId"></ngx-datatable-column>
+            <ngx-datatable-column name="Transaction Mode" prop="mode"></ngx-datatable-column>
+            <ngx-datatable-column name="UPI Name" prop="upi"></ngx-datatable-column>
 
-                            <ngx-datatable-column name="Deposited Date" prop="pdepositeddate" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <span title="{{row.pdepositeddate}}">{{row.pdepositeddate | dateformat}}</span>
-                                </ng-template>
-                            </ngx-datatable-column>
+        </ngx-datatable>
 
-                            <ngx-datatable-column name="{{datetitle}}" prop="pCleardate" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'" *ngIf="!hiddendate">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <span title="{{row.pCleardate}}">{{row.pCleardate | dateformat}}</span>
-                                </ng-template>
-                            </ngx-datatable-column>
-                        
-                            <ngx-datatable-column name="Receipt Id" prop="preceiptid" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-
-                            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" [cellClass]="'cell-center'"
-                                [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-
-                            <ngx-datatable-column name="UPI Name" prop="cheque_bank" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                            </ngx-datatable-column>
-                            
-                            <ngx-datatable-footer *ngIf="gridData">
-                                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageCriteria.pageSize"
-                                    let-selectedCount="selectedCount" let-curPage="curPage" let-offset="pageCriteria.offset"
-                                    let-isVisible="isVisible">
-                                    <div style="padding: 5px 10px" *ngIf="gridData.length>0">
-                                        <div>Page {{pageCriteria.CurrentPage}} of {{pageCriteria.TotalPages}}
-                                            ({{ pageCriteria.totalrows }} items) </div>
-                                    </div>
-                                    <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'" [pagerRightArrowIcon]="'datatable-icon-right'"
-                                        [pagerPreviousIcon]="'datatable-icon-prev'" [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage"
-                                        [size]="pageCriteria.pageSize" [count]="rowCount" (change)="onFooterPageChange($event)"
-                                        [hidden]="!((rowCount / pageCriteria.pageSize) > 0)">
-                                    </datatable-pager>
-                                </ng-template>
-                            </ngx-datatable-footer>
-                        </ngx-datatable>
-
-                        <ngx-datatable class="material expandable table" [rows]="displayGridDataBasedOnForm" columnMode="force" [headerHeight]="50" [scrollbarH]="true" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
-                            *ngIf="!displayGridBasedOnFormName">
-
-                            <ngx-datatable-column name="Cheque Status" prop="chequeStatus" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Cheque/ Reference No. " prop="pChequenumber" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" [cellClass]="'cell-right'" [headerClass]="'header-right'">
-                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                                    <span title="{{currencySymbol}} {{row.ptotalreceivedamount | currencypipe}}">{{currencySymbol}}
-                                        {{row.ptotalreceivedamount | currencypipe}}</span>
-                                </ng-template>
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Receipt Id" prop="preceiptid" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Receipt Date" prop="preceiptdate" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Deposited/Cleared/Returned Date" prop="pdepositeddate" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                                    <div *ngIf="row.ptypeofpayment == 'CHEQUE'">{{row.pdepositeddate |dateformat}}</div>
-                                    <div *ngIf=" (row.ptypeofpayment != 'CHEQUE') && (row.pchequestatus == 'Y' || row.pchequestatus == 'R')">
-                                        {{row.pCleardate |dateformat}}</div>
-                                </ng-template>
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Cheque Bank Name" prop="cheque_bank" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                            </ngx-datatable-column>
-                            <ngx-datatable-column name="Party" prop="ppartyname" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                            </ngx-datatable-column>
-
-                            <ngx-datatable-footer *ngIf="displayGridDataBasedOnForm">
-                                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-selectedCount="selectedCount" let-curPage="curPage" let-offset="pageCriteria.offset" let-isVisible=" ">
-                                    <div style="padding: 5px 10px" *ngIf="displayGridDataBasedOnForm.length>0">
-                                        <div>Page {{pageCriteria.CurrentPage}} of {{pageCriteria.TotalPages}} ({{ pageCriteria.totalrows }} items) </div>
-                                    </div>
-                                    <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'" [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'" [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount" (change)="onFooterPageChange($event)"
-                                        [hidden]="!((rowCount / pageSize) > 0)">
-                                    </datatable-pager>
-                                </ng-template>
-                            </ngx-datatable-footer>
-                        </ngx-datatable>
-
-                    </div>
-
-                </div>
-            </div>
-            <label>Selected Rows Count is: <b>{{checkedRowsCount}}</b></label><br/>
-            <label>Selected Total Value is: <b>{{currencySymbol}} {{checkedAmountTotal | currencypipe}} </b></label>
+        <div class="text-right font-weight-bold mt-2 pr-3">
+            <!-- Grand Total : ₹ {{ grandTotal | number:'1.2-2' }} -->
+            Selected Rows Count is: 0
         </div>
-    </div>
-
-    <div class=" d-flex justify-content-end mt-3">
-        <a (click)="Clear()" data-toggle="tab" class="btn btn-g-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false"><img src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px" height="20px">Clear</a>
-        <div >
-
-            <button (click)="Save()" class="btn btn-s-icon px-3 border-0 ml-3" [disabled]="disablesavebutton">
-                <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                    *ngIf="!disablesavebutton">
-                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}
+        <div class="text-right font-weight-bold mt-2 pr-3">
+            Selected Total Value is: ₹ 0
+        </div>
+        <div class="d-flex justify-content-end mt-3 gap-3">
+            <button type="button" class="btn btn-dark" style="width: 100px;">
+                <i class="fa fa-times"></i> Clear
+            </button>
+            <button type="button" class="btn btn-primary" style="width: 100px;">
+                <i class="fa fa-check"></i> Save
             </button>
         </div>
+
     </div>
-
-    <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
-        <div class="modal-dialog" style="margin-right:0px !important; ">
-            <div class="model-cst modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <div class="form-group">
-                        <label for="">Enter The Return Amount Charges For The Cheque:{{chequenumber}}</label>
-                        <input type="text" class="form-control" style="text-align:right;" name="cancelcharges"  maxlength="3" id="cancelcharges" #ref appNumbersonly appMycurrencyFormatter>
-
-                    </div>
-                    <div class="d-flex justify-content-end mt-4">
-                        <a (click)="CancelChargesOk(ref.value)" data-toggle="tab" class="btn btn-b-icon px-3 border-0 mr-3" role="tab" aria-controls="hot" aria-selected="false"><img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px">Ok</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form> -->
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Cheques In Bank (Static)</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker.min.css"
-        rel="stylesheet" />
-
-    <style>
-        .required-field::after {
-            content: " *";
-            color: red;
-        }
-
-        .temp-ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
-
-        .temp-ico {
-            cursor: pointer;
-        }
-
-        .cell-center {
-            text-align: center;
-        }
-
-        .cell-left {
-            text-align: left;
-        }
-
-        .cell-right {
-            text-align: right;
-        }
-
-        .header-center {
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .header-left {
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .header-right {
-            text-align: right;
-            font-weight: bold;
-        }
-
-        .datepicker.dropdown-menu {
-            z-index: 9999 !important;
-        }
-
-        .section-content {
-            padding: 12px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container-fluid mt-3">
-
-        <div class="section-content">
-            <div class="row">
-
-                <div class="col-md-4 col-xl-4">
-                    <div class="form-group">
-                        <label class="required-field">Transaction Date</label>
-                        <input type="text" class="form-control datepicker" placeholder="DD/MM/YYYY" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Receipt Date</label>
-                        <input type="text" class="form-control datepicker" placeholder="DD/MM/YYYY" />
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required-field">Clear Date</label>
-                        <input type="text" class="form-control datepicker" placeholder="DD/MM/YYYY" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Bank</label>
-                        <select class="form-control">
-                            <option value="">Select</option>
-                            <option>SBI</option>
-                            <option>HDFC</option>
-                            <option>ICICI</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Online Account</label>
-                        <select class="form-control">
-                            <option value="">Select</option>
-                            <option>Paytm</option>
-                            <option>PhonePe</option>
-                            <option>Google Pay</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-8 col-xl-8">
-                    <div class="border rounded shadow-sm bg-light p-3 mb-3">
-                        <h5 class="mb-2 text-primary">SBI</h5>
-                        <hr class="mt-2 mb-3" />
-                        <div class="form-group mb-2">
-                            <label class="mb-0">Balance: </label>
-                            <span class="ml-2 font-weight-bold">₹ 25,000.00 Dr</span>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="mb-0">BRS Date: </label>
-                            <span class="ml-2 font-weight-bold">23/01/2026</span>
-                        </div>
-                    </div>
-
-                    <!-- <div class="border rounded shadow-sm bg-light p-3">
-                        <h5 class="mb-2 text-primary">Paytm</h5>
-                        <hr class="mt-2 mb-3" />
-                        <div class="form-group mb-0">
-                            <label class="mb-0">Balance: </label>
-                            <span class="ml-2 font-weight-bold">₹ 8,500.00 Cr</span>
-                        </div>
-                    </div> -->
-                </div>
-
-            </div>
-        </div>
-
-        <div class="section-content mt-2">
-            <div class="row">
-                <div class="col-md-12 col-xl-12">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="chequeintype" id="all" checked>
-                        <label class="form-check-label" for="all">All</label>
-                    </div>
-                    <div class="form-check form-check-inline ml-5">
-                        <input class="form-check-input" type="radio" name="chequeintype" id="cleared">
-                        <label class="form-check-label" for="cleared">Cleared</label>
-                    </div>
-                    <div class="form-check form-check-inline ml-5">
-                        <input class="form-check-input" type="radio" name="chequeintype" id="pending">
-                        <label class="form-check-label" for="pending">Pending</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-                <div class="col-md-6 col-xl-6">
-                    <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search" />
-                        <!-- <i class="fa fa-search"></i> -->
-
-
-                    </div>
-                    <div class="col-md-4 col-xl-4 d-flex align-items-center">
-                        <button type="button" class="btn btn-primary mt-2">
-                            ALL
-                        </button>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-6">
-                    <div class="d-flex justify-content-end mt-1">
-                        <ul class="temp-ul">
-                            <li class="temp-ico ml-3">EXCELL
-                                <!-- <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" /> -->
-                            </li>
-                            <li class="temp-ico ml-3">PRINT
-                                <!-- <img src="assets/images/print-icon-blue.svg" width="18" title="Print" /> -->
-                            </li>
-                            <li class="temp-ico ml-3">PDF
-                                <!-- <img src="assets/images/icon-excel.svg" width="18" title="Excel" /> -->
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- <div class="row"> -->
-            <!-- <div class="col-md-4 col-xl-4">
-        <div class="form-group">
-          <label>BRS From Date</label>
-          <input type="text" class="form-control datepicker" placeholder="DD/MM/YYYY" />
-        </div>
-      </div>
-      <div class="col-md-4 col-xl-4">
-        <div class="form-group">
-          <label>BRS To Date</label>
-          <input type="text" class="form-control datepicker" placeholder="DD/MM/YYYY" />
-        </div>
-      </div> -->
-
-            <!-- </div> -->
-
-            <div class="table-responsive mt-3">
-                <table class="table table-bordered table-striped">
-                    <thead class="thead-light">
-                        <tr>
-                            <th class="header-center" style="width:60px;"><input type="checkbox" checked /></th>
-                            <th class="header-center">Chit Receipt No</th>
-                            <th class="header-center">Reference No.</th>
-                            <th class="header-left">Branch Name</th>
-                            <th class="header-right">Amount</th>
-                            <th class="header-left">Party</th>
-                            <th class="header-center">Receipt Date</th>
-                            <th class="header-center">Deposited Date</th>
-                            <th class="header-center">Clear Date</th>
-                            <th class="header-center">Receipt Id</th>
-                            <th class="header-center">Transaction Mode</th>
-                            <th class="header-left">UPI Name</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr>
-                            <td class="cell-center">
-                                <input type="checkbox" checked />
-                            </td>
-                            <td class="cell-center">CR123</td>
-                            <td class="cell-center">REF456</td>
-                            <td class="cell-left">Hyderabad</td>
-                            <td class="cell-right">₹ 5,000.00</td>
-                            <td class="cell-left">Ramesh</td>
-                            <td class="cell-center">12/01/2026</td>
-                            <td class="cell-center">13/01/2026</td>
-                            <td class="cell-center">23/01/2026</td>
-                            <td class="cell-center">R001</td>
-                            <td class="cell-center">CHEQUE</td>
-                            <td class="cell-left">Paytm</td>
-                        </tr>
-
-                        <tr>
-                            <td class="cell-center">
-                                <input type="checkbox" />
-                            </td>
-                            <td class="cell-center">CR124</td>
-                            <td class="cell-center">REF999</td>
-                            <td class="cell-left">Bangalore</td>
-                            <td class="cell-right">₹ 7,500.00</td>
-                            <td class="cell-left">Suresh</td>
-                            <td class="cell-center">15/01/2026</td>
-                            <td class="cell-center">16/01/2026</td>
-                            <td class="cell-center">—</td>
-                            <td class="cell-center">R002</td>
-                            <td class="cell-center">UPI</td>
-                            <td class="cell-left">PhonePe</td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="4" class="text-right font-weight-bold">Grand Total :</td>
-                            <td class="cell-right font-weight-bold">₹ 12,500.00</td>
-                            <td colspan="7"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="mt-2">
-                <div>Page 1 of 1 (2 items)</div>
-                <div class="mt-2">
-                    <label>Selected Rows Count is: <b>1</b></label><br />
-                    <label>Selected Total Value is: <b>₹ 5,000.00</b></label>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-end mt-3">
-                <button type="button" class="btn btn-secondary">
-                    <i class="fa fa-times"></i> Clear
-                </button>
-                <button type="button" class="btn btn-success ml-3">
-                    <i class="fa fa-check"></i> Save
-                </button>
-            </div>
-
-        </div>
-    </div>
+</div>
