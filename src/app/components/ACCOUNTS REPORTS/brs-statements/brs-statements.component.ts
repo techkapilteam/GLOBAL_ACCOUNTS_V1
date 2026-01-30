@@ -18,7 +18,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 export class BrsStatementsComponent {  
 
   form!: FormGroup;
-  bankType: 'CREDIT' | 'DEBIT' = 'CREDIT';
+bankType: 'CREDIT' | 'DEBIT' | null = null;
   gridView: any[] = [];
 
   dpConfig = {
@@ -34,7 +34,7 @@ export class BrsStatementsComponent {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    // Initialize the form with default dates as today
+   
     const todayStr = this.getTodayString();
     this.form = this.fb.group({
       bankId: [''],
@@ -43,7 +43,7 @@ export class BrsStatementsComponent {
     });
   }
 
-  // Convert Date to yyyy-MM-dd string for type="date"
+
   getTodayString(): string {
     const today = new Date();
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -54,7 +54,7 @@ export class BrsStatementsComponent {
 
   onBankTypeChange(type: 'CREDIT' | 'DEBIT') {
     this.bankType = type;
-    this.gridView = []; // clear table when switching
+    this.gridView = []; 
   }
 
   getReport() {
@@ -92,6 +92,10 @@ export class BrsStatementsComponent {
   export() {
     console.log('Excel Export');
   }
+
+
+
+  
 }
   
 
