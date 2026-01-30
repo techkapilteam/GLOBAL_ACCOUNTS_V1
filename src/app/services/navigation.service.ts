@@ -58,7 +58,7 @@ export class NavigationService {
             { id: 'general-receipt', name: 'General Receipt', route: '/dashboard/accounts/accounts-transactions/general-receipt' },
             { id: 'payment-voucher', name: 'Payment Voucher', route: '/dashboard/accounts/accounts-transactions/payment-voucher' },
           //  { id: 'payment-voucher-view', name: 'Payment Voucher view', route: '/dashboard/accounts/accounts-transactions/payment-voucher-view' },
-             { id: 'general-receipt-new', name: 'General receipt New', route: '/dashboard/accounts/accounts-transactions/general-receipt-new' },
+             //{ id: 'general-receipt-new', name: 'General receipt New', route: '/dashboard/accounts/accounts-transactions/general-receipt-new' },
             //{ id: 'general-receipt-view', name: 'General receipt View', route: '/dashboard/accounts/accounts-transactions/general-receipt-view' },
             { id: 'petty-cash', name: 'Petty Cash', route: '/dashboard/accounts/accounts-transactions/petty-cash' },
            // { id: 'petty-cash-view', name: 'Petty Cash View', route: '/dashboard/accounts/accounts-transactions/petty-cash-view' },
