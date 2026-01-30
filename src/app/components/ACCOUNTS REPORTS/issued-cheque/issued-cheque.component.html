@@ -5,101 +5,154 @@
     </div>
 
     <div class="screen-content">
-      <form>
+      <form [formGroup]="FrmIssuedCheque" autocomplete="off">
+
         <div class="row g-3">
 
           <div class="col-md-6">
             <label class="form-label required-field">Bank Name</label>
-            <select class="form-select" [(ngModel)]="selectedBank" name="bank" (change)="loadChequeDetails()">
-              <option value="">Select Bank</option>
-              <option>Bank A</option>
-              <option>Bank B</option>
-            </select>
+
+            <ng-select [items]="BankData" formControlName="pbankname" bindLabel="pbankname" bindValue="pbankaccountid"
+              placeholder="Select" [searchable]="true" [clearable]="true" dropdownPosition="bottom"
+              [clearOnBackspace]="true" appendTo="body" (change)="BankName_Cahange($event)"
+              [ngClass]="{ 'is-invalid': f['pbankname'].touched && f['pbankname'].invalid }">
+            </ng-select>
+
+            <div class="invalid-feedback d-block" *ngIf="f['pbankname'].touched && f['pbankname'].errors?.['required']">
+              Bank Name is required
+            </div>
           </div>
 
           <div class="col-md-4">
             <label class="form-label required-field">Cheque No.</label>
-            <select class="form-select" [(ngModel)]="selectedChequeNo" name="cheque" (change)="loadChequeDetails()">
-              <option value="">Select Cheque No.</option>
-              <option>1001-1010</option>
-              <option>1011-1020</option>
-            </select>
+
+            <ng-select [items]="lstBankChequeDetails" formControlName="pchqfromto" bindLabel="pchqfromto"
+              bindValue="pchkBookId" placeholder="Select" appendTo="body" [searchable]="true" [clearable]="true"
+              dropdownPosition="bottom" [clearOnBackspace]="true" (change)="GetIssuedBankDetails($event)"
+              [ngClass]="{ 'is-invalid': f['pchqfromto'].touched && f['pchqfromto'].invalid }">
+            </ng-select>
+
+            <div class="invalid-feedback d-block"
+              *ngIf="f['pchqfromto'].touched && f['pchqfromto'].errors?.['required']">
+              Cheque Number is required
+            </div>
           </div>
 
         </div>
+
       </form>
+    </div>
+  </div>
 
-      <div class="card shadow-sm mt-4" *ngIf="unusedChequeRows.length > 0">
-        <div class="card-header bg-light">
-          <h6 class="mb-0">Unused Cheques</h6>
-        </div>
-        <div class="card-body p-0">
-          <div class="p-2">
-            <ngx-datatable class="material striped"
-              [rows]="unusedChequeRows"
-              [columnMode]="'force'"
-              [headerHeight]="45"
-              [footerHeight]="0"
-              [rowHeight]="'auto'">
+  <div class="card shadow-sm mt-4">
+    <div class="card-header bg-light">
+      <h6 class="mb-0">Unused Cheques</h6>
+    </div>
 
-              <ngx-datatable-column name="Cancel">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  <input type="checkbox" [(ngModel)]="row.selected" name="sel{{row.chequeNo}}">
-                </ng-template>
-              </ngx-datatable-column>
+    <div class="card-body p-0">
 
-              <ngx-datatable-column name="Cheque No." prop="chequeNo"></ngx-datatable-column>
-              <ngx-datatable-column name="Bank Name" prop="bankName"></ngx-datatable-column>
-              <ngx-datatable-column name="Cheque Book ID" prop="chequeBookId"></ngx-datatable-column>
+      <ngx-datatable class="material table" [rows]="gridData" [scrollbarH]="true" columnMode="force" [headerHeight]="50"
+        [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="50" [limit]="pageCriteria.pageSize"
+        [offset]="pageCriteria.offset" [count]="pageCriteria.totalrows">
 
-            </ngx-datatable>
-          </div>
-        </div>
-        <div class="card-footer text-end">
-          <button class="btn btn-primary px-4" type="button">Submit</button>
-        </div>
+        <ngx-datatable-column name="Cancel" prop="pchequestatus" [cellClass]="'text-center'">
+          <ng-template let-row="value" ngx-datatable-cell-template>
+            <input type="checkbox" [checked]="row.pchequestatus === true" (change)="checkedCancel($event, row)" />
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Cheque No." prop="pchequenumber"></ngx-datatable-column>
+        <ngx-datatable-column name="Bank Name" prop="pbankname"></ngx-datatable-column>
+        <ngx-datatable-column name="Cheque Book ID" prop="pchkBookId"></ngx-datatable-column>
+
+        <ngx-datatable-footer *ngIf="gridData?.length">
+          <ng-template ngx-datatable-footer-template>
+            <div class="px-3 py-2">
+              Page {{ pageCriteria.pageNumber }} of {{ TotalPages }}
+              ({{ pageCriteria.totalrows }} items)
+            </div>
+          </ng-template>
+        </ngx-datatable-footer>
+
+      </ngx-datatable>
+
+    </div>
+
+    <div class="card-footer text-end">
+      <button class="btn btn-primary px-4" type="button" (click)="UnusedChequeCancel()">
+        {{ savebutton }}
+      </button>
+    </div>
+
+  </div>
+
+  <div class="card shadow-sm mt-4">
+
+    <div class="card-body">
+
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+          <i class="fa fa-file-pdf-o">PDF</i>
+        </button>
+
+        <button class="btn btn-outline-dark me-2" (click)="pdfOrprint('Print')">
+          <i class="fa fa-print">Print</i>
+        </button>
+
+        <button class="btn btn-outline-success" (click)="export()">
+          <i class="fa fa-file-excel-o">Excel</i>
+        </button>
       </div>
 
-      <div class="card shadow-sm mt-4">
-        <div class="card-body">
+      <div id="print-section" class="border rounded p-3 bg-white shadow-sm">
 
-          <div class="d-flex justify-content-end mb-3" *ngIf="issuedChequeRows.length > 0">
-            <button class="btn btn-outline-danger me-2"><i class="fa fa-file-pdf-o"></i> PDF</button>
-            <button class="btn btn-outline-dark me-2"><i class="fa fa-print"></i> Print</button>
-            <button class="btn btn-outline-success"><i class="fa fa-file-excel-o"></i> Excel</button>
-          </div>
+        <h5 class="text-center mt-2">Issued Cheque Details</h5>
 
-          <div class="border rounded p-3 bg-white shadow-sm">
-            <h5 class="text-center mt-2">Issued Cheque Details</h5>
+        <ngx-datatable class="material table mt-3" [rows]="gridDataDetails" [headerHeight]="50" [rowHeight]="50"
+          columnMode="force" [limit]="commencementgridPage.size||0" [count]="commencementgridPage.totalElements||0"
+          [groupRowsBy]="'pchequestatus'" [groupExpansionDefault]="true" [offset]="commencementgridPage.pageNumber||0">
 
-            <div *ngIf="issuedChequeRows.length > 0; else noRecords">
-              <ngx-datatable class="material striped"
-                [rows]="issuedChequeRows"
-                [columnMode]="'force'"
-                [headerHeight]="45"
-                [footerHeight]="0"
-                [rowHeight]="'auto'">
-
-                <ngx-datatable-column name="Cheque No." prop="chequeNo"></ngx-datatable-column>
-                <ngx-datatable-column name="Payment ID" prop="paymentId"></ngx-datatable-column>
-                <ngx-datatable-column name="Particulars" prop="particulars"></ngx-datatable-column>
-                <ngx-datatable-column name="Payment Date" prop="paymentDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Paid Amt." prop="paidAmount"></ngx-datatable-column>
-                <ngx-datatable-column name="Bank Name" prop="bankName"></ngx-datatable-column>
-                <ngx-datatable-column name="Cheque Book ID" prop="chequeBookId"></ngx-datatable-column>
-                <ngx-datatable-column name="Cheque Status" prop="status"></ngx-datatable-column>
-
-              </ngx-datatable>
-            </div>
-
-            <ng-template #noRecords>
-              <div class="text-center text-muted py-4">No records to display</div>
+          <ngx-datatable-group-header [rowHeight]="50">
+            <ng-template ngx-datatable-group-header-template let-group="group" let-expanded="expanded">
+              <div class="ps-2">
+                <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+                  (click)="toggleExpandGroup(group)">
+                  <b>{{ group?.value?.[0]?.pchequestatus || group?.key }}</b>
+                </a>
+              </div>
             </ng-template>
+          </ngx-datatable-group-header>
 
-          </div>
+          <ngx-datatable-column name="Cheque No." prop="pchequenumber"></ngx-datatable-column>
+          <ngx-datatable-column name="Payment ID" prop="ppaymentid"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars" prop="pparticulars"></ngx-datatable-column>
 
-        </div>
+          <ngx-datatable-column name="Payment Date" prop="ppaymentdate">
+            <ng-template let-row="value" ngx-datatable-cell-template>
+              {{ row.ppaymentdate | date:'dd-MM-yyyy' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Cleared Date" prop="pcleardate">
+            <ng-template let-row="value" ngx-datatable-cell-template>
+              {{ row.pcleardate | date:'dd-MM-yyyy' }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Paid Amt." prop="ppaidamount" [cellClass]="'text-end'">
+            <ng-template let-row="value" ngx-datatable-cell-template>
+              <span *ngIf="row.ppaidamount !== 0">
+                {{ currencysymbol }} {{ row.ppaidamount | number:'1.2-2' }}
+              </span>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Bank Name" prop="pbankname"></ngx-datatable-column>
+          <ngx-datatable-column name="Cheque Book ID" prop="pchkBookId"></ngx-datatable-column>
+          <ngx-datatable-column name="Cheque Status" prop="pstatus"></ngx-datatable-column>
+
+        </ngx-datatable>
+
       </div>
 
     </div>
