@@ -67,7 +67,6 @@ export class NavigationService {
             { id: 'cheques-issued', name: 'Cheques Issued', route: '/dashboard/accounts/accounts-transactions/cheques-issued' },
             { id: 'general-receipt-cancel', name: 'General Receipt Cancel', route: '/dashboard/accounts/accounts-transactions/general-receipt-cancel' },
             { id: 'pettycash-receipt-cancel', name: 'Petty Cash Receipt Cancel', route: '/dashboard/accounts/accounts-transactions/pettycash-receipt-cancel' },
-            // { id: 'journal-voucher', name: 'Journal Voucher', route: '/dashboard/accounts/accounts-transactions/journal-voucher' },
             { id: 'journal-voucher-view', name: 'Journal Voucher  ', route: '/dashboard/accounts/accounts-transactions/journal-voucher-view' },
             { id: 'cash-onhand', name: 'Cash On Hand', route: '/dashboard/accounts/accounts-transactions/cash-onhand' },
             { id: 'tds-jv', name: 'TDS Journal Voucher', route: '/dashboard/accounts/accounts-transactions/tds-jv' },
