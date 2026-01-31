@@ -7,6 +7,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { CommonService } from './services/common.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +15,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideToastr(),
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
-    CommonService
+    CommonService,
+    BsDatepickerConfig,BsDatepickerModule,
+    provideAnimations()
   ]
 };

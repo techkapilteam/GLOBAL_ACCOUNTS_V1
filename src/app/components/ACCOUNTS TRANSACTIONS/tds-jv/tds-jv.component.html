@@ -1,95 +1,110 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+    <div class="screen-header">
       <h2>TDS Journal Voucher</h2>
     </div>
     <div class="screen-content">
-<form [formGroup]="tdsJvDetailsForm" autocomplete="off">
+      <form [formGroup]="tdsJvDetailsForm" autocomplete="off">
 
-  <div class="row mt-3">
-    <div class="col-md-4">
-      <label class="required-field">Debit Ledger</label>
-      <ng-select [items]="tdsledgeraccountslist" bindLabel="pledgername" bindValue="pledgername"
-        class="form-control" formControlName="DebitLedger" placeholder="Debit Ledger" (change)="click_jvtype($event)">
-      </ng-select>
-    </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label class="required-field">Debit Ledger</label>
+            <ng-select [items]="tdsledgeraccountslist" bindLabel="pledgername" bindValue="pledgername"
+              class="form-control" formControlName="DebitLedger" placeholder="Debit Ledger"
+              (change)="click_jvtype($event)">
+            </ng-select>
+          </div>
 
-    <div class="col-md-4">
-      <label class="required-field">Credit Ledger</label>
-      <ng-select [items]="ledgeraccountslist" bindLabel="pledgername" bindValue="pledgername"
-          class="form-control" formControlName="CreditLedger" placeholder="Credit Ledger">
-      </ng-select>
-    </div>
+          <div class="col-md-4">
+            <label class="required-field">Credit Ledger</label>
+            <ng-select [items]="ledgeraccountslist" bindLabel="pledgername" bindValue="pledgername" class="form-control"
+              formControlName="CreditLedger" placeholder="Credit Ledger">
+            </ng-select>
+          </div>
 
-    <div class="col-md-4">
+          <!-- <div class="col-md-4">
       <label class="required-field">Date</label>
-      <input type="date" class="form-control" formControlName="preceiptdate">
+      <input type="text" class="form-control" formControlName="preceiptdate">
     </div>
-  </div>
-
-  <div class="row mt-3">
-    <div class="col-md-4">
-      <label class="required-field">Year</label>
-      <ng-select [items]="calendarYearData" bindLabel="pPeriodType" bindValue="pCalenderPeriodId"
-         class="form-control"  formControlName="pPeriodType" (change)="CalendarYear_change($event)">
-      </ng-select>
-    </div>
-
-    <div class="col-md-4">
-      <label class="required-field">Month</label>
-      <ng-select [items]="calendarMonthData" bindLabel="pCalendarMonth" bindValue="pCalenderPeriodDetailsId"
-        class="form-control"  formControlName="pCalendarMonth" (change)="CalendarYearMOnth_change($event)">
-      </ng-select>
-    </div>
-
-    <div class="col-md-2 mt-4">
-      <button type="button" class="btn btn-primary" (click)="gettdsjvdetails()">
-        {{ savebutton1 }}
-      </button>
-    </div>
-  </div>
-
-  <hr>
   
-      <div class="col-md-12 col-xl-12" *ngIf="showhidetable">
-        <div class="d-flex justify-content-end">
-          <a class="export-icons" ><img src="assets/images/icon-excel.svg " title="Excel" width="18px"></a>
+  (ngModelChange)="change_date($event)" -->
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group">
+              <label class="required-field"> Date</label>
+              <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
+                formControlName="preceiptdate" placeholder="" readonly [bsConfig]="dpConfig" #dp="bsDatepicker"
+                bsDatepicker placement="bottom">
+              <!-- <app-validation-message [messgae]="CashOnHandValidation?.ptransactiondate"></app-validation-message> -->
+            </div>
+          </div>
+
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label class="required-field">Year</label>
+            <ng-select [items]="calendarYearData" bindLabel="pPeriodType" bindValue="pCalenderPeriodId"
+              class="form-control" formControlName="pPeriodType" (change)="CalendarYear_change($event)">
+            </ng-select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="required-field">Month</label>
+            <ng-select [items]="calendarMonthData" bindLabel="pCalendarMonth" bindValue="pCalenderPeriodDetailsId"
+              class="form-control" formControlName="pCalendarMonth" (change)="CalendarYearMOnth_change($event)">
+            </ng-select>
+          </div>
+
+          <div class="col-md-2 mt-4">
+            <button type="button" class="btn btn-primary" (click)="gettdsjvdetails()">
+              {{ savebutton1 }}
+            </button>
+          </div>
         </div>
 
+        <hr>
 
-  <ngx-datatable class="material" [rows]="tdsJvDetailsGrid" [columnMode]="ColumnMode.force" [headerHeight]="50"
-    [rowHeight]="50" [selectionType]="SelectionType.checkbox" [selected]="selected1" (select)="onSelect($event)">
+        <div class="col-md-12 col-xl-12" *ngIf="showhidetable">
+          <div class="d-flex justify-content-end">
+            <a class="export-icons" (click)="export()">Excel
+              <!-- <img src="assets/images/icon-excel.svg " title="Excel" width="18px"> -->
+            </a>
+          </div>
 
-    <ngx-datatable-column name="Particulars" prop="particulars"></ngx-datatable-column>
 
-    <ngx-datatable-column name="Debit Amount">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        {{ currencysymbol }} {{ row.debit_amount | number:'1.2-2' }}
-      </ng-template>
-    </ngx-datatable-column>
+          <ngx-datatable class="material" [rows]="tdsJvDetailsGrid" [columnMode]="ColumnMode.force" [headerHeight]="50"
+            [rowHeight]="50" [selectionType]="SelectionType.checkbox" [selected]="selected1"
+            (select)="onSelect($event)">
 
-    <ngx-datatable-column name="Credit Amount">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        {{ currencysymbol }} {{ row.credit_amount | number:'1.2-2' }}
-      </ng-template>
-    </ngx-datatable-column>
+            <ngx-datatable-column name="Particulars" prop="particulars"></ngx-datatable-column>
 
-  </ngx-datatable>
-  
+            <ngx-datatable-column name="Debit Amount">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ currencysymbol }} {{ row.debit_amount | number:'1.2-2' }}
+              </ng-template>
+            </ngx-datatable-column>
 
-  <div class="mt-3">
-    <label class="required-field">Narration</label>
-    <textarea class="form-control" rows="4" formControlName="pnarration"></textarea>
+            <ngx-datatable-column name="Credit Amount">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ currencysymbol }} {{ row.credit_amount | number:'1.2-2' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+
+
+          <div class="mt-3">
+            <label class="required-field">Narration</label>
+            <textarea class="form-control" rows="4" formControlName="pnarration"></textarea>
+          </div>
+
+          <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-secondary me-3" (click)="clearJVDetails()">Clear</button>
+            <button type="button" class="btn btn-primary" (click)="saveJVDetails()" [disabled]="disablesavebutton">
+              {{ savebutton }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div class="d-flex justify-content-end mt-3">
-    <button type="button" class="btn btn-secondary me-3" (click)="clearJVDetails()">Clear</button>
-    <button type="button" class="btn btn-primary" (click)="saveJVDetails()" [disabled]="disablesavebutton">
-      {{ savebutton }}
-    </button>
-  </div>
-  </div>
-</form>
-</div>
-</div>
 </div>
