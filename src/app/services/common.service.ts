@@ -9,13 +9,88 @@ import { formatDate } from 'ngx-bootstrap/chronos';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../envir/environment.prod';
 import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import autoTable, { ColumnInput, RowInput } from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
-import * as FileSaver from 'file-saver';
+import { saveAs } from 'file-saver';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
+
+  showSuccessMsg(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
+  exportAsExcelFile(json: any[], excelFileName: string): void {
+    import("xlsx").then(xlsx => {
+      const worksheet = xlsx.utils.json_to_sheet(json);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      this.saveAsExcelFile(excelBuffer, excelFileName);
+    });
+  }
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    import("file-saver").then(FileSaver => {
+      const data: Blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+      });
+      FileSaver.saveAs(data, fileName + '.xlsx');
+    });
+  }
+  showWarningMessage(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
+  convertAmountToPdfFormat(arg0: any): any {
+    throw new Error('Method not implemented.');
+  }
+  pageSize: number = 10;
+
+  datePickerPropertiesSetup(property: string): string | boolean {
+
+    if (property === "containerClass") {
+      return "theme-dark-blue";
+    }
+
+    if (property === "dateInputFormat") {
+      return sessionStorage.getItem("dateformat") ?? "DD-MM-YYYY";
+    }
+
+    if (property === "monthInputFormat") {
+      return this.getMonthInputFormat(); // already returns string
+    }
+
+    if (property === "showWeekNumbers") {
+      return false;
+    }
+
+    if (property === "currencysymbol") {
+      return sessionStorage.getItem("currencyformat") ?? "₹";
+    }
+    return "";
+  }
+
+  getMonthInputFormat(): string {
+
+    this.dateFormat = sessionStorage.getItem("dateformat");
+
+    if (this.dateFormat == "MM DD YYYY") return 'MM YYYY';
+    if (this.dateFormat == "DD MM YYYY") return 'MM YYYY';
+    if (this.dateFormat == "YYYY MM DD") return 'YYYY MM';
+    if (this.dateFormat == "DD/MM/YYYY") return 'MM/YYYY';
+    if (this.dateFormat == "MM/DD/YYYY") return 'MM/YYYY';
+    if (this.dateFormat == "YYYY/MM/DD") return 'YYYY/MM';
+    if (this.dateFormat == "DD-MM-YYYY") return 'MM-YYYY';
+    if (this.dateFormat == "MM-DD-YYYY") return 'MM-YYYY';
+    if (this.dateFormat == "YYYY-MM-DD") return 'YYYY-MM';
+    if (this.dateFormat == "DD-MMM-YYYY") return 'MMM-YYYY';
+    if (this.dateFormat == "MMM-DD-YYYY") return 'MMM-YYYY';
+    if (this.dateFormat == "YYYY-MMM-DD") return 'YYYY-MMM';
+    return 'MM-YYYY';
+  }
+
+  currencyformat(ptotalreceivedamount: any): any {
+    throw new Error('Method not implemented.');
+  }
   searchfilterlength = 3;
   searchplaceholder = 'Please enter 3 or more characters'
   ipaddress = sessionStorage.getItem("ipaddress");
@@ -451,6 +526,7 @@ export class CommonService {
     //   },
 
     // });
+
     autoTable(doc, {
       columns: gridheaders,
       body: gridData,
@@ -524,40 +600,141 @@ export class CommonService {
     // iframe.contentWindow.print();
     iframe.contentWindow?.print();
   }
+  _downloadGSTVOucherReport2(
+    reportName: string,
+    gridData: RowInput[],
+    gridheaders: ColumnInput[],
+    colWidthHeight: any,
+    pagetype: 'a4' | 'letter' | 'legal',
+    betweenorason: string,
+    fromdate: string,
+    todate: string,
+    printorpdf: 'Pdf' | 'Print',
+    gstvoucherprintdata: any[],
+    SubscriberImage: string | undefined,
+    companydata: any,
+    showgrid1: boolean,
+    totalamtBeforeTax: number,
+    totaligstamt: number,
+    totalCGSTAmt: number,
+    totalSGSTAmt: number,
+    totalTaxAmt: number,
+    totalamtAfterTax: number,
+    gsthideshow: boolean,
+    otherstate: boolean,
+    AmtnubertoWords: string,
+    totaldiscountAmt: number,
+    proundoff_amount: number,
+    invoice_tds_amount: number,
+    totalamount_after_tax: number
+  ): void {
 
+    const company: any = this._getCompanyDetails();
+    let address = company?.pAddress1 || this.getcompanyaddress() || '';
+    address = address.replace(/,\s*$/, '');
+    if (address) address += '.';
 
+    const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: pagetype });
+    const totalPagesExp = '{total_pages_count_string}';
+    const today = this.pdfProperties('Date');
 
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
 
+    doc.setFont('times', 'normal');
+    doc.setFontSize(15);
+    doc.text(company.pCompanyName, pageWidth / 2, 10, { align: 'center' });
 
+    doc.setFontSize(8);
+    doc.text(address.substring(0, 115), pageWidth / 2, 15, { align: 'center' });
+    doc.text(address.substring(115), pageWidth / 2, 18, { align: 'center' });
 
-  public exportAsExcelFile(json: any[], excelFileName: string): void {
+    if (company?.pCinNo) {
+      doc.text(`CIN : ${company.pCinNo}`, pageWidth / 2, 22, { align: 'center' });
+    }
 
-  let myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+    doc.setFontSize(14);
+    doc.text(reportName, 15, 30);
 
-  let myworkbook: XLSX.WorkBook = { Sheets: { 'data': myworksheet }, SheetNames: ['data'] };
-  let excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
-  this.saveAsExcelFile(excelBuffer, excelFileName);
+    if (betweenorason === 'Between') {
+      doc.text(`Between: ${fromdate} And ${todate}`, 15, 40);
+    } else if (fromdate) {
+      doc.text(`As on: ${fromdate}`, 15, 40);
+    }
 
+    doc.line(10, 37, pageWidth - 10, 37);
+
+    autoTable(doc, {
+      columns: gridheaders,
+      body: gridData,
+      startY: 75,
+      theme: 'grid',
+      styles: {
+        fontSize: Number(this.pdfProperties('Cell Fontsize')),
+        cellPadding: 1
+      },
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: 'center'
+      },
+      columnStyles: colWidthHeight,
+      didDrawPage: (data) => {
+        let page = `Page ${doc.getNumberOfPages()}`;
+        if (typeof doc.putTotalPages === 'function') {
+          page += ` of ${totalPagesExp}`;
+        }
+
+        doc.setFontSize(9);
+        doc.text(`Printed on: ${today}`, 14, pageHeight - 5);
+        doc.text(page, pageWidth - 30, pageHeight - 5);
+      }
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+    doc.setFontSize(10);
+    doc.text('Total Discount Amount:', 15, finalY);
+    doc.text(this.convertAmountToPdfFormat(totaldiscountAmt), 70, finalY);
+
+    doc.text('Total Amount Before Tax:', 15, finalY + 7);
+    doc.text(this.convertAmountToPdfFormat(totalamtBeforeTax), 70, finalY + 7);
+
+    if (gsthideshow) {
+      doc.text('CGST:', 15, finalY + 14);
+      doc.text(this.convertAmountToPdfFormat(totalCGSTAmt), 70, finalY + 14);
+
+      doc.text('SGST:', 15, finalY + 21);
+      doc.text(this.convertAmountToPdfFormat(totalSGSTAmt), 70, finalY + 21);
+    } else {
+      doc.text('IGST:', 15, finalY + 14);
+      doc.text(this.convertAmountToPdfFormat(totaligstamt), 70, finalY + 14);
+    }
+
+    doc.text('Total Tax Amount:', 15, finalY + 28);
+    doc.text(this.convertAmountToPdfFormat(totalTaxAmt), 70, finalY + 28);
+
+    doc.setFont('times', 'bold');
+    doc.text('Total Amount After Tax:', 15, finalY + 35);
+    doc.text(this.convertAmountToPdfFormat(totalamtAfterTax), 70, finalY + 35);
+
+    doc.setFont('times', 'normal');
+    doc.text(`Amount in Words: ${AmtnubertoWords}`, 15, finalY + 45);
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printorpdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else {
+      this.setiFrameForPrint(doc);
+    }
+  }
 
 }
 
-  private saveAsExcelFile(buffer: any, fileName: string): void {
-
-    let EXCEL_TYPE =
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-
-let EXCEL_EXTENSION = '.xlsx';
-  let data: Blob = new Blob([buffer], {
-    type: EXCEL_TYPE
-  });
-  FileSaver.saveAs(data, fileName + '_Excel' + EXCEL_EXTENSION);
-}
 
 
-
-
-
-}
 
 function isNullOrEmptyString(pCinNo: any) {
   throw new Error('Function not implemented.');

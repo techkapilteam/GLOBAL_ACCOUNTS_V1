@@ -641,13 +641,14 @@ import { CommonService } from '../../../services/common.service';
 // }
 
 export class TdsJvComponent implements OnInit {
+    public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
   tdsJvDetailsForm!: FormGroup;
 
   // ngx-datatable configs
   SelectionType = SelectionType;
   ColumnMode = ColumnMode;
-
+  today:Date=new Date()
   showhidetable = false;
   dataisempty = false;
 
@@ -709,21 +710,28 @@ export class TdsJvComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private _commonService:CommonService
 
-  ) {}
+  ) {
+     this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+  }
 
   ngOnInit(): void {
     this.createForm();
     this.calculateTotals();
+
   }
 
   createForm(): void {
     this.tdsJvDetailsForm = this.fb.group({
       DebitLedger: [null, Validators.required],
       CreditLedger: [null, Validators.required],
-      preceiptdate: [null, Validators.required],
+      preceiptdate: [this.today, Validators.required],
       pPeriodType: [null, Validators.required],
       pCalendarMonth: [null, Validators.required],
-      pnarration: ['', Validators.required]
+      pnarration: ['', Validators.required],
+      
     });
   }
 
