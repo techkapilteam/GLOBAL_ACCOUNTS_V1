@@ -153,10 +153,10 @@ export class GstReportComponent implements OnInit {
     this.showhidegstreport = false;
     this.showicons = false;
 
-    this.GstSummaryDetails = [
-      { companyname: 'ABC Traders', state: 'Karnataka', count: 5 },
-      { companyname: 'XYZ Enterprises', state: 'Maharashtra', count: 3 }
-    ];
+    // this.GstSummaryDetails = [
+    //   { companyname: 'ABC Traders', state: 'Karnataka', count: 5 },
+    //   { companyname: 'XYZ Enterprises', state: 'Maharashtra', count: 3 }
+    // ];
 
     this.GSTSummaryExcel = this.GstSummaryDetails;
     this.showhidegstsummary = true;

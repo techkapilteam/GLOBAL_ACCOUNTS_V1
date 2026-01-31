@@ -9,16 +9,16 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 
 @Component({
   selector: 'app-cheque-cancel',
-  imports: [CommonModule,FormsModule,NgxDatatableModule,ReactiveFormsModule,BsDatepickerModule],
-  standalone:true,
+  imports: [CommonModule, FormsModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule],
+  standalone: true,
   templateUrl: './cheque-cancel.component.html',
   styleUrl: './cheque-cancel.component.css',
 })
-export class ChequeCancelComponent implements OnInit{
+export class ChequeCancelComponent implements OnInit {
   private fb = inject(FormBuilder);
   private commonService = inject(CommonService);
   private accReportService = inject(AccountingReportsService);
-  private datePipe=inject(DatePipe);
+  private datePipe = inject(DatePipe);
   FrmChequeCancel!: FormGroup;
 
   dpConfig: Partial<BsDatepickerConfig> = {};
@@ -27,7 +27,7 @@ export class ChequeCancelComponent implements OnInit{
   loading = false;
   disablesavebutton = false;
   savebutton = 'Generate Report';
-  
+
 
   gridData: any[] = [];
   pageCriteria = new PageCriteria();
@@ -35,8 +35,9 @@ export class ChequeCancelComponent implements OnInit{
   showicons = false;
   reportDateRange = '';
   currencysymbol: string;
- StartDate!: string | null;
-  EndDate!: string | null;
+  StartDate: Date | null = null;
+  EndDate: Date | null = null;
+
   constructor() {
     this.currencysymbol = this.commonService.datePickerPropertiesSetup("currencysymbol") as string;
 
@@ -68,13 +69,20 @@ export class ChequeCancelComponent implements OnInit{
     ];
   }
   updateFormattedDates() {
-    this.StartDate = this.datePipe.transform(this.f['fromdate']?.value, 'dd-MMM-yyyy');
-    this.EndDate = this.datePipe.transform(this.f['todate']?.value, 'dd-MMM-yyyy');
+    this.StartDate = this.f['fromdate'].value ? new Date(this.f['fromdate'].value) : null;
+    this.EndDate = this.f['todate'].value ? new Date(this.f['todate'].value) : null;
   }
 
   GetChequeCancelDetails() {
-    const fromDate: Date = this.f['fromdate'].value;
-    const toDate: Date = this.f['todate'].value;
+    const fromRaw = this.f['fromdate'].value;
+    const toRaw = this.f['todate'].value;
+    if (!fromRaw || !toRaw) return
+
+    const fromDate = new Date(fromRaw);
+    const toDate = new Date(toRaw);
+
+    this.StartDate = fromDate;
+    this.EndDate = toDate;
 
     this.loading = true;
     this.disablesavebutton = true;
@@ -88,7 +96,7 @@ export class ChequeCancelComponent implements OnInit{
         new Date(d.pdepositeddate) <= toDate
       );
 
-      this.reportDateRange = `Between : ${this.commonService.getFormatDateGlobal(fromDate)} And ${this.commonService.getFormatDateGlobal(toDate)}`;
+      // this.reportDateRange = `Between : ${this.commonService.getFormatDateGlobal(fromDate)} And ${this.commonService.getFormatDateGlobal(toDate)}`;
 
       this.showicons = this.gridData.length > 0;
       this.showHide = this.gridData.length === 0;
@@ -160,9 +168,9 @@ export class ChequeCancelComponent implements OnInit{
       {},
       "landscape",
       "Between",
-      this.StartDate ?? '',
-      this.EndDate ?? '',
-      type   
+      this.StartDate ? this.datePipe.transform(this.StartDate, 'dd-MM-yyyy') ?? '' : '',
+      this.EndDate ? this.datePipe.transform(this.EndDate, 'dd-MM-yyyy') ?? '' : '',
+      type
     );
   }
 
