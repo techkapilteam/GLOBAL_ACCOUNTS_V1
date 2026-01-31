@@ -5,89 +5,102 @@ import { Router } from '@angular/router';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-brs-statements',
   standalone:true,
-  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,BsDatepickerModule],
+  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,BsDatepickerModule,CommonModule,NgSelectModule],
    providers: [ DatePipe],
   templateUrl: './brs-statements.component.html',
   styleUrl: './brs-statements.component.css',
 })
 export class BrsStatementsComponent {  
 
-   form: FormGroup;
+  form!: FormGroup;
+bankType: 'CREDIT' | 'DEBIT' | null = null;
+  gridView: any[] = [];
 
-  currencySymbol = '₹';
+  dpConfig = {
+    dateInputFormat: 'DD-MM-YYYY'
+  };
 
-  bankList = [
-    { id: 1, name: 'SBI', account: '123456' },
-    { id: 2, name: 'HDFC', account: '987654' }
+  bankData = [
+    { id: 1, name: 'HDFC Bank' },
+    { id: 2, name: 'ICICI Bank' },
+    { id: 3, name: 'SBI Bank' }
   ];
 
-  selectedBankName = '';
-  selectedBankAccount = '';
+  constructor(private fb: FormBuilder) {}
 
-  reportDate = new Date(); 
-  rows: any[] = []; 
-  private allRows = [
-    {
-      pGroupType: 'Receipts',
-      date: new Date('2025-01-05'),
-      chequeNo: 'CHQ001',
-      particulars: 'Customer Payment',
-      amount: 25000
-    },
-    {
-      pGroupType: 'Receipts',
-      date: new Date('2025-01-10'),
-      chequeNo: 'CHQ002',
-      particulars: 'Installment',
-      amount: 15000
-    },
-    {
-      pGroupType: 'Payments',
-      date: new Date('2025-01-12'),
-      chequeNo: 'CHQ003',
-      particulars: 'Office Rent',
-      amount: 10000
-    }
-  ];
-
-  constructor(private fb: FormBuilder) {
+  ngOnInit(): void {
+   
+    const todayStr = this.getTodayString();
     this.form = this.fb.group({
       bankId: [''],
-      chequeInfo: [false],
-      onDate: [this.today()],
-      fromDate: [this.today()],
-      toDate: [this.today()]
+      fromDate: [todayStr],
+      toDate: [todayStr]
     });
   }
 
-  today(): string {
-    return new Date().toISOString().substring(0, 10);
+
+  getTodayString(): string {
+    const today = new Date();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const year = today.getFullYear();
+    return `${year}-${month}-${day}`;
   }
 
-  generateReport(): void {
-    const bank = this.bankList.find(
-      b => b.id === +this.form.value.bankId
-    );
-
-    this.selectedBankName = bank?.name || '';
-    this.selectedBankAccount = bank?.account || '';
-    this.reportDate = new Date();
-
-   
-    this.rows = [...this.allRows];
+  onBankTypeChange(type: 'CREDIT' | 'DEBIT') {
+    this.bankType = type;
+    this.gridView = []; 
   }
 
-  getGroupTotal(type: string): number {
-    return this.rows
-      .filter(r => r.pGroupType === type)
-      .reduce((sum, r) => sum + r.amount, 0);
+  getReport() {
+    if (this.bankType === 'CREDIT') {
+      this.gridView = [
+        {
+          receiptDate: new Date(),
+          receiptNo: 'RC001',
+          amount: 5000,
+          chequeNo: 'CH123',
+          chequeDate: new Date(),
+          depositDate: new Date(),
+          clearedDate: new Date(),
+          particular: 'Customer Deposit'
+        }
+      ];
+    } else {
+      this.gridView = [
+        {
+          transDate: new Date(),
+          transNo: 'TR001',
+          chequeNo: 'CH789',
+          amount: 2500,
+          clearedDate: new Date(),
+          particular: 'Office Expense'
+        }
+      ];
+    }
   }
 
+  pdfOrprint(type: string) {
+    console.log(type);
+  }
+
+  export() {
+    console.log('Excel Export');
+  }
+
+
+
+  
 }
+  
+
+
+
 
  
 

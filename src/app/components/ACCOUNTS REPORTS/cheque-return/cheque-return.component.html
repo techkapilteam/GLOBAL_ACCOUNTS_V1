@@ -5,61 +5,133 @@
     </div>
 
     <div class="screen-content">
-      <form autocomplete="off">
-        <div class="row g-3 align-items-end">
+      <div class="container mt-4">
 
-          <div class="col-md-3">
-            <label class="form-label">From Date</label>
-            <input type="date" class="form-control" [(ngModel)]="fromDate" name="fromDate">
+        <div class="card shadow-sm">
+
+          <div class="card-body">
+
+            <form [formGroup]="FrmChequeReturn" autocomplete="off">
+
+              <div class="row g-3 align-items-end">
+
+                <div class="col-md-3">
+                  <label class="form-label fw-semibold">From Date</label>
+                  <input type="text" class="form-control" formControlName="fromdate" bsDatepicker [bsConfig]="dpConfig"
+                    readonly />
+                </div>
+
+                <div class="col-md-3">
+                  <label class="form-label fw-semibold">To Date</label>
+                  <input type="text" class="form-control" formControlName="todate" bsDatepicker [bsConfig]="dpConfig"
+                    readonly />
+                </div>
+
+                <div class="col-md-4">
+                  <button type="button" class="btn btn-primary px-4" (click)="GetChequeReturnDetails()">
+
+                    <i class="fa fa-search me-2"></i>
+                    {{ savebutton }}
+                  </button>
+                </div>
+
+              </div>
+
+            </form>
+
           </div>
+        </div>
 
-          <div class="col-md-3">
-            <label class="form-label">To Date</label>
-            <input type="date" class="form-control" [(ngModel)]="toDate" name="toDate">
-          </div>
 
-          <div class="col-md-4">
-            <button type="button" class="btn btn-primary px-4" (click)="showReport = true">
-              <i class="fa fa-search me-2"></i>
-              Generate Report
-            </button>
+        <div class="card shadow-sm mt-4" [hidden]="showHide">
+
+          <div class="card-body">
+
+            <div class="d-flex justify-content-end mb-3" *ngIf="showicons">
+              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+                <i class="fa fa-file-pdf-o">PDF</i>
+              </button>
+
+              <button class="btn btn-outline-dark me-2" (click)="pdfOrprint('Print')">
+                <i class="fa fa-print">Print</i>
+              </button>
+
+              <button class="btn btn-outline-success" (click)="export()">
+                <i class="fa fa-file-excel-o">Excel</i>
+              </button>
+            </div>
+            <div class="text-center mb-1 fw-bold fs-5">
+              KAPIL CHITS (HYDERABAD) PVT. LTD.
+            </div>
+
+            <div class="text-center mb-1">
+              Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old N.K-07, Kamarreddy
+            </div>
+
+            <div class="text-center mb-2 fw-semibold">
+              CIN: U65992TG2008PTC060803
+            </div>
+
+            <hr class="mt-2 mb-3">
+
+
+            <div class="border rounded p-3 bg-white shadow-sm">
+
+              <!-- <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details> -->
+
+              <h5 class="text-center mt-2">Cheque Return</h5>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <strong>Between:</strong>
+                  <span class="ms-2">
+                    {{ StartDate | date:'dd-MM-yyyy' }} And {{ EndDate | date:'dd-MM-yyyy' }}
+                  </span>
+                </div>
+              </div>
+
+              <ngx-datatable class="material table mt-3" [rows]="gridData" columnMode="force" [headerHeight]="50"
+                [rowHeight]="50" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
+                [count]="pageCriteria.totalrows">
+
+                <ngx-datatable-column name="Return Date" prop="pcleardate">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.pcleardate ? (row.pcleardate | date:'dd-MM-yyyy') : '--NA--' }}
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Cheque No." prop="preferencenumber"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Cheque Amt." prop="ptotalreceivedamount" [cellClass]="'text-end'">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Bank Name" prop="pbankname"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Receipt No." prop="preceiptid"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Receipt Date" prop="pchequedate">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.pchequedate ? (row.pchequedate | date:'dd-MM-yyyy') : '--NA--' }}
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Particulars" prop="pparticulars"></ngx-datatable-column>
+
+                <ngx-datatable-column name="Referred By" prop="pbranchname"></ngx-datatable-column>
+
+              </ngx-datatable>
+
+            </div>
+
           </div>
 
         </div>
-      </form>
 
-      <div class="mt-3" *ngIf="showReport">
-        <div class="text-center mb-2">
-            <h5 class="fw-bold mb-0">KAPIL CHITS (HYDERABAD) PVT. LTD.</h5>
-            <div>Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07</div>
-            <div>CIN: U65992TG2008PTC060803</div>
-          </div>
-
-          <div class="d-flex justify-content-between border-top border-bottom py-2 mb-2">
-            <div><strong>Branch :</strong> CA-HYDERABAD-CO</div>
-            <div class="fw-bold">Cheque Return</div>
-          </div>
-
-        <!-- Date Range Header -->
-        <div class="report-range-bar mb-2">
-          <strong>Between:</strong>
-          {{ fromDate | date:'dd-MMM-yyyy' }} And {{ toDate | date:'dd-MMM-yyyy' }}
-        </div>
-
-        <ngx-datatable class="material striped" [rows]="chequeReturnRows" [columnMode]="'force'"
-          [headerHeight]="45" [footerHeight]="0" [rowHeight]="'auto'">
-
-          <ngx-datatable-column name="Return Date" prop="returnDate"></ngx-datatable-column>
-          <ngx-datatable-column name="Cheque No." prop="chequeNo"></ngx-datatable-column>
-          <ngx-datatable-column name="Cheque Amt." prop="chequeAmt"></ngx-datatable-column>
-          <ngx-datatable-column name="Bank Name" prop="bankName"></ngx-datatable-column>
-          <ngx-datatable-column name="Receipt No." prop="receiptNo"></ngx-datatable-column>
-          <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
-          <ngx-datatable-column name="Particulars" prop="particulars"></ngx-datatable-column>
-          <ngx-datatable-column name="Referred By" prop="referredBy"></ngx-datatable-column>
-
-        </ngx-datatable>
       </div>
+
 
     </div>
   </div>

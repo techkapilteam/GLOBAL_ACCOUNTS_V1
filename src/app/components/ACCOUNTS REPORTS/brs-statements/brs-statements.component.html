@@ -1,106 +1,106 @@
-<div class="container mt-3">
-  <div class="screen-card">
-     <div class="screen-header">
-      <h2>BRS Statements</h2>
-    </div>
-     &nbsp;&nbsp;&nbsp;   
+<div class="section-content">
+    <div class="screen-card">
 
-    <form [formGroup]="form" class="d-flex gap-3 flex-wrap mb-3">
-
-        <div style="width:200px">
-            <label>Bank</label>
-            <select class="form-select form-select-sm" formControlName="bankId">
-                <option value="">Select</option>
-                <option *ngFor="let b of bankList" [value]="b.id">
-                    {{ b.name }} - {{ b.account }}
-                </option>
-            </select>
+        <div class="screen-header mb-3">
+            <h4>BRS Statements</h4>
         </div>
 
-        <div class="form-check mt-4">
-            <input class="form-check-input" type="checkbox" formControlName="chequeInfo">
-            <label class="form-check-label">Cheque Info</label>
-        </div>
+        <form [formGroup]="form" class="mb-3">
 
-        <div *ngIf="!form.get('chequeInfo')?.value" style="width:150px">
-            <label>As on Date</label>
-            <input type="date" class="form-control form-control-sm" formControlName="onDate">
-        </div>
 
-        <div *ngIf="form.get('chequeInfo')?.value" class="d-flex gap-2">
-            <div>
-                <label>From Date</label>
-                <input type="date" class="form-control form-control-sm" formControlName="fromDate">
+            <div class="row ms-4">
+
+                <div class="form-check form-check-inline col-md-4">
+                    <input class="form-check-input" type="radio" name="bankType" value="CREDIT"
+                        (change)="onBankTypeChange('CREDIT')">
+                    <label class="form-check-label">Bank Credit</label>
+                </div>
+
+                <div class="form-check form-check-inline col-md-4" style="margin-left: -220px;">
+                    <input class="form-check-input" type="radio" name="bankType" value="DEBIT"
+                        (change)="onBankTypeChange('DEBIT')">
+                    <label class="form-check-label">Bank Debit</label>
+                </div>
+
             </div>
-            <div>
-                <label>To Date</label>
-                <input type="date" class="form-control form-control-sm" formControlName="toDate">
-            </div>
-        </div>
 
-        <div class="mt-4">
-            <button class="btn btn-primary btn-sm" type="button" (click)="generateReport()">
-                Generate Report
+            <br>
+
+
+            <div class="row ms-2">
+
+                <div class="form-group col-md-3 me-3">
+                    <label>Bank Name</label>
+                    <ng-select id="bankId" title="Select Bank Name" [items]="bankData" formControlName="bankId"
+                        bindLabel="name" bindValue="name" [multiple]="false" placeholder="Select Bank Name"
+                        [searchable]="true" [clearable]="true" dropdownPosition="bottom" [clearOnBackspace]="true"
+                        [virtualScroll]="true">
+                    </ng-select>
+                </div>
+
+                <div class="form-group col-md-3 me-3">
+                    <label>From Date</label>
+                    <input type="date" class="form-control" formControlName="fromDate">
+                </div>
+
+                <div class="form-group col-md-3 me-3">
+                    <label>To Date</label>
+                    <input type="date" class="form-control" formControlName="toDate">
+                </div>
+
+                <div class="form-group col-md-2 mt-4">
+                    <button type="button" class="btn btn-primary" (click)="getReport()" [disabled]="!bankType">
+                        Show
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+
+        <div class="d-flex justify-content-end align-items-center gap-3 mb-3" *ngIf="bankType">
+
+            <button type="button" class="btn btn-link p-0" title="PDF" (click)="pdfOrprint('Pdf')">
+                <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF">
             </button>
+
+            <button type="button" class="btn btn-link p-0" title="Print" (click)="pdfOrprint('Print')">
+                <img src="assets/images/print-icon-blue.svg" width="18" alt="Print">
+            </button>
+
+            <button type="button" class="btn btn-link p-0" title="Excel" (click)="export()">
+                <img src="assets/images/icon-excel.svg" width="18" alt="Excel">
+            </button>
+
         </div>
-         
-    </form>
 
 
-    <div *ngIf="rows.length">
+        <ngx-datatable *ngIf="bankType" class="material" [rows]="gridView" [headerHeight]="50" [rowHeight]="50"
+            [scrollbarH]="true">
 
-        <div class="d-flex justify-content-between mb-2">
-            <strong>As on: {{ reportDate | date:'dd-MMM-yyyy' }}</strong>
-            <b>{{ selectedBankName }} - {{ selectedBankAccount }}</b>
-        </div>
 
-        <ngx-datatable class="material" [rows]="rows" [groupRowsBy]="'pGroupType'" [groupExpansionDefault]="true"
-            [headerHeight]="45" [rowHeight]="45">
+            <ng-container *ngIf="bankType === 'CREDIT'">
+                <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Receipt No" prop="receiptNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque No" prop="chequeNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque Date" prop="chequeDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Deposit Date" prop="depositDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Particular" prop="particular"></ngx-datatable-column>
+            </ng-container>
 
-            <ngx-datatable-group-header>
-                <ng-template ngx-datatable-group-header-template let-group="group">
-                    <b>{{ group.value[0].pGroupType }}</b>
-                </ng-template>
-            </ngx-datatable-group-header>
-
-            <ngx-datatable-row-detail [rowHeight]="45">
-                <ng-template ngx-datatable-row-detail-template let-row="row">
-                    <div class="text-end pe-3">
-                        <b>
-                            Total :
-                            {{ currencySymbol }}
-                            {{ getGroupTotal(row.value[0].pGroupType) | number:'1.2-2' }}
-                        </b>
-                    </div>
-                </ng-template>
-            </ngx-datatable-row-detail>
-
-            <ngx-datatable-column name="Date">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                    {{ row.date | date:'dd/MM/yyyy' }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Cheque No">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                    {{ row.chequeNo }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Particulars">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                    {{ row.particulars }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Amount">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                    {{ currencySymbol }} {{ row.amount | number:'1.2-2' }}
-                </ng-template>
-            </ngx-datatable-column>
+            <ng-container *ngIf="bankType === 'DEBIT'">
+                <ngx-datatable-column name="Trans Date" prop="transDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Trans No" prop="transNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque No" prop="chequeNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
+                <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Particular" prop="particular"></ngx-datatable-column>
+            </ng-container>
 
         </ngx-datatable>
-
+        <div class="text-center mt-3" *ngIf="bankType && gridView.length === 0">
+        </div>
     </div>
-
 </div>
