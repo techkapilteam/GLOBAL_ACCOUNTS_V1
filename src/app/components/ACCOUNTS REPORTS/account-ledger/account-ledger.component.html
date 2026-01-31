@@ -14,7 +14,6 @@
           <!-- Ledger -->
           <div class="col-xl-3 col-md-3 form-group">
             <label>Ledger</label>
-
             <ng-select [items]="ledgeraccountslist" bindLabel="pledgername" bindValue="pledgerid"
               placeholder="Select Ledger" formControlName="pledgerid" (change)="ledgerName_Change($event)">
             </ng-select>
@@ -22,23 +21,20 @@
             <div class="text-danger">{{ LedgerValidationErrors?.pledgerid }}</div>
           </div>
 
-          <!-- Sub Ledger -->
           <div class="col-xl-3 col-md-3 form-group">
             <label>Sub Ledger</label>
-
             <ng-select [items]="subledgeraccountslist" bindLabel="psubledgername" bindValue="psubledgerid"
               placeholder="Select Sub Ledger" formControlName="psubledgerid" (change)="subledgerName_Change($event)"
               [disabled]="!AccountLedger.controls['pledgerid'].value">
             </ng-select>
 
-            <div class="text-danger" *ngIf="!AccountLedger.controls['pledgerid'].value">
+            <!-- Show error only when Sub Ledger is touched AND Ledger is not selected -->
+            <div class="text-danger"
+              *ngIf="AccountLedger.controls['psubledgerid'].touched && !AccountLedger.controls['pledgerid'].value">
               Please select Ledger first
             </div>
           </div>
 
-          <!-- From Date -->
-          <!-- From Date -->
-          <!-- From Date -->
           <div class="col-xl-3 col-md-3 form-group">
             <label>From Date</label>
 
@@ -53,7 +49,7 @@
             </div>
           </div>
 
-          <!-- To Date -->
+
           <div class="col-xl-3 col-md-3 form-group">
             <label>To Date</label>
 
@@ -68,9 +64,26 @@
             </div>
           </div>
 
+          <!-- <div class="col-md-3">
+  <label class="required-field">To Date</label>
+  <div class="input-group">
+    <input type="text" 
+           class="form-control" 
+           formControlName="toDate" 
+           bsDatepicker 
+           #toDp="bsDatepicker"
+           [bsConfig]="{dateInputFormat: 'DD/MMM/YYYY'}"
+           (bsValueChange)="ToDateChange($event)" 
+           readonly
+           (keydown)="$event.preventDefault()" />
+
+    <span class="input-group-text" (click)="toDp.toggle()">
+      <i class="fa-solid fa-calendar-days"></i>
+    </span>
+  </div>
+</div> -->
 
 
-          <!-- Narration -->
           <div class="col-xl-3 col-md-3 form-group">
             <div class="d-inline-flex align-items-center">
               <input type="checkbox" id="WithNarration" (change)="CheckNarration($event)" />
@@ -78,7 +91,7 @@
             </div>
           </div>
 
-          <!-- Generate Button -->
+
           <div class="col-xl-3 col-md-3 form-group">
             <button type="button" class="btn btn-primary" (click)="GenerateReport()">
               {{ savebutton }}
@@ -88,7 +101,7 @@
         </div>
       </form>
 
-      <!-- REPORT SECTION -->
+
       <div class="section-content mt-2" [hidden]="Showhide">
 
         <div class="d-flex justify-content-end mr-3 mt-4">

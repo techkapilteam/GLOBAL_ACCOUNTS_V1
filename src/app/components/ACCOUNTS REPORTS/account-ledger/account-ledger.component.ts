@@ -41,6 +41,7 @@ class PageCriteria {
   templateUrl: './account-ledger.component.html'
 })
 export class AccountLedgerComponent implements OnInit {
+  
 
   @ViewChild('fromDp', { static: false }) fromDp!: BsDatepickerDirective;
   @ViewChild('toDp', { static: false }) toDp!: BsDatepickerDirective;
