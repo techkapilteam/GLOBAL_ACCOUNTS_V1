@@ -12,14 +12,16 @@
 
                 <div class="form-group">
                     <label class="required-field">Receipt Date</label>
-                    <input type="text" class="form-control" bsDatepicker name="receiptDate" [(ngModel)]="receiptDate"
-                        [bsConfig]="dateConfig" readonlyInput>
+                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="receiptDate"
+                     name="receiptDate"
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
                 </div>
 
                 <div class="form-group">
                     <label class="required-field">Clear Date</label>
-                    <input type="text" class="form-control" bsDatepicker name="clearDate" [(ngModel)]="clearDate"
-                        [bsConfig]="dateConfig" readonlyInput>
+                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="clearDate"
+                 name="clearDate"
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
                 </div>
 
 

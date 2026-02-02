@@ -13,10 +13,10 @@ export const appConfig: ApplicationConfig = {
   providers: [
     DatePipe,
     provideHttpClient(),
+    provideAnimations(),
     provideToastr(),
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
     CommonService,
-    BsDatepickerConfig,BsDatepickerModule,
-    provideAnimations()
+    
   ]
 };

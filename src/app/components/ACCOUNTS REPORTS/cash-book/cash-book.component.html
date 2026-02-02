@@ -1,79 +1,74 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+    <div class="screen-header">
       <h2>Cash Book</h2>
     </div>
     <div class="screen-content">
       <form autocomplete="off">
         <div class="row">
-    
+
           <div class="col-12">
             <p class="bc-2 font-weight-bold">Cash Book Details</p>
           </div>
-    
+
           <!-- Date Range -->
           <div class="col-md-4">
             <div class="row">
-    
+
               <div class="col-md-6">
                 <div class="form-group">
                   <label>From Date</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    name="fromDate">
+                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
                 </div>
               </div>
-    
+
               <div class="col-md-6">
                 <div class="form-group">
                   <label>To Date</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    name="toDate">
+                  <!-- <input type="date" class="form-control" name="toDate"> -->
+                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate"
+                   name="toDate"
+                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
                 </div>
               </div>
-    
+
             </div>
           </div>
-    
+
           <!-- Transaction Type -->
           <div class="col-md-4">
             <label>Transaction Type</label>
             <div class="mb-3 pr-2">
-    
+
               <label class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="ptranstype" value="CASH">
                 <span class="mt-1">Cash</span>
               </label>
-    
+
               <label class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="ptranstype" value="CHEQUE">
                 <span class="mt-1">Cheque</span>
               </label>
-    
+
               <label class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="ptranstype" value="BOTH">
                 <span class="mt-1">Both</span>
               </label>
-    
+
             </div>
           </div>
-    
+
           <!-- Submit -->
           <div class="col-md-4 mt-4">
             <button type="submit" class="btn btn-primary px-3 border-0">
               Generate
             </button>
           </div>
-    
+
         </div>
       </form>
-      
-</div>
-</div>
-</div>
 
-
-
+    </div>
+  </div>
+</div>
