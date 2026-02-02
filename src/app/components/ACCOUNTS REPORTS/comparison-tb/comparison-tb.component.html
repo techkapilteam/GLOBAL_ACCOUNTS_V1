@@ -30,12 +30,12 @@
                 <div class="form-group">
                   <label class="fw-bold">From Date</label>
                   <input type="text" class="form-control d-inline-block w-auto" formControlName="fromDate"
-                    placeholder="Select From Date" bsDatepicker [bsConfig]="dpConfig"
+                    placeholder="Select From Date" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
                     (ngModelChange)="DateChange($event)" readonly>
 
                   <label class="fw-bold">To Date</label>
                   <input type="text" class="form-control d-inline-block w-auto" formControlName="toDate"
-                    placeholder="Select To Date" bsDatepicker [bsConfig]="dpConfig1" readonly>
+                    placeholder="Select To Date" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" readonly>
                 </div>
 
 

@@ -402,20 +402,17 @@
               <!-- Buttons -->
               <div class="d-flex justify-content-end mt-4">
                 <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentDetails()">Clear</a>
-                <button class="btn btn-b-icon px-3 border-0" (click)="addPaymentDetails()">
-                  <i class="fa fa-plus"></i> Add
+                <button class="btn btn-b-icon px-3 border-0" (click)="addPaymentDetails()">Add
+                  <!-- <i class="fa fa-plus"></i>-->
                 </button>
               </div>
             </div>
           </div>
         </div>
-      </form>
-    </div>
-  </div>
-</div>
+     
+   
 
-<!-- DATATABLE -->
-<div class="section-content mt-2">
+
   <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
     [footerHeight]="50" [rowHeight]="50" [limit]="5" [scrollbarH]="true">
     <ngx-datatable-column name="Actions" prop="" frozenLeft="True">
@@ -464,10 +461,10 @@
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
-</div>
+
 
 <!-- JOURNAL ENTRY -->
-<div class="section-content mt-2">
+
   <div class="row">
     <div class="col-md-6 col-xl-6 mt-4" style="height: 400;">
       <ngx-datatable class="material expandable table" [rows]="partyjournalentrylist" columnMode="force"
@@ -513,14 +510,6 @@
 
 
   </div>
-</div>
-
-
-
-
-
-
-
 
 <div class="row mt-3">
   <div class="col-md-12 col-xl-12">
@@ -536,3 +525,10 @@
     </div>
   </div>
 </div>
+ </form>
+
+
+  </div>
+</div>
+
+

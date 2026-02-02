@@ -26,14 +26,14 @@
 
               <div class="col-md-3">
                 <label class="form-label fw-semibold">From Date</label>
-                <input type="text" class="form-control form-control-sm" [bsConfig]="dpConfig" #dp="bsDatepicker"
+                <input type="text" class="form-control form-control-sm" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" #dp="bsDatepicker"
                 bsDatepicker
                   formControlName="fromdate" >
               </div>
 
               <div class="col-md-3">
                 <label class="form-label fw-semibold">To Date</label>
-                <input type="text" class="form-control form-control-sm" [bsConfig]="dpConfig" #dp="bsDatepicker"
+                <input type="text" class="form-control form-control-sm" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" #dp="bsDatepicker"
                 bsDatepicker
                   formControlName="todate" readonly>
               </div>
