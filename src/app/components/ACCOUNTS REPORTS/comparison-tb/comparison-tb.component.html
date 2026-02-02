@@ -117,7 +117,7 @@
                 [scrollbarH]="true" [footerHeight]="50" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
                 [groupRowsBy]="'pparentaccountName'" [groupExpansionDefault]="true">
 
-                <ngx-datatable-column name="Particulars" prop="paccountName" [width]="250">
+                <ngx-datatable-column name="Particulars" prop="paccountName" sortable="false" [width]="250">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     <span [ngClass]="{'fw-bold': row.isHeader || row.isTotal}">
                       {{ row.isHeader ? row.pparentaccountName : row.paccountName }}
@@ -125,37 +125,37 @@
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Debit" prop="pdebitamount1">
+                <ngx-datatable-column name="Debit" prop="pdebitamount1" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pdebitamount1 || '' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Credit" prop="pcreditamount1">
+                <ngx-datatable-column name="Credit" prop="pcreditamount1" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pcreditamount1 || '' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Debit" prop="pdebitamount2">
+                <ngx-datatable-column name="Debit" prop="pdebitamount2" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pdebitamount2 || '' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Credit" prop="pcreditamount2">
+                <ngx-datatable-column name="Credit" prop="pcreditamount2" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pcreditamount2 || '' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Debit Total" prop="pdebittotal">
+                <ngx-datatable-column name="Debit Total" prop="pdebittotal" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pdebittotal || '' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Credit Total" prop="pcredittotal">
+                <ngx-datatable-column name="Credit Total" prop="pcredittotal" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pcredittotal || '' }}
                   </ng-template>

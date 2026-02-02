@@ -105,18 +105,18 @@ displayedRows: any[] = [];
   selectedUPI: string = '';
 
   columns = [
-    { name: 'Transaction No', prop: 'transactionNo', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Transaction Date', prop: 'transactionDate', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Chit Receipt No', prop: 'chitReceiptNo', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Reference No', prop: 'referenceNo', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Cheque Date', prop: 'chequeDate', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Amount', prop: 'amount', headerClass: 'text-end', cellClass: 'text-end fw-bold' },
-    { name: 'Chit No', prop: 'chitNo' },
-    { name: 'Receipt Date', prop: 'receiptDate', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Deposited Date', prop: 'depositedDate', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'Receipt Id', prop: 'receiptId', headerClass: 'text-center', cellClass: 'text-center' },
-    { name: 'UPI Name', prop: 'upiName' },
-    { name: 'Party', prop: 'party' }
+    { name: 'Transaction No', prop: 'transactionNo', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Transaction Date', prop: 'transactionDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Chit Receipt No', prop: 'chitReceiptNo', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Reference No', prop: 'referenceNo', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Cheque Date', prop: 'chequeDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Amount', prop: 'amount', headerClass: 'text-center', cellClass: 'text-center fw-bold', sortable: false },
+    { name: 'Chit No', prop: 'chitNo', sortable: false },
+    { name: 'Receipt Date', prop: 'receiptDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Deposited Date', prop: 'depositedDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'Receipt Id', prop: 'receiptId', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
+    { name: 'UPI Name', prop: 'upiName', sortable: false },
+    { name: 'Party', prop: 'party', sortable: false }
   ];
   fromDate!: Date;
   toDate!: Date;
