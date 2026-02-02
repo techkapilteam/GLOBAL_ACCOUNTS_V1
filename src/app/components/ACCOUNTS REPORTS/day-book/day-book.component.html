@@ -10,7 +10,11 @@
         <div class="row">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="asdate" type="checkbox" formControlName="date"
+              <input
+                class="form-check-input"
+                id="asdate"
+                type="checkbox"
+                formControlName="date"
                 (change)="checkox($event)">
               <label for="asdate"> Date :</label>
             </div>
@@ -42,7 +46,12 @@
         <div class="row mt-2">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="kgms" type="checkbox" #kgmsChk (change)="checkboxx($event)">
+              <input
+                class="form-check-input"
+                id="kgms"
+                type="checkbox"
+                #kgmsChk
+                (change)="checkboxx($event)">
               <label for="kgms"> Kgms :</label>
             </div>
           </div>
@@ -95,7 +104,11 @@
           </p>
         </div>
 
-        <ngx-datatable class="bootstrap" [rows]="transactions" [headerHeight]="40" [rowHeight]="40"
+        <ngx-datatable
+          class="bootstrap"
+          [rows]="transactions"
+          [headerHeight]="40"
+          [rowHeight]="40"
           [columnMode]="'force'">
           <ngx-datatable-column name="Transaction No"  sortable="false" prop="rTxn"></ngx-datatable-column>
           <ngx-datatable-column name="Particulars" sortable="false" prop="rPart"></ngx-datatable-column>
@@ -110,7 +123,11 @@
           <ngx-datatable-column name="Type" sortable="false" prop="pType"></ngx-datatable-column>
         </ngx-datatable>
 
-        <ngx-datatable class="bootstrap mt-4" [rows]="bankSummary" [headerHeight]="40" [rowHeight]="40"
+        <ngx-datatable
+          class="bootstrap mt-4"
+          [rows]="bankSummary"
+          [headerHeight]="40"
+          [rowHeight]="40"
           [columnMode]="'force'">
           <ngx-datatable-column name="Bank Name" sortable="false"  prop="bank"></ngx-datatable-column>
           <ngx-datatable-column name="Opening Balance" sortable="false"  prop="opening"></ngx-datatable-column>
