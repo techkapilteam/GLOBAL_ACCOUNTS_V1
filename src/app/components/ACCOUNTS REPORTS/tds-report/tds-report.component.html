@@ -1,121 +1,118 @@
 <!-- <form> -->
-<div class="section-content container-fluid">
+<div class="screen-container">
 
-  <div class="row">
-    <div class="col-12">
-      <label class="font-weight-bold">Section wise report</label>
+  <div class="screen-card">
+    <div class="screen-header">
+      <h2>Section Wise Report</h2>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-8">
-      <div class="row">
 
-        <!-- Section -->
-        <div class="col-md-6">
-          <div class="form-group">
-            <label class="font-weight-bold">Section</label>
-            <select class="form-control" name="section" [(ngModel)]="selectedSection"
-              (ngModelChange)="onSectionChange()">
+    <div class="screen-content">
+      <div class="col-md-8">
+        <div class="row">
 
-              <option value="">Select</option>
-              <option *ngFor="let s of sections" [ngValue]="s.code">
-                {{ s.code }}
-              </option>
-            </select>
+          <!-- Section -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="font-weight-bold">Section</label>
+              <select class="form-control" name="section" [(ngModel)]="selectedSection"
+                (ngModelChange)="onSectionChange()">
+
+                <option value="">Select</option>
+                <option *ngFor="let s of sections" [ngValue]="s.code">
+                  {{ s.code }}
+                </option>
+              </select>
+            </div>
           </div>
+
+          <!-- Section Name -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Section Name</label>
+              <!-- <input type="text" class="form-control" [value]="sectionName" readonly /> -->
+              <input type="text" class="form-control" name="sectionName" [(ngModel)]="sectionName" readonly />
+            </div>
+          </div>
+
         </div>
 
-        <!-- Section Name -->
-        <div class="col-md-6">
-          <div class="form-group">
-            <label>Section Name</label>
-            <!-- <input type="text" class="form-control" [value]="sectionName" readonly /> -->
-            <input type="text" class="form-control" name="sectionName" [(ngModel)]="sectionName" readonly />
-          </div>
+      </div>
+    </div>
+
+    <div class="screen-content">
+      <div class="col-md-4">
+        <div class="form-check mt-2">
+          <input type="checkbox" class="form-check-input" id="asOn" (change)="onAsOnChange($event)" />
+          <label class="form-check-label" for="asOn">
+            As On
+          </label>
         </div>
+      </div>
+    </div>
+    <div class="screen-content" *ngIf="asOnChecked">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Date</label>
+          <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
+          <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+        </div>
+      </div>
 
+      <div class="col-md-4">
+        <div class="form-check mt-2">
+          <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
+
+          <label class="form-check-label" for="summary">
+            Summary
+          </label>
+        </div>
+      </div>
+      <div class="col-md-2 mt-2">
+        <button class="btn btn-primary" (click)="onShowClick()">
+          Show
+        </button>
       </div>
 
     </div>
-  </div>
-  <br><br>
 
-  <div class="row">
-    <div class="col-md-4">
-      <div class="form-check mt-2">
-        <input type="checkbox" class="form-check-input" id="asOn" (change)="onAsOnChange($event)" />
-        <label class="form-check-label" for="asOn">
-          As On
-        </label>
+    <div class="screen-content" *ngIf="!asOnChecked">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>From Date</label>
+          <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
+          <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+        </div>
       </div>
-    </div>
-  </div>
-  <br><br>
 
-
-  <div class="row mt-3" *ngIf="asOnChecked">
-    <div class="col-md-3">
-      <div class="form-group">
-        <label>Date</label>
-        <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
-        <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+      <div class="col-md-3">
+        <div class="form-group">
+          <!-- <label>To Date</label> -->
+          <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
+          <label class="required-field">To Date</label>
+          <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
+            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+        </div>
       </div>
-    </div>
 
-    <div class="col-md-4">
-      <div class="form-check mt-2">
-        <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
+      <div class="col-md-4">
+        <div class="form-check mt-2">
+          <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
 
-        <label class="form-check-label" for="summary">
-          Summary
-        </label>
+          <label class="form-check-label" for="summary">
+            Summary
+          </label>
+        </div>
       </div>
-    </div>
-    <div class="col-md-2 mt-2">
-      <button class="btn btn-primary" (click)="onShowClick()">
-        Show
-      </button>
-    </div>
-
-  </div>
-
-  <div class="row mt-3" *ngIf="!asOnChecked">
-    <div class="col-md-3">
-      <div class="form-group">
-        <label>From Date</label>
-        <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
-        <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+      <div class="col-md-2 mt-2">
+        <button class="btn btn-primary" (click)="onShowClick()">
+          Show
+        </button>
       </div>
-    </div>
 
-    <div class="col-md-3">
-      <div class="form-group">
-        <label>To Date</label>
-        <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
-        <label class="required-field">To Date</label>
-        <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
-          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
-      </div>
     </div>
-
-    <div class="col-md-4">
-      <div class="form-check mt-2">
-        <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
-
-        <label class="form-check-label" for="summary">
-          Summary
-        </label>
-      </div>
-    </div>
-    <div class="col-md-2 mt-2">
-      <button class="btn btn-primary" (click)="onShowClick()">
-        Show
-      </button>
-    </div>
-
   </div>
 
   <!-- <div class="row">
