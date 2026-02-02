@@ -15,7 +15,7 @@
                                 <label>Date</label>
                                 <input type="date" class="form-control">
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <label>Bank</label>
                                 <select class="form-control">
@@ -125,37 +125,38 @@
                 </div>
 
                 <div class="section-content mt-3">
-                    <ngx-datatable class="material striped" [rows]="gridData"  [headerHeight]="45" [rowHeight]="45"
+                    <ngx-datatable class="material striped" [rows]="gridData" [headerHeight]="45" [rowHeight]="45"
                         [columnMode]="'force'" [scrollbarH]="true">
 
-                        <ngx-datatable-column [width]="40"  sortable="false" *ngIf="showActionColumns">
+                        <ngx-datatable-column [width]="40" sortable="false" *ngIf="showActionColumns">
                             <ng-template ngx-datatable-header-template>
-                                <input type="checkbox"  [checked]="isAllSelected()" (change)="toggleAll($event)" />
+                                <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)" />
                             </ng-template>
 
                             <ng-template ngx-datatable-cell-template let-row="row">
-                                <input type="checkbox"    [(ngModel)]="row.selected" />
+                                <input type="checkbox" [(ngModel)]="row.selected" />
                             </ng-template>
 
                         </ngx-datatable-column>
 
                         <ngx-datatable-column name="Deposit" sortable="false" [width]="90" *ngIf="showActionColumns">
                             <ng-template ngx-datatable-cell-template let-row="row">
-                                <input type="checkbox"  [(ngModel)]="row.deposit" [disabled]="row.mode === 'ONLINE'" />
+                                <input type="checkbox" [(ngModel)]="row.deposit" [disabled]="row.mode === 'ONLINE'" />
                             </ng-template>
 
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column  name="Cancel" sortable="false" [width]="90" *ngIf="showActionColumns">
+                        <ngx-datatable-column name="Cancel" sortable="false" [width]="90" *ngIf="showActionColumns">
                             <ng-template ngx-datatable-cell-template let-row="row">
-                                <input type="checkbox"  [(ngModel)]="row.cancel" />
+                                <input type="checkbox" [(ngModel)]="row.cancel" />
                             </ng-template>
 
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column name="Cheque / Reference" sortable="false" prop="cheque"></ngx-datatable-column>
+                        <ngx-datatable-column name="Cheque / Reference" sortable="false"
+                            prop="cheque"></ngx-datatable-column>
 
-                        <ngx-datatable-column name="Branch Name"  sortable="false" prop="branch"></ngx-datatable-column>
+                        <ngx-datatable-column name="Branch Name" sortable="false" prop="branch"></ngx-datatable-column>
 
                         <ngx-datatable-column name="Amount" sortable="false">
                             <ng-template ngx-datatable-cell-template let-row="row">
@@ -165,22 +166,24 @@
                         </ngx-datatable-column>
 
                         <ngx-datatable-column name="Party" sortable="false" prop="party"></ngx-datatable-column>
-                        <ngx-datatable-column name="Receipt Date" sortable="false" prop="receiptDate"></ngx-datatable-column>
-                        <ngx-datatable-column name="Cheque Date" sortable="false" prop="chequeDate"></ngx-datatable-column>
+                        <ngx-datatable-column name="Receipt Date" sortable="false"
+                            prop="receiptDate"></ngx-datatable-column>
+                        <ngx-datatable-column name="Cheque Date" sortable="false"
+                            prop="chequeDate"></ngx-datatable-column>
 
 
-                        <ngx-datatable-column  *ngIf="activeTab === 'DEPOSITED'" name="Deposited Date"
+                        <ngx-datatable-column *ngIf="activeTab === 'DEPOSITED'" name="Deposited Date"
                             prop="depositedDate">
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column  *ngIf="activeTab === 'CANCELLED'" name="Cancelled Date"
+                        <ngx-datatable-column *ngIf="activeTab === 'CANCELLED'" name="Cancelled Date"
                             prop="cancelledDate">
                         </ngx-datatable-column>
 
-                        <ngx-datatable-column name="Receipt No"  prop="receiptNo"></ngx-datatable-column>
-                        <ngx-datatable-column name="Receipt Id"  prop="receiptId"></ngx-datatable-column>
-                        <ngx-datatable-column name="Transaction Mode"  prop="mode"></ngx-datatable-column>
-                        <ngx-datatable-column name="Cheque Bank Name"  prop="bank"></ngx-datatable-column>
+                        <ngx-datatable-column name="Receipt No"   sortable="false" prop="receiptNo"></ngx-datatable-column>
+                        <ngx-datatable-column name="Receipt Id"   sortable="false" prop="receiptId"></ngx-datatable-column>
+                        <ngx-datatable-column name="Transaction Mode"  sortable="false" prop="mode"></ngx-datatable-column>
+                        <ngx-datatable-column name="Cheque Bank Name"   sortable="false" prop="bank"></ngx-datatable-column>
 
                     </ngx-datatable>
 

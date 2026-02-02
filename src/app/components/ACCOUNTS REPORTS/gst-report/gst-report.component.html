@@ -42,7 +42,7 @@
 
           <div class="col-md-3" *ngIf="showreceipts">
             <label class="form-label required-field">Month</label>
-            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" formControlName="month" readonly>
+            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MMM-YYYY' }" formControlName="month" readonly>
           </div>
 
           <div class="col-md-3" *ngIf="showpayments">
