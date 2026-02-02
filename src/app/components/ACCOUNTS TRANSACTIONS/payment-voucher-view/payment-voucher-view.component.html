@@ -109,7 +109,7 @@
                   </div>
                 </div>
 
-                <!-- ONLINE -->
+               
                 <div class="online" *ngIf="bankType === 'ONLINE'">
                   <div class="row">
                     <div class="col-md-3">
@@ -147,7 +147,7 @@
                   </div>
                 </div>
 
-                <!-- DEBIT -->
+                
                 <div class="debit" *ngIf="bankType === 'DEBIT'">
                   <div class="row">
                     <div class="col-md-3">
@@ -171,7 +171,7 @@
                   </div>
                 </div>
 
-                <!-- CREDIT -->
+                
                 <div class="credit" *ngIf="bankType === 'CREDIT'">
                   <div class="row">
                     <div class="col-md-3">
@@ -201,7 +201,7 @@
 
         </div>
 
-        <!-- PAYMENT DETAILS -->
+        
         <div class="section-content mt-2">
           <div class="row">
             <div class="col-md-6 col-xl-4">
@@ -239,10 +239,10 @@
               </div>
             </div>
 
-            <!-- GST + TDS SECTION -->
+            
             <div class="col-md-6 col-xl-6 offset-2 pt-2">
 
-              <!-- GST -->
+              
               <div class="form-group">
                 <div class="border rounded p-2 mt-3">
                   <div class="col-md-12 col-xl-12 mt-2 mb-2">
@@ -338,7 +338,7 @@
                   </div>
                 </div>
               </div>
-              <!-- TDS -->
+              
               <div class="form-group">
                 <div class="border rounded p-2 mt-3">
                   <div class="col-md-12 col-xl-12 mt-2 mb-2">
@@ -399,11 +399,11 @@
                   </div>
                 </div>
               </div>
-              <!-- Buttons -->
+              
               <div class="d-flex justify-content-end mt-4">
                 <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentDetails()">Clear</a>
                 <button class="btn btn-b-icon px-3 border-0" (click)="addPaymentDetails()">Add
-                  <!-- <i class="fa fa-plus"></i>-->
+                
                 </button>
               </div>
             </div>
@@ -415,7 +415,7 @@
 
   <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
     [footerHeight]="50" [rowHeight]="50" [limit]="5" [scrollbarH]="true">
-    <ngx-datatable-column name="Actions" prop="" frozenLeft="True">
+    <ngx-datatable-column name="Actions" sortable="false" prop="" frozenLeft="True">
       <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
         <label for="delete{{ rowIndex }}">
           <div id="icon-delete" (click)="removeHandler(rowIndex)"></div>
@@ -423,59 +423,59 @@
       </ng-template>
     </ngx-datatable-column>
 
-    <ngx-datatable-column name="Party Name" prop="ppartyname"></ngx-datatable-column>
-    <ngx-datatable-column name="Ledger Name" prop="pledgername"></ngx-datatable-column>
-    <ngx-datatable-column name="Sub Ledger Name" prop="psubledgername"></ngx-datatable-column>
-    <ngx-datatable-column name="Total Paid Amount" prop="ptotalamount">
+    <ngx-datatable-column name="Party Name" sortable="false" prop="ppartyname"></ngx-datatable-column>
+    <ngx-datatable-column name="Ledger Name" sortable="false" prop="pledgername"></ngx-datatable-column>
+    <ngx-datatable-column name="Sub Ledger Name" sortable="false" prop="psubledgername"></ngx-datatable-column>
+    <ngx-datatable-column name="Total Paid Amount" sortable="false" prop="ptotalamount">
       <ng-template let-row="row" ngx-datatable-cell-template>
         ₹ {{ row.ptotalamount | number:'1.2-2' }}
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="Paid Amount" prop="pamount">
+    <ngx-datatable-column name="Paid Amount" sortable="false" prop="pamount">
       <ng-template let-row="row" ngx-datatable-cell-template>
         ₹ {{ row.pamount | number:'1.2-2' }}
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="GST Type" prop="pgstcalculationtype">
+    <ngx-datatable-column name="GST Type" sortable="false" prop="pgstcalculationtype">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <div *ngIf="row.pgstcalculationtype==''">-- NA --</div>
         <div *ngIf="row.pgstcalculationtype!=''">{{row.pgstcalculationtype}}</div>
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="TDS Section" prop="pTdsSection">
+    <ngx-datatable-column name="TDS Section" sortable="false" prop="pTdsSection">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <div *ngIf="row.pTdsSection==''">-- NA --</div>
         <div *ngIf="row.pTdsSection!=''">{{row.pTdsSection}}</div>
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="GST Percentage" prop="pgstpercentage">
+    <ngx-datatable-column name="GST Percentage" sortable="false" prop="pgstpercentage">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <div *ngIf="row.pgstpercentage==0">-- NA --</div>
         <div *ngIf="row.pgstpercentage!=0">{{row.pgstpercentage}}</div>
       </ng-template>
     </ngx-datatable-column>
-    <ngx-datatable-column name="TDS Amount" prop="ptdsamount">
+    <ngx-datatable-column name="TDS Amount" sortable="false" prop="ptdsamount">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <div *ngIf="row.ptdsamount==0">-- NA --</div>
-        <div *ngIf="row.ptdsamount!=0">₹ {{row.ptdsamount | number:'1.2-2'}}</div>
+        <div *ngIf="row.ptdsamount!=0" >₹ {{row.ptdsamount | number:'1.2-2'}}</div>
       </ng-template>
     </ngx-datatable-column>
   </ngx-datatable>
 
 
-<!-- JOURNAL ENTRY -->
+
 
   <div class="row">
     <div class="col-md-6 col-xl-6 mt-4" style="height: 400;">
       <ngx-datatable class="material expandable table" [rows]="partyjournalentrylist" columnMode="force"
         [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="5">
-        <ngx-datatable-column name="Particulars" prop="accountname"></ngx-datatable-column>
-        <ngx-datatable-column name="Dr" prop="debitamount">
+        <ngx-datatable-column name="Particulars" prop="accountname" sortable="false" ></ngx-datatable-column>
+        <ngx-datatable-column name="Dr" prop="debitamount" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
             <div *ngIf="row.debitamount!=0">₹ {{row.debitamount | number:'1.2-2'}}</div>
           </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Cr" prop="creditamount">
+        <ngx-datatable-column name="Cr" prop="creditamount" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
             <div *ngIf="row.creditamount!=0">₹ {{row.creditamount | number:'1.2-2'}}</div>
           </ng-template>
