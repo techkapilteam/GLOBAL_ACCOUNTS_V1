@@ -12,13 +12,13 @@
           <div class="col-md-3">
             <label class="form-label">From Date</label>
             <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+              [bsConfig]="dpConfig" onkeydown="return false">
           </div>
 
           <div class="col-md-3">
             <label class="form-label">To Date</label>
             <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+              [bsConfig]="dpConfig" onkeydown="return false">
           </div>
 
           <div class="col-md-3">
@@ -34,9 +34,7 @@
           </div>
 
           <div class="col-md-3 d-flex align-items-end">
-            <button type="button" class="btn btn-primary" (click)="generateReport()">
-              Generate Report
-            </button>
+            <button type="button" class="btn btn-primary" (click)="generateReport()">Generate Report</button>
           </div>
 
         </div>
@@ -48,11 +46,9 @@
           <button type="button" (click)="exportPDF()" class="btn btn-link p-0">
             <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF">
           </button>
-
           <button type="button" (click)="printReport()" class="btn btn-link p-0">
             <img src="assets/images/print-icon-blue.svg" width="18" alt="Print">
           </button>
-
           <button type="button" (click)="exportExcel()" class="btn btn-link p-0">
             <img src="assets/images/icon-excel.svg" width="18" alt="Excel">
           </button>
@@ -60,25 +56,12 @@
 
         <div class="text-center mb-3">
           <h4 class="mb-1">KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
-          <p class="mb-1">
-            Above TVS Showroom, 1st Floor, Opp:R&B Guest House,
-            Old NK-07, Kamareddy
-          </p>
+          <p class="mb-1">Above TVS Showroom, 1st Floor, Opp:R&B Guest House, Old NK-07, Kamareddy</p>
           <p class="mb-1">CIN : U65992TG2008PTC060803</p>
-
-          <p class="mb-1 text-end">
-            <b>Branch : Ca-hyderabad-co</b>
-          </p>
-
-          <h5 class="mt-2 mb-1">
-            Bank Book - {{ bankName }}
-          </h5>
-
+          <p class="mb-1 text-end"><b>Branch : Ca-hyderabad-co</b></p>
+          <h5 class="mt-2 mb-1">Bank Book - {{ bankName }}</h5>
           <p class="mb-1 text-start">
-            <b>Between :</b>
-            {{ fromDate | date:'dd-MMM-yyyy' }}
-            And
-            {{ toDate | date:'dd-MMM-yyyy' }}
+            <b>Between :</b> {{ formatDate(fromDate) }} And {{ formatDate(toDate) }}
           </p>
         </div>
 
@@ -87,9 +70,9 @@
 
           <ngx-datatable-column name="Transaction No" sortable="false" prop="txnNo"></ngx-datatable-column>
 
-          <ngx-datatable-column name="Particulars" sortable="false" >
+          <ngx-datatable-column name="Particulars" sortable="false">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row.particulars | date:'dd-MMM-yyyy' }}
+              {{ formatDate(row.particulars) }}
             </ng-template>
           </ngx-datatable-column>
 
@@ -114,9 +97,7 @@
           </ngx-datatable-column>
 
         </ngx-datatable>
-
       </form>
-
     </div>
   </div>
 </div>
@@ -136,7 +117,6 @@
     font-size: 16px;
     color: #555;
   }
-
 
   .custom-select {
     -webkit-appearance: none;

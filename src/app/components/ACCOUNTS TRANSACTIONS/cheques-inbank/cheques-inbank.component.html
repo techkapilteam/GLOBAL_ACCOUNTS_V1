@@ -12,7 +12,7 @@
             <input type="text"
                    class="form-control"
                    bsDatepicker
-                   [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                   [bsConfig]="dpConfig"
                    [(ngModel)]="transactionDate"
                    name="transactionDate"
                    readonly>
@@ -24,7 +24,7 @@
             <input type="text"
                    class="form-control"
                    bsDatepicker
-                   [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                   [bsConfig]="dpConfig"
                    [(ngModel)]="chequesclearDate"
                    name="chequesclearDate"
                    readonly>
@@ -50,7 +50,7 @@
                 <label>Balance :</label>
                 <label class="sec-head-bold ml-2">15,74,948Dr</label>
                 &nbsp;&nbsp;&nbsp;
-                <label class="ml-4"> Date: {{ transactionDate | date:'dd-MMM-yyyy' }}</label>
+                <label class="ml-4"> Date: {{ formatDate(transactionDate) }}</label>
               </div>
             </div>
           </div>
@@ -86,7 +86,7 @@
             <input type="text"
                    class="form-control"
                    bsDatepicker
-                   [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                   [bsConfig]="dpConfig"
                    [(ngModel)]="brsFromDate"
                    name="brsFromDate"
                    readonly>
@@ -96,7 +96,7 @@
             <input type="text"
                    class="form-control"
                    bsDatepicker
-                   [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                   [bsConfig]="dpConfig"
                    [(ngModel)]="brsToDate"
                    name="brsToDate"
                    readonly>
@@ -115,32 +115,27 @@
                          [columnMode]="'standard'"
                          [scrollbarH]="true">
 
-            <!-- Columns remain same -->
-            <!-- Example: Cheque No -->
             <ngx-datatable-column name="Cheque/Reference No." sortable="false" prop="chequeNo" [width]="150"></ngx-datatable-column>
             <ngx-datatable-column name="Branch Name" sortable="false" prop="branchName" [width]="150"></ngx-datatable-column>
             <ngx-datatable-column name="Amount" sortable="false" prop="amount" [width]="100"></ngx-datatable-column>
             <ngx-datatable-column name="Party" sortable="false" prop="party" [width]="120"></ngx-datatable-column>
 
-            <!-- Date columns -->
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="ReceiptDate" sortable="false"
-                                  [width]="100">
+            <!-- Date columns using formatDate -->
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Receipt Date" sortable="false" [width]="100">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.date | date:'dd-MMM-yyyy' }}
+                {{ formatDate(row.date) }}
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Deposited Date" sortable="false"
-                                  [width]="120">
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Deposited Date" sortable="false" [width]="120">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.depositedDate | date:'dd-MMM-yyyy' }}
+                {{ formatDate(row.depositedDate) }}
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Cleared Date" sortable="false"
-                                  [width]="120">
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Cleared Date" sortable="false" [width]="120">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.clearedDate | date:'dd-MMM-yyyy' }}
+                {{ formatDate(row.clearedDate) }}
               </ng-template>
             </ngx-datatable-column>
 
