@@ -38,7 +38,7 @@ today:Date=new Date;
   constructor(private fb:FormBuilder) {
        this.dpConfig.maxDate = new Date();
     this.dpConfig.containerClass = 'theme-dark-blue';
-    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.dpConfig.showWeekNumbers = false;
 
   }
