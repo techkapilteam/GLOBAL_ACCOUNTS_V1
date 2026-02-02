@@ -55,15 +55,15 @@
         [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="50" [limit]="pageCriteria.pageSize"
         [offset]="pageCriteria.offset" [count]="pageCriteria.totalrows">
 
-        <ngx-datatable-column name="Cancel" prop="pchequestatus" [cellClass]="'text-center'">
+        <ngx-datatable-column name="Cancel" prop="pchequestatus" sortable="false" [cellClass]="'text-center'">
           <ng-template let-row="value" ngx-datatable-cell-template>
             <input type="checkbox" [checked]="row.pchequestatus === true" (change)="checkedCancel($event, row)" />
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Cheque No." prop="pchequenumber"></ngx-datatable-column>
-        <ngx-datatable-column name="Bank Name" prop="pbankname"></ngx-datatable-column>
-        <ngx-datatable-column name="Cheque Book ID" prop="pchkBookId"></ngx-datatable-column>
+        <ngx-datatable-column name="Cheque No." prop="pchequenumber" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="Bank Name" prop="pbankname" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="Cheque Book ID" prop="pchkBookId" sortable="false"></ngx-datatable-column>
 
         <ngx-datatable-footer *ngIf="gridData?.length">
           <ng-template ngx-datatable-footer-template>
@@ -125,7 +125,7 @@
           columnMode="force" [limit]="commencementgridPage.size||0" [count]="commencementgridPage.totalElements||0"
           [groupRowsBy]="'pchequestatus'" [groupExpansionDefault]="true" [offset]="commencementgridPage.pageNumber||0">
 
-          <ngx-datatable-group-header [rowHeight]="50">
+          <ngx-datatable-group-header [rowHeight]="50" sortable="false">
             <ng-template ngx-datatable-group-header-template let-group="group" let-expanded="expanded">
               <div class="ps-2">
                 <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
@@ -136,23 +136,23 @@
             </ng-template>
           </ngx-datatable-group-header>
 
-          <ngx-datatable-column name="Cheque No." prop="pchequenumber"></ngx-datatable-column>
-          <ngx-datatable-column name="Payment ID" prop="ppaymentid"></ngx-datatable-column>
-          <ngx-datatable-column name="Particulars" prop="pparticulars"></ngx-datatable-column>
+          <ngx-datatable-column name="Cheque No." prop="pchequenumber" sortable="false"></ngx-datatable-column>
+          <ngx-datatable-column name="Payment ID" prop="ppaymentid" sortable="false"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars" prop="pparticulars" sortable="false"></ngx-datatable-column>
 
-          <ngx-datatable-column name="Payment Date" prop="ppaymentdate">
+          <ngx-datatable-column name="Payment Date" prop="ppaymentdate" sortable="false">
             <ng-template let-row="value" ngx-datatable-cell-template>
               {{ row.ppaymentdate | date:'dd-MM-yyyy' }}
             </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column name="Cleared Date" prop="pcleardate">
+          <ngx-datatable-column name="Cleared Date" prop="pcleardate" sortable="false">
             <ng-template let-row="value" ngx-datatable-cell-template>
               {{ row.pcleardate | date:'dd-MM-yyyy' }}
             </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column name="Paid Amt." prop="ppaidamount" [cellClass]="'text-end'">
+          <ngx-datatable-column name="Paid Amt." prop="ppaidamount" sortable="false" [cellClass]="'text-end'">
             <ng-template let-row="value" ngx-datatable-cell-template>
               <span *ngIf="row.ppaidamount !== 0">
                 {{ currencysymbol }} {{ row.ppaidamount | number:'1.2-2' }}
@@ -160,9 +160,9 @@
             </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column name="Bank Name" prop="pbankname"></ngx-datatable-column>
-          <ngx-datatable-column name="Cheque Book ID" prop="pchkBookId"></ngx-datatable-column>
-          <ngx-datatable-column name="Cheque Status" prop="pstatus"></ngx-datatable-column>
+          <ngx-datatable-column name="Bank Name" prop="pbankname" sortable="false"></ngx-datatable-column>
+          <ngx-datatable-column name="Cheque Book ID" prop="pchkBookId" sortable="false"></ngx-datatable-column>
+          <ngx-datatable-column name="Cheque Status" prop="pstatus" sortable="false"></ngx-datatable-column>
 
         </ngx-datatable>
 

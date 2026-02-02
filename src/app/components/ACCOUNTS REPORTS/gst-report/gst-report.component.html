@@ -76,12 +76,12 @@
       <ngx-datatable class="material" [rows]="GstReportDetails" columnMode="force" [headerHeight]="50" [rowHeight]="50"
         [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset">
 
-        <ngx-datatable-column name="Chit No" prop="groupcode"></ngx-datatable-column>
-        <ngx-datatable-column name="GST No" prop="gstnumber"></ngx-datatable-column>
-        <ngx-datatable-column name="Name" prop="accountname"></ngx-datatable-column>
-        <ngx-datatable-column name="City" prop="city"></ngx-datatable-column>
-        <ngx-datatable-column name="State" prop="state"></ngx-datatable-column>
-        <ngx-datatable-column name="Amount" prop="receiptamount"></ngx-datatable-column>
+        <ngx-datatable-column name="Chit No" prop="groupcode" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="GST No" prop="gstnumber" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" prop="accountname" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="City" prop="city" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="State" prop="state" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="Amount" prop="receiptamount" sortable="false"></ngx-datatable-column>
 
       </ngx-datatable>
     </div>
@@ -90,9 +90,9 @@
   <div class="card shadow-sm mt-4" *ngIf="showhidegstsummary">
     <div class="card-body p-0">
       <ngx-datatable class="material" [rows]="GstSummaryDetails">
-        <ngx-datatable-column name="Company" prop="companyname"></ngx-datatable-column>
-        <ngx-datatable-column name="State" prop="state"></ngx-datatable-column>
-        <ngx-datatable-column name="Count" prop="count"></ngx-datatable-column>
+        <ngx-datatable-column name="Company" prop="companyname" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="State" prop="state" sortable="false"></ngx-datatable-column>
+        <ngx-datatable-column name="Count" prop="count" sortable="false"></ngx-datatable-column>
       </ngx-datatable>
     </div>
   </div>
@@ -102,27 +102,27 @@
       <ngx-datatable class="material" [rows]="gstpaymentsdata" [columnMode]="'force'" [headerHeight]="45"
         [footerHeight]="40" [rowHeight]="'auto'">
 
-        <ngx-datatable-column name="GST Voucher No." prop="pgstvoucherno"></ngx-datatable-column>
+        <ngx-datatable-column name="GST Voucher No." prop="pgstvoucherno" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="Name" prop="vendorname"></ngx-datatable-column>
+        <ngx-datatable-column name="Name" prop="vendorname" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="State" prop="state"></ngx-datatable-column>
+        <ngx-datatable-column name="State" prop="state" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="GST Voucher Date" prop="gstVoucherDate">
+        <ngx-datatable-column name="GST Voucher Date" prop="gstVoucherDate" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.gstVoucherDate | date:'dd-MM-yyyy' }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Taxable Amount" prop="taxableAmount"></ngx-datatable-column>
+        <ngx-datatable-column name="Taxable Amount" prop="taxableAmount" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="CGST Amount" prop="cgstAmount"></ngx-datatable-column>
+        <ngx-datatable-column name="CGST Amount" prop="cgstAmount" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="SGST Amount" prop="sgstAmount"></ngx-datatable-column>
+        <ngx-datatable-column name="SGST Amount" prop="sgstAmount" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="IGST Amount" prop="igstAmount"></ngx-datatable-column>
+        <ngx-datatable-column name="IGST Amount" prop="igstAmount" sortable="false"></ngx-datatable-column>
 
-        <ngx-datatable-column name="Total Amount" prop="invoice_total_amount"></ngx-datatable-column>
+        <ngx-datatable-column name="Total Amount" prop="invoice_total_amount" sortable="false"></ngx-datatable-column>
 
       </ngx-datatable>
 
