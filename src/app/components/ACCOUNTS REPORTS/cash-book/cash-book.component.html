@@ -19,7 +19,7 @@
                 <div class="form-group">
                   <label>From Date</label>
                   <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+                        [bsConfig]="dpConfig" onkeydown="return false">
                 </div>
               </div>
 
@@ -29,7 +29,7 @@
                   <!-- <input type="date" class="form-control" name="toDate"> -->
                   <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate"
                    name="toDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+                        [bsConfig]="dpConfig" onkeydown="return false">
                 </div>
               </div>
 
