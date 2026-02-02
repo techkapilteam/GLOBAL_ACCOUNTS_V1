@@ -33,22 +33,22 @@
 
         >
 
-        <ngx-datatable-column name="Actions" [cellClass]="'cell-center'" [headerClass]="'header-center'">
+        <ngx-datatable-column name="Actions" sortable="false" [cellClass]="'cell-center'" [headerClass]="'header-center'">
           <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
             <button class="btn btn-sm btn-primary" (click)="viewRow()">View</button>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Receipt Date" prop="preceiptdate" [cellClass]="'cell-left'" [headerClass]="'header-left'">
+        <ngx-datatable-column name="Receipt Date" sortable="false" prop="preceiptdate" [cellClass]="'cell-left'" [headerClass]="'header-left'">
           <ng-template ngx-datatable-cell-template let-row="row">
             <span title="{{row.preceiptdate}}">{{row.preceiptdate}}</span>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Receipt No." prop="preceiptid" [cellClass]="'cell-center'" [headerClass]="'header-center'">
+        <ngx-datatable-column name="Receipt No." sortable="false" prop="preceiptid" [cellClass]="'cell-center'" [headerClass]="'header-center'">
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Payment Details" prop="pmodofreceipt" [cellClass]="'cell-left'" [headerClass]="'header-left'">
+        <ngx-datatable-column name="Payment Details" sortable="false" prop="pmodofreceipt" [cellClass]="'cell-left'" [headerClass]="'header-left'">
           <ng-template ngx-datatable-cell-template let-row="row">
             <div *ngIf="row.pmodofreceipt === 'CASH'">
               {{row.pmodofreceipt}}
@@ -59,13 +59,13 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Received Amount" prop="ptotalreceivedamount" [cellClass]="'cell-right'" [headerClass]="'header-right'">
+        <ngx-datatable-column name="Received Amount" sortable="false" prop="ptotalreceivedamount" [cellClass]="'cell-right'" [headerClass]="'header-right'">
           <ng-template ngx-datatable-cell-template let-row="row">
             {{currencySymbol}} {{row.ptotalreceivedamount |currency }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Narration" prop="pnarration" [cellClass]="'cell-left'" [headerClass]="'header-left'" [width]="400">
+        <ngx-datatable-column name="Narration" sortable="false" prop="pnarration" [cellClass]="'cell-left'" [headerClass]="'header-left'" [width]="400">
           <ng-template ngx-datatable-cell-template let-row="row">
             <div *ngIf="row.pnarration === ''">-- NA --</div>
             <div *ngIf="row.pnarration !== ''" title="{{row.pnarration}}">

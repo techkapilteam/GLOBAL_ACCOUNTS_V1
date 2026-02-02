@@ -16,8 +16,8 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
   providers: [DecimalPipe]
 })
 export class PaymentVoucherViewComponent implements OnInit {
- public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
-  today:Date=new Date();
+  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  today: Date = new Date();
 
   // Payment Mode
   paymentMode: 'CASH' | 'BANK' = 'CASH';
@@ -46,17 +46,17 @@ export class PaymentVoucherViewComponent implements OnInit {
   journalform!: FormGroup;
 
   constructor(private fb: FormBuilder) {
-      this.dpConfig.maxDate = new Date();
+    this.dpConfig.maxDate = new Date();
     this.dpConfig.containerClass = 'theme-dark-blue';
-    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.dpConfig.showWeekNumbers = false;
   }
 
   ngOnInit(): void {
-   // this.today = new Date().toISOString().substring(0, 10);
+    // this.today = new Date().toISOString().substring(0, 10);
 
     this.paymentVoucherForm = this.fb.group({
-      todate:[this.today],
+      todate: [this.today],
       pisgstapplicable: [false],
       pgstcalculationtype: ['INCLUDE'],
       pStateId: [''],
@@ -77,7 +77,8 @@ export class PaymentVoucherViewComponent implements OnInit {
       pTdsSection: [''],
       pTdsPercentage: [0],
       ptdsamount: [0],
-
+      pnarration: [''],
+      pDocStorePath: [''],
       ppaymentsslistcontrols: this.fb.group({
         pgstamount: [0],
         pigstpercentage: [0],
@@ -91,8 +92,7 @@ export class PaymentVoucherViewComponent implements OnInit {
         ptdsamount: [0]
       }),
 
-      pnarration: [''],
-      pDocStorePath: ['']
+
     });
 
     this.paymentslist1 = [
@@ -179,9 +179,9 @@ export class PaymentVoucherViewComponent implements OnInit {
   removeHandler(rowIndex: number) {
     this.paymentslist1.splice(rowIndex, 1);
   }
-  saveJournalVoucher(){
+  saveJournalVoucher() {
 
   }
-  clearPaymentVoucher(){}
-  uploadAndProgress($event:any){}
+  clearPaymentVoucher() { }
+  uploadAndProgress($event: any) { }
 }
