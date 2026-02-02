@@ -18,8 +18,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 export class BankBookComponent implements OnInit {
 
 
-  fromDate: string = new Date().toISOString().split('T')[0];
-  toDate: string   = new Date().toISOString().split('T')[0];
+  // fromDate: string = new Date().toISOString().split('T')[0];
+  // toDate: string = new Date().toISOString().split('T')[0];
 
   bankName: string = '';
   showTable: boolean = false;
@@ -31,8 +31,15 @@ export class BankBookComponent implements OnInit {
     { txnNo: 'TXN004', particulars: '2026-01-04', narration: 'CR004', receipts: 0, payments: 1000, balance: 5500 }
   ];
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 
+  fromDate!: Date;
+  toDate!: Date;
+  ngOnInit() {
+    const today = new Date();
+    this.fromDate = today;
+    this.toDate = today;
+  }
   generateReport() {
     if (!this.fromDate || !this.toDate || !this.bankName) {
       alert('Please Select From Date, To Date And Bank Name.');

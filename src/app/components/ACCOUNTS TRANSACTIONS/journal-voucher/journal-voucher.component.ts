@@ -27,6 +27,7 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 
 export class JournalVoucherComponent {
   public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+    today:Date=new Date()
   showModeofPayment = false;
   showTypeofPayment = false;
   showtranstype = false;
@@ -150,7 +151,7 @@ export class JournalVoucherComponent {
 
   bankBalance: any;
 
-  today!: string;
+  // today!: string;
   bankbookBalance: any;
   subledgerName: any;
   bankpassbookBalance: any;;
@@ -169,9 +170,10 @@ export class JournalVoucherComponent {
   //   skip: 0,
   //   take: 10
   // };
+  
   disabletransactiondate = false;
   // public selectableSettings: SelectableSettings;
-  public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  // public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
 
   constructor(
@@ -186,9 +188,14 @@ export class JournalVoucherComponent {
   ) {
     // this.ppaymentdateConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
     // this.ppaymentdateConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
-    this.ppaymentdateConfig.maxDate = new Date();
-    this.ppaymentdateConfig.dateInputFormat = 'DD-MM-YYYY'
-    this.dpConfig.maxDate = new Date();
+    // this.ppaymentdateConfig.maxDate = new Date();
+    // this.ppaymentdateConfig.dateInputFormat = 'DD-MM-YYYY'
+
+
+        this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
     // this.ppaymentdateConfig = { ...this.dpConfig };
     // this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
   }
@@ -196,7 +203,7 @@ export class JournalVoucherComponent {
   // public gridView: DataResult;
 
   ngOnInit() {
-    this.today = new Date().toISOString().substring(0, 10);
+    //this.today = new Date().toISOString().substring(0, 10);
     console.log(this.paymentlistcolumnwiselist)
     // this.currencySymbol = this._commonService.currencysymbol;
     // if (this._commonService.comapnydetails != null)
@@ -213,7 +220,7 @@ export class JournalVoucherComponent {
     this.hidefootertemplate = true;
     this.paymentVoucherForm = this._FormBuilder.group({
       ppaymentid: [''],
-      pjvdate: ['', Validators.required],
+      pjvdate: [this.today, Validators.required],
       ptotalpaidamount: [''],
       pnarration: ['', Validators.required],
       pmodofpayment: ['CASH'],

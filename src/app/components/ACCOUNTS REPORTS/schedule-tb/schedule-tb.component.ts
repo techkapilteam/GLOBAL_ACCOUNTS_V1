@@ -166,7 +166,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-schedule-tb',
@@ -184,18 +184,24 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 export class ScheduleTbComponent {
 
 DocumentsForm!: FormGroup;
+  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
   // static values
   disabletransactiondate: boolean = false;
   savebutton: string = 'Save';
 
   // ngx-bootstrap datepicker config (static)
-  dpConfig = {
-    dateInputFormat: 'DD-MM-YYYY',
-    showWeekNumbers: false
-  };
+  // dpConfig = {
+  //   dateInputFormat: 'DD-MM-YYYY',
+  //   showWeekNumbers: false
+  // };
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+      this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+  }
 
   ngOnInit(): void {
     this.DocumentsForm = this.fb.group({

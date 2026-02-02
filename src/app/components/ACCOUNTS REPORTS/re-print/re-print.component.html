@@ -79,19 +79,19 @@
         [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
         columnMode="force">
 
-        <ngx-datatable-column prop="general_receipt_number" name="T/R Receipt No."></ngx-datatable-column>
+        <ngx-datatable-column prop="general_receipt_number" sortable="false" name="T/R Receipt No."></ngx-datatable-column>
 
-        <ngx-datatable-column prop="receipt_date" name="Receipt Date">
+        <ngx-datatable-column prop="receipt_date" sortable="false" name="Receipt Date">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.receipt_date ? (row.receipt_date | date:'dd/MM/yyyy') : '--NA--' }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column prop="receipt_number" name="Receipt No."></ngx-datatable-column>
+        <ngx-datatable-column prop="receipt_number" sortable="false" name="Receipt No."></ngx-datatable-column>
 
-        <ngx-datatable-column prop="ticketno" name="Chit No."></ngx-datatable-column>
+        <ngx-datatable-column prop="ticketno" sortable="false" name="Chit No."></ngx-datatable-column>
 
-        <ngx-datatable-column name="Receipt Amount" [cellClass]="'cell-right'">
+        <ngx-datatable-column name="Receipt Amount" sortable="false" [cellClass]="'cell-right'">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ currencysymbol }} {{ row.total_received_amount | number:'1.2-2' }}
           </ng-template>

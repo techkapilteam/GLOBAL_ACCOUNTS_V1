@@ -204,6 +204,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-general-receipt-new',
@@ -211,13 +212,15 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
   styleUrls: ['./general-receipt-new.component.css'],
   imports: [CommonModule,
     ReactiveFormsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    BsDatepickerModule
   ],
   providers: [DecimalPipe]
 })
 export class GeneralReceiptNewComponent implements OnInit {
-
-  today!: string;
+  
+ public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  today:Date=new Date();
 disablesavebutton:boolean=false;
   // Payment Mode
   paymentMode: 'CASH' | 'BANK' = 'CASH';
@@ -244,12 +247,18 @@ disablesavebutton:boolean=false;
   // Reactive Form
   paymentVoucherForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+      this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+  }
 
   ngOnInit(): void {
-    this.today = new Date().toISOString().substring(0, 10);
+   // this.today = new Date().toISOString().substring(0, 10);
 
     this.paymentVoucherForm = this.fb.group({
+    todate:[this.today],
       pisgstapplicable: [false],
       pgstcalculationtype: ['INCLUDE'],
       pStateId: [''],

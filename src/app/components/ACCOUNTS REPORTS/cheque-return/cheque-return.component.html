@@ -94,33 +94,33 @@
                 [rowHeight]="50" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
                 [count]="pageCriteria.totalrows">
 
-                <ngx-datatable-column name="Return Date" prop="pcleardate">
+                <ngx-datatable-column name="Return Date" prop="pcleardate" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pcleardate ? (row.pcleardate | date:'dd-MM-yyyy') : '--NA--' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Cheque No." prop="preferencenumber"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque No." prop="preferencenumber" sortable="false"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Cheque Amt." prop="ptotalreceivedamount" [cellClass]="'text-end'">
+                <ngx-datatable-column name="Cheque Amt." prop="ptotalreceivedamount" sortable="false" [cellClass]="'text-end'">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Bank Name" prop="pbankname"></ngx-datatable-column>
+                <ngx-datatable-column name="Bank Name" prop="pbankname" sortable="false"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Receipt No." prop="preceiptid"></ngx-datatable-column>
+                <ngx-datatable-column name="Receipt No." prop="preceiptid" sortable="false"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Receipt Date" prop="pchequedate">
+                <ngx-datatable-column name="Receipt Date" prop="pchequedate" sortable="false">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.pchequedate ? (row.pchequedate | date:'dd-MM-yyyy') : '--NA--' }}
                   </ng-template>
                 </ngx-datatable-column>
 
-                <ngx-datatable-column name="Particulars" prop="pparticulars"></ngx-datatable-column>
+                <ngx-datatable-column name="Particulars" prop="pparticulars" sortable="false"></ngx-datatable-column>
 
-                <ngx-datatable-column name="Referred By" prop="pbranchname"></ngx-datatable-column>
+                <ngx-datatable-column name="Referred By" prop="pbranchname" sortable="false"></ngx-datatable-column>
 
               </ngx-datatable>
 
