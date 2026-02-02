@@ -82,51 +82,51 @@
           <ngx-datatable *ngIf="showTable" class="bootstrap mt-2" [rows]="filteredCheques" [headerHeight]="50"
             [rowHeight]="'auto'" [columnMode]="'standard'" [scrollbarH]="true">
 
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Checkbook"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Checkbook" sortable="false"
               prop="checkbook" [width]="60">
               <ng-template ngx-datatable-header-template>
                 <input type="checkbox" class="form-check-input" [(ngModel)]="headerCheckbook"
                   (change)="toggleAllCheckbook($event)">
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Clear"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Clear" sortable="false"
               prop="clear" [width]="80"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Return"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Return" sortable="false"
               prop="return" [width]="80"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Reference No"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Reference No" sortable="false"
               prop="referenceNo" [width]="120"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" sortable="false"
               name="Cheque/Reference No." prop="chequeNo" [width]="150"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Branch Name"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Branch Name" sortable="false"
               prop="branchName" [width]="150"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Amount"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Amount" sortable="false"
               prop="amount" [width]="100"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Party"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Party" sortable="false"
               prop="party" [width]="120"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Receipts"
+            <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Receipts" sortable="false"
               prop="receipts" [width]="100"></ngx-datatable-column>
             <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'"
-              name="Cheque/Reference No." prop="chequeNo" [width]="150"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Branch Name"
+              name="Cheque/Reference No." sortable="false" prop="chequeNo" [width]="150"></ngx-datatable-column>
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Branch Name" sortable="false"
               prop="branchName" [width]="150"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Amount"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Amount" sortable="false"
               prop="amount" [width]="100"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Party"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Party" sortable="false" 
               prop="party" [width]="120"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="ReceiptDate"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="ReceiptDate" sortable="false"
               prop="receipts" [width]="100"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Deposited Date"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Deposited Date" sortable="false"
               prop="depositedDate" [width]="120"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Cleared Date"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Cleared Date" sortable="false"
               prop="clearedDate" [width]="120"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Receipt Id"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Receipt Id" sortable="false"
               prop="receiptId" [width]="120"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Transaction Mode"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Transaction Mode" sortable="false" 
               prop="transactionMode" [width]="150"></ngx-datatable-column>
-            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Cheque Bank Name"
+            <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'" name="Cheque Bank Name" sortable="false"
               prop="chequeBankName" [width]="150"></ngx-datatable-column>
             <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'"
-              name="Cheque Branch Name" prop="chequeBranchName" [width]="150"></ngx-datatable-column>
+              name="Cheque Branch Name" sortable="false" prop="chequeBranchName" [width]="150"></ngx-datatable-column>
 
           </ngx-datatable>
         </div>

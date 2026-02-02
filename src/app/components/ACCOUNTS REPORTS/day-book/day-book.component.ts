@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule,CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
@@ -19,7 +19,7 @@ export class DayBookComponent implements OnInit {
   Daybook!: FormGroup;
   isSingleDate: boolean = true;
   showGrid: boolean = false;
- 
+
   today: string = new Date().toISOString().split('T')[0];
 
   transactions: any[] = [];
@@ -108,8 +108,16 @@ export class DayBookComponent implements OnInit {
     }
   }
 
+  
   GetChequeonHandDetails() {
-    this.loadGrid();
+    this.showGrid = false;        
+    this.transactions = [];       
+    this.bankSummary = [];
+
+    setTimeout(() => {            
+      this.loadGrid();            
+      this.showGrid = true;       
+    }, 50);
   }
 
   getsummaryReport() {

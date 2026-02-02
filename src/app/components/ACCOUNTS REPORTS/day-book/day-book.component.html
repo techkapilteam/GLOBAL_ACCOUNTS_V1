@@ -1,6 +1,5 @@
 <div class="container mt-3">
   <div class="screen-card">
-
     <div class="screen-header">
       <h2>Day Book</h2>
     </div>
@@ -23,34 +22,22 @@
 
           <div class="col-xl-2 col-md-2 form-group">
             <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
-            <input
-              type="date"
-              class="form-control"
-              formControlName="dfromdate">
+            <input type="date" class="form-control" formControlName="dfromdate">
           </div>
 
           <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
             <label>To Date</label>
-            <input
-              type="date"
-              class="form-control"
-              formControlName="dtodate">
+            <input type="date" class="form-control" formControlName="dtodate">
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button
-              type="button"
-              class="btn btn-primary px-3 border-0"
-              (click)="getdaybookdata()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
               Generate Report
             </button>
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button
-              type="button"
-              class="btn btn-primary px-3 border-0"
-              (click)="GetChequeonHandDetails()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">
               Cheques On Hand
             </button>
           </div>
@@ -82,10 +69,7 @@
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button
-              type="button"
-              class="btn btn-primary px-3 border-0"
-              (click)="getsummaryReport()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="getsummaryReport()">
               Generate Report
             </button>
           </div>
@@ -105,13 +89,18 @@
 
         <div class="text-center mb-3">
           <h4>KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
+          <p class="mb-1">
+            Above TVS Showroom, 1st Floor, Opp:R&B Guest House,
+            Old NK-07, Kamareddy
+          </p>
+          <p class="mb-1">CIN : U65992TG2008PTC060803</p>
+          
           <p class="text-end">
             <b>Branch : {{ Daybook.value.branch || 'Main Branch' }}</b>
           </p>
           <h5>Day Book</h5>
           <p class="text-start">
-            <b>Date :</b>
-            {{ Daybook.value.dfromdate | date:'dd-MMM-yyyy' }}
+            <b>Date :</b> {{ Daybook.value.dfromdate | date:'dd-MMM-yyyy' }}
           </p>
         </div>
 
@@ -121,17 +110,17 @@
           [headerHeight]="40"
           [rowHeight]="40"
           [columnMode]="'force'">
-          <ngx-datatable-column name="Transaction No" prop="rTxn"></ngx-datatable-column>
-          <ngx-datatable-column name="Particulars" prop="rPart"></ngx-datatable-column>
-          <ngx-datatable-column name="Type" prop="rType"></ngx-datatable-column>
-          <ngx-datatable-column name="Amount">
+          <ngx-datatable-column name="Transaction No"  sortable="false" prop="rTxn"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars" sortable="false" prop="rPart"></ngx-datatable-column>
+          <ngx-datatable-column name="Type" sortable="false" prop="rType"></ngx-datatable-column>
+          <ngx-datatable-column name="Amount" sortable="false">
             <ng-template let-row="row" ngx-datatable-cell-template>
               ₹ {{ row.amount | number:'1.2-2' }}
             </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column name="Transaction No" prop="pTxn"></ngx-datatable-column>
-          <ngx-datatable-column name="Particulars" prop="pPart"></ngx-datatable-column>
-          <ngx-datatable-column name="Type" prop="pType"></ngx-datatable-column>
+          <ngx-datatable-column name="Transaction No" sortable="false"  prop="pTxn"></ngx-datatable-column>
+          <ngx-datatable-column name="Particulars"  sortable="false" prop="pPart"></ngx-datatable-column>
+          <ngx-datatable-column name="Type" sortable="false" prop="pType"></ngx-datatable-column>
         </ngx-datatable>
 
         <ngx-datatable
@@ -140,38 +129,13 @@
           [headerHeight]="40"
           [rowHeight]="40"
           [columnMode]="'force'">
-          <ngx-datatable-column name="Bank Name" prop="bank"></ngx-datatable-column>
-          <ngx-datatable-column name="Opening Balance" prop="opening"></ngx-datatable-column>
-          <ngx-datatable-column name="Receipts" prop="receipts"></ngx-datatable-column>
-          <ngx-datatable-column name="Payments" prop="payments"></ngx-datatable-column>
-          <ngx-datatable-column name="Closing Balance" prop="closing"></ngx-datatable-column>
+          <ngx-datatable-column name="Bank Name" sortable="false"  prop="bank"></ngx-datatable-column>
+          <ngx-datatable-column name="Opening Balance" sortable="false"  prop="opening"></ngx-datatable-column>
+          <ngx-datatable-column name="Receipts" sortable="false" prop="receipts"></ngx-datatable-column>
+          <ngx-datatable-column name="Payments" sortable="false"  prop="payments"></ngx-datatable-column>
+          <ngx-datatable-column name="Closing Balance" sortable="false" prop="closing"></ngx-datatable-column>
         </ngx-datatable>
 
       </form>
     </div>
-  </div>
-</div>
 
-<style>
-.custom-select-wrapper {
-  position: relative;
-}
-
-.custom-select-wrapper::after {
-  content: '▾';
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 16px;
-  color: #555;
-}
-
-.custom-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding-right: 30px;
-}
-</style>
