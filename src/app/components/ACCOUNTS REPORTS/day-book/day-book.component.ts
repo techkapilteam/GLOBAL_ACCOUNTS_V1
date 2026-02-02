@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule,CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
 @Component({
   selector: 'app-day-book',
   standalone: true,
@@ -11,7 +11,6 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     FormsModule,
     ReactiveFormsModule,
     NgxDatatableModule,
-    BsDatepickerModule
   ],
   templateUrl: './day-book.component.html'
 })
@@ -20,20 +19,21 @@ export class DayBookComponent implements OnInit {
   Daybook!: FormGroup;
   isSingleDate: boolean = true;
   showGrid: boolean = false;
- 
-  // today: string = new Date().toISOString().split('T')[0];
+
+  today: string = new Date().toISOString().split('T')[0];
 
   transactions: any[] = [];
   bankSummary: any[] = [];
 
   constructor(private fb: FormBuilder) {}
 
-  fromDate!: Date;
-  toDate!: Date;
-  ngOnInit() {
-    const today = new Date();
-    this.fromDate = today;
-    this.toDate = today;
+  ngOnInit(): void {
+    this.Daybook = this.fb.group({
+      date: [true],
+      dfromdate: [this.today],
+      dtodate: [this.today],
+      branch: ['']
+    });
   }
 
   checkox(event: any) {
@@ -108,8 +108,16 @@ export class DayBookComponent implements OnInit {
     }
   }
 
+  
   GetChequeonHandDetails() {
-    this.loadGrid();
+    this.showGrid = false;       
+    this.transactions = [];       
+    this.bankSummary = [];
+
+    setTimeout(() => {           
+      this.loadGrid();            
+      this.showGrid = true;      
+    }, 50);
   }
 
   getsummaryReport() {
@@ -124,5 +132,4 @@ export class DayBookComponent implements OnInit {
   exportPDF() { console.log('Export PDF'); }
   printReport() { window.print(); }
   exportExcel() { console.log('Export Excel'); }
-  
 }
