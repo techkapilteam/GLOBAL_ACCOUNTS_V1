@@ -80,23 +80,23 @@
 
 
             <ng-container *ngIf="bankType === 'CREDIT'">
-                <ngx-datatable-column name="Receipt Date" prop="receiptDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Receipt No" prop="receiptNo"></ngx-datatable-column>
-                <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
-                <ngx-datatable-column name="Cheque No" prop="chequeNo"></ngx-datatable-column>
-                <ngx-datatable-column name="Cheque Date" prop="chequeDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Deposit Date" prop="depositDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Particular" prop="particular"></ngx-datatable-column>
+                <ngx-datatable-column name="Receipt Date" sortable="false" prop="receiptDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Receipt No" sortable="false" prop="receiptNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Amount"  sortable="false" prop="amount"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque No" sortable="false" prop="chequeNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque Date" sortable="false" prop="chequeDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Deposit Date" sortable="false"  prop="depositDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Cleared Date" sortable="false" prop="clearedDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Particular" sortable="false" prop="particular"></ngx-datatable-column>
             </ng-container>
 
             <ng-container *ngIf="bankType === 'DEBIT'">
-                <ngx-datatable-column name="Trans Date" prop="transDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Trans No" prop="transNo"></ngx-datatable-column>
-                <ngx-datatable-column name="Cheque No" prop="chequeNo"></ngx-datatable-column>
-                <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
-                <ngx-datatable-column name="Cleared Date" prop="clearedDate"></ngx-datatable-column>
-                <ngx-datatable-column name="Particular" prop="particular"></ngx-datatable-column>
+                <ngx-datatable-column name="Trans Date" sortable="false" prop="transDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Trans No"  sortable="false" prop="transNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Cheque No" sortable="false" prop="chequeNo"></ngx-datatable-column>
+                <ngx-datatable-column name="Amount" sortable="false"  prop="amount"></ngx-datatable-column>
+                <ngx-datatable-column name="Cleared Date" sortable="false" prop="clearedDate"></ngx-datatable-column>
+                <ngx-datatable-column name="Particular"sortable="false" prop="particular"></ngx-datatable-column>
             </ng-container>
 
         </ngx-datatable>
