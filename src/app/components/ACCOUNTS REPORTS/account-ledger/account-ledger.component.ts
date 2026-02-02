@@ -1,6 +1,6 @@
 import { Component, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -36,12 +36,13 @@ class PageCriteria {
     NgSelectModule,
     NgxDatatableModule,
     BsDatepickerModule,
-    DateFormatPipe
+    DateFormatPipe,
+    FormsModule
   ],
   templateUrl: './account-ledger.component.html'
 })
 export class AccountLedgerComponent implements OnInit {
-  
+
 
   @ViewChild('fromDp', { static: false }) fromDp!: BsDatepickerDirective;
   @ViewChild('toDp', { static: false }) toDp!: BsDatepickerDirective;
@@ -85,50 +86,43 @@ export class AccountLedgerComponent implements OnInit {
     { psubledgerid: 32, psubledgername: 'Sales Sub 2', pledgerid: 3 }
   ];
 
-  filtersubledgeraccountslist:any[]=[];
+  filtersubledgeraccountslist: any[] = [];
 
-selectedLedger:any;
-selectedsubledger:any;
+  selectedLedger: any;
+  selectedsubledger: any;
   pageCriteria = new PageCriteria();
   LedgerValidationErrors: any = {};
 
   constructor(private fb: FormBuilder) { }
+  fromDate!: Date;
+  toDate!: Date;
 
   ngOnInit(): void {
     const today = new Date();
 
+    this.fromDate = today;
+    this.toDate = today;
     this.AccountLedger = this.fb.group({
       pledgerid: [null, Validators.required],
       pledgername: [''],
       psubledgerid: [null],
       psubledgername: [''],
-      fromDate: [today, Validators.required],
-      toDate: [today, Validators.required],
+      // fromDate: [today, Validators.required],
+      // toDate: [today, Validators.required],
+
     });
 
-    this.dpConfig = {
-      dateInputFormat: 'DD-MMM-YYYY',
-      containerClass: 'theme-default',
-      maxDate: today
-    };
-
-    this.dpConfig1 = {
-      dateInputFormat: 'DD-MMM-YYYY',
-      containerClass: 'theme-default',
-      maxDate: today,
-      minDate: today
-    };
 
   }
 
 
 
- ledgerName_Change(pledgerid: number) {
-  debugger
+  ledgerName_Change(pledgerid: number) {
+    debugger
     this.filtersubledgeraccountslist = this.subledgeraccountslist.filter(
       s => s.pledgerid === pledgerid
     );
-   
+
     this.selectedsubledger = null;
   }
 
@@ -140,7 +134,7 @@ selectedsubledger:any;
       this.SubLedgerName = event.label;
     }
   }
-   
+
 
   FromDateChange(event: any) {
     this.dpConfig1.minDate = event;

@@ -1,107 +1,231 @@
-<div class="screen-container">
-  <div class="screen-card">
+<!-- <form> -->
+<div class="section-content container-fluid">
 
-    <div class="screen-header">
-      <h2>TDS Report</h2>
+  <div class="row">
+    <div class="col-12">
+      <label class="font-weight-bold">Section wise report</label>
     </div>
+  </div>
 
-    <div class="screen-content">
-      <form>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
 
-        <h5 class="section-title">Section wise report</h5>
+        <!-- Section -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="font-weight-bold">Section</label>
+            <select class="form-control" name="section" [(ngModel)]="selectedSection"
+              (ngModelChange)="onSectionChange()">
 
-        <div class="row g-3 mb-2">
-          <div class="col-xl-3 col-md-4">
-            <label class="form-label">Section <span class="text-danger">*</span></label>
-            <select class="form-control">
-              <option value="" disabled selected>Select</option>
-              <option>194A</option>
-              <option>194C</option>
-              <option>194H</option>
+              <option value="">Select</option>
+              <option *ngFor="let s of sections" [ngValue]="s.code">
+                {{ s.code }}
+              </option>
             </select>
           </div>
+        </div>
 
-          <div class="col-xl-5 col-md-5">
-            <label class="form-label">Section Name</label>
-            <input type="text" class="form-control" readonly>
+        <!-- Section Name -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <label>Section Name</label>
+            <!-- <input type="text" class="form-control" [value]="sectionName" readonly /> -->
+            <input type="text" class="form-control" name="sectionName" [(ngModel)]="sectionName" readonly />
           </div>
         </div>
 
-        <div class="row mb-3">
-          <div class="col-md-2 d-flex align-items-center">
-            <input type="checkbox" class="form-check-input me-2" [(ngModel)]="asOn" name="ason">
-            <label class="form-check-label">As On</label>
-          </div>
-        </div>
-
-        <div class="row g-3 align-items-end" *ngIf="!asOn">
-          <div class="col-xl-3 col-md-4">
-            <label class="form-label">From Date</label>
-            <input type="date" class="form-control">
-          </div>
-
-          <div class="col-xl-3 col-md-4">
-            <label class="form-label">To Date</label>
-            <input type="date" class="form-control">
-          </div>
-        </div>
-
-        <div class="row g-3 align-items-end" *ngIf="asOn">
-          <div class="col-xl-3 col-md-4">
-            <label class="form-label">Date</label>
-            <input type="date" class="form-control">
-          </div>
-        </div>
-        <div class="row g-3 align-items-end mt-2">
-          <div class="col-xl-2 col-md-3 d-flex align-items-center mt-4">
-            <input type="checkbox" class="form-check-input me-2">
-            <label class="form-check-label">Summary</label>
-          </div>
-
-          <div class="col-xl-2 col-md-3 mt-3 text-end">
-            <button type="button" class="btn btn-primary px-4"  (click)="onShow()">Show</button>
-          </div>
-        </div>
-
-      </form>
-      <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="showTable">
-        <button class="btn btn-danger btn-sm" >PDF</button>
-        <button class="btn btn-secondary btn-sm" >Print</button>
-        <button class="btn btn-success btn-sm" >Excel</button>
       </div>
-
-      <div class="mt-2" *ngIf="showTable">
-        <ngx-datatable class="material striped" [rows]="rows" [columnMode]="'force'" [headerHeight]="45"
-          [footerHeight]="45" [rowHeight]="'auto'" [limit]="10">
-
-          <ngx-datatable-column name="PAN Number" prop="pan"></ngx-datatable-column>
-          <ngx-datatable-column name="Agent Name" prop="agentName"></ngx-datatable-column>
-          <ngx-datatable-column name="Agent Code" prop="agentCode"></ngx-datatable-column>
-
-          <ngx-datatable-column name="Paid Amount">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              ₹{{ row.paidAmount | number:'1.2-2' }}
-            </ng-template>
-          </ngx-datatable-column>
-
-          <ngx-datatable-column name="TDS Calculated">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              ₹{{ row.tdsAmount | number:'1.2-2' }}
-            </ng-template>
-          </ngx-datatable-column>
-
-          <ngx-datatable-column name="Amount">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              ₹{{ row.netAmount | number:'1.2-2' }}
-            </ng-template>
-          </ngx-datatable-column>
-
-        </ngx-datatable>
-      </div>
-
 
     </div>
+  </div>
+  <br><br>
 
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-check mt-2">
+        <input type="checkbox" class="form-check-input" id="asOn" (change)="onAsOnChange($event)" />
+        <label class="form-check-label" for="asOn">
+          As On
+        </label>
+      </div>
+    </div>
+  </div>
+  <br><br>
+
+
+  <div class="row mt-3" *ngIf="asOnChecked">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>Date</label>
+        <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
+        <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-check mt-2">
+        <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
+
+        <label class="form-check-label" for="summary">
+          Summary
+        </label>
+      </div>
+    </div>
+    <div class="col-md-2 mt-2">
+      <button class="btn btn-primary" (click)="onShowClick()">
+        Show
+      </button>
+    </div>
 
   </div>
+
+  <div class="row mt-3" *ngIf="!asOnChecked">
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>From Date</label>
+        <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
+        <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="form-group">
+        <label>To Date</label>
+        <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" readonly /> -->
+        <label class="required-field">To Date</label>
+        <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
+          [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="form-check mt-2">
+        <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
+
+        <label class="form-check-label" for="summary">
+          Summary
+        </label>
+      </div>
+    </div>
+    <div class="col-md-2 mt-2">
+      <button class="btn btn-primary" (click)="onShowClick()">
+        Show
+      </button>
+    </div>
+
+  </div>
+
+  <!-- <div class="row">
+            <div class="col-md-4">
+                <div class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input" id="asOn" />
+                    <label class="form-check-label" for="summary">
+                        summary
+                    </label>
+                </div>
+            </div>
+        </div> -->
+
+
+  <div class="row mt-3" *ngIf="showResult && !isSummary">
+    <div class="col-md-12">
+
+      <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="45" [rowHeight]="'auto'"
+        [scrollbarH]="true">
+
+        <ngx-datatable-column name="Particulars" prop="particulars">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="PAN Number" prop="panNumber">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="PAN Status" prop="panStatus">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Name" prop="name">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Code" prop="code">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Transaction Date" prop="transactionDate">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Paid Amount" prop="paidAmount" [cellClass]="'text-right'">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            ₹ {{ row.paidAmount }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="TDS calculated Amount" prop="tdsAmount">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            ₹ {{ row.tdsAmount }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Amount" prop="amount" [cellClass]="'text-right'">
+          <ng-template ngx-datatable-cell-template let-row="row">
+            ₹ {{ row.amount }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Effective JV" prop="effectiveJV">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Subscriber Branch" prop="subscriberBranch">
+        </ngx-datatable-column>+
+
+      </ngx-datatable>
+
+    </div>
+  </div>
+
+  <div class="row mt-4" *ngIf="showResult && isSummary">
+    <div class="col-md-12">
+
+      <ngx-datatable class="material" [rows]="agentRows" [columnMode]="'force'" [headerHeight]="45" [rowHeight]="'auto'"
+        [scrollbarH]="true">
+
+        <ngx-datatable-column name="Agent Name" prop="agentName">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Agent Code" prop="agentCode">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="PAN Number" prop="panNumber">
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Paid Amount" prop="paidAmount" [cellClass]="'text-right'">
+
+          <ng-template ngx-datatable-cell-template let-row="row">
+            ₹ {{ row.paidAmount | number:'1.2-2' }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="TDS Calculated Amount" prop="tdsAmount" [cellClass]="'text-right'">
+
+          <ng-template ngx-datatable-cell-template let-row="row">
+            ₹ {{ row.tdsAmount | number:'1.2-2' }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Amount" prop="amount" [cellClass]="'text-right'">
+
+          <ng-template ngx-datatable-cell-template let-row="row">
+            ₹ {{ row.amount | number:'1.2-2' }}
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+
+    </div>
+  </div>
+
+
+
+
 </div>
+<!-- </form> -->

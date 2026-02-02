@@ -19,14 +19,20 @@ export class OnlineSettlementComponent {
   ChequesInBankForm!: FormGroup;
   today: string = '';
   selected: any[] = [];
-  ngOnInit() {
-    this.today = this.formatDate(new Date());
-  }
+  // ngOnInit() {
+  //   this.today = this.formatDate(new Date());
+  // }
   dateConfig = {
     dateInputFormat: 'DD-MMM-YYYY',
     adaptivePosition: true
   };
+ fromDate!: Date;
+  toDate!: Date;
 
+  ngOnInit() {
+    this.today = this.formatDate(new Date());
+    
+  }
   receiptDate = new Date();
   clearDate = new Date();
 

@@ -1,16 +1,24 @@
-
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { FormBuilder, FormGroup, Validators ,FormsModule} from '@angular/forms';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-cash-book',
-  imports: [],
+  imports: [BsDatepickerModule, NgxDatatableModule, CommonModule, FormsModule],
    templateUrl: './cash-book.component.html',
   styleUrl: './cash-book.component.css',
 })
 export class CashBookComponent 
 // implements OnInit 
 {
+  fromDate!: Date;
+  toDate!: Date;
+  ngOnInit() {
+    const today = new Date();
+    this.fromDate = today;
+    this.toDate = today;
+  }
 
   // CashBookReportForm!: FormGroup;
   // submitted = false;

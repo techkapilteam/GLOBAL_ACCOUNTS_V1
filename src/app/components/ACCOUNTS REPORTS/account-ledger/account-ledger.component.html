@@ -39,13 +39,12 @@
             <label>From Date</label>
 
             <div class="input-group">
-              <input type="text" class="form-control" formControlName="fromDate" bsDatepicker #fromDp="bsDatepicker"
-                [bsConfig]="dpConfig" (bsValueChange)="FromDateChange($event)" readonly
-                (keydown)="$event.preventDefault()" />
-
-              <span class="input-group-text" (click)="fromDp.toggle()">
-                <i class="fa-solid fa-calendar-days"></i>
-              </span>
+              <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" 
+              name="fromDate"
+                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+              <!-- <span class="input-group-text" (click)="fromDp.toggle()"> -->
+                <!-- <i class="fa-solid fa-calendar-days"></i> -->
+              <!-- </span> -->
             </div>
           </div>
 
@@ -54,13 +53,13 @@
             <label>To Date</label>
 
             <div class="input-group">
-              <input type="text" class="form-control" formControlName="toDate" bsDatepicker #toDp="bsDatepicker"
-                [bsConfig]="dpConfig1" (bsValueChange)="ToDateChange($event)" readonly
-                (keydown)="$event.preventDefault()" />
-
-              <span class="input-group-text" (click)="toDp.toggle()">
-                <i class="fa-solid fa-calendar-days"></i>
-              </span>
+              <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate"
+                   name="toDate"
+                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" readonly>
+<!-- onkeydown="return false" -->
+              <!-- <span class="input-group-text" (click)="toDp.toggle()"> -->
+                <!-- <i class="fa-solid fa-calendar-days"></i> -->
+              <!-- </span> -->
             </div>
           </div>
 

@@ -11,11 +11,7 @@
         <div class="row">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input
-                class="form-check-input"
-                id="asdate"
-                type="checkbox"
-                formControlName="date"
+              <input class="form-check-input" id="asdate" type="checkbox" formControlName="date"
                 (change)="checkox($event)">
               <label for="asdate"> Date :</label>
             </div>
@@ -23,34 +19,26 @@
 
           <div class="col-xl-2 col-md-2 form-group">
             <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
-            <input
-              type="date"
-              class="form-control"
-              formControlName="dfromdate">
+            <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate"
+             name="fromDate"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
           </div>
 
           <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
             <label>To Date</label>
-            <input
-              type="date"
-              class="form-control"
-              formControlName="dtodate">
+            <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate"
+             name="toDate"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button
-              type="button"
-              class="btn btn-primary px-3 border-0"
-              (click)="getdaybookdata()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
               Generate Report
             </button>
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button
-              type="button"
-              class="btn btn-primary px-3 border-0"
-              (click)="GetChequeonHandDetails()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">
               Cheques On Hand
             </button>
           </div>
@@ -59,12 +47,7 @@
         <div class="row mt-2">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input
-                class="form-check-input"
-                id="kgms"
-                type="checkbox"
-                #kgmsChk
-                (change)="checkboxx($event)">
+              <input class="form-check-input" id="kgms" type="checkbox" #kgmsChk (change)="checkboxx($event)">
               <label for="kgms"> Kgms :</label>
             </div>
           </div>
@@ -82,10 +65,7 @@
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button
-              type="button"
-              class="btn btn-primary px-3 border-0"
-              (click)="getsummaryReport()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="getsummaryReport()">
               Generate Report
             </button>
           </div>
@@ -115,11 +95,7 @@
           </p>
         </div>
 
-        <ngx-datatable
-          class="bootstrap"
-          [rows]="transactions"
-          [headerHeight]="40"
-          [rowHeight]="40"
+        <ngx-datatable class="bootstrap" [rows]="transactions" [headerHeight]="40" [rowHeight]="40"
           [columnMode]="'force'">
           <ngx-datatable-column name="Transaction No" prop="rTxn"></ngx-datatable-column>
           <ngx-datatable-column name="Particulars" prop="rPart"></ngx-datatable-column>
@@ -134,11 +110,7 @@
           <ngx-datatable-column name="Type" prop="pType"></ngx-datatable-column>
         </ngx-datatable>
 
-        <ngx-datatable
-          class="bootstrap mt-4"
-          [rows]="bankSummary"
-          [headerHeight]="40"
-          [rowHeight]="40"
+        <ngx-datatable class="bootstrap mt-4" [rows]="bankSummary" [headerHeight]="40" [rowHeight]="40"
           [columnMode]="'force'">
           <ngx-datatable-column name="Bank Name" prop="bank"></ngx-datatable-column>
           <ngx-datatable-column name="Opening Balance" prop="opening"></ngx-datatable-column>
@@ -153,25 +125,25 @@
 </div>
 
 <style>
-.custom-select-wrapper {
-  position: relative;
-}
+  .custom-select-wrapper {
+    position: relative;
+  }
 
-.custom-select-wrapper::after {
-  content: '▾';
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  font-size: 16px;
-  color: #555;
-}
+  .custom-select-wrapper::after {
+    content: '▾';
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 16px;
+    color: #555;
+  }
 
-.custom-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding-right: 30px;
-}
+  .custom-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px;
+  }
 </style>
