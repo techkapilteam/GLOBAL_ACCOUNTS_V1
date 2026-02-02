@@ -124,25 +124,25 @@
                 </ng-template>
               </ngx-datatable-row-detail>
 
-              <ngx-datatable-column name="Transaction Date">
+              <ngx-datatable-column name="Transaction Date" sortable="false">
                 <ng-template ngx-datatable-cell-template let-row="row">
                   {{ row.ptransactiondate | date:'shortDate' }}
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Cheque No" prop="pChequeNumber">
+              <ngx-datatable-column name="Cheque No"  sortable="false" prop="pChequeNumber">
                 <ng-template ngx-datatable-cell-template let-row="row">
                   {{ row.pChequeNumber }}
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Particulars">
+              <ngx-datatable-column name="Particulars" sortable="false">
                 <ng-template ngx-datatable-cell-template let-row="row">
                   {{ row.pparticulars || '--NA--' }}
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Amount">
+              <ngx-datatable-column name="Amount" sortable="false">
                 <ng-template ngx-datatable-cell-template let-row="row">
                   {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
                 </ng-template>

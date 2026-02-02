@@ -11,12 +11,12 @@
         <div class="section-content">
           <div class="row">
             <div class="col-md-6 col-xl-4">
-              <div class="form-group">
-                <label class="required-field">Date</label>
-                <fieldset>
-                  <input class="form-control" type="date" [value]="today" readonly>
-                </fieldset>
-              </div>
+             <div class="form-group">
+                      <label class="required-field">Date</label>
+                      <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="todate"
+                        placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                        [disabled]="false">
+                    </div>
             </div>
           </div>
         </div>

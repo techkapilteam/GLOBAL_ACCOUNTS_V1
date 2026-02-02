@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // ngx-datatable imports
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-petty-cash',
@@ -12,24 +13,40 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    BsDatepickerModule
   ],
   templateUrl: './petty-cash.component.html',
   styleUrls: ['./petty-cash.component.css']
 })
 export class PettyCashComponent implements OnInit {
+    public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
+today:Date=new Date;
   // Payment list
   paymentslist1: any[] = [];
   tdsEnabled:boolean=false
   gstEnabled:boolean=false
+  
+  
+  
+  pettyform!:FormGroup
 
   // Journal entry list
   partyjournalentrylist: any[] = [];
 
-  constructor() {}
+  constructor(private fb:FormBuilder) {
+       this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+
+  }
 
   ngOnInit(): void {
+    this.pettyform=this.fb.group({
+      todate:[this.today]
+    })
     // init default values
     this.paymentslist1 = [];
     this.partyjournalentrylist = [];
