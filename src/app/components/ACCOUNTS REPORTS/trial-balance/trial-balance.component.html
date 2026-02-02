@@ -4,37 +4,57 @@
       <div class="screen-header mb-3">
         <h2>Trial Balance</h2>
       </div>
+
       <div class="screen-content">
         <form [formGroup]="TrialBalanceForm" class="row g-3 align-items-end">
 
           <div class="col-xl-2 col-md-2 mt-4">
-            <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="asdate" type="checkbox" [checked]="showhideason"
-                (change)="checkboxChecked($event)" />
-              <label class="mt-2" for="asdate">As On:</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"
+                     id="asdate"
+                     type="checkbox"
+                     [checked]="showhideason"
+                     (change)="checkboxChecked($event)">
+              <label class="mt-2" for="asdate">As On</label>
             </div>
           </div>
 
-          <div class="col-xl-2 col-md-2 form-group">
+          <div class="col-xl-2 col-md-2">
             <label>{{ showhideason ? 'Date' : 'From Date' }}</label>
-            <input type="date" class="form-control" formControlName="fromdate" (change)="DateChange($event, 'from')" />
+            <input type="text"
+                   class="form-control"
+                   bsDatepicker
+                   formControlName="fromdate"
+                   [bsConfig]="dpConfig"
+                   readonly>
           </div>
 
-          <div class="col-xl-2 col-md-2 form-group" *ngIf="!showhideason">
+          <div class="col-xl-2 col-md-2" *ngIf="!showhideason">
             <label>To Date</label>
-            <input type="date" class="form-control" formControlName="todate" (change)="DateChange($event, 'to')" />
+            <input type="text"
+                   class="form-control"
+                   bsDatepicker
+                   formControlName="todate"
+                   [bsConfig]="dpConfig"
+                   readonly>
           </div>
+
           <div class="col-xl-2 col-md-2 mt-4">
-            <div class="form-check ">
-              <input class="form-check-input" id="grouping" type="checkbox" [checked]="withGroupingFlag"
-                (change)="withGrouping($event)" />
+            <div class="form-check">
+              <input class="form-check-input"
+                     id="grouping"
+                     type="checkbox"
+                     [checked]="withGroupingFlag"
+                     (change)="withGrouping($event)">
               <label class="mt-2" for="grouping">With Grouping</label>
             </div>
           </div>
 
-         <div class="col-xl-4 col-md-1 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="GenerateReport()">
-              <i class="fa fa-check mr-2"></i> {{ savebutton }}
+          <div class="col-xl-4 col-md-1 form-group mt-2 pt-3">
+            <button type="button"
+                    class="btn btn-primary btn-lg w-80"
+                    (click)="GenerateReport()">
+              {{ savebutton }}
             </button>
           </div>
 
@@ -42,86 +62,55 @@
       </div>
     </div>
 
-    <div class="section-content mt-2">
-      <div *ngIf="showhidetable" class="d-flex justify-content-end mt-4 mr-3">
-        <ul *ngIf="!TrialBalanceDifference" class="temp-ul">
+   
+    <div *ngIf="dataisempty && !showhidetable" class="text-center mt-4">
+      <strong>No Records to Display</strong>
+    </div>
 
-          <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf" style="cursor: pointer;" />
-          <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print" />
-          <img src="assets/images/icon-excel.svg " width="18px" class="pt-2" title="Excel" style="cursor: pointer;" />
+    
+    <div *ngIf="showhidetable" class="mt-4 border rounded shadow-sm bg-white p-3">
 
-        </ul>
+      <div class="text-center">
+        <h2 class="m-0 font-weight-bold">KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
+        <p class="m-0">Above TVS Showroom, 1st Floor, Kamareddy</p>
+        <p>CIN : U65992TG2008PTC060803</p>
       </div>
 
-      <div class="mt-2 border rounded shadow-sm bg-white">
-        <div class="section-content mt-2">
+      <p class="text-end fw-bold">Branch : Ca-hyderabad-co</p>
 
-          <div *ngIf="dataisempty" class="text-right">
-            No Records to Display
-          </div>
+      <h4 class="text-center fw-bold">Trial Balance</h4>
 
-          <div *ngIf="showhidetable" id="temp-box">
-            <div class="mt-2 border rounded shadow-sm bg-white">
-              <div class="row">
-                <div class="col-md-20">
-                  <div class="temp-head float-md-center pt-3">
-                    <h2 class="font text-center m-0 font-weight-bold"> KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
-                    <p class="font-16  text-center m-0">Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old
-                      NK-07,Kamareddy.
-                    </p>
-                    <p class="font-14  text-center">CIN : U65992TG2008PTC060803</p>
-                  </div>
+      <div *ngIf="ShowAsOn" class="mb-3">
+        <strong>As On : {{ formatDate(fromdate) }}</strong>
+      </div>
 
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="">
-                        <b>
-                          <p class="font-14 text-end m-0 font-weight-bold m-0">Branch : Ca-hyderabad-co</p>
-                        </b>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-2 border rounded shadow-sm bg-white">
-                <div *ngIf="showhidetable">
-                  <b>
-                    <p class="text-center font-weight-bold">Trial Balance</p>
-                  </b>
-                </div>
-              </div>
-              <div *ngIf="ShowAsOn" class="mb-3">
-                <strong>As On: {{ fromdate | date:'dd-MMM-yyyy' }}</strong>
-              </div>
+      <ngx-datatable class="material"
+                     [rows]="Trialbalancelst"
+                     [headerHeight]="50"
+                     [rowHeight]="50">
 
-              <ngx-datatable class="material" [rows]="Trialbalancelst" [headerHeight]="50" [rowHeight]="50">
+        <ngx-datatable-column name="Type" sortable="false" prop="pparentname"></ngx-datatable-column>
 
-                <ngx-datatable-column prop="pparentname" name="Type" sortable="false" [headerClass]="'header-left'"
-                  [cellClass]="'cell-left'">
-                </ngx-datatable-column>
+        <ngx-datatable-column name="Particulars" sortable="false"  prop="paccountname"></ngx-datatable-column>
 
-                <ngx-datatable-column prop="paccountname" name="Particulars" sortable="false" [headerClass]="'header-left'"
-                  [cellClass]="'cell-left'">
-                </ngx-datatable-column>
+        <ngx-datatable-column name="Debit" sortable="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span *ngIf="row.pdebitamount">
+              {{ currencysymbol }} {{ row.pdebitamount | number:'1.2-2' }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
 
-                <ngx-datatable-column prop="pdebitamount" name="Debit"  sortable="false" [headerClass]="'header-right'"
-                  [cellClass]="'cell-right'">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    <div *ngIf="row.pdebitamount != 0">
-                      {{ currencysymbol }} {{ row.pdebitamount | number:'1.2-2' }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
+        <ngx-datatable-column name="Credit" sortable="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span *ngIf="row.pcreditamount">
+              {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
 
-                <ngx-datatable-column prop="pcreditamount" name="Credit" sortable="false" [headerClass]="'header-right'"
-                  [cellClass]="'cell-right'">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    <div *ngIf="row.pcreditamount != 0">
-                      {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
-                    </div>
-                  </ng-template>
-                </ngx-datatable-column>
-              </ngx-datatable>
-            </div>
-          </div>
-        </div>
+      </ngx-datatable>
+
+    </div>
+  </div>
+</div>

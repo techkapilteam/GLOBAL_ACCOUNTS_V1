@@ -1,23 +1,20 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, Output, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-//import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-//import { GroupDescriptor } from '@progress/kendo-data-query';
-import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-
+import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-account-summary',
-  imports: [NgxDatatableModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,FormsModule],
-  standalone:true,
-  providers:[DatePipe],
+  standalone: true,
+  imports: [NgxDatatableModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, FormsModule],
+  providers: [DatePipe],
   templateUrl: './account-summary.component.html',
-  styleUrl: './account-summary.component.css',
+  styleUrls: ['./account-summary.component.css']
 })
 export class AccountSummaryComponent {
 
- accountSummaryForm!: FormGroup;
+  accountSummaryForm!: FormGroup;
 
   ledgerList: any[] = [
     { pledgerid: '1', pledgername: 'Cash' },
@@ -36,23 +33,30 @@ export class AccountSummaryComponent {
   betweenFrom!: Date;
   betweenTo!: Date;
 
-  constructor(private fb: FormBuilder) {}
+  dpConfig: Partial<BsDatepickerConfig> = {};
 
- ngOnInit(): void {
-  const today = new Date().toISOString().split('T')[0]; 
+  constructor(private fb: FormBuilder, private datePipe: DatePipe) {}
 
-  this.accountSummaryForm = this.fb.group({
-    asOnChecked: [true],
-    fromDate: [today, Validators.required],  
-    toDate: [today, Validators.required],    
-    ledgerId: ['', Validators.required]
-  });
+  ngOnInit(): void {
+    const today = new Date();
 
-  this.accountSummaryForm.get('asOnChecked')?.valueChanges.subscribe(value => {
-    this.showAsOn = value;
-  });
-}
+    this.dpConfig = {
+      dateInputFormat: 'DD-MMM-YYYY',
+      containerClass: 'theme-dark-blue',
+      showWeekNumbers: false
+    };
 
+    this.accountSummaryForm = this.fb.group({
+      asOnChecked: [true],
+      fromDate: [today, Validators.required],
+      toDate: [today, Validators.required],
+      ledgerId: ['', Validators.required]
+    });
+
+    this.accountSummaryForm.get('asOnChecked')?.valueChanges.subscribe(value => {
+      this.showAsOn = value;
+    });
+  }
 
   generateReport() {
     if (!this.accountSummaryForm.valid) return;
@@ -114,12 +118,9 @@ export class AccountSummaryComponent {
 
     this.isLoading = false;
   }
+
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
 }
-
-
-
-
-
-  
-
-
