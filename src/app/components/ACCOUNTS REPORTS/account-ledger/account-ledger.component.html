@@ -36,30 +36,35 @@
           </div>
 
           <div class="col-xl-3 col-md-3 form-group">
-            <label>From Date</label>
 
-            <div class="input-group">
-              <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" 
-              name="fromDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
-              <!-- <span class="input-group-text" (click)="fromDp.toggle()"> -->
-                <!-- <i class="fa-solid fa-calendar-days"></i> -->
-              <!-- </span> -->
+            <div class="form-group">
+              <label class="required-field">From Date</label>
+              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="fromDate"
+                placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                [disabled]="false">
             </div>
+
+
+
+
+            <!-- <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" 
+              name="fromDate"
+                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false"> -->
+            <!-- <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false"> -->
+            <!-- <span class="input-group-text" (click)="fromDp.toggle()"> -->
+            <!-- <i class="fa-solid fa-calendar-days"></i> -->
+            <!-- </span> -->
           </div>
 
 
           <div class="col-xl-3 col-md-3 form-group">
-            <label>To Date</label>
-
-            <div class="input-group">
-              <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate"
-                   name="toDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" readonly>
-<!-- onkeydown="return false" -->
-              <!-- <span class="input-group-text" (click)="toDp.toggle()"> -->
-                <!-- <i class="fa-solid fa-calendar-days"></i> -->
-              <!-- </span> -->
+            
+            <div class="form-group">
+              <label class="required-field">To Date</label>
+              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="toDate"
+                placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                [disabled]="false">
             </div>
           </div>
 

@@ -92,10 +92,16 @@ export class AccountLedgerComponent implements OnInit {
   selectedsubledger: any;
   pageCriteria = new PageCriteria();
   LedgerValidationErrors: any = {};
-
-  constructor(private fb: FormBuilder) { }
-  fromDate!: Date;
+    fromDate!: Date;
   toDate!: Date;
+
+  constructor(private fb: FormBuilder) { 
+      this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+  }
+
 
   ngOnInit(): void {
     const today = new Date();
@@ -103,7 +109,9 @@ export class AccountLedgerComponent implements OnInit {
     this.fromDate = today;
     this.toDate = today;
     this.AccountLedger = this.fb.group({
-      pledgerid: [null, Validators.required],
+      fromDate:[this.toDate],
+      toDate:[this.toDate],
+      pledgerid: ['', Validators.required],
       pledgername: [''],
       psubledgerid: [null],
       psubledgername: [''],
