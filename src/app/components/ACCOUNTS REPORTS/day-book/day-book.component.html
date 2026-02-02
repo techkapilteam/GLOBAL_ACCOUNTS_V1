@@ -8,6 +8,7 @@
       <form [formGroup]="Daybook">
 
         <div class="row">
+         
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
               <input
@@ -20,16 +21,31 @@
             </div>
           </div>
 
+          
           <div class="col-xl-2 col-md-2 form-group">
             <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
-            <input type="date" class="form-control" formControlName="dfromdate">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="dfromdate"
+              bsDatepicker
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+              readonly>
           </div>
 
+         
           <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
             <label>To Date</label>
-            <input type="date" class="form-control" formControlName="dtodate">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="dtodate"
+              bsDatepicker
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+              readonly>
           </div>
 
+        
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
             <button type="button" class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
               Generate Report
@@ -43,6 +59,7 @@
           </div>
         </div>
 
+        
         <div class="row mt-2">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
@@ -77,6 +94,7 @@
 
       </form>
 
+      
       <form *ngIf="showGrid" class="mt-4 p-3 border" style="background-color:white;">
         <div class="d-flex justify-content-end gap-2 mb-2">
           <button type="button" (click)="exportPDF()" class="btn btn-link p-0">
@@ -101,6 +119,9 @@
           <h5>Day Book</h5>
           <p class="text-start">
             <b>Date :</b> {{ Daybook.value.dfromdate | date:'dd-MMM-yyyy' }}
+            <span *ngIf="!isSingleDate">
+              To {{ Daybook.value.dtodate | date:'dd-MMM-yyyy' }}
+            </span>
           </p>
         </div>
 
@@ -123,6 +144,7 @@
           <ngx-datatable-column name="Type" sortable="false" prop="pType"></ngx-datatable-column>
         </ngx-datatable>
 
+        
         <ngx-datatable
           class="bootstrap mt-4"
           [rows]="bankSummary"
@@ -138,4 +160,5 @@
 
       </form>
     </div>
-
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-day-book',
@@ -11,6 +12,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     FormsModule,
     ReactiveFormsModule,
     NgxDatatableModule,
+    BsDatepickerModule
   ],
   templateUrl: './day-book.component.html'
 })
@@ -20,7 +22,7 @@ export class DayBookComponent implements OnInit {
   isSingleDate: boolean = true;
   showGrid: boolean = false;
 
-  today: string = new Date().toISOString().split('T')[0];
+  today: Date = new Date();
 
   transactions: any[] = [];
   bankSummary: any[] = [];
@@ -108,7 +110,6 @@ export class DayBookComponent implements OnInit {
     }
   }
 
-  
   GetChequeonHandDetails() {
     this.showGrid = false;       
     this.transactions = [];       
