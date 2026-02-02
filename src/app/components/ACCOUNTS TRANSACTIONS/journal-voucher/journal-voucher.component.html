@@ -20,10 +20,13 @@
                         <div class="col-md-6 col-xl-4">
                             <div class="form-group">
                                 <label class="required-field">Date</label>
-                                <fieldset [disabled]="!disabletransactiondate">
-                                    <input class="form-control" id="pjvdate" title="Date" readonly type="text"
+                                <fieldset [disabled]="disabletransactiondate">
+                                    <!-- <input class="form-control" id="pjvdate" title="Date" readonly type="text"
                                         formControlName="pjvdate" [bsConfig]="ppaymentdateConfig" #dp="bsDatepicker"
-                                        bsDatepicker [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }">
+                                        bsDatepicker [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }"> -->
+                                    <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
+                                        formControlName="pjvdate" placeholder=""  [bsConfig]="dpConfig"
+                                        #dp="bsDatepicker" bsDatepicker placement="bottom">
 
                                 </fieldset>
                             </div>
