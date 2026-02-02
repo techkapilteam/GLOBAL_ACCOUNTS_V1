@@ -1,5 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -18,9 +18,10 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 
 
 export class ReceiptsAndPaymentsComponent {
-
-  
-  private fb = inject(FormBuilder);
+  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  FormReceiptsandPaymentsGroup!:FormGroup
+FormReceiptsandPaymentsGroup1!:FormGroup
+  // private fb = inject(FormBuilder);
 
  
   disablesavebutton = signal(false);
@@ -47,24 +48,32 @@ export class ReceiptsAndPaymentsComponent {
   //   dateInputFormat: 'DD-MM-YYYY',
   //   showWeekNumbers: false
   // };
-  dpConfig: Partial<BsDatepickerConfig> = {
-    containerClass: 'theme-default',
-    dateInputFormat: 'DD/MM/YYYY'
-  };
+  // dpConfig: Partial<BsDatepickerConfig> = {
+  //   containerClass: 'theme-default',
+  //   dateInputFormat: 'DD/MM/YYYY'
+  // };
 
-FormReceiptsandPaymentsGroup = this.fb.nonNullable.group({
+
+
+
+ constructor(private fb: FormBuilder) { 
+      this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+  }
+
+  ngOnInit(): void {
+    this.FormReceiptsandPaymentsGroup = this.fb.group({
   groupcode: [null, Validators.required],
   fromdate: new Date(),
   todate: new Date()
 });
 
-FormReceiptsandPaymentsGroup1 = this.fb.nonNullable.group({
+this.FormReceiptsandPaymentsGroup1 = this.fb.nonNullable.group({
   extractcode: [null, Validators.required]
 });
-
-
-
-
+  }
   // FormReceiptsandPaymentsGroup = this.fb.nonNullable.group({
   //   groupcode: ['', Validators.required],
   //   fromdate: new Date(),
@@ -83,7 +92,7 @@ FormReceiptsandPaymentsGroup1 = this.fb.nonNullable.group({
   GroupChange(): void {
     console.log(
       'Group changed:',
-      this.FormReceiptsandPaymentsGroup.controls.groupcode.value
+      this.FormReceiptsandPaymentsGroup.controls['groupcode'].value
     );
   }
 

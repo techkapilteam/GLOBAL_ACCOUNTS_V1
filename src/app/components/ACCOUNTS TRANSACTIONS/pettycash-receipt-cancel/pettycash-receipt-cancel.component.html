@@ -4,7 +4,7 @@
       <h2>Petty Receipt Cancel</h2>
     </div>
     <div class="screen-content">
-<form autocomplete="off">
+<form [formGroup]="pettycashcancelform"  autocomplete="off">
     <div class="row g-3">
       <!-- Receipt No. -->
       <div class="col-md-4">
@@ -29,13 +29,14 @@
       </div>
          <!-- Date -->
       <div class="col-md-4">
-        <div class="mb-3">
-          <label class="form-label required-field" title="Date">Date</label>
-          <input type="date" id="ppaymentdate" class="form-control">
-          <div class="invalid-feedback">
-            <!-- Validation message placeholder -->
-          </div>
-        </div>
+        
+          <div class="form-group">
+              <label class="required-field"> Date</label>
+              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="toDate"
+                placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                [disabled]="false">
+            </div>
+      
       </div>
   
       <div class="row" *ngIf="show">
