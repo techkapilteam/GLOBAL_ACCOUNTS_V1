@@ -16,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideToastr(),
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
-    CommonService,BsDatepickerConfig,BsDatepickerModule,
+    CommonService,
+    
   ]
 };

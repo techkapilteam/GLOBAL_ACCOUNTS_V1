@@ -552,7 +552,7 @@ export class CommonService {
       showHead: 'everyPage',
       showFoot: 'lastPage',
 
-      didDrawPage: (data: any) => {
+      didDrawPage: (data) => {
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
 
@@ -732,6 +732,9 @@ export class CommonService {
   }
 
 }
+
+
+
 
 function isNullOrEmptyString(pCinNo: any) {
   throw new Error('Function not implemented.');

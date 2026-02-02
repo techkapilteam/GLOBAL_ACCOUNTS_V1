@@ -20,8 +20,8 @@ export class ChequeCancelComponent implements OnInit {
   private accReportService = inject(AccountingReportsService);
   private datePipe = inject(DatePipe);
   FrmChequeCancel!: FormGroup;
-
-  dpConfig: Partial<BsDatepickerConfig> = {};
+  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  // dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
 
   loading = false;
@@ -40,14 +40,18 @@ export class ChequeCancelComponent implements OnInit {
 
   constructor() {
     this.currencysymbol = this.commonService.datePickerPropertiesSetup("currencysymbol") as string;
+     this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
 
-    this.dpConfig = {
-      dateInputFormat: 'DD-MM-YYYY',
-      containerClass: 'theme-default',
-      maxDate: new Date()
-    };
+    // this.dpConfig = {
+    //   dateInputFormat: 'DD-MM-YYYY',
+    //   containerClass: 'theme-default',
+    //   maxDate: new Date()
+    // };
 
-    this.dpConfig1 = { ...this.dpConfig };
+   // this.dpConfig1 = { ...this.dpConfig };
   }
 
   ngOnInit(): void {

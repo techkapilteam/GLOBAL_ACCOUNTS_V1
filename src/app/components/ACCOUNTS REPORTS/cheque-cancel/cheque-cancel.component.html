@@ -26,8 +26,9 @@
 
               <div class="col-md-3">
                 <label class="form-label fw-semibold">From Date</label>
-                <input type="text" class="form-control form-control-sm" bsDatepicker [bsConfig]="dpConfig"
-                  formControlName="fromdate" readonly>
+                <input type="text" class="form-control form-control-sm" [bsConfig]="dpConfig" #dp="bsDatepicker"
+                bsDatepicker
+                  formControlName="fromdate" >
               </div>
 
               <div class="col-md-3">

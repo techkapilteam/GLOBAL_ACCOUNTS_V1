@@ -7,6 +7,7 @@ import { NgxDatatableModule, ColumnMode, SelectionType } from '@swimlane/ngx-dat
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 // import { PageCriteria } from '../Models/pageCriteria';
 import { PageCriteria } from '../../../Models/pageCriteria';
+import { CommonService } from '../../../services/common.service';
 // import { ValidationMessage } from "../shared/validation-message/validation-message";
 
 @Component({
@@ -640,13 +641,14 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 // }
 
 export class TdsJvComponent implements OnInit {
+    public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
 
   tdsJvDetailsForm!: FormGroup;
 
   // ngx-datatable configs
   SelectionType = SelectionType;
   ColumnMode = ColumnMode;
-
+  today:Date=new Date()
   showhidetable = false;
   dataisempty = false;
 
@@ -705,21 +707,31 @@ export class TdsJvComponent implements OnInit {
   ];
 
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private _commonService:CommonService
+
+  ) {
+     this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+  }
 
   ngOnInit(): void {
     this.createForm();
     this.calculateTotals();
+
   }
 
   createForm(): void {
     this.tdsJvDetailsForm = this.fb.group({
       DebitLedger: [null, Validators.required],
       CreditLedger: [null, Validators.required],
-      preceiptdate: [null, Validators.required],
+      preceiptdate: [this.today, Validators.required],
       pPeriodType: [null, Validators.required],
       pCalendarMonth: [null, Validators.required],
-      pnarration: ['', Validators.required]
+      pnarration: ['', Validators.required],
+      
     });
   }
 
@@ -770,4 +782,68 @@ export class TdsJvComponent implements OnInit {
       alert('JV Saved (Static)');
     }, 1000);
   }
+export(): void {
+  debugger
+  
+  let rows: { "Particulars": string; "Debit Amount": number; "Credit Amount": number }[] = [];
+
+  this.tdsJvDetailsGrid.forEach(element => {
+    debugger;
+
+    let pdebitamount = 0;
+    let pcreditamount = 0;
+
+    if (element.debit_amount != 0) {
+      pdebitamount = element.debit_amount;
+    }
+
+    if (element.credit_amount != 0) {
+      pcreditamount = element.credit_amount;
+    }
+
+    let dataobject = {
+      "Particulars": element.particulars,
+      "Debit Amount": pdebitamount,
+      "Credit Amount": pcreditamount
+    };
+
+    rows.push(dataobject);
+  });
+
+ this._commonService.exportAsExcelFile(rows, 'TDS-Jv');
+}
+
+
+  //  export(): void {
+  //   let rows = [];
+  //   this.tdsJvDetailsGrid.forEach(element => {
+  //     debugger;
+  //     let pdebitamount=0;
+  //     let pcreditamount=0;
+      
+      
+  //     if (element.debit_amount != 0) {
+  //       //pdebitamount = this._commonService.currencyformat(element.debit_amount);
+  //       //pdebitamount = this._commonService.convertAmountToPdfFormat(pdebitamount);
+  //       pdebitamount = element.debit_amount;
+  //     }
+  //     if (element.credit_amount != 0) {
+  //       //pcreditamount = this._commonService.currencyformat(element.credit_amount);
+  //       //pcreditamount = this._commonService.convertAmountToPdfFormat(pcreditamount);
+  //       pcreditamount = element.credit_amount;
+  //     }  
+      
+  //     let temp;
+  //     let dataobject;
+  //     dataobject = {
+  //       "Particulars":element.particulars,
+  //       "Debit Amount":pdebitamount,
+  //       "Credit Amount": pcreditamount
+        
+  //     }
+  //     rows.push(dataobject);
+  //   });
+  //   this._commonService.exportAsExcelFile(rows, 'TDS-Jv');
+
+  // }
 }
