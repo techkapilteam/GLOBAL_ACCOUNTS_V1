@@ -25,8 +25,8 @@
                                         formControlName="pjvdate" [bsConfig]="ppaymentdateConfig" #dp="bsDatepicker"
                                         bsDatepicker [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }"> -->
                                     <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
-                                        formControlName="pjvdate" placeholder=""  [bsConfig]="dpConfig"
-                                        #dp="bsDatepicker" bsDatepicker placement="bottom">
+                                        formControlName="pjvdate" placeholder="" [disabled]="true"
+                                        [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
 
                                 </fieldset>
                             </div>
