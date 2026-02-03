@@ -42,17 +42,17 @@
 
           <div class="col-md-3" *ngIf="showreceipts">
             <label class="form-label required-field">Month</label>
-            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MMM-YYYY' }" formControlName="month" readonly>
+            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'MMM-YYYY',containerClass: 'theme-dark-blue' }" formControlName="month" readonly>
           </div>
 
           <div class="col-md-3" *ngIf="showpayments">
             <label class="form-label">From Date</label>
-            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" formControlName="fromdate" readonly>
+            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue'}" formControlName="fromdate" readonly>
           </div>
 
           <div class="col-md-3" *ngIf="showpayments">
             <label class="form-label">To Date</label>
-            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" formControlName="todate" readonly>
+            <input class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }" formControlName="todate" readonly>
           </div>
 
           <div class="col-md-4 d-flex align-items-end gap-2">

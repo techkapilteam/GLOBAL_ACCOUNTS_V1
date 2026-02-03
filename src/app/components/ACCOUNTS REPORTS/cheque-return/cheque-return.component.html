@@ -17,13 +17,13 @@
 
                 <div class="col-md-3">
                   <label class="form-label fw-semibold">From Date</label>
-                  <input type="text" class="form-control" formControlName="fromdate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                  <input type="text" class="form-control" formControlName="fromdate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
                     readonly />
                 </div>
 
                 <div class="col-md-3">
                   <label class="form-label fw-semibold">To Date</label>
-                  <input type="text" class="form-control" formControlName="todate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                  <input type="text" class="form-control" formControlName="todate" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
                     readonly />
                 </div>
 
@@ -85,7 +85,7 @@
                 <div class="col-md-6">
                   <strong>Between:</strong>
                   <span class="ms-2">
-                    {{ StartDate | date:'dd-MM-yyyy' }} And {{ EndDate | date:'dd-MM-yyyy' }}
+                    {{ StartDate | date:'dd-MMM-yyyy' }} And {{ EndDate | date:'dd-MMM-yyyy' }}
                   </span>
                 </div>
               </div>

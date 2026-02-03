@@ -6,30 +6,32 @@
 
         <form>
             <div class="screen-content">
+                <div class="row align-items-end">
+                    <div class="col-md-3">
+                        <label class="required-field">From Date</label>
+                        <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
+                            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
+                            onkeydown="return false">
+                    </div>
 
-                <div class="col-md-3">
-                    <label class="required-field">From Date</label>
-                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
+
+                    <div class="col-md-3">
+                        <label class="required-field">To Date</label>
+                        <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
+                            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
+                            onkeydown="return false">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Online Account</label>
+                        <select class="form-control" [(ngModel)]="selectedUPI" name="selectedUPI">
+                            <option value="">--Select--</option>
+                            <option>Paytm</option>
+                            <option>PhonePe</option>
+                            <option>Google Pay</option>
+                        </select>
+                    </div>
                 </div>
-
-
-                <div class="col-md-3">
-                    <label class="required-field">To Date</label>
-                    <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false">
-                </div>
-
-                <div class="col-md-3">
-                    <label>Online Account</label>
-                    <select class="form-control" [(ngModel)]="selectedUPI" name="selectedUPI">
-                        <option>Select</option>
-                        <option>Paytm</option>
-                        <option>PhonePe</option>
-                        <option>Google Pay</option>
-                    </select>
-                </div>
-
                 <div class="col-md-3 mt-4">
                     <button type="button" class="btn btn-primary me-2" (click)="showFiltered()">
                         <i class="fa fa-search"></i> Show
@@ -54,7 +56,7 @@
     <hr>
 
     <ngx-datatable class="bootstrap mt-3" style="height: 400px" [rows]="displayedRows" [columns]="columns"
-        [columnMode]="ColumnMode.force" [headerHeight]="45" [rowHeight]="45" [footerHeight]="0" [scrollbarH]="true" >
+        [columnMode]="ColumnMode.force" [headerHeight]="45" [rowHeight]="45" [footerHeight]="0" [scrollbarH]="true">
     </ngx-datatable>
 
 
