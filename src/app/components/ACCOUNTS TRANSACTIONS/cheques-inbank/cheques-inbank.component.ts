@@ -1,8 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 interface Cheque {
   checkbook?: string;
@@ -94,7 +97,9 @@ export class ChequesInbankComponent implements OnInit {
   }
 
   showCheques() {
-    this.showTable = true;
+    if (this.activeTab && this.activeTab !== 'Deposited' && this.activeTab !== 'Cancelled') {
+      this.showTable = true;
+    }
   }
 
   showClearedCheques() {
@@ -120,5 +125,40 @@ export class ChequesInbankComponent implements OnInit {
   formatDate(date: Date | string | null): string {
     if (!date) return '';
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
+
+  /** Export to Excel */
+  exportExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredCheques);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Cheques');
+    XLSX.writeFile(wb, 'Cheques.xlsx');
+  }
+
+  /** Export to PDF */
+  exportPDF() {
+    const doc = new jsPDF();
+    const col = Object.keys(this.filteredCheques[0] || {});
+    const rows = this.filteredCheques.map(c => col.map(k => (c as any)[k]));
+    (doc as any).autoTable({
+      head: [col],
+      body: rows
+    });
+    doc.save('Cheques.pdf');
+  }
+
+  /** Print Table */
+  printTable() {
+    const printContent = document.querySelector('.table-responsive')?.innerHTML;
+    const WindowPrt = window.open('', '', 'width=900,height=700');
+    if (WindowPrt && printContent) {
+      WindowPrt.document.write('<html><head><title>Print</title></head><body>');
+      WindowPrt.document.write(printContent);
+      WindowPrt.document.write('</body></html>');
+      WindowPrt.document.close();
+      WindowPrt.focus();
+      WindowPrt.print();
+      WindowPrt.close();
+    }
   }
 }
