@@ -92,15 +92,15 @@
 
       <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
-          <i class="fa fa-file-pdf-o">PDF</i>
-        </button>
-
-        <button class="btn btn-outline-dark me-2" (click)="pdfOrprint('Print')">
-          <i class="fa fa-print">Print</i>
+          <i class="fa fa-file-pdf me-1"></i> PDF
         </button>
 
         <button class="btn btn-outline-success" (click)="export()">
-          <i class="fa fa-file-excel-o">Excel</i>
+          <i class="fa fa-file-excel me-1"></i> Excel
+        </button>
+
+        <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+          <i class="fa fa-print me-1"></i> Print
         </button>
       </div>
       <div class="text-center mb-1 fw-bold fs-5">
