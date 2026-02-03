@@ -64,11 +64,38 @@
         <hr>
 
         <div class="col-md-12 col-xl-12" *ngIf="showhidetable">
-          <div class="d-flex justify-content-end">
-            <a class="export-icons" (click)="export()">Excel
-              <!-- <img src="assets/images/icon-excel.svg " title="Excel" width="18px"> -->
-            </a>
+
+          <div class="d-flex justify-content-end mb-2 gap-2">
+            <!-- <button class="btn btn-outline-danger me-2">
+              <i class="fa fa-file-pdf me-1 icon-lg"></i> PDF
+            </button> -->
+
+            <button class="btn btn-outline-success">
+              <i class="fa fa-file-excel me-1 icon-lg"></i> Excel
+            </button>
+
+            <!-- <button class="btn btn-outline-secondary me-2">
+              <i class="fa fa-print me-1 icon-lg"></i> Print
+            </button> -->
           </div>
+
+
+
+          <!-- <div class="d-flex justify-content-end"> -->
+          <!-- <a class="export-icons" (click)="export()">Excel
+              <img src="assets/images/icon-excel.svg " title="Excel" width="18px">
+            </a> -->
+
+
+
+
+          <!-- <span class="mx-1 cursor-pointer">
+                <img src="assets/excel.svg" width="18" class="me-1">
+                <small>Excel</small>
+              </span> -->
+          <!-- </div> -->
+
+
 
 
           <ngx-datatable class="material" [rows]="tdsJvDetailsGrid" [columnMode]="ColumnMode.force" [headerHeight]="50"
