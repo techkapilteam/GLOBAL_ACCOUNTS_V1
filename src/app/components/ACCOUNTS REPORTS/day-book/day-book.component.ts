@@ -36,12 +36,12 @@ export class DayBookComponent implements OnInit {
   EndDate: Date | null = null;
 
   constructor() {
-    // Allow selecting future dates
+   
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
       containerClass: 'theme-dark-blue',
       showWeekNumbers: false
-      // maxDate: new Date(); // removed to allow future dates
+      
     };
   }
 
@@ -54,16 +54,16 @@ export class DayBookComponent implements OnInit {
     });
   }
 
-  // Single/Multiple date toggle
+  
   checkox(event: any) {
     this.isSingleDate = event.target.checked;
     this.Daybook.get('date')?.setValue(this.isSingleDate);
   }
 
-  // KGMS branch checkbox logic
+ 
   checkboxx(event: any) {}
 
-  // Validate input dates
+  
   private validateInputs(): boolean {
     if (this.isSingleDate) {
       if (!this.Daybook.value.dfromdate) {
@@ -79,7 +79,7 @@ export class DayBookComponent implements OnInit {
     return true;
   }
 
-  // Load dummy grid data
+ 
   private loadGrid() {
     this.showGrid = true;
 

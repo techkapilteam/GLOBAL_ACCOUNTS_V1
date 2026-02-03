@@ -1,13 +1,12 @@
 <div class="mt-2 border rounded shadow-sm bg-white">
-
   <div class="section-content">
     <div class="screen-card">
       <div class="screen-header mb-3">
         <h2>Account Summary</h2>
       </div>
+
       <div class="screen-content">
         <form [formGroup]="accountSummaryForm" class="row g-3 align-items-end">
-
 
           <div class="col-auto me-3">
             <div class="form-check">
@@ -18,13 +17,16 @@
 
           <div class="col-auto me-3">
             <label>From Date</label>
-            <input type="date" class="form-control" formControlName="fromDate">
+            <input type="text" class="form-control" bsDatepicker formControlName="fromDate" [bsConfig]="dpConfig"
+              readonly style="width:140px">
           </div>
 
           <div class="col-auto me-3" *ngIf="!showAsOn">
             <label>To Date</label>
-            <input type="date" class="form-control" formControlName="toDate">
+            <input type="text" class="form-control" bsDatepicker formControlName="toDate" [bsConfig]="dpConfig" readonly
+              style="width:140px">
           </div>
+
           <div class="col-md-3 me-9">
             <label>Ledger</label>
             <select class="form-select" formControlName="ledgerId">
@@ -35,15 +37,17 @@
             </select>
           </div>
 
-
           <div class="col-auto">
             <button type="button" class="btn btn-primary" (click)="generateReport()" [disabled]="isLoading">
               {{ saveButtonText }}
             </button>
           </div>
+
         </form>
       </div>
     </div>
+
+    <!-- ===== BELOW CONTENT UNCHANGED ===== -->
 
     <div *ngIf="gridData.length > 0" class="mt-4">
 
@@ -51,53 +55,52 @@
         <div class="row">
           <div class="col-md-20">
             <div class="temp-head float-md-center pt-3">
-              <h2 class="font text-center m-0 font-weight-bold"> KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
-              <p class="font-16  text-center m-0">Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old
-                NK-07,Kamareddy.
+              <h2 class="font text-center m-0 font-weight-bold">
+                KAPIL CHITS(HYDERABAD) PVT. LTD.
+              </h2>
+              <p class="font-16 text-center m-0">
+                Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old NK-07,Kamareddy.
               </p>
-              <p class="font-14  text-center">CIN : U65992TG2008PTC060803</p>
+              <p class="font-14 text-center">CIN : U65992TG2008PTC060803</p>
             </div>
 
             <div class="row">
               <div class="col-md-12">
-                <div class="">
-                  <b>
-                    <p class="font-14 text-end m-0 font-weight-bold m-0">Branch : Ca-hyderabad-co</p>
-                  </b>
-                </div>
+                <b>
+                  <p class="font-14 text-end m-0">Branch : Ca-hyderabad-co</p>
+                </b>
               </div>
             </div>
           </div>
         </div>
 
-
         <div class="mt-2 border rounded shadow-sm bg-white">
           <div class="report-head mt-2">
             <b>
-              <p class="font-16 text-dark text-center m-0 font-weight-bold">
-                Account Summary
-              </p>
+              <p class="font-16 text-dark text-center m-0">Account Summary</p>
             </b>
           </div>
         </div>
-
       </div>
 
       <div *ngIf="showAsOn" class="mb-3">
-        <strong>As On: {{ asOnDate | date:'dd-MMM-yyyy' }}</strong>
+        <strong>As On: {{ formatDate(asOnDate) }}</strong>
       </div>
 
-
       <div *ngIf="!showAsOn" class="mb-3">
-        <strong>Between: {{ betweenFrom | date:'dd-MMM-yyyy' }} And {{ betweenTo | date:'dd-MMM-yyyy' }}</strong>
+        <strong>
+          Between: {{ formatDate(betweenFrom) }} And {{ formatDate(betweenTo) }}
+        </strong>
       </div>
 
       <ngx-datatable class="material striped" [rows]="gridData" [headerHeight]="50" [rowHeight]="'auto'"
         [columnMode]="'force'" [scrollbarH]="true">
+
         <ngx-datatable-column name="Particulars" sortable="false" prop="particulars"></ngx-datatable-column>
-        <ngx-datatable-column name="Max Transaction Date" sortable="false" prop="transactionDate">
+
+        <ngx-datatable-column name="Max Transaction Date" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
-            {{ row.transactionDate | date:'dd-MMM-yyyy' }}
+            {{ formatDate(row.transactionDate) }}
           </ng-template>
         </ngx-datatable-column>
 
@@ -107,13 +110,13 @@
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Debit Amount" sortable="false" prop="debitAmount">
+        <ngx-datatable-column name="Debit Amount" prop="debitAmount" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.debitAmount | currency:currencySymbol:'symbol':'1.2-2' }}
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Credit Amount" sortable="false" prop="creditAmount">
+        <ngx-datatable-column name="Credit Amount" prop="creditAmount" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
             {{ row.creditAmount | currency:currencySymbol:'symbol':'1.2-2' }}
           </ng-template>
@@ -124,6 +127,7 @@
             {{ row.closingBalance | currency:currencySymbol:'symbol':'1.2-2' }}
           </ng-template>
         </ngx-datatable-column>
+
       </ngx-datatable>
     </div>
   </div>

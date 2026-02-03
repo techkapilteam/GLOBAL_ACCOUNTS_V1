@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators ,FormsModule} from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-cash-book',
@@ -11,14 +11,27 @@ import { CommonModule } from '@angular/common';
 })
 export class CashBookComponent 
 // implements OnInit 
-{
-  fromDate!: Date;
-  toDate!: Date;
-  ngOnInit() {
-    const today = new Date();
-    this.fromDate = today;
-    this.toDate = today;
-  }
+{today:Date=new Date();
+  fromDate=this.today;
+  toDate=this.today;
+ public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+constructor(private fb:FormBuilder){
+  this.dpConfig.maxDate = new Date();
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
+    this.dpConfig.showWeekNumbers = false;
+}
+  show: boolean = false
+ ngOnInit() {
+  
+ 
+}
+
+
+}
+
+  
+  
 
   // CashBookReportForm!: FormGroup;
   // submitted = false;
@@ -49,15 +62,7 @@ export class CashBookComponent
   //   dateInputFormat: 'DD/MM/YYYY'
   // };
 
-  // constructor(private fb: FormBuilder) {}
 
-  // ngOnInit(): void {
-  //   this.CashBookReportForm = this.fb.group({
-  //     fromDate: [''],
-  //     toDate: [''],
-  //     ptranstype: ['', Validators.required]
-  //   });
-  // }
 
   // get f() {
   //   return this.CashBookReportForm.controls;
@@ -106,4 +111,4 @@ export class CashBookComponent
   // export() {
   //   console.log('Export');
   // }
-}
+

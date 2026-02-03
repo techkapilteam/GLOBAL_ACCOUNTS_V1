@@ -1,29 +1,25 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-brs-statements',
-  standalone:true,
-  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,BsDatepickerModule,CommonModule,NgSelectModule],
-   providers: [ DatePipe],
+  standalone: true,
+  imports: [NgxDatatableModule, ReactiveFormsModule, CommonModule, BsDatepickerModule, NgSelectModule],
+  providers: [DatePipe],
   templateUrl: './brs-statements.component.html',
-  styleUrl: './brs-statements.component.css',
+  styleUrls: ['./brs-statements.component.css']
 })
-export class BrsStatementsComponent {  
+export class BrsStatementsComponent {
 
   form!: FormGroup;
-bankType: 'CREDIT' | 'DEBIT' | null = null;
+  bankType: 'CREDIT' | 'DEBIT' | null = null;
   gridView: any[] = [];
 
-  dpConfig = {
-    dateInputFormat: 'DD-MM-YYYY'
-  };
+  dpConfig: Partial<BsDatepickerConfig> = {};
 
   bankData = [
     { id: 1, name: 'HDFC Bank' },
@@ -31,30 +27,27 @@ bankType: 'CREDIT' | 'DEBIT' | null = null;
     { id: 3, name: 'SBI Bank' }
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
-   
-    const todayStr = this.getTodayString();
+    const today = new Date();
+
+    this.dpConfig = {
+      dateInputFormat: 'DD-MMM-YYYY',
+      containerClass: 'theme-dark-blue',
+      showWeekNumbers: false
+    };
+
     this.form = this.fb.group({
       bankId: [''],
-      fromDate: [todayStr],
-      toDate: [todayStr]
+      fromDate: [today],
+      toDate: [today]
     });
-  }
-
-
-  getTodayString(): string {
-    const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const year = today.getFullYear();
-    return `${year}-${month}-${day}`;
   }
 
   onBankTypeChange(type: 'CREDIT' | 'DEBIT') {
     this.bankType = type;
-    this.gridView = []; 
+    this.gridView = [];
   }
 
   getReport() {
@@ -85,6 +78,11 @@ bankType: 'CREDIT' | 'DEBIT' | null = null;
     }
   }
 
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
+
   pdfOrprint(type: string) {
     console.log(type);
   }
@@ -92,19 +90,4 @@ bankType: 'CREDIT' | 'DEBIT' | null = null;
   export() {
     console.log('Excel Export');
   }
-
-
-
-  
 }
-  
-
-
-
-
- 
-
-
-
-
-

@@ -3,22 +3,17 @@
     <div class="screen-header mb-3">
       <h4>Bank Reconciliation</h4>
     </div>
+
     <div class="screen-content">
       <form [formGroup]="BRStatmentForm">
-
         <div class="row align-items-end">
-
           <div class="col-md-3">
             <label class="form-label">Bank Name</label>
             <select class="form-select form-select-sm" formControlName="pbankname">
               <option value="" disabled>Select</option>
-              <option *ngFor="let bank of bankData" [value]="bank.pbankaccountid">
-                {{ bank.pbankname }}
-              </option>
+              <option *ngFor="let bank of bankData" [value]="bank.pbankaccountid">{{ bank.pbankname }}</option>
             </select>
-            <small class="text-danger" *ngIf="pbankname?.touched && pbankname?.invalid">
-              Bank is required
-            </small>
+            <small class="text-danger" *ngIf="pbankname?.touched && pbankname?.invalid">Bank is required</small>
           </div>
 
           <div class="col-md-2">
@@ -29,164 +24,131 @@
           <ng-container *ngIf="!BRStatmentForm.get('chequeInfo')?.value">
             <div class="col-md-2">
               <label>As on Date</label>
-              <input type="date" class="form-control form-control-sm" formControlName="onDate">
+              <input type="text" class="form-control form-control-sm" bsDatepicker
+                     formControlName="onDate" [bsConfig]="dpConfig" readonly>
             </div>
           </ng-container>
 
           <ng-container *ngIf="BRStatmentForm.get('chequeInfo')?.value">
             <div class="col-md-2">
               <label>From Date</label>
-              <input type="date" class="form-control form-control-sm" formControlName="fromDate">
+              <input type="text" class="form-control form-control-sm" bsDatepicker
+                     formControlName="fromDate" [bsConfig]="dpConfig" readonly>
             </div>
-
             <div class="col-md-2">
               <label>To Date</label>
-              <input type="date" class="form-control form-control-sm" formControlName="toDate">
+              <input type="text" class="form-control form-control-sm" bsDatepicker
+                     formControlName="toDate" [bsConfig]="dpConfig" readonly>
             </div>
           </ng-container>
-          
-        <div class="col-auto me-3">
-          <button type="button" class="btn btn-primary btn-sm" (click)="getBRStatmentReports()">
-            Generate Report
-          </button>
+
+          <div class="col-auto me-3">
+            <button type="button" class="btn btn-primary btn-sm" (click)="getBRStatmentReports()">Generate Report</button>
+          </div>
         </div>
-      </div>
       </form>
     </div>
 
     <div *ngIf="gridView.length" class="mt-4 bg-white border rounded p-3">
+
       <div class="row mb-5">
         <div class="col-12 text-end">
           <img class="pt-2" src="assets/images/pdf-icon-blue.svg" title="PDF" width="20px">
           <img class="pt-2" src="assets/images/icon-excel.svg" title="print" width="20px">
         </div>
       </div>
-      <div class="mt-2 border rounded shadow-sm bg-white">
-        <div class="row">
-          <div class="col-md-20">
-            <div class="temp-head float-md-center pt-3">
-              <h2 class="font text-center m-0 font-weight-bold"> KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
-              <p class="font-16  text-center m-0">Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old
-                NK-07,Kamareddy.
-              </p>
-              <p class="font-14  text-center">CIN : U65992TG2008PTC060803</p>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12">
-                <div class="">
-                  <b>
-                    <p class="font-14 text-end m-0 font-weight-bold m-0">Branch : Ca-hyderabad-co</p>
-                  </b>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-2 border rounded shadow-sm bg-white">
-          <div class="report-head mt-2">
-            <b>
-              <p class="font-16 text-dark text-center m-0 font-weight-bold">
-                Bank Reconciliation
-              </p>
-            </b>
-          </div>
-        </div>
-      </div>
 
       <div class="mt-2 border rounded shadow-sm bg-white">
-        <div class="d-flex justify-content-between mb-3">
-          <strong>As on: {{ startDate | date:'dd-MMM-yyyy' }}</strong>
+        <div class="temp-head float-md-center pt-3">
+          <h2 class="font text-center m-0 font-weight-bold"> KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
+          <p class="font-16 text-center m-0">Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old NK-07,Kamareddy.</p>
+          <p class="font-14 text-center">CIN : U65992TG2008PTC060803</p>
+          <p class="font-14 text-end m-0 font-weight-bold">Branch : Ca-hyderabad-co</p>
+        </div>
+
+        <div class="report-head mt-2 text-center"><b>Bank Reconciliation</b></div>
+
+        <div class="d-flex justify-content-between mt-2 mb-3">
+          <strong>As on: {{ formatDate(startDate) }}</strong>
           <b>{{ selectedBankName }} - {{ selectedBankAccount }}</b>
         </div>
 
-        <div class=" border  shadow-sm bg-white p-3" style="overflow:hidden; height:auto !important;">
-          <div class="col-md-12">
-            <ngx-datatable #myTable class="material expandable" [rows]="gridView" [headerHeight]="45" [rowHeight]="45"
-              [groupRowsBy]="'pGroupType'" [groupExpansionDefault]="true" [columnMode]="'force'" [scrollbarH]="true">
+        <div class="border shadow-sm bg-white p-3" style="overflow:hidden; height:auto !important;">
+          <ngx-datatable #myTable class="material expandable"
+                         [rows]="gridView"
+                         [headerHeight]="45"
+                         [rowHeight]="45"
+                         [groupRowsBy]="'pGroupType'"
+                         [groupExpansionDefault]="true"
+                         [columnMode]="'force'"
+                         [scrollbarH]="true">
 
-              <ngx-datatable-group-header>
-                <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
-                  <a (click)="toggleExpandGroup(group)">
-                    <b>{{ group.value[0].pGroupType }}</b>
-                  </a>
-                </ng-template>
-              </ngx-datatable-group-header>
+            <ngx-datatable-group-header>
+              <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+                <a (click)="toggleExpandGroup(group)">
+                  <b>{{ group.value[0].pGroupType }}</b>
+                </a>
+              </ng-template>
+            </ngx-datatable-group-header>
 
-              <ngx-datatable-row-detail [rowHeight]="60">
-                <ng-template let-row="row" ngx-datatable-row-detail-template>
-                  <div class="text-end pe-3">
-                    <strong>Total :5000</strong>
-                    {{ currencysymbol }} {{ getGroupTotal(row.value[0].pGroupType) | number:'1.2-2' }}
-
-                  </div>
-                </ng-template>
-              </ngx-datatable-row-detail>
-
-              <ngx-datatable-column name="Transaction Date" sortable="false">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                  {{ row.ptransactiondate | date:'shortDate' }}
-                </ng-template>
-              </ngx-datatable-column>
-
-              <ngx-datatable-column name="Cheque No"  sortable="false" prop="pChequeNumber">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                  {{ row.pChequeNumber }}
-                </ng-template>
-              </ngx-datatable-column>
-
-              <ngx-datatable-column name="Particulars" sortable="false">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                  {{ row.pparticulars || '--NA--' }}
-                </ng-template>
-              </ngx-datatable-column>
-
-              <ngx-datatable-column name="Amount" sortable="false">
-                <ng-template ngx-datatable-cell-template let-row="row">
-                  {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
-                </ng-template>
-              </ngx-datatable-column>
-
-            </ngx-datatable>
-
-            <div class="temp-box-inner border rounded shadow-sm bg-white p-3 mt-4">
-              <p><b>Balance as per bank book :</b> ₹ 1,50,000.00</p>
-              <p><b>Less: Cheques deposited but not credited :</b> ₹ 25,000.00</p>
-              <p><b>Add: Cheques issued but not cleared :</b> ₹ 12,000.00</p>
-              <p><b>Balance as per pass book :</b> ₹ 1,37,000.00</p>
-
-              <div class="row">
-                <div class="col-md-6 ">
-                  <p class="mt-2">
-                    <b>Bank Balance :</b>
-                    <input type="text" class="form-control d-inline-block ml-2" style="width:200px" value="137000.00">
-                  </p>
+            <ngx-datatable-row-detail [rowHeight]="60">
+              <ng-template let-row="row" ngx-datatable-row-detail-template>
+                <div class="text-end pe-3">
+                  <strong>Total :5000</strong> {{ currencysymbol }} {{ getGroupTotal(row.value[0].pGroupType) | number:'1.2-2' }}
                 </div>
-                <div class="col-md-6 col-xl-4  ">
-                  <div class="form-group">
-                    <label id="pDocStorePath" title="Upload Identification Proof">Upload Document</label>
-                    <div class="input-group">
-                      <input #input type="text" class="form-control" placeholder="" formControlName="pDocStorePath">
-                      <div class="input-group-append">
-                        <button class="btn btn-lg-icon px-2 p-0" [attr.disabled]="disablereference ? '' : null">
-                          <img src="assets/images/icon-upload-blue.svg" class="" width="18px" height="18px">
-                        </button>
-                        <input id="fileInput1" style="display: none" type="file" #fileInput>
-                      </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
 
-                    </div>
+            <ngx-datatable-column name="Transaction Date" sortable="false">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ formatDate(row.ptransactiondate) }}
+              </ng-template>
+            </ngx-datatable-column>
 
+            <ngx-datatable-column name="Cheque No" sortable="false" prop="pChequeNumber"></ngx-datatable-column>
+            <ngx-datatable-column name="Particulars" sortable="false">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ row.pparticulars || '--NA--' }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Amount" sortable="false">
+              <ng-template ngx-datatable-cell-template let-row="row">
+                {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>      
+        <div class="temp-box-inner border rounded shadow-sm bg-white p-3 mt-4">
+          <p><b>Balance as per bank book :</b> ₹ 1,50,000.00</p>
+          <p><b>Less: Cheques deposited but not credited :</b> ₹ 25,000.00</p>
+          <p><b>Add: Cheques issued but not cleared :</b> ₹ 12,000.00</p>
+          <p><b>Balance as per pass book :</b> ₹ 1,37,000.00</p>
+
+          <div class="row">
+            <div class="col-md-6">
+              <p class="mt-2">
+                <b>Bank Balance :</b>
+                <input type="text" class="form-control d-inline-block ml-2" style="width:200px" value="137000.00">
+              </p>
+            </div>
+            <div class="col-md-6 col-xl-4">
+              <div class="form-group">
+                <label id="pDocStorePath" title="Upload Identification Proof">Upload Document</label>
+                <div class="input-group">
+                  <input #input type="text" class="form-control" placeholder="" formControlName="pDocStorePath">
+                  <div class="input-group-append">
+                    <button class="btn btn-lg-icon px-2 p-0" [attr.disabled]="disablereference ? '' : null">
+                      <img src="assets/images/icon-upload-blue.svg" width="18px" height="18px">
+                    </button>
+                    <input id="fileInput1" style="display: none" type="file" #fileInput>
                   </div>
-
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-      </div>
+        </div>
     </div>
-
   </div>
 </div>
