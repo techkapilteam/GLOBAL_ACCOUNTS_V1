@@ -25,7 +25,7 @@
             <div class="col-md-2">
               <label>As on Date</label>
               <input type="text" class="form-control form-control-sm" bsDatepicker
-                     formControlName="onDate" [bsConfig]="dpConfig" readonly>
+                     formControlName="onDate" [bsConfig]="dpConfig" readonly onkeydown="return false">
             </div>
           </ng-container>
 
@@ -33,12 +33,12 @@
             <div class="col-md-2">
               <label>From Date</label>
               <input type="text" class="form-control form-control-sm" bsDatepicker
-                     formControlName="fromDate" [bsConfig]="dpConfig" readonly>
+                     formControlName="fromDate" [bsConfig]="dpConfig" readonly onkeydown="return false">
             </div>
             <div class="col-md-2">
               <label>To Date</label>
               <input type="text" class="form-control form-control-sm" bsDatepicker
-                     formControlName="toDate" [bsConfig]="dpConfig" readonly>
+                     formControlName="toDate" [bsConfig]="dpConfig" readonly onkeydown="return false">
             </div>
           </ng-container>
 

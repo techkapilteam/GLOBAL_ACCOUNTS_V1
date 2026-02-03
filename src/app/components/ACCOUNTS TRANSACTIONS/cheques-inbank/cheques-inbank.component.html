@@ -43,12 +43,16 @@
           </div>
         </div>
 
-        <div class="row mb-3" *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'">
+        <!-- SEARCH BAR & SHOW BUTTON (always visible) -->
+        <div class="row mb-3">
           <div class="col-md-4">
             <input class="form-control" placeholder="Search" [(ngModel)]="searchText" name="search">
           </div>
           <div class="col-md-2">
-            <button type="button" class="btn btn-primary" (click)="showCheques()">Show</button>
+            <button type="button" class="btn btn-primary" 
+                    (click)="activeTab === 'Deposited' || activeTab === 'Cancelled' ? showClearedCheques() : showCheques()">
+              Show
+            </button>
           </div>
         </div>
 
@@ -75,15 +79,13 @@
             <input type="text" class="form-control" bsDatepicker [(ngModel)]="brsToDate" name="brsToDate"
                    [bsConfig]="dpConfig" onkeydown="return false">
           </div>
-          <div class="col-md-2 align-self-end">
-            <button type="button" class="btn btn-primary" (click)="showClearedCheques()">Show</button>
-          </div>
         </div>
 
         <div class="table-responsive" style="overflow-x:auto;">
           <ngx-datatable *ngIf="showTable" class="bootstrap mt-2" [rows]="filteredCheques" [headerHeight]="50"
             [rowHeight]="'auto'" [columnMode]="'standard'" [scrollbarH]="true">
             
+            <!-- Columns for All / Received / Online -->
             <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Checkbook" sortable="false"
               prop="checkbook" [width]="60">
               <ng-template ngx-datatable-header-template>
@@ -116,6 +118,7 @@
             <ngx-datatable-column *ngIf="activeTab !== 'Deposited' && activeTab !== 'Cancelled'" name="Receipts" sortable="false"
               prop="receipts" [width]="100"></ngx-datatable-column>
 
+            <!-- Columns for Deposited / Cancelled -->
             <ngx-datatable-column *ngIf="activeTab === 'Deposited' || activeTab === 'Cancelled'"
               name="Cheque/Reference No." sortable="false" prop="chequeNo" [width]="150"></ngx-datatable-column>
 

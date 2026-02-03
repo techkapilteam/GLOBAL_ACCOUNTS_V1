@@ -94,9 +94,7 @@ export class ChequesInbankComponent implements OnInit {
   }
 
   showCheques() {
-    if (this.activeTab && this.activeTab !== 'Deposited' && this.activeTab !== 'Cancelled') {
-      this.showTable = true;
-    }
+    this.showTable = true;
   }
 
   showClearedCheques() {
