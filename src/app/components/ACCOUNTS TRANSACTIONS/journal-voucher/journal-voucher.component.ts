@@ -220,8 +220,8 @@ export class JournalVoucherComponent {
     this.hidefootertemplate = true;
     this.paymentVoucherForm = this._FormBuilder.group({
       ppaymentid: [''],
-      // pjvdate: [this.today, Validators.required],
-       pjvdate: [{ value: null, disabled: true }],
+      pjvdate: [this.today, Validators.required],
+      //  pjvdate: [{ value: null, disabled: true }],
       ptotalpaidamount: [''],
       pnarration: ['', Validators.required],
       pmodofpayment: ['CASH'],

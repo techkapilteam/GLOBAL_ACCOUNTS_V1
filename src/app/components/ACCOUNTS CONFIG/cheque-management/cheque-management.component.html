@@ -1,82 +1,93 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+    <div class="screen-header">
       <h2>Cheque Management</h2>
     </div>
-  <div class="screen-content">
-<form>
-  <div class="section-content">
-    <div class="row g-3">
-      
-      <!-- Select Bank -->
-      <div class="col-md-4">
-        <div class="mb-3">
-          <label class="form-label required-field">Select Bank</label>
-          <select class="form-select" id="pBankname" title="Select Bank">
-            <option value="">-- Select Bank --</option>
-            <option value="Bank 1">Bank 1</option>
-            <option value="Bank 2">Bank 2</option>
-            <option value="Bank 3">Bank 3</option>
-          </select>
-          <div class="invalid-feedback">
-            <!-- Validation message -->
-          </div>
-        </div>
-      </div>
+    <div class="screen-content">
+      <form [formGroup]="chequeform">
+        <div class="section-content">
+          <div class="row g-3">
 
-      <!-- Entry Date -->
-      <div class="col-md-3">
-        <div class="mb-3">
-          <label class="form-label" title="Entry Date">Entry Date</label>
-          <input type="date" class="form-control" id="pChequeGenerateDate" placeholder="Select date">
-        </div>
-      </div>
+            <!-- Select Bank -->
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label required-field">Select Bank</label>
+                <select class="form-select" id="pBankname" title="Select Bank">
+                  <option value="">-- Select Bank --</option>
+                  <option value="Bank 1">Bank 1</option>
+                  <option value="Bank 2">Bank 2</option>
+                  <option value="Bank 3">Bank 3</option>
+                </select>
+                <div class="invalid-feedback">
+                  <!-- Validation message -->
+                </div>
+              </div>
+            </div>
 
-      <!-- Number of Cheques -->
-      <div class="col-md-4">
-        <div class="mb-3">
-          <label class="form-label required-field">Number Of Cheques</label>
-          <input type="number" class="form-control" id="pNoofcheques" min="1" max="999" placeholder="Enter number of cheques">
-          <div class="invalid-feedback">
-            <!-- Validation message -->
-          </div>
-        </div>
-      </div>
+            <!-- Entry Date -->
+            <div class="col-md-3">
+              <div class="mb-3">
+                <!-- <label class="form-label" title="Entry Date">Entry Date</label>
+                <input type="date" class="form-control" id="pChequeGenerateDate" placeholder="Select date"> -->
 
-      <!-- From No. and To No. -->
-      <div class="col-md-4">
-        <div class="mb-3">
-          <label class="form-label required-field">From No.</label>
-          <input type="number" class="form-control" id="pChequefrom" min="0" placeholder="From cheque number">
-          <div class="invalid-feedback">
-            <!-- Validation message -->
+                <div class="form-group">
+                  <label class="required-field">Date</label>
+               
+
+                    <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
+                      formControlName="pjvdate" placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker
+                      placement="bottom">
+
+                  
+                </div>
+              </div>
+            </div>
+            <!-- Number of Cheques -->
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label required-field">Number Of Cheques</label>
+                <input type="text" class="form-control" id="pNoofcheques" min="1" max="999"
+                  placeholder="Enter number of cheques">
+                <div class="invalid-feedback">
+                  <!-- Validation message -->
+                </div>
+              </div>
+            </div>
+
+            <!-- From No. and To No. -->
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label required-field">From No.</label>
+                <input type="text" class="form-control" id="pChequefrom" min="0" placeholder="From cheque number">
+                <div class="invalid-feedback">
+                  <!-- Validation message -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label required-field">To No.</label>
+                <input type="text" class="form-control" id="pChequeto" readonly placeholder="To cheque number">
+                <div class="invalid-feedback">
+                  <!-- Validation message -->
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4 mt-5">
+              <button type="button" class="btn btn-primary">
+                Add
+              </button>
+              <button type="button" class="btn btn-secondary ms-2">
+                Clear
+              </button>
+            </div>
+            <!-- Add Button -->
+
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="mb-3">
-          <label class="form-label required-field">To No.</label>
-          <input type="number" class="form-control" id="pChequeto" readonly placeholder="To cheque number">
-          <div class="invalid-feedback">
-            <!-- Validation message -->
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-4 mt-5">
-        <button type="button" class="btn btn-primary">
-          Add
-        </button>
-        <button type="button" class="btn btn-secondary ms-2">
-          Clear
-        </button>
-      </div>
-<!-- Add Button -->
-      
+
+      </form>
     </div>
   </div>
-
-</form>
-</div>
-</div>
 </div>

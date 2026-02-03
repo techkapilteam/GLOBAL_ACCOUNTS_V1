@@ -29,7 +29,6 @@ export class BrsComponent implements OnInit {
   ];
 
   gridView: any[] = [];
-
   startDate!: Date;
   selectedBankName = '';
   selectedBankAccount = '';
@@ -50,13 +49,13 @@ export class BrsComponent implements OnInit {
       toDate: [today],
       pDocStorePath: ['']
     });
-   
+
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
       containerClass: 'theme-dark-blue',
       showWeekNumbers: false
     };
-   
+
     this.BRStatmentForm.get('chequeInfo')?.valueChanges.subscribe(checked => {
       if (checked) {
         this.BRStatmentForm.patchValue({ fromDate: today, toDate: today });

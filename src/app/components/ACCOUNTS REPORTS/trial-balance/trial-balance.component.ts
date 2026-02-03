@@ -39,7 +39,7 @@ export class TrialBalanceComponent {
   dpConfig: Partial<BsDatepickerConfig> = {};
 
   constructor(private fb: FormBuilder,
-              private datePipe: DatePipe) {}
+    private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     const today = new Date();
