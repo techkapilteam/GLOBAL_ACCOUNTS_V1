@@ -1,11 +1,8 @@
-import { Component, OnInit, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 interface Cheque {
   checkbook?: string;
@@ -40,12 +37,13 @@ export class ChequesInbankComponent implements OnInit {
   selectedBank: string = '';
   searchText: string = '';
   activeTab: string = '';
-  showTable: boolean = false;
+  showTable: boolean = true;
   transactionDate: Date = new Date();
   chequesclearDate: Date = new Date();
   brsFromDate: Date = new Date();
   brsToDate: Date = new Date();
   headerCheckbook: boolean = false;
+  brsDataLoaded: boolean = false;
 
   dpConfig: Partial<BsDatepickerConfig> = {};
 
@@ -57,16 +55,17 @@ export class ChequesInbankComponent implements OnInit {
   ];
 
   clearedCheques: Cheque[] = [
-    { chequeNo: 'CHQ101', branchName: 'SBI Main', amount: 15000, party: 'ABC Corp', receipts: 15000, date: '2026-01-01', depositedDate: '2026-01-03', clearedDate: '2026-01-05', transactionMode: 'NEFT', chequeBankName: 'SBI', chequeBranchName: 'Main Branch' },
-    { chequeNo: 'CHQ102', branchName: 'HDFC Branch', amount: 8000, party: 'XYZ Ltd', receipts: 8000, date: '2026-01-02', depositedDate: '2026-01-04', clearedDate: '2026-01-06', transactionMode: 'RTGS', chequeBankName: 'HDFC', chequeBranchName: 'Branch A' },
+    { chequeNo: 'CHQ101', branchName: 'SBI Main', amount: 15000, party: 'ABC Corp', receipts: 15000, date: '2026-01-01', depositedDate: '2026-01-03', clearedDate: '2026-01-05', transactionMode: 'NEFT', chequeBankName: 'SBI', chequeBranchName: 'Main Branch', receiptId: 'RCPT101' },
+    { chequeNo: 'CHQ102', branchName: 'HDFC Branch', amount: 8000, party: 'XYZ Ltd', receipts: 8000, date: '2026-01-02', depositedDate: '2026-01-04', clearedDate: '2026-01-06', transactionMode: 'RTGS', chequeBankName: 'HDFC', chequeBranchName: 'Branch A', receiptId: 'RCPT102' },
+    { chequeNo: 'CHQ103', branchName: 'ICICI Branch', amount: 12000, party: 'LMN Pvt Ltd', receipts: 12000, date: '2026-01-03', depositedDate: '2026-01-05', clearedDate: '2026-01-07', transactionMode: 'Cheque', chequeBankName: 'ICICI', chequeBranchName: 'Branch B', receiptId: 'RCPT103' }
   ];
 
   filteredCheques: Cheque[] = [];
+  brsFilteredCheques: Cheque[] = [];
 
   ngOnInit(): void {
-    this.showTable = true;
-    this.filteredCheques = [...this.allCheques];
     this.activeTab = 'All';
+    this.filteredCheques = [...this.allCheques];
 
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
@@ -77,10 +76,15 @@ export class ChequesInbankComponent implements OnInit {
 
   filterTab(tab: string) {
     this.activeTab = tab;
-    this.showTable = false;
+    this.showTable = true;
+
     if (tab === 'Deposited' || tab === 'Cancelled') {
       this.filteredCheques = [];
+      this.brsDataLoaded = false;
+      this.brsFromDate = new Date();
+      this.brsToDate = new Date();
     } else {
+      this.brsDataLoaded = false;
       switch (tab) {
         case 'All':
           this.filteredCheques = [...this.allCheques];
@@ -92,18 +96,38 @@ export class ChequesInbankComponent implements OnInit {
           this.filteredCheques = this.allCheques.filter(c => c.status === 'Online');
           break;
       }
-      this.showTable = true;
+    }
+  }
+
+  onShowClick() {
+    if (this.activeTab === 'Deposited' || this.activeTab === 'Cancelled') {
+      this.showClearedCheques();
+    } else {
+      this.showCheques();
     }
   }
 
   showCheques() {
-    if (this.activeTab && this.activeTab !== 'Deposited' && this.activeTab !== 'Cancelled') {
-      this.showTable = true;
+    this.showTable = true;
+    if (this.selectedBank) {
+      this.filteredCheques = [...this.allCheques].filter(c => c.chequeBankName === this.selectedBank);
+    } else {
+      this.filteredCheques = [...this.allCheques];
     }
   }
 
   showClearedCheques() {
-    this.filteredCheques = [...this.clearedCheques];
+    if (!this.brsFromDate || !this.brsToDate) {
+      alert('Please select BRS From and To Dates.');
+      return;
+    }
+
+    this.brsFilteredCheques = this.selectedBank 
+      ? this.clearedCheques.filter(c => c.chequeBankName === this.selectedBank) 
+      : [...this.clearedCheques];
+
+    this.filteredCheques = [...this.brsFilteredCheques];
+    this.brsDataLoaded = true;
     this.showTable = true;
   }
 
@@ -127,38 +151,16 @@ export class ChequesInbankComponent implements OnInit {
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
   }
 
-  /** Export to Excel */
-  exportExcel() {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredCheques);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Cheques');
-    XLSX.writeFile(wb, 'Cheques.xlsx');
-  }
-
-  /** Export to PDF */
-  exportPDF() {
-    const doc = new jsPDF();
-    const col = Object.keys(this.filteredCheques[0] || {});
-    const rows = this.filteredCheques.map(c => col.map(k => (c as any)[k]));
-    (doc as any).autoTable({
-      head: [col],
-      body: rows
-    });
-    doc.save('Cheques.pdf');
-  }
-
-  /** Print Table */
-  printTable() {
-    const printContent = document.querySelector('.table-responsive')?.innerHTML;
-    const WindowPrt = window.open('', '', 'width=900,height=700');
-    if (WindowPrt && printContent) {
-      WindowPrt.document.write('<html><head><title>Print</title></head><body>');
-      WindowPrt.document.write(printContent);
-      WindowPrt.document.write('</body></html>');
-      WindowPrt.document.close();
-      WindowPrt.focus();
-      WindowPrt.print();
-      WindowPrt.close();
+ 
+  pdfOrPrint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
     }
+  }
+
+  exportExcel() {
+    alert('Excel export not implemented in demo mode');
   }
 }
