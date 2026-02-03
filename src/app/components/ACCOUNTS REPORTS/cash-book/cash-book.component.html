@@ -1,8 +1,10 @@
 <div class="screen-container">
   <div class="screen-card">
+
     <div class="screen-header">
       <h2>Cash Book</h2>
     </div>
+
     <div class="screen-content">
       <form autocomplete="off">
         <div class="row">
@@ -18,18 +20,26 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label>From Date</label>
-                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-                        [bsConfig]="dpConfig" onkeydown="return false">
+                  <input type="text"
+                         class="form-control"
+                         bsDatepicker
+                         [(ngModel)]="fromDate"
+                         name="fromDate"
+                         [bsConfig]="dpConfig"
+                         (keydown)="$event.preventDefault()">
                 </div>
               </div>
 
               <div class="col-md-6">
                 <div class="form-group">
                   <label>To Date</label>
-                  <!-- <input type="date" class="form-control" name="toDate"> -->
-                  <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate"
-                   name="toDate"
-                        [bsConfig]="dpConfig" onkeydown="return false">
+                  <input type="text"
+                         class="form-control"
+                         bsDatepicker
+                         [(ngModel)]="toDate"
+                         name="toDate"
+                         [bsConfig]="dpConfig"
+                         (keydown)="$event.preventDefault()">
                 </div>
               </div>
 
@@ -39,35 +49,99 @@
           <!-- Transaction Type -->
           <div class="col-md-4">
             <label>Transaction Type</label>
-            <div class="mb-3 pr-2">
+            <div class="mb-3">
 
               <label class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="ptranstype" value="CASH">
-                <span class="mt-1">Cash</span>
+                <input class="form-check-input"
+                       type="radio"
+                       name="ptranstype"
+                       value="CASH"
+                       [(ngModel)]="transactionType">
+                <span>Cash</span>
               </label>
 
               <label class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="ptranstype" value="CHEQUE">
-                <span class="mt-1">Cheque</span>
+                <input class="form-check-input"
+                       type="radio"
+                       name="ptranstype"
+                       value="CHEQUE"
+                       [(ngModel)]="transactionType">
+                <span>Cheque</span>
               </label>
 
               <label class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="ptranstype" value="BOTH">
-                <span class="mt-1">Both</span>
+                <input class="form-check-input"
+                       type="radio"
+                       name="ptranstype"
+                       value="BOTH"
+                       [(ngModel)]="transactionType">
+                <span>Both</span>
               </label>
 
             </div>
           </div>
 
-          <!-- Submit -->
+          <!-- Generate -->
           <div class="col-md-4 mt-4">
-            <button type="submit" class="btn btn-primary px-3 border-0">
+            <button type="button"
+                    class="btn btn-primary px-3"
+                    (click)="GenerateReport()">
               Generate
             </button>
           </div>
 
         </div>
       </form>
+
+      <!-- REPORT SECTION -->
+      <div class="card shadow-sm mt-4" *ngIf="!show">
+        <div class="card-body">
+
+          <!-- EXPORT -->
+          <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-outline-danger me-2"
+                    (click)="pdfOrprint('Pdf')">
+              <i class="fa fa-file-pdf me-1"></i> PDF
+            </button>
+
+            <button class="btn btn-outline-secondary me-2"
+                    (click)="pdfOrprint('Print')">
+              <i class="fa fa-print me-1"></i> Print
+            </button>
+
+            <button class="btn btn-outline-success"
+                    (click)="exportExcel()">
+              <i class="fa fa-file-excel me-1"></i> Excel
+            </button>
+          </div>
+
+          <h5 class="text-center fw-bold">Cash Book</h5>
+
+          <div class="text-center mb-3">
+            Between :
+            {{ fromDate | date:'dd-MMM-yyyy' }}
+            And
+            {{ toDate | date:'dd-MMM-yyyy' }}
+            &nbsp; | &nbsp;
+            {{ transactionType }}
+          </div>
+
+          <ngx-datatable
+            class="bootstrap"
+            [rows]="gridView"
+            [headerHeight]="50"
+            [rowHeight]="50"
+            [footerHeight]="50"
+            [limit]="10">
+
+            <ngx-datatable-column name="Date" prop="ptransactiondate"></ngx-datatable-column>
+            <ngx-datatable-column name="Description" prop="description"></ngx-datatable-column>
+            <ngx-datatable-column name="Amount" prop="amount"></ngx-datatable-column>
+
+          </ngx-datatable>
+
+        </div>
+      </div>
 
     </div>
   </div>

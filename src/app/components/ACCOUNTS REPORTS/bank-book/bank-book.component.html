@@ -14,27 +14,27 @@
             <div class="row g-3 align-items-end">
 
               <div class="col-md-3">
-                <label class="fw-bold">From Date</label>
+                <label >From Date</label>
                 <input type="text" class="form-control"
                   bsDatepicker
                   [(ngModel)]="fromDate"
                   name="fromDate"
                   [bsConfig]="dpConfig"
-                  readonly>
+                  readonly  onkeydown="return false">
               </div>
 
               <div class="col-md-3">
-                <label class="fw-bold">To Date</label>
+                <label >To Date</label>
                 <input type="text" class="form-control"
                   bsDatepicker
                   [(ngModel)]="toDate"
                   name="toDate"
                   [bsConfig]="dpConfig"
-                  readonly>
+                  readonly  onkeydown="return false">
               </div>
 
               <div class="col-md-3">
-                <label class="fw-bold">Bank Name</label>
+                <label>Bank Name</label>
                 <select class="form-control" [(ngModel)]="bankName" name="bankName">
                   <option value="">Select</option>
                   <option>State Bank</option>
@@ -53,19 +53,17 @@
        
         <div class="card shadow-sm" *ngIf="showTable">
           <div class="card-body">
-
             
             <div class="d-flex justify-content-end mb-2">
               <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
                 <i class="fa fa-file-pdf me-1"></i> PDF
-              </button>
-
-              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
-                <i class="fa fa-print me-1"></i> Print
-              </button>
+              </button>           
 
               <button class="btn btn-outline-success" (click)="exportExcel()">
                 <i class="fa fa-file-excel me-1"></i> Excel
+              </button>
+              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+                <i class="fa fa-print me-1"></i> Print
               </button>
             </div>
 
