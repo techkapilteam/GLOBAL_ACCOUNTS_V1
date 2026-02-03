@@ -1,184 +1,189 @@
 <div class="screen-container">
-  <div class="screen-card">
+    <div class="screen-card">
 
-    <div class="screen-header">
-      <h2>Cheques On Hand</h2>
-    </div>
-
-    <div class="screen-content">
-
-      
-      <form>
-        <div class="section-content">
-          <div class="row align-items-end g-3">
-
-            <div class="col-md-2">
-              <label>Date</label>
-              <input type="text" class="form-control" bsDatepicker
-                     [(ngModel)]="selectedDate" [bsConfig]="dpConfig" name="selectedDate"
-                     [value]="formatDate(selectedDate)" onkeydown="return false">
-            </div>
-
-           <div class="col-md-3">
-            <label>Bank</label>
-            <select class="form-select" [(ngModel)]="selectedBank" name="bank">
-              <option value="">Select</option>
-              <option value="SBI">SBI</option>
-              <option value="HDFC">HDFC</option>
-              <option value="ICICI">ICICI</option>
-              <option value="IDBI">IDBI</option>
-            </select>
-          </div>
-
-            <div class="col-md-7">
-              <div class="border rounded bg-light p-3">
-                <h5 class="text-primary mb-2"><u>Cheques on Hand</u></h5>
-                <strong>
-                  Balance: ₹ 15,74,94,468 Dr
-                  &nbsp;&nbsp;&nbsp;
-                  BRS Date: {{ formatDate(brsDate) }}
-                </strong>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </form>
-
-    
-      <form>
-        <div class="section-content mt-3">
-          <div class="row align-items-center">
-            <div class="col-md-6">
-              <input type="search" class="form-control" placeholder="Search for cheque number">
-            </div>
-
-            <div class="col-md-3 text-end">
-              <span class="mx-3 cursor-pointer">
-                <img src="assets/pdf.svg" width="18" class="me-1">
-                <small>PDF</small>
-              </span>
-
-              <span class="mx-3 cursor-pointer">
-                <img src="assets/print.svg" width="18" class="me-1">
-                <small>Print</small>
-              </span>
-
-              <span class="mx-1 cursor-pointer">
-                <img src="assets/excel.svg" width="18" class="me-1">
-                <small>Excel</small>
-              </span>
-            </div>
-          </div>
-        </div>
-      </form>
-
-     
-      <form>
-        <ul class="nav nav-tabs mt-4">
-          <li class="nav-item">
-            <button class="nav-link active" (click)="setTab('ALL')">All</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" (click)="setTab('CHEQUE')">Cheques Received</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" (click)="setTab('ONLINE')">Online Receipts</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" (click)="setTab('DEPOSITED')">Deposited</button>
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" (click)="setTab('CANCELLED')">Cancelled</button>
-          </li>
-        </ul>
-
-        
-        <div *ngIf="activeTab === 'DEPOSITED' || activeTab === 'CANCELLED'" class="row mt-3">
-          <div class="col-md-3">
-            <label>BRS From Date</label>
-            <input type="text" class="form-control" bsDatepicker
-                   [(ngModel)]="brsFromDate" [bsConfig]="dpConfig" name="brsFromDate"
-                   [value]="formatDate(brsFromDate)" onkeydown="return false">
-          </div>
-          <div class="col-md-3">
-            <label>BRS To Date</label>
-            <input type="text" class="form-control" bsDatepicker
-                   [(ngModel)]="brsToDate" [bsConfig]="dpConfig" name="brsToDate"
-                   [value]="formatDate(brsToDate)" onkeydown="return false">
-          </div>
-          <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-primary">Show</button>
-          </div>
+        <div class="screen-header">
+            <h2>Cheques On Hand</h2>
         </div>
 
-        <!-- Data Table -->
-        <div class="section-content mt-3">
-          <ngx-datatable class="material striped" [rows]="gridData" [headerHeight]="45" [rowHeight]="45"
-                         [columnMode]="'force'" [scrollbarH]="true">
+        <div class="screen-content">
 
-            <!-- Checkbox Columns -->
-            <ngx-datatable-column [width]="40" sortable="false" *ngIf="showActionColumns">
-              <ng-template ngx-datatable-header-template>
-                <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)" />
-              </ng-template>
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <input type="checkbox" [(ngModel)]="row.selected" />
-              </ng-template>
-            </ngx-datatable-column>
 
-            <ngx-datatable-column name="Deposit" sortable="false" [width]="90" *ngIf="showActionColumns">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <input type="checkbox" [(ngModel)]="row.deposit" [disabled]="row.mode === 'ONLINE'" />
-              </ng-template>
-            </ngx-datatable-column>
+            <form>
+                <div class="section-content">
+                    <div class="row align-items-end g-3">
 
-            <ngx-datatable-column name="Cancel" sortable="false" [width]="90" *ngIf="showActionColumns">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <input type="checkbox" [(ngModel)]="row.cancel" />
-              </ng-template>
-            </ngx-datatable-column>
+                        <div class="col-md-2">
+                            <label>Date</label>
+                            <input type="text" class="form-control" bsDatepicker [(ngModel)]="selectedDate"
+                                [bsConfig]="dpConfig" name="selectedDate" [value]="formatDate(selectedDate)"
+                                onkeydown="return false">
+                        </div>
 
-            <!-- Data Columns -->
-            <ngx-datatable-column name="Cheque / Reference" sortable="false" prop="cheque"></ngx-datatable-column>
-            <ngx-datatable-column name="Branch Name" sortable="false" prop="branch"></ngx-datatable-column>
-            <ngx-datatable-column name="Amount" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                ₹ {{ row.amount | number:'1.2-2' }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Party" sortable="false" prop="party"></ngx-datatable-column>
+                        <div class="col-md-3">
+                            <label>Bank</label>
+                            <select class="form-select" [(ngModel)]="selectedBank" name="bank">
+                                <option value="">Select</option>
+                                <option value="SBI">SBI</option>
+                                <option value="HDFC">HDFC</option>
+                                <option value="ICICI">ICICI</option>
+                                <option value="IDBI">IDBI</option>
+                            </select>
+                        </div>
 
-            <ngx-datatable-column name="Receipt Date" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ formatDate(row.receiptDate) }}
-              </ng-template>
-            </ngx-datatable-column>
+                        <div class="col-md-7">
+                            <div class="border rounded bg-light p-3">
+                                <h5 class="text-primary mb-2"><u>Cheques on Hand</u></h5>
+                                <strong>
+                                    Balance: ₹ 15,74,94,468 Dr
+                                    &nbsp;&nbsp;&nbsp;
+                                    BRS Date: {{ formatDate(brsDate) }}
+                                </strong>
+                            </div>
+                        </div>
 
-            <ngx-datatable-column name="Cheque Date" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ formatDate(row.chequeDate) }}
-              </ng-template>
-            </ngx-datatable-column>
+                    </div>
+                </div>
+            </form>
 
-            <ngx-datatable-column *ngIf="activeTab === 'DEPOSITED'" name="Deposited Date">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ formatDate(row.depositedDate) }}
-              </ng-template>
-            </ngx-datatable-column>
 
-            <ngx-datatable-column *ngIf="activeTab === 'CANCELLED'" name="Cancelled Date">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ formatDate(row.cancelledDate) }}
-              </ng-template>
-            </ngx-datatable-column>
+            <form>
+                <div class="section-content mt-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <input type="search" class="form-control" placeholder="Search for cheque number">
+                        </div>
 
-            <ngx-datatable-column name="Receipt No" sortable="false" prop="receiptNo"></ngx-datatable-column>
-            <ngx-datatable-column name="Receipt Id" sortable="false" prop="receiptId"></ngx-datatable-column>
-            <ngx-datatable-column name="Transaction Mode" sortable="false" prop="mode"></ngx-datatable-column>
-            <ngx-datatable-column name="Cheque Bank Name" sortable="false" prop="bank"></ngx-datatable-column>
+                        <div class="col-md-3 text-end">
+                            <span class="mx-3 cursor-pointer">
+                                <img src="assets/pdf.svg" width="18" class="me-1">
+                                <small>PDF</small>
+                            </span>
 
-          </ngx-datatable>
+                            <span class="mx-3 cursor-pointer">
+                                <img src="assets/print.svg" width="18" class="me-1">
+                                <small>Print</small>
+                            </span>
+
+                            <span class="mx-1 cursor-pointer">
+                                <img src="assets/excel.svg" width="18" class="me-1">
+                                <small>Excel</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <form>
+                <ul class="nav nav-tabs mt-4">
+                    <li class="nav-item">
+                        <button class="nav-link active" (click)="setTab('ALL')">All</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('CHEQUE')">Cheques Received</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('ONLINE')">Online Receipts</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('DEPOSITED')">Deposited</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" (click)="setTab('CANCELLED')">Cancelled</button>
+                    </li>
+                </ul>
+
+
+                <div *ngIf="activeTab === 'DEPOSITED' || activeTab === 'CANCELLED'" class="row mt-3">
+                    <div class="col-md-3">
+                        <label>BRS From Date</label>
+                        <input type="text" class="form-control" bsDatepicker [(ngModel)]="brsFromDate"
+                            [bsConfig]="dpConfig" name="brsFromDate" [value]="formatDate(brsFromDate)"
+                            onkeydown="return false">
+                    </div>
+                    <div class="col-md-3">
+                        <label>BRS To Date</label>
+                        <input type="text" class="form-control" bsDatepicker [(ngModel)]="brsToDate"
+                            [bsConfig]="dpConfig" name="brsToDate" [value]="formatDate(brsToDate)"
+                            onkeydown="return false">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary">Show</button>
+                    </div>
+                </div>
+
+
+                <div class="section-content mt-3">
+                    <ngx-datatable class="material striped" [rows]="gridData" [headerHeight]="45" [rowHeight]="45"
+                        [columnMode]="'force'" [scrollbarH]="true">
+
+
+                        <ngx-datatable-column [width]="40" sortable="false" *ngIf="showActionColumns">
+                            <ng-template ngx-datatable-header-template>
+                                <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)" />
+                            </ng-template>
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <input type="checkbox" [(ngModel)]="row.selected" />
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Deposit" sortable="false" [width]="90" *ngIf="showActionColumns">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <input type="checkbox" [(ngModel)]="row.deposit" [disabled]="row.mode === 'ONLINE'" />
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Cancel" sortable="false" [width]="90" *ngIf="showActionColumns">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                <input type="checkbox" [(ngModel)]="row.cancel" />
+                            </ng-template>
+                        </ngx-datatable-column>
+
+
+                        <ngx-datatable-column name="Cheque / Reference" sortable="false"
+                            prop="cheque"></ngx-datatable-column>
+                        <ngx-datatable-column name="Branch Name" sortable="false" prop="branch"></ngx-datatable-column>
+                        <ngx-datatable-column name="Amount" sortable="false">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                ₹ {{ row.amount | number:'1.2-2' }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Party" sortable="false" prop="party"></ngx-datatable-column>
+
+                        <ngx-datatable-column name="Receipt Date" sortable="false">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ formatDate(row.receiptDate) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Cheque Date" sortable="false">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ formatDate(row.chequeDate) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column *ngIf="activeTab === 'DEPOSITED'" name="Deposited Date">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ formatDate(row.depositedDate) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column *ngIf="activeTab === 'CANCELLED'" name="Cancelled Date">
+                            <ng-template ngx-datatable-cell-template let-row="row">
+                                {{ formatDate(row.cancelledDate) }}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Receipt No" sortable="false"
+                            prop="receiptNo"></ngx-datatable-column>
+                        <ngx-datatable-column name="Receipt Id" sortable="false"
+                            prop="receiptId"></ngx-datatable-column>
+                        <ngx-datatable-column name="Transaction Mode" sortable="false"
+                            prop="mode"></ngx-datatable-column>
+                        <ngx-datatable-column name="Cheque Bank Name" sortable="false"
+                            prop="bank"></ngx-datatable-column>
+
+                    </ngx-datatable>
 
           <!-- Buttons -->
           <div class="section-content mt-4">
@@ -188,9 +193,9 @@
             </div>
           </div>
 
-        </div>
-      </form>
+                </div>
+            </form>
 
+        </div>
     </div>
-  </div>
 </div>

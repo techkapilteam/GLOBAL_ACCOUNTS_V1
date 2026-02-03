@@ -19,14 +19,15 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
   providers: [DatePipe]
 })
 export class DayBookComponent implements OnInit {
+
   private fb = inject(FormBuilder);
   private datePipe = inject(DatePipe);
 
   Daybook!: FormGroup;
-  isSingleDate: boolean = true;
-  showGrid: boolean = false;
+  isSingleDate = true;
+  showGrid = false;
 
-  today: Date = new Date();
+  today = new Date();
   dpConfig: Partial<BsDatepickerConfig> = {};
 
   transactions: any[] = [];
@@ -34,14 +35,14 @@ export class DayBookComponent implements OnInit {
 
   StartDate: Date | null = null;
   EndDate: Date | null = null;
+  
+  isKgmsChecked = false;
 
   constructor() {
-   
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
       containerClass: 'theme-dark-blue',
       showWeekNumbers: false
-      
     };
   }
 
@@ -54,16 +55,16 @@ export class DayBookComponent implements OnInit {
     });
   }
 
-  
   checkox(event: any) {
     this.isSingleDate = event.target.checked;
-    this.Daybook.get('date')?.setValue(this.isSingleDate);
   }
 
- 
+  toggleKgmsGenerate(event: any) {
+    this.isKgmsChecked = event.target.checked;
+  }
+
   checkboxx(event: any) {}
 
-  
   private validateInputs(): boolean {
     if (this.isSingleDate) {
       if (!this.Daybook.value.dfromdate) {
@@ -79,21 +80,21 @@ export class DayBookComponent implements OnInit {
     return true;
   }
 
- 
   private loadGrid() {
     this.showGrid = true;
 
     this.StartDate = new Date(this.Daybook.value.dfromdate);
-    this.EndDate = this.isSingleDate ? this.StartDate : new Date(this.Daybook.value.dtodate);
-
+    this.EndDate = this.isSingleDate
+      ? this.StartDate
+      : new Date(this.Daybook.value.dtodate);
+   
     this.transactions = [
       { rTxn: 'R001', rPart: 'Cash Receipt', rType: 'Cash', amount: 5000, pTxn: 'P001', pPart: 'Office Expense', pType: 'Cash' },
       { rTxn: 'R002', rPart: 'Online Receipt', rType: 'Online', amount: 12000, pTxn: 'P002', pPart: 'Bank Transfer', pType: 'Online' }
     ];
 
     this.bankSummary = [
-      { bank: 'UNION BANK OF INDIA', opening: '₹ 9,89,39,559.97 Dr', receipts: '₹ 12,000', payments: '₹ 5,000', closing: '₹ 9,89,46,559.97 Dr' },
-      { bank: 'STATE BANK OF INDIA', opening: '₹ 5,45,14,713.69 Dr', receipts: '₹ 8,000', payments: '₹ 2,500', closing: '₹ 5,45,20,213.69 Dr' }
+      { bank: this.Daybook.value.branch, opening: '₹ 9,89,39,559.97 Dr', receipts: '₹ 12,000', payments: '₹ 5,000', closing: '₹ 9,89,46,559.97 Dr' }
     ];
   }
 
@@ -117,19 +118,34 @@ export class DayBookComponent implements OnInit {
   }
 
   getsummaryReport() {
+  
     if (!this.Daybook.value.branch) {
       alert('Please select Branch');
       this.showGrid = false;
       return;
     }
-    this.loadGrid();
+   
+    this.showGrid = false;
+    this.transactions = [];
+    this.bankSummary = [];
+    
+    setTimeout(() => {
+      this.loadGrid();
+      this.showGrid = true;
+    }, 50);
   }
-
-  exportPDF() { console.log('Export PDF'); }
-  printReport() { window.print(); }
 
   formatDate(date: Date | string | null): string {
     if (!date) return '';
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
+
+ 
+  pdfOrprint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented');
+    }
   }
 }
