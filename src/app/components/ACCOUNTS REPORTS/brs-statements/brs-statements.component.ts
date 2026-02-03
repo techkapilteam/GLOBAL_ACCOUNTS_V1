@@ -27,7 +27,7 @@ export class BrsStatementsComponent {
     { id: 3, name: 'SBI Bank' }
   ];
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe) {}
+  constructor(private fb: FormBuilder, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     const today = new Date();

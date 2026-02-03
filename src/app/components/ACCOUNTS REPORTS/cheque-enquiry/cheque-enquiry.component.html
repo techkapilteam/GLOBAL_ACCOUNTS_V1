@@ -59,8 +59,8 @@
               [headerClass]="'text-center'">
             </ngx-datatable-column>
 
-            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
+            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber" sortable="false"
+              [cellClass]="'text-center'" [headerClass]="'text-center'">
             </ngx-datatable-column>
 
             <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" sortable="false" [cellClass]="'text-end'"
@@ -110,8 +110,8 @@
               </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
+            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" sortable="false"
+              [cellClass]="'text-center'" [headerClass]="'text-center'">
             </ngx-datatable-column>
 
             <ngx-datatable-column name="Party" prop="ppartyname" sortable="false" [cellClass]="'text-start'"
@@ -158,8 +158,13 @@
             </div>
 
             <div class="col-md-6 text-end d-flex justify-content-end gap-3">
-              <img src="images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')" />
-              <img src="images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')" />
+              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+                <i class="fa fa-file-pdf me-1"></i> PDF
+              </button>
+
+              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+                <i class="fa fa-print me-1"></i> Print
+              </button>
             </div>
           </div>
 
@@ -169,7 +174,8 @@
 
             <ngx-datatable-column name="Cheque Status" prop="chequeStatus" sortable="false"></ngx-datatable-column>
 
-            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber" sortable="false"></ngx-datatable-column>
+            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber"
+              sortable="false"></ngx-datatable-column>
 
             <ngx-datatable-column name="Branch" prop="pbranchname" sortable="false"></ngx-datatable-column>
 
