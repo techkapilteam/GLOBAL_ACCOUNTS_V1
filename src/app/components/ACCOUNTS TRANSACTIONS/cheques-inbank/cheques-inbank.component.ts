@@ -37,12 +37,13 @@ export class ChequesInbankComponent implements OnInit {
   selectedBank: string = '';
   searchText: string = '';
   activeTab: string = '';
-  showTable: boolean = false;
+  showTable: boolean = true;
   transactionDate: Date = new Date();
   chequesclearDate: Date = new Date();
   brsFromDate: Date = new Date();
   brsToDate: Date = new Date();
   headerCheckbook: boolean = false;
+  brsDataLoaded: boolean = false;
 
   dpConfig: Partial<BsDatepickerConfig> = {};
 
@@ -54,16 +55,17 @@ export class ChequesInbankComponent implements OnInit {
   ];
 
   clearedCheques: Cheque[] = [
-    { chequeNo: 'CHQ101', branchName: 'SBI Main', amount: 15000, party: 'ABC Corp', receipts: 15000, date: '2026-01-01', depositedDate: '2026-01-03', clearedDate: '2026-01-05', transactionMode: 'NEFT', chequeBankName: 'SBI', chequeBranchName: 'Main Branch' },
-    { chequeNo: 'CHQ102', branchName: 'HDFC Branch', amount: 8000, party: 'XYZ Ltd', receipts: 8000, date: '2026-01-02', depositedDate: '2026-01-04', clearedDate: '2026-01-06', transactionMode: 'RTGS', chequeBankName: 'HDFC', chequeBranchName: 'Branch A' },
+    { chequeNo: 'CHQ101', branchName: 'SBI Main', amount: 15000, party: 'ABC Corp', receipts: 15000, date: '2026-01-01', depositedDate: '2026-01-03', clearedDate: '2026-01-05', transactionMode: 'NEFT', chequeBankName: 'SBI', chequeBranchName: 'Main Branch', receiptId: 'RCPT101' },
+    { chequeNo: 'CHQ102', branchName: 'HDFC Branch', amount: 8000, party: 'XYZ Ltd', receipts: 8000, date: '2026-01-02', depositedDate: '2026-01-04', clearedDate: '2026-01-06', transactionMode: 'RTGS', chequeBankName: 'HDFC', chequeBranchName: 'Branch A', receiptId: 'RCPT102' },
+    { chequeNo: 'CHQ103', branchName: 'ICICI Branch', amount: 12000, party: 'LMN Pvt Ltd', receipts: 12000, date: '2026-01-03', depositedDate: '2026-01-05', clearedDate: '2026-01-07', transactionMode: 'Cheque', chequeBankName: 'ICICI', chequeBranchName: 'Branch B', receiptId: 'RCPT103' }
   ];
 
   filteredCheques: Cheque[] = [];
+  brsFilteredCheques: Cheque[] = [];
 
   ngOnInit(): void {
-    this.showTable = true;
-    this.filteredCheques = [...this.allCheques];
     this.activeTab = 'All';
+    this.filteredCheques = [...this.allCheques];
 
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
@@ -74,10 +76,15 @@ export class ChequesInbankComponent implements OnInit {
 
   filterTab(tab: string) {
     this.activeTab = tab;
-    this.showTable = false;
+    this.showTable = true;
+
     if (tab === 'Deposited' || tab === 'Cancelled') {
       this.filteredCheques = [];
+      this.brsDataLoaded = false;
+      this.brsFromDate = new Date();
+      this.brsToDate = new Date();
     } else {
+      this.brsDataLoaded = false;
       switch (tab) {
         case 'All':
           this.filteredCheques = [...this.allCheques];
@@ -89,18 +96,38 @@ export class ChequesInbankComponent implements OnInit {
           this.filteredCheques = this.allCheques.filter(c => c.status === 'Online');
           break;
       }
-      this.showTable = true;
+    }
+  }
+
+  onShowClick() {
+    if (this.activeTab === 'Deposited' || this.activeTab === 'Cancelled') {
+      this.showClearedCheques();
+    } else {
+      this.showCheques();
     }
   }
 
   showCheques() {
-    if (this.activeTab && this.activeTab !== 'Deposited' && this.activeTab !== 'Cancelled') {
-      this.showTable = true;
+    this.showTable = true;
+    if (this.selectedBank) {
+      this.filteredCheques = [...this.allCheques].filter(c => c.chequeBankName === this.selectedBank);
+    } else {
+      this.filteredCheques = [...this.allCheques];
     }
   }
 
   showClearedCheques() {
-    this.filteredCheques = [...this.clearedCheques];
+    if (!this.brsFromDate || !this.brsToDate) {
+      alert('Please select BRS From and To Dates.');
+      return;
+    }
+
+    this.brsFilteredCheques = this.selectedBank 
+      ? this.clearedCheques.filter(c => c.chequeBankName === this.selectedBank) 
+      : [...this.clearedCheques];
+
+    this.filteredCheques = [...this.brsFilteredCheques];
+    this.brsDataLoaded = true;
     this.showTable = true;
   }
 
@@ -122,5 +149,18 @@ export class ChequesInbankComponent implements OnInit {
   formatDate(date: Date | string | null): string {
     if (!date) return '';
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
+
+ 
+  pdfOrPrint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
+    }
+  }
+
+  exportExcel() {
+    alert('Excel export not implemented in demo mode');
   }
 }

@@ -52,12 +52,13 @@ export class ComparisonTbComponent {
   constructor() {
     this.currencysymbol = String(this.commonService.datePickerPropertiesSetup('currencysymbol'));
      this.dpConfig.maxDate = new Date();
-    this.dpConfig.dateInputFormat = 'DD-MM-YYYY'
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY'
     // this.dpConfig.maxDate = new Date();
 
     this.dpConfig = {
       dateInputFormat: String(this.commonService.datePickerPropertiesSetup('dateInputFormat')),
-      containerClass: String(this.commonService.datePickerPropertiesSetup('containerClass')),
+      // containerClass: String(this.commonService.datePickerPropertiesSetup('containerClass')),
+      containerClass: 'theme-dark-blue',
       showWeekNumbers: false,
       maxDate: new Date()
     };

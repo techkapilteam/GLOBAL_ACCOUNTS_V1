@@ -20,24 +20,27 @@
     </ngx-loading> -->
 
         </div>
+        <div class="card-body">
+          <form [formGroup]="ComparisionTBForm" autocomplete="off">
 
-        <form [formGroup]="ComparisionTBForm" autocomplete="off">
+            <div class="card shadow-sm p-3 mb-4">
 
-          <div class="card shadow-sm mb-3">
-            <div class="card-body">
 
-              <div class="row align-items-end">
-                <div class="form-group">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
                   <label class="fw-bold">From Date</label>
                   <input type="text" class="form-control d-inline-block w-auto" formControlName="fromDate"
-                    placeholder="Select From Date" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }"
+                    placeholder="Select From Date" bsDatepicker
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
                     (ngModelChange)="DateChange($event)" readonly>
-
-                  <label class="fw-bold">To Date</label>
-                  <input type="text" class="form-control d-inline-block w-auto" formControlName="toDate"
-                    placeholder="Select To Date" bsDatepicker [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" readonly>
                 </div>
 
+                <div class="col-md-3">
+                  <label class="fw-bold">To Date</label>
+                  <input type="text" class="form-control d-inline-block w-auto" formControlName="toDate"
+                    placeholder="Select To Date" bsDatepicker
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }" readonly>
+                </div>
 
                 <div class="col-md-2">
                   <div class="form-check mt-4">
@@ -57,8 +60,8 @@
               </div>
 
             </div>
-          </div>
 
+          </form>
           <div class="card shadow-sm" [hidden]="showHide">
 
             <div class="card-body">
@@ -167,7 +170,9 @@
             </div>
           </div>
 
-        </form>
+          <!-- </form> -->
+        </div>
       </div>
     </div>
   </div>
+</div>

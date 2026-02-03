@@ -18,12 +18,12 @@
           <div class="col-auto me-3">
             <label>From Date</label>
             <input type="text" class="form-control" bsDatepicker formControlName="fromDate" [bsConfig]="dpConfig"
-              readonly style="width:140px">
+              readonly onkeydown="return false" style="width:140px">
           </div>
 
           <div class="col-auto me-3" *ngIf="!showAsOn">
             <label>To Date</label>
-            <input type="text" class="form-control" bsDatepicker formControlName="toDate" [bsConfig]="dpConfig" readonly
+            <input type="text" class="form-control" bsDatepicker formControlName="toDate" [bsConfig]="dpConfig" readonly onkeydown="return false"
               style="width:140px">
           </div>
 
@@ -46,6 +46,8 @@
         </form>
       </div>
     </div>
+
+    <!-- ===== BELOW CONTENT UNCHANGED ===== -->
 
     <div *ngIf="gridData.length > 0" class="mt-4">
 

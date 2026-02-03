@@ -24,21 +24,21 @@
           <ng-container *ngIf="!BRStatmentForm.get('chequeInfo')?.value">
             <div class="col-md-2">
               <label>As on Date</label>
-              <input type="text" class="form-control form-control-sm" bsDatepicker formControlName="onDate"
-                [bsConfig]="dpConfig" readonly>
+              <input type="text" class="form-control form-control-sm" bsDatepicker
+                     formControlName="onDate" [bsConfig]="dpConfig" readonly>
             </div>
           </ng-container>
 
           <ng-container *ngIf="BRStatmentForm.get('chequeInfo')?.value">
             <div class="col-md-2">
               <label>From Date</label>
-              <input type="text" class="form-control form-control-sm" bsDatepicker formControlName="fromDate"
-                [bsConfig]="dpConfig" readonly>
+              <input type="text" class="form-control form-control-sm" bsDatepicker
+                     formControlName="fromDate" [bsConfig]="dpConfig" readonly>
             </div>
             <div class="col-md-2">
               <label>To Date</label>
-              <input type="text" class="form-control form-control-sm" bsDatepicker formControlName="toDate"
-                [bsConfig]="dpConfig" readonly>
+              <input type="text" class="form-control form-control-sm" bsDatepicker
+                     formControlName="toDate" [bsConfig]="dpConfig" readonly>
             </div>
           </ng-container>
 
