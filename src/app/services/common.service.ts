@@ -17,10 +17,32 @@ import { saveAs } from 'file-saver';
   providedIn: 'root',
 })
 export class CommonService {
+  
 
-  showSuccessMsg(arg0: string) {
-    throw new Error('Method not implemented.');
+  showSuccessMsg(message: string) {
+    this.toastr.warning(message);
   }
+  showErrorMessage(error: any) {
+  console.warn('API disabled (mock mode):', error?.message || error);
+}
+
+  _downloadchequesReportsPdf(
+  reportname: string,
+  rows: any[],
+  headers: string[],
+  colWidthHeight: any,
+  orientation: string,
+  from: string,
+  to: string,
+  type: string,
+  printorpdf: string,
+  total: any
+) {
+  console.log("PDF Download Triggered", {
+    reportname, rows, headers, orientation, total
+  });
+}
+
   exportAsExcelFile(json: any[], excelFileName: string): void {
     import("xlsx").then(xlsx => {
       const worksheet = xlsx.utils.json_to_sheet(json);
@@ -37,8 +59,8 @@ export class CommonService {
       FileSaver.saveAs(data, fileName + '.xlsx');
     });
   }
-  showWarningMessage(arg0: string) {
-    throw new Error('Method not implemented.');
+  showWarningMessage(message: string) {
+    this.toastr.warning(message);
   }
   convertAmountToPdfFormat(arg0: any): any {
     throw new Error('Method not implemented.');
@@ -302,10 +324,10 @@ export class CommonService {
     return raw ? JSON.parse(raw) : null;
   }
 
-  showErrorMessage(errormsg: string) {
+  // showErrorMessage(errormsg: string) {
 
-    this.toastr.error(errormsg, "Error!", { timeOut: this.messageShowTimeOut });
-  }
+  //   this.toastr.error(errormsg, "Error!", { timeOut: this.messageShowTimeOut });
+  // }
 
   pdfProperties(propertyType: string): string | number {
     switch (propertyType) {
@@ -730,6 +752,32 @@ export class CommonService {
       this.setiFrameForPrint(doc);
     }
   }
+  getDateObjectFromDataBase(date: any): Date | null {
+  if (!date) return null;
+
+  try {
+    // If already a Date object
+    if (date instanceof Date) {
+      return date;
+    }
+
+    // If string like "2024-01-31T00:00:00"
+    if (typeof date === 'string') {
+      return new Date(date);
+    }
+
+    // If numeric timestamp
+    if (typeof date === 'number') {
+      return new Date(date);
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Invalid date received from DB:', date);
+    return null;
+  }
+}
+
 
 }
 
