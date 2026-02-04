@@ -25,7 +25,7 @@
                                         formControlName="pjvdate" [bsConfig]="ppaymentdateConfig" #dp="bsDatepicker"
                                         bsDatepicker [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }"> -->
                                     <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
-                                        formControlName="pjvdate" placeholder="" [disabled]="true"
+                                        formControlName="pjvdate" placeholder="" 
                                         [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
 
                                 </fieldset>
@@ -628,7 +628,7 @@
                 <div class="col-md-12 col-xl-12">
                     <div class="d-flex justify-content-end">
                         <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
-                        <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()"
+                        <a class="btn btn-primary mr-4 px-3 border-0" (click)="clearPaymentVoucher()"
                             appButtonDoubleClick>
                             <!-- <img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
                     appButtonDoubleClick> -->
@@ -640,11 +640,11 @@
                     {{savebutton}}
                 </button> -->
 
-                        <button (click)="saveJournalVoucher()" class="btn btn-secondary px-3 border-0"
+                        <button (click)="saveJournalVoucher()" class="btn btn-navy px-3 border-0"
                             [disabled]="disablesavebutton">
                             <!-- <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
                     *ngIf="!disablesavebutton"> -->
-                            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
+                             {{savebutton}}
                         </button>
 
                         <!--<a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false" appButtonDoubleClick [debounceTime]="500" (debounceClick)="saveJournalVoucher()"><img src="assets/images/icon-check-white.svg" width="20px" height="20px" class="mr-3">Save</a>-->

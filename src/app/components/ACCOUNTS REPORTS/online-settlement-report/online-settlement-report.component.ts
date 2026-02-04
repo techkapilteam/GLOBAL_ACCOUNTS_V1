@@ -55,7 +55,7 @@ onlineSettlementRows: any[] = [];
       receiptDate: '14/01/2026',
       depositedDate: '15/01/2026',
       receiptId: 'R003',
-      upiName: 'GooglePay',
+      upiName: 'Google Pay',
       party: 'Anita'
     },
     {
@@ -97,7 +97,7 @@ onlineSettlementRows: any[] = [];
       receiptDate: '17/01/2026',
       depositedDate: '18/01/2026',
       receiptId: 'R006',
-      upiName: 'GooglePay',
+      upiName: 'Google Pay',
       party: 'Vikram'
     }
   ];

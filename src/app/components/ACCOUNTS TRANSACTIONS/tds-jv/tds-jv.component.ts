@@ -735,6 +735,20 @@ export class TdsJvComponent implements OnInit {
     });
   }
 
+ 
+
+  pdfOrprint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
+    }
+  }
+
+  exportExcel() {
+    alert('Excel export not implemented in demo mode');
+  }
+
   calculateTotals(): void {
     this.totaldebitamount = this.tdsJvDetailsGrid.reduce(
       (sum, r) => sum + r.debit_amount, 0

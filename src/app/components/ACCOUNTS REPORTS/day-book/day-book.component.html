@@ -10,43 +10,32 @@
         <div class="row">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="asdate" type="checkbox"
-                     formControlName="date"
-                     (change)="checkox($event)">
+              <input class="form-check-input" id="asdate" type="checkbox" formControlName="date"
+                (change)="checkox($event)">
               <label for="asdate"> Date :</label>
             </div>
           </div>
 
           <div class="col-xl-2 col-md-2 form-group">
             <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
-            <input type="text"
-                   class="form-control"
-                   formControlName="dfromdate"
-                   bsDatepicker
-                   [bsConfig]="dpConfig">
+            <input type="text" class="form-control" formControlName="dfromdate" bsDatepicker [bsConfig]="dpConfig"
+              onkeydown="return false">
           </div>
 
           <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
             <label>To Date</label>
-            <input type="text"
-                   class="form-control"
-                   formControlName="dtodate"
-                   bsDatepicker
-                   [bsConfig]="dpConfig">
+            <input type="text" class="form-control" formControlName="dtodate" bsDatepicker [bsConfig]="dpConfig"
+              onkeydown="return false">
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button"
-                    class="btn btn-primary px-3 border-0"
-                    (click)="getdaybookdata()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
               Generate Report
             </button>
           </div>
 
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button"
-                    class="btn btn-primary px-3 border-0"
-                    (click)="GetChequeonHandDetails()">
+            <button type="button" class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">
               Cheques On Hand
             </button>
           </div>
@@ -55,8 +44,7 @@
         <div class="row mt-2">
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="kgms" type="checkbox" #kgmsChk
-                     (change)="toggleKgmsGenerate($event)">
+              <input class="form-check-input" id="kgms" type="checkbox" #kgmsChk (change)="toggleKgmsGenerate($event)">
               <label for="kgms"> Kgms :</label>
             </div>
           </div>
@@ -72,11 +60,10 @@
               </select>
             </div>
           </div>
-          
+
           <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
             <button type="button" class="btn btn-primary px-3 border-0"
-                    [disabled]="!isKgmsChecked || !Daybook.value.branch"
-                    (click)="getsummaryReport()">
+              [disabled]="!isKgmsChecked || !Daybook.value.branch" (click)="getsummaryReport()">
               Generate Report
             </button>
           </div>
@@ -86,11 +73,10 @@
         <div class="d-flex justify-content-end mb-2">
           <button class="btn btn-outline-danger me-2"
                   (click)="pdfOrprint('Pdf')">
-            <i class="fa fa-file-pdf me-1"></i> PDF  
+            <i class="fa fa-file-pdf me-1"></i> PDF
           </button>
 
-          <button class="btn btn-outline-secondary"
-                  (click)="pdfOrprint('Print')">
+          <button class="btn btn-outline-secondary" (click)="pdfOrprint('Print')">
             <i class="fa fa-print me-1"></i> Print
           </button>
         </div>
@@ -114,11 +100,8 @@
           </p>
         </div>
 
-        <ngx-datatable class="bootstrap"
-                       [rows]="transactions"
-                       [headerHeight]="40"
-                       [rowHeight]="40"
-                       [columnMode]="'force'">
+        <ngx-datatable class="bootstrap" [rows]="transactions" [headerHeight]="40" [rowHeight]="40"
+          [columnMode]="'force'">
 
           <ngx-datatable-column name="Transaction No" sortable="false" prop="rTxn"></ngx-datatable-column>
           <ngx-datatable-column name="Particulars" sortable="false" prop="rPart"></ngx-datatable-column>
@@ -136,11 +119,8 @@
 
         </ngx-datatable>
 
-        <ngx-datatable class="bootstrap mt-4"
-                       [rows]="bankSummary"
-                       [headerHeight]="40"
-                       [rowHeight]="40"
-                       [columnMode]="'force'">
+        <ngx-datatable class="bootstrap mt-4" [rows]="bankSummary" [headerHeight]="40" [rowHeight]="40"
+          [columnMode]="'force'">
 
           <ngx-datatable-column name="Bank Name" sortable="false" prop="bank"></ngx-datatable-column>
           <ngx-datatable-column name="Opening Balance" sortable="false" prop="opening"></ngx-datatable-column>
