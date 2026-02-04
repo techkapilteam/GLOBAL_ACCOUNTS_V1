@@ -49,62 +49,6 @@
                        readonly onkeydown="return false">
               </div>
 
-<<<<<<< HEAD
-          <!-- Ledger -->
-          <div class="col-xl-3 col-md-3 form-group">
-            <label>Ledger</label>
-            <ng-select [items]="ledgeraccountslist" bindLabel="pledgername" bindValue="pledgerid"
-              placeholder="Select Ledger" formControlName="pledgerid" (change)="ledgerName_Change($event)">
-            </ng-select>
-
-            <div class="text-danger">{{ LedgerValidationErrors?.pledgerid }}</div>
-          </div>
-
-          <div class="col-xl-3 col-md-3 form-group">
-            <label>Sub Ledger</label>
-            <ng-select [items]="subledgeraccountslist" bindLabel="psubledgername" bindValue="psubledgerid"
-              placeholder="Select Sub Ledger" formControlName="psubledgerid" (change)="subledgerName_Change($event)"
-              [disabled]="!AccountLedger.controls['pledgerid'].value">
-            </ng-select>
-
-            <!-- Show error only when Sub Ledger is touched AND Ledger is not selected -->
-            <div class="text-danger"
-              *ngIf="AccountLedger.controls['psubledgerid'].touched && !AccountLedger.controls['pledgerid'].value">
-              Please select Ledger first
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-md-3 form-group">
-
-            <div class="form-group">
-              <label class="required-field">From Date</label>
-              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="fromDate"
-                placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false"onkeydown="return false">
-            </div>
-
-
-
-
-            <!-- <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" 
-              name="fromDate"
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false"> -->
-            <!-- <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" onkeydown="return false"> -->
-            <!-- <span class="input-group-text" (click)="fromDp.toggle()"> -->
-            <!-- <i class="fa-solid fa-calendar-days"></i> -->
-            <!-- </span> -->
-          </div>
-
-
-          <div class="col-xl-3 col-md-3 form-group">
-            
-            <div class="form-group">
-              <label class="required-field">To Date</label>
-              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="toDate"
-                placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false"onkeydown="return false">
-=======
             
               <div class="col-md-3">
                 <label >To Date</label>
@@ -132,7 +76,6 @@
                 <button type="button" class="btn btn-primary btn-sm" (click)="generateReport()">Generate Report</button>
               </div>
 
->>>>>>> b79f3cb0879dba3d64673e682782cabeb642182d
             </div>
           </div>
         </form>

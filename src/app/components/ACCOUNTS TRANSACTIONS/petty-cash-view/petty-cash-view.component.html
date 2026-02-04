@@ -31,13 +31,13 @@
         [limit]="pageCriteria.pageSize"
       >
 
-        <ngx-datatable-column name="Actions" [cellClass]="'cell-center'" [headerClass]="'header-center'">
+        <ngx-datatable-column name="Actions"sortable= "false" [cellClass]="'cell-center'" [headerClass]="'header-center'">
           <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
             <button class="btn btn-sm btn-primary" (click)="viewRow()">View</button>
           </ng-template>
         </ngx-datatable-column>
 
-        <ngx-datatable-column name="Receipt Date" prop="preceiptdate" [cellClass]="'cell-left'" [headerClass]="'header-left'">
+        <ngx-datatable-column name="Receipt Date" sortable= "false" prop="preceiptdate" [cellClass]="'cell-left'" [headerClass]="'header-left'">
           <ng-template ngx-datatable-cell-template let-row="row">
             <span title="{{row.preceiptdate}}">{{row.preceiptdate}}</span>
           </ng-template>
