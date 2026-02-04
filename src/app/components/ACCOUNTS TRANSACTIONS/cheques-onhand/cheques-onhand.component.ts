@@ -18,7 +18,7 @@ export class ChequesOnhandComponent {
   activeTab: string = 'ALL';
   showCheckbox: boolean = true;
 
- 
+
   selectedDate: Date = new Date();
   brsDate: Date = new Date();
   brsFromDate: Date = new Date();
