@@ -7,4 +7,7 @@ export class PageCriteria {
   footerPageHeight = 50;
   pageNumber!: number;
   currentPageRows!: number;
+  headerHeight?: number;
+rowHeight?: number | string;
+
 }

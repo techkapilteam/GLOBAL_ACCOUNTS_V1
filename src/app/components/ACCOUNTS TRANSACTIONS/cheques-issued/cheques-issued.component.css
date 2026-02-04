@@ -1,0 +1,52 @@
+.custom-tabs {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 15px;
+  gap: 10px;
+}
+
+.tab-btn {
+  border: 1px solid #d6e0f0;
+  background: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: #f2f6ff;
+}
+
+.active-tab {
+  background: #0d6efd;
+  color: #fff !important;
+  border-color: #0d6efd;
+}
+
+.count {
+  background: #ffc107;
+  color: #000;
+  border-radius: 12px;
+  padding: 2px 7px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.count.blue { background: #0d6efd; color: #fff; }
+.count.green { background: #28a745; color: #fff; }
+.count.red { background: #dc3545; color: #fff; }
+
+.tab-btn.outline {
+  background: transparent;
+  border: 1px dashed #0d6efd;
+  color: #0d6efd;
+}
+::ng-deep .ngx-datatable .datatable-body-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
