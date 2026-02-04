@@ -17,10 +17,11 @@ import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker
   providers: [DatePipe]
 })
 export class BankBookComponent implements OnInit {
+
   private datePipe = inject(DatePipe);
 
-  bankName: string = '';
-  showTable: boolean = false;
+  bankName = '';
+  showTable = false;
 
   fromDate!: Date;
   toDate!: Date;
@@ -34,7 +35,7 @@ export class BankBookComponent implements OnInit {
     { txnNo: 'TXN004', particulars: new Date('2026-01-04'), narration: 'CR004', receipts: 0, payments: 1000, balance: 5500 }
   ];
 
-  ngOnInit() {
+  ngOnInit(): void {
     const today = new Date();
     this.fromDate = today;
     this.toDate = today;
@@ -42,7 +43,8 @@ export class BankBookComponent implements OnInit {
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
       containerClass: 'theme-dark-blue',
-      showWeekNumbers: false
+      showWeekNumbers: false,
+      maxDate: new Date()
     };
   }
 
@@ -54,16 +56,16 @@ export class BankBookComponent implements OnInit {
     this.showTable = true;
   }
 
-  exportPDF() {
-    console.log('Export PDF clicked');
-  }
-
-  printReport() {
-    window.print();
+  pdfOrprint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
+    }
   }
 
   exportExcel() {
-    console.log('Export Excel clicked');
+    alert('Excel export not implemented in demo mode');
   }
 
   formatDate(date: Date | string | null): string {

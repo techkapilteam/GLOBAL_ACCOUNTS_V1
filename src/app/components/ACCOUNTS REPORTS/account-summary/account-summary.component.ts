@@ -35,7 +35,7 @@ export class AccountSummaryComponent {
 
   dpConfig: Partial<BsDatepickerConfig> = {};
 
-  constructor(private fb: FormBuilder, private datePipe: DatePipe) {}
+  constructor(private fb: FormBuilder, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     const today = new Date();

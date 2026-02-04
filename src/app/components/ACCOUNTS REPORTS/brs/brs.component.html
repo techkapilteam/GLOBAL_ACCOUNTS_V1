@@ -25,7 +25,7 @@
             <div class="col-md-2">
               <label>As on Date</label>
               <input type="text" class="form-control form-control-sm" bsDatepicker
-                     formControlName="onDate" [bsConfig]="dpConfig" readonly>
+                     formControlName="onDate" [bsConfig]="dpConfig"  readonly onkeydown="return false">
             </div>
           </ng-container>
 
@@ -33,17 +33,18 @@
             <div class="col-md-2">
               <label>From Date</label>
               <input type="text" class="form-control form-control-sm" bsDatepicker
-                     formControlName="fromDate" [bsConfig]="dpConfig" readonly>
+                     formControlName="fromDate" [bsConfig]="dpConfig" readonly   onkeydown="return false">
             </div>
             <div class="col-md-2">
               <label>To Date</label>
               <input type="text" class="form-control form-control-sm" bsDatepicker
-                     formControlName="toDate" [bsConfig]="dpConfig" readonly>
+                     formControlName="toDate" [bsConfig]="dpConfig" readonly   onkeydown="return false">
             </div>
           </ng-container>
 
           <div class="col-auto me-3">
-            <button type="button" class="btn btn-primary btn-sm" (click)="getBRStatmentReports()">Generate Report</button>
+            <button type="button" class="btn btn-primary btn-sm" (click)="getBRStatmentReports()">Generate
+              Report</button>
           </div>
         </div>
       </form>
@@ -74,14 +75,8 @@
         </div>
 
         <div class="border shadow-sm bg-white p-3" style="overflow:hidden; height:auto !important;">
-          <ngx-datatable #myTable class="material expandable"
-                         [rows]="gridView"
-                         [headerHeight]="45"
-                         [rowHeight]="45"
-                         [groupRowsBy]="'pGroupType'"
-                         [groupExpansionDefault]="true"
-                         [columnMode]="'force'"
-                         [scrollbarH]="true">
+          <ngx-datatable #myTable class="material expandable" [rows]="gridView" [headerHeight]="45" [rowHeight]="45"
+            [groupRowsBy]="'pGroupType'" [groupExpansionDefault]="true" [columnMode]="'force'" [scrollbarH]="true">
 
             <ngx-datatable-group-header>
               <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
@@ -94,7 +89,8 @@
             <ngx-datatable-row-detail [rowHeight]="60">
               <ng-template let-row="row" ngx-datatable-row-detail-template>
                 <div class="text-end pe-3">
-                  <strong>Total :5000</strong> {{ currencysymbol }} {{ getGroupTotal(row.value[0].pGroupType) | number:'1.2-2' }}
+                  <strong>Total :5000</strong> {{ currencysymbol }} {{ getGroupTotal(row.value[0].pGroupType) |
+                  number:'1.2-2' }}
                 </div>
               </ng-template>
             </ngx-datatable-row-detail>
@@ -118,7 +114,7 @@
             </ngx-datatable-column>
 
           </ngx-datatable>
-        </div>      
+        </div>
         <div class="temp-box-inner border rounded shadow-sm bg-white p-3 mt-4">
           <p><b>Balance as per bank book :</b> ₹ 1,50,000.00</p>
           <p><b>Less: Cheques deposited but not credited :</b> ₹ 25,000.00</p>
@@ -148,7 +144,7 @@
             </div>
           </div>
         </div>
-        </div>
+      </div>
     </div>
   </div>
 </div>

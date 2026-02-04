@@ -221,6 +221,7 @@ export class JournalVoucherComponent {
     this.paymentVoucherForm = this._FormBuilder.group({
       ppaymentid: [''],
       pjvdate: [this.today, Validators.required],
+      //  pjvdate: [{ value: null, disabled: true }],
       ptotalpaidamount: [''],
       pnarration: ['', Validators.required],
       pmodofpayment: ['CASH'],

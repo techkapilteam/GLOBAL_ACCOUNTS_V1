@@ -8,8 +8,8 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-cheque-enquiry',
-  standalone:true,
-  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule, NgxDatatableModule, ReactiveFormsModule],
   templateUrl: './cheque-enquiry.component.html',
   styleUrl: './cheque-enquiry.component.css',
 })
@@ -32,7 +32,7 @@ export class ChequeEnquiryComponent implements OnInit {
   currencySymbol = this.commonService.currencysymbol;
 
   ChequesIssuedForm: FormGroup = this.fb.group({
-    pchequestype: ['Issued'], 
+    pchequestype: ['Issued'],
     chequeNumber: [''],
     bankname: [''],
     fromDate: [null],
@@ -169,7 +169,7 @@ export class ChequeEnquiryComponent implements OnInit {
   pdfOrprint(type: string) {
     alert(type + ' option clicked (dummy)');
   }
-  
+
   Clear() {
     this.ChequesIssuedForm.reset({ pchequestype: 'Issued' });
     this.selectChequesType('Issued');

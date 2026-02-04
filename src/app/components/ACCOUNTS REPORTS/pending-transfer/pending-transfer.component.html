@@ -75,11 +75,16 @@
         </div>
 
         <div class="col-md-2 text-end" *ngIf="showicons">
-          <ul class="d-flex justify-content-end list-unstyled mb-0 gap-3">
-            <li><img src="public/images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')" /></li>
-            <li><img src="public/images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')" /></li>
-            <li><img src="public/images/icon-excel.svg" width="18" (click)="export()" /></li>
-          </ul>
+          <button class="btn btn-outline-danger btn-sm" (click)="pdfOrprint('pdf')">
+              <i class="fa fa-file-pdf me-1"></i> PDF
+            </button>
+            
+            <button class="btn btn-outline-success btn-sm" (click)="export()">
+              <i class="fa fa-file-excel me-1"></i> Excel
+            </button>
+            <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('print')">
+              <i class="fa fa-print me-1"></i> Print
+            </button>
         </div>
       </div>
 

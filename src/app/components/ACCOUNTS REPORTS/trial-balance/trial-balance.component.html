@@ -10,11 +10,8 @@
 
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check form-check-inline">
-              <input class="form-check-input"
-                     id="asdate"
-                     type="checkbox"
-                     [checked]="showhideason"
-                     (change)="checkboxChecked($event)">
+              <input class="form-check-input" id="asdate" type="checkbox" [checked]="showhideason"
+                (change)="checkboxChecked($event)">
               <label class="mt-2" for="asdate">As On</label>
             </div>
           </div>
@@ -26,7 +23,7 @@
                    bsDatepicker
                    formControlName="fromdate"
                    [bsConfig]="dpConfig"
-                   readonly>
+                  readonly onkeydown="return false">
           </div>
 
           <div class="col-xl-2 col-md-2" *ngIf="!showhideason">
@@ -36,24 +33,19 @@
                    bsDatepicker
                    formControlName="todate"
                    [bsConfig]="dpConfig"
-                   readonly>
+                   readonly onkeydown="return false">
           </div>
 
           <div class="col-xl-2 col-md-2 mt-4">
             <div class="form-check">
-              <input class="form-check-input"
-                     id="grouping"
-                     type="checkbox"
-                     [checked]="withGroupingFlag"
-                     (change)="withGrouping($event)">
+              <input class="form-check-input" id="grouping" type="checkbox" [checked]="withGroupingFlag"
+                (change)="withGrouping($event)">
               <label class="mt-2" for="grouping">With Grouping</label>
             </div>
           </div>
 
           <div class="col-xl-4 col-md-1 form-group mt-2 pt-3">
-            <button type="button"
-                    class="btn btn-primary btn-lg w-80"
-                    (click)="GenerateReport()">
+            <button type="button" class="btn btn-primary btn-lg w-80" (click)="GenerateReport()">
               {{ savebutton }}
             </button>
           </div>
@@ -62,12 +54,12 @@
       </div>
     </div>
 
-   
+
     <div *ngIf="dataisempty && !showhidetable" class="text-center mt-4">
       <strong>No Records to Display</strong>
     </div>
 
-    
+
     <div *ngIf="showhidetable" class="mt-4 border rounded shadow-sm bg-white p-3">
 
       <div class="text-center">
@@ -84,14 +76,11 @@
         <strong>As On : {{ formatDate(fromdate) }}</strong>
       </div>
 
-      <ngx-datatable class="material"
-                     [rows]="Trialbalancelst"
-                     [headerHeight]="50"
-                     [rowHeight]="50">
+      <ngx-datatable class="material" [rows]="Trialbalancelst" [headerHeight]="50" [rowHeight]="50">
 
         <ngx-datatable-column name="Type" sortable="false" prop="pparentname"></ngx-datatable-column>
 
-        <ngx-datatable-column name="Particulars" sortable="false"  prop="paccountname"></ngx-datatable-column>
+        <ngx-datatable-column name="Particulars" sortable="false" prop="paccountname"></ngx-datatable-column>
 
         <ngx-datatable-column name="Debit" sortable="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
