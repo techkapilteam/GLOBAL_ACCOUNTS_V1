@@ -41,7 +41,7 @@
               <label class="required-field">From Date</label>
               <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="fromDate"
                 placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false">
+                [disabled]="false"onkeydown="return false">
             </div>
 
 
@@ -64,7 +64,7 @@
               <label class="required-field">To Date</label>
               <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="toDate"
                 placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false">
+                [disabled]="false"onkeydown="return false">
             </div>
           </div>
 
