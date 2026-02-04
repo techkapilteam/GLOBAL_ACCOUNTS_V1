@@ -53,22 +53,22 @@
                             <input type="search" class="form-control" placeholder="Search for cheque number">
                         </div>
 
-                        <div class="col-md-3 text-end">
-                            <span class="mx-3 cursor-pointer">
-                                <img src="assets/pdf.svg" width="18" class="me-1">
-                                <small>PDF</small>
-                            </span>
+                        <div class="col-md-3 text-end d-flex justify-content-end align-items-center gap-2">
 
-                            <span class="mx-3 cursor-pointer">
-                                <img src="assets/print.svg" width="18" class="me-1">
-                                <small>Print</small>
-                            </span>
+                            <button class="btn btn-outline-danger btn-sm" (click)="pdfOrprint('Pdf')">
+                                <i class="fa fa-file-pdf me-1"></i> PDF
+                            </button>
 
-                            <span class="mx-1 cursor-pointer">
-                                <img src="assets/excel.svg" width="18" class="me-1">
-                                <small>Excel</small>
-                            </span>
+                            <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('Print')">
+                                <i class="fa fa-print me-1"></i> Print
+                            </button>
+
+                            <button class="btn btn-outline-success btn-sm" (click)="exportExcel()">
+                                <i class="fa fa-file-excel me-1"></i> Excel
+                            </button>
+
                         </div>
+
                     </div>
                 </div>
             </form>
@@ -185,7 +185,7 @@
 
                     </ngx-datatable>
 
-                  
+
                     <div class="section-content mt-4">
                         <div class="d-flex justify-content-end gap-3">
                             <button type="button" class="btn btn-secondary">Clear</button>

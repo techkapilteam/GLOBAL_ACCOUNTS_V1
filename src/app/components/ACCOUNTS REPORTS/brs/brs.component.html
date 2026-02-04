@@ -52,12 +52,20 @@
 
     <div *ngIf="gridView.length" class="mt-4 bg-white border rounded p-3">
 
-      <div class="row mb-5">
-        <div class="col-12 text-end">
-          <img class="pt-2" src="assets/images/pdf-icon-blue.svg" title="PDF" width="20px">
-          <img class="pt-2" src="assets/images/icon-excel.svg" title="print" width="20px">
-        </div>
-      </div>
+    <div class="card-body">
+
+            
+            <div class="d-flex justify-content-end mb-2">
+              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+                <i class="fa fa-file-pdf me-1"></i> PDF
+              </button>
+
+              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+                <i class="fa fa-print me-1"></i> Print
+              </button>
+
+              
+            </div>
 
       <div class="mt-2 border rounded shadow-sm bg-white">
         <div class="temp-head float-md-center pt-3">

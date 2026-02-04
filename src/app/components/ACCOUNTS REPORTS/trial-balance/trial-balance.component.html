@@ -47,18 +47,36 @@
     </div>
 
 
-    <div *ngIf="dataisempty && !showhidetable" class="text-center mt-4">
+    <div *ngIf="dataisempty && !showhidetable" class="text-start">
       <p>No Records to Display</p>
     </div>
 
 
     <div *ngIf="showhidetable" class="mt-4 border rounded shadow-sm bg-white p-3">
 
+       <div class="card-body">
+
+            
+            <div class="d-flex justify-content-end mb-2">
+              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+                <i class="fa fa-file-pdf me-1"></i> PDF
+              </button>
+
+              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+                <i class="fa fa-print me-1"></i> Print
+              </button>
+
+              <button class="btn btn-outline-success" (click)="exportExcel()">
+                <i class="fa fa-file-excel me-1"></i> Excel
+              </button>
+            </div>
+<div *ngIf="showhidetable" class="mt-4 border rounded shadow-sm bg-white p-3">
       <div class="text-center">
         <h2 class="m-0 font-weight-bold">KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
         <p class="m-0">Above TVS Showroom, 1st Floor, Kamareddy</p>
         <p>CIN : U65992TG2008PTC060803</p>
       </div>
+      
 
       <p class="text-end fw-bold">Branch : Ca-hyderabad-co</p>
 
@@ -94,4 +112,5 @@
 
     </div>
   </div>
+</div>
 </div>

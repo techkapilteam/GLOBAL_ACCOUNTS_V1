@@ -123,4 +123,16 @@ export class ChequesOnhandComponent {
     if (!date) return '';
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
   }
+
+  pdfOrprint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
+    }
+  }
+
+  exportExcel() {
+    alert('Excel export not implemented in demo mode');
+  }
 }

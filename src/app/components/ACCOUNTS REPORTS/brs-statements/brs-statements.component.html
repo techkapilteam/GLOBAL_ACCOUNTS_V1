@@ -59,17 +59,17 @@
 
         <div class="d-flex justify-content-end align-items-center gap-3 mb-3" *ngIf="bankType">
 
-            <button type="button" class="btn btn-link p-0" title="PDF" (click)="pdfOrprint('Pdf')">
-                <img src="assets/images/pdf-icon-blue.svg" width="18" alt="PDF">
-            </button>
+           <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+                <i class="fa fa-file-pdf me-1"></i> PDF
+              </button>
 
-            <button type="button" class="btn btn-link p-0" title="Print" (click)="pdfOrprint('Print')">
-                <img src="assets/images/print-icon-blue.svg" width="18" alt="Print">
-            </button>
+           <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+                <i class="fa fa-print me-1"></i> Print
+              </button>
 
-            <button type="button" class="btn btn-link p-0" title="Excel" (click)="export()">
-                <img src="assets/images/icon-excel.svg" width="18" alt="Excel">
-            </button>
+            <button class="btn btn-outline-success" (click)="exportExcel()">
+                <i class="fa fa-file-excel me-1"></i> Excel
+              </button>
 
         </div>
 
