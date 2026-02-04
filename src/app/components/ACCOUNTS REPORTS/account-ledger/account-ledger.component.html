@@ -1,16 +1,55 @@
 <div class="screen-container">
   <div class="screen-card">
 
-    <div class="screen-header">
+   
+    <div class="screen-header d-flex justify-content-between align-items-center">
       <h2>Account Ledger</h2>
     </div>
 
     <div class="screen-content">
+      <div class="container-fluid my-3">
 
-      <form [formGroup]="AccountLedger">
+       
+        <form>
+          <div class="card shadow-sm p-3 mb-4">
+            <div class="row g-3 align-items-end">
+             
+              <div class="col-md-3">
+                <label >Ledger</label>
+                <ng-select
+                  [items]="ledgeraccountslist"
+                  bindLabel="pledgername"
+                  bindValue="pledgerid"
+                  [(ngModel)]="selectedLedger"
+                  name="ledger"
+                  (change)="ledgerName_Change($event)">
+                </ng-select>
+              </div>             
+              <div class="col-md-3">
+                <label >Sub Ledger</label>
+                <ng-select
+                  [items]="filteredSubLedgers"
+                  bindLabel="psubledgername"
+                  bindValue="psubledgerid"
+                  [(ngModel)]="selectedsubledger"
+                  name="subledger"
+                  (change)="subledgerName_Change($event)"
+                  [disabled]="!selectedLedger">
+                </ng-select>
+              </div>
 
-        <div class="row">
+             
+              <div class="col-md-3">
+                <label >From Date</label>
+                <input class="form-control"
+                       bsDatepicker
+                       [(ngModel)]="fromDate"
+                       name="fromDate" 
+                       [bsConfig]="dpConfig"
+                       readonly onkeydown="return false">
+              </div>
 
+<<<<<<< HEAD
           <!-- Ledger -->
           <div class="col-xl-3 col-md-3 form-group">
             <label>Ledger</label>
@@ -41,7 +80,7 @@
               <label class="required-field">From Date</label>
               <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="fromDate"
                 placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false">
+                [disabled]="false"onkeydown="return false">
             </div>
 
 
@@ -64,78 +103,97 @@
               <label class="required-field">To Date</label>
               <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="toDate"
                 placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false">
+                [disabled]="false"onkeydown="return false">
+=======
+            
+              <div class="col-md-3">
+                <label >To Date</label>
+                <input class="form-control"
+                       bsDatepicker
+                       [(ngModel)]="toDate"
+                       name="toDate"
+                       [bsConfig]="dpConfig"
+                       readonly onkeydown="return false">
+              </div>
+
+              
+              <div class="col-auto me-3 mt-2">
+                <div class="form-check">
+                  <input class="form-check-input"
+                         type="checkbox"
+                         [(ngModel)]="isNarrationChecked"
+                         name="narration">
+                  <label class="form-check-label">With Narration</label>
+                </div>
+              </div>
+
+              
+              <div class="col-auto me-3 mt-2">
+                <button type="button" class="btn btn-primary btn-sm" (click)="generateReport()">Generate Report</button>
+              </div>
+
+>>>>>>> b79f3cb0879dba3d64673e682782cabeb642182d
             </div>
           </div>
+        </form>
 
-          <!-- <div class="col-md-3">
-  <label class="required-field">To Date</label>
-  <div class="input-group">
-    <input type="text" 
-           class="form-control" 
-           formControlName="toDate" 
-           bsDatepicker 
-           #toDp="bsDatepicker"
-           [bsConfig]="{dateInputFormat: 'DD/MMM/YYYY'}"
-           (bsValueChange)="ToDateChange($event)" 
-           readonly
-           (keydown)="$event.preventDefault()" />
+       
+        <div class="card shadow-sm" *ngIf="showReport">
+          <div class="card-body">
 
-    <span class="input-group-text" (click)="toDp.toggle()">
-      <i class="fa-solid fa-calendar-days"></i>
-    </span>
-  </div>
-</div> -->
-
-
-          <div class="col-xl-3 col-md-3 form-group">
-            <div class="d-inline-flex align-items-center">
-              <input type="checkbox" id="WithNarration" (change)="CheckNarration($event)" />
-              <label for="WithNarration" class="ml-2">With Narration</label>
+           
+            <div class="d-flex justify-content-end mb-2">
+              <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">
+                <i class="fa fa-file-pdf me-1"></i> PDF
+              </button>
+              <button class="btn btn-outline-success me-2" (click)="exportExcel()">
+                <i class="fa fa-file-excel me-1"></i> Excel
+              </button>
+              <button class="btn btn-outline-secondary" (click)="pdfOrPrint('Print')">
+                <i class="fa fa-print me-1"></i> Print
+              </button>
             </div>
+
+           
+            <div class="text-center mb-1 fw-bold fs-5">
+              KAPIL CHITS (HYDERABAD) PVT. LTD.
+            </div>
+            <div class="text-center mb-1">
+              Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy, Telangana - 503111
+            </div>
+            <div class="text-center mb-2 fw-semibold">
+              CIN : U65992TG2008PTC060803
+            </div>
+            <hr>
+
+           
+            <h6 class="text-center fw-bold">
+              Account Ledger - {{ LedgerName }} {{ SubLedgerName ? ' / ' + SubLedgerName : '' }}
+            </h6>
+
+           
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <span class="fw-bold">Between :</span>
+                {{ formatDate(fromDate) }} And {{ formatDate(toDate) }}
+              </div>
+            </div>
+
+            
+            <ngx-datatable
+              class="bootstrap mt-3"
+              [rows]="gridView"
+              [columns]="columns"
+              [headerHeight]="50"
+              [rowHeight]="'auto'"
+              [footerHeight]="50"
+              [limit]="10">
+            </ngx-datatable>
+
           </div>
-
-
-          <div class="col-xl-3 col-md-3 form-group">
-            <button type="button" class="btn btn-primary" (click)="GenerateReport()">
-              {{ savebutton }}
-            </button>
-          </div>
-
         </div>
-      </form>
-
-
-      <div class="section-content mt-2" [hidden]="Showhide">
-
-        <div class="d-flex justify-content-end mr-3 mt-4">
-          <button class="icon-btn" (click)="pdfOrprint('Pdf')" title="PDF">
-            <i class="fa-solid fa-file-pdf"></i>
-          </button>
-
-          <button class="icon-btn" (click)="pdfOrprint('Print')" title="Print">
-            <i class="fa-solid fa-print"></i>
-          </button>
-
-          <button class="icon-btn" (click)="exportExcel()" title="Excel">
-            <i class="fa-solid fa-file-excel"></i>
-          </button>
-        </div>
-
-        <div class="report-header">
-          <h3>Account Ledger - {{ LedgerName }} ({{ SubLedgerName }})</h3>
-          <div>
-            Between : {{ startDatesReport | dateformat }} And {{ endDatesReport | dateformat }}
-          </div>
-        </div>
-
-        <ngx-datatable class="material expandable" [rows]="gridView" [headerHeight]="50" [rowHeight]="50"
-          [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
-          [groupRowsBy]="'ptransactiondate'" [groupExpansionDefault]="true">
-        </ngx-datatable>
 
       </div>
-
     </div>
   </div>
 </div>
