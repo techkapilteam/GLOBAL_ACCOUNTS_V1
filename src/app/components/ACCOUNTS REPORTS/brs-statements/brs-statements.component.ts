@@ -90,4 +90,8 @@ export class BrsStatementsComponent {
   export() {
     console.log('Excel Export');
   }
+
+   exportExcel() {
+    alert('Excel export not implemented in demo mode');
+  }
 }

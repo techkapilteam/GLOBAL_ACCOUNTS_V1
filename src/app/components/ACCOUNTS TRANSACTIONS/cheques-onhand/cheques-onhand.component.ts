@@ -18,7 +18,7 @@ export class ChequesOnhandComponent {
   activeTab: string = 'ALL';
   showCheckbox: boolean = true;
 
- 
+
   selectedDate: Date = new Date();
   brsDate: Date = new Date();
   brsFromDate: Date = new Date();
@@ -122,5 +122,17 @@ export class ChequesOnhandComponent {
   formatDate(date: Date | string | null): string {
     if (!date) return '';
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
+
+  pdfOrprint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
+    }
+  }
+
+  exportExcel() {
+    alert('Excel export not implemented in demo mode');
   }
 }
