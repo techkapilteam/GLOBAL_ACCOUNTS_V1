@@ -97,7 +97,6 @@
             </div>
           </div>
 
-          <!-- TABS -->
           <ul class="custom-tabs d-flex flex-wrap">
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
               <button class="tab-btn" [class.active-tab]="activeTab==='all'" (click)="All(); activeTab='all'">
@@ -161,7 +160,7 @@
               <div class="form-group">
                 <label class="fw-bold">BRS From Date</label>
                 <input class="form-control w-auto" type="text" formControlName="pfrombrsdate" readonly
-                  [bsConfig]="brsfromConfig" bsDatepicker placement="bottom" />
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker placement="bottom" />
               </div>
             </div>
 
@@ -169,7 +168,7 @@
               <div class="form-group">
                 <label class="fw-bold">BRS To Date</label>
                 <input class="form-control w-auto" type="text" formControlName="ptobrsdate" readonly
-                  [bsConfig]="brstoConfig" bsDatepicker placement="bottom" />
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker placement="bottom" />
                 <div *ngIf="validatebrsdateclear" style="color:red">
                   Brs To Date Should Be Greater Than From Date
                 </div>
@@ -186,14 +185,13 @@
           </div>
 
 
-          <!-- RETURNED BRS -->
           <form [formGroup]="BrsReturnForm">
             <div *ngIf="brsdateshowhidereturned" class="row">
               <div class="col-md-6 col-xl-4">
                 <div class="form-group">
                   <label class="fw-bold">BRS From Date</label>
                   <input class="form-control w-auto" type="text" formControlName="frombrsdate" readonly
-                    [bsConfig]="brsfromConfig" bsDatepicker />
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker />
                 </div>
               </div>
 
@@ -201,7 +199,7 @@
                 <div class="form-group">
                   <label class="fw-bold">BRS To Date</label>
                   <input class="form-control w-auto" type="text" formControlName="tobrsdate" readonly
-                    [bsConfig]="brstoConfig" bsDatepicker />
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker />
                   <div *ngIf="validatebrsdatereturn" style="color:red">
                     Brs To Date Should Be Greater Than From Date
                   </div>
@@ -215,14 +213,13 @@
           </form>
 
 
-          <!-- CANCELLED BRS -->
           <form [formGroup]="BrsCancelForm">
             <div *ngIf="brsdateshowhidecancelled" class="row">
               <div class="col-md-6 col-xl-4">
                 <div class="form-group">
                   <label class="fw-bold">BRS From Date</label>
                   <input class="form-control w-auto" type="text" formControlName="frombrsdate" readonly
-                    [bsConfig]="brsfromConfig" bsDatepicker />
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker />
                 </div>
               </div>
 
@@ -230,7 +227,7 @@
                 <div class="form-group">
                   <label class="fw-bold">BRS To Date</label>
                   <input class="form-control w-auto" type="text" formControlName="tobrsdate" readonly
-                    [bsConfig]="brstoConfig" bsDatepicker />
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker />
                   <div *ngIf="validatebrsdatecancel" style="color:red">
                     Brs To Date Should Be Greater Than From Date
                   </div>
@@ -243,8 +240,6 @@
             </div>
           </form>
 
-
-          <!-- MAIN GRID -->
           <div class="tab-content">
             <div class="tab-pane fade show active">
               <div class="row">
@@ -339,7 +334,6 @@
                     </ngx-datatable-column>
 
                   </ngx-datatable>
-                  <!-- ALL CHEQUES GRID -->
                   <ngx-datatable class="material expandable table" [rows]="displayAllChequesDataBasedOnForm"
                     columnMode="force" [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight"
                     [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
@@ -382,8 +376,6 @@
 
                   </ngx-datatable>
 
-
-                  <!-- OTHER CHEQUES GRID -->
                   <ngx-datatable class="material expandable table" [rows]="OtherChequesData" columnMode="force"
                     [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="'auto'"
                     [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset" [scrollbarH]="true"
@@ -428,8 +420,6 @@
               </div>
             </div>
 
-
-            <!-- AUTO BRS SECTION -->
             <div class="tab-pane" id="bankfileupload">
 
               <div class="row">

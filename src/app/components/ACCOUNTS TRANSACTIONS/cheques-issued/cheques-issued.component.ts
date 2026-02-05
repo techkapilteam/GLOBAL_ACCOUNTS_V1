@@ -1394,7 +1394,6 @@ Save() {
     return;
   }
 
-  // 🚫 Business validations (only when not Auto BRS)
   if (this.status !== 'autobrs' && !this.showhidegridcolumns) {
     const duplicates = this.validateDuplicates();
     const emptyValues = this.emptyValuesFound();
@@ -1417,19 +1416,17 @@ Save() {
     }
   }
 
-  // 🛑 Final confirmation
   if (!confirm('Do You Want To Save ?')) return;
 
   this.buttonname = 'Processing';
   this.disablesavebutton = true;
 
-  // 📦 Prepare records for saving
   const recordsToSave = this.gridData
     .filter(row => ['P', 'R', 'C'].includes(row.pchequestatus))
     .map(row => ({
       ...row,
-      pCreatedby: this._commonService.pCreatedby(),
-      pipaddress: this._commonService.ipaddress,
+      pCreatedby: this._commonService.getCreatedBy(),
+      pipaddress: this._commonService.getIpAddress(),
       preferencetext: row.preferencetext + '-' + new Date().getFullYear()
     }));
 
@@ -1440,16 +1437,14 @@ Save() {
     return;
   }
 
-  // 🧾 Attach list to form
   this.ChequesIssuedForm.patchValue({ pchequesOnHandlist: recordsToSave });
 
   const payload = {
     ...this.ChequesIssuedForm.value,
     ptransactiondate: this._commonService.getFormatDateGlobal(this.ChequesIssuedForm.value.ptransactiondate),
-    pCreatedby: this._commonService.pCreatedby()
+    pCreatedby: this._commonService.getCreatedBy()
   };
 
-  // 💾 API Call
   this._accountingtransaction.SaveChequesIssued(JSON.stringify(payload)).subscribe({
     next: () => {
       this._commonService.showSuccessMsg("Saved successfully");
@@ -1771,9 +1766,4 @@ checkDuplicateValueslatest(event: any, rowIndex: number, row: any) {
 
   this.gridData = [...this.gridData];
 }
-
-
-
-
-
 }

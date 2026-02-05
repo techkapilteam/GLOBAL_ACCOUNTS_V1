@@ -180,7 +180,10 @@ export class CommonService {
 
 
   currencysymbol = sessionStorage.getItem("currencyformat");
-  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService) { 
+    this.pCreatedby = 'admin'; // or from auth/user session
+    this.ipaddress = '127.0.0.1';
+  }
 
 
 
@@ -777,7 +780,19 @@ export class CommonService {
     return null;
   }
 }
+getCreatedBy(): string {
+  const userId = sessionStorage.getItem('LoginUserid');
+  return userId ? JSON.parse(userId).toString() : '';
+}
 
+getIpAddress(): string {
+  const ip = sessionStorage.getItem('ipaddress');
+  return ip ?? '';
+}
+showInfoMessage(errormsg: string) {
+
+    this.toastr.success(errormsg, "Success!", { timeOut: this.messageShowTimeOut });
+  }
 
 }
 
