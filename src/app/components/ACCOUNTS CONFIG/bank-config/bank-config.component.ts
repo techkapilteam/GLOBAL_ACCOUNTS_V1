@@ -93,22 +93,10 @@ export class BankConfigComponent implements OnInit {
 
     this.bankmasterform.get('pIsdebitcardapplicable')?.valueChanges.subscribe(val => {
       this.debitcardhideandshow = val;
-      const cardNo = this.bankmasterform.get('pCardNo');
-      const cardName = this.bankmasterform.get('pCardName');
-      if (val) { cardNo?.setValidators([Validators.required]); cardName?.setValidators([Validators.required]); }
-      else { cardNo?.clearValidators(); cardName?.clearValidators(); }
-      cardNo?.updateValueAndValidity();
-      cardName?.updateValueAndValidity();
     });
 
     this.bankmasterform.get('pIsupiapplicable')?.valueChanges.subscribe(val => {
       this.bankupihideandshow = val;
-      const upiId = this.bankmasterform.get('pUpiid');
-      const upiName = this.bankmasterform.get('pUpiname');
-      if (val) { upiId?.setValidators([Validators.required]); upiName?.setValidators([Validators.required]); }
-      else { upiId?.clearValidators(); upiName?.clearValidators(); }
-      upiId?.updateValueAndValidity();
-      upiName?.updateValueAndValidity();
     });
   }
 
@@ -163,7 +151,6 @@ export class BankConfigComponent implements OnInit {
       console.log('Form submitted', this.bankmasterform.value);
       alert('Form submitted successfully!');
     } else {
-      this.markFormGroupTouched(this.bankmasterform);
       alert('Please fill all required fields.');
     }
   }
@@ -177,8 +164,6 @@ export class BankConfigComponent implements OnInit {
       pIsupiapplicable: false
     });
   }
-
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => control.markAsTouched());
-  }
 }
+
+
