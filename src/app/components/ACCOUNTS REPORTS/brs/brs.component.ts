@@ -103,4 +103,13 @@ export class BrsComponent implements OnInit {
 
   get pbankname() { return this.BRStatmentForm.get('pbankname'); }
 
+  pdfOrprint(type: 'Pdf' | 'Print') {
+    if (type === 'Print') {
+      window.print();
+    } else {
+      alert('PDF export not implemented in demo mode');
+    }
+  }
+
+
 }

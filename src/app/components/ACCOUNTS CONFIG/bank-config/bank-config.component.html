@@ -10,16 +10,20 @@
 
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
-              <label class="form-label">Date</label>
-              <label>Date</label>
-              <input type="text" class="form-control" bsDatepicker [(ngModel)]="selectedDate" [bsConfig]="dpConfig"
-                name="selectedDate" [value]="formatDate(selectedDate)" onkeydown="return false">
+              <label class="required-field">Date</label>
+              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="todate"
+                [bsConfig]="dpConfig" bsDatepicker placement="bottom">
+              <small class="text-danger"
+                *ngIf="bankmasterform.get('todate')?.touched && bankmasterform.get('todate')?.invalid">
+                Date is required.
+              </small>
             </div>
           </div>
         </div>
 
         <div class="row">
-          <!-- Account Type -->
+
+          <!-- A/C Type -->
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">A/C Type</label>
@@ -31,7 +35,6 @@
             </div>
           </div>
 
-          <!-- Account Number -->
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Account No.</label>
@@ -39,7 +42,6 @@
             </div>
           </div>
 
-          <!-- Bank Name -->
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Bank</label>
@@ -52,7 +54,6 @@
             </div>
           </div>
 
-          <!-- Account Name -->
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Account Name</label>
@@ -60,7 +61,6 @@
             </div>
           </div>
 
-          <!-- Branch -->
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Branch</label>
@@ -68,17 +68,16 @@
             </div>
           </div>
 
-          <!-- IFSC Code & Overdraft -->
           <div class="col-md-6 col-xl-4">
             <label class="form-label">IFSC Code</label>
             <div class="d-flex gap-2">
-              <input class="form-control" placeholder="IFSC Code" maxlength="12">
-              <input class="form-control text-end" placeholder="Overdraft">
+              <input class="form-control" placeholder="IFSC Code" maxlength="12" formControlName="pIfsccode">
+              <input class="form-control text-end" placeholder="Overdraft" formControlName="pOverdraft">
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
-            <label class="form-label">Overdraft Limit</label>
+            <label class="form-label">Opening Balance</label>
             <div class="input-group">
               <input class="form-control text-end" placeholder="0.00">
               <select class="form-select">
@@ -92,40 +91,50 @@
 
         <hr class="my-4">
 
+       
         <div class="row">
           <div class="col-md-12 mb-2">
-            <label class="form-check-label">Branch Address</label>
+            <label class="form-check-label d-flex align-items-center" style="cursor:pointer; color: #0d6efd;"
+              (click)="toggleBranchAddress()">
+              <span class="me-2">
+                <i [ngClass]="{
+                  'bi-chevron-right': !branchAddressExpanded,
+                  'bi-chevron-down': branchAddressExpanded
+                }"></i>
+              </span>
+              Branch Address
+            </label>
           </div>
 
           <div class="col-md-6 col-xl-4">
             <div class="form-group">
               <label for="address1" title="Address Line 1">Address Line 1</label>
-              <input type="text" id="address1" class="form-control" maxlength="150">
+              <input type="text" id="address1" class="form-control" maxlength="150" formControlName="address1">
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
             <div class="form-group">
               <label for="address2" title="Address Line 2">Address Line 2</label>
-              <input type="text" id="address2" class="form-control" maxlength="150">
+              <input type="text" id="address2" class="form-control" maxlength="150" formControlName="address2">
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
             <div class="form-group">
               <label for="city" title="City / Village">City / Village</label>
-              <input type="text" id="city" class="form-control" maxlength="75">
+              <input type="text" id="city" class="form-control" maxlength="75" formControlName="city">
             </div>
           </div>
-
         </div>
+
         <div class="row mt-2">
           <div class="col-md-6 col-xl-4">
             <div class="form-group">
               <label for="country" title="Country">Country</label>
-              <select id="country" class="form-control">
+              <select id="country" class="form-control" formControlName="country">
                 <option value="">Select</option>
-                <option value="1">India</option>
+                <option *ngFor="let c of countries" [value]="c.name">{{ c.name }}</option>
               </select>
             </div>
           </div>
@@ -136,8 +145,9 @@
               <div class="col-md-6 col-xl-6 pl-0">
                 <div class="form-group">
                   <label for="state" title="State">State</label>
-                  <select id="state" class="form-control">
+                  <select id="state" class="form-control" formControlName="state">
                     <option value="">Select</option>
+                    <option *ngFor="let s of states" [value]="s.name">{{ s.name }}</option>
                   </select>
                 </div>
               </div>
@@ -145,8 +155,9 @@
               <div class="col-md-6 col-xl-6 pr-0">
                 <div class="form-group">
                   <label for="district" title="District">District</label>
-                  <select id="district" class="form-control">
+                  <select id="district" class="form-control" formControlName="district">
                     <option value="">Select</option>
+                    <option *ngFor="let d of districts" [value]="d.name">{{ d.name }}</option>
                   </select>
                 </div>
               </div>
@@ -157,75 +168,84 @@
           <div class="col-md-6 col-xl-4">
             <div class="form-group">
               <label for="pincode" title="Pincode">Pincode</label>
-              <input type="text" id="pincode" class="form-control" maxlength="6">
+              <input type="text" id="pincode" class="form-control" maxlength="6" formControlName="pincode" readonly>
             </div>
           </div>
 
         </div>
 
-        <hr class="light">
-
-        <div class="row">
+        <hr class="light">       
+        <div class="row">          
           <div class="col-md-4">
             <div class="mb-3">
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="debitCardCheck">
+                <input type="checkbox" class="form-check-input" formControlName="pIsdebitcardapplicable"
+                  id="debitCardCheck">
                 <label class="form-check-label" for="debitCardCheck">Add Debit Card</label>
               </div>
 
-              <div class="mt-3">
+              <div class="mt-3" *ngIf="debitcardhideandshow">
                 <div class="mb-3">
-                  <input class="form-control" placeholder="Card No" maxlength="16">
+                  <input class="form-control" placeholder="Card No" maxlength="16" formControlName="pCardNo">
                 </div>
                 <div class="row g-2 mb-3">
                   <div class="col">
-                    <input class="form-control" placeholder="Valid From">
+                    <input class="form-control" placeholder="Valid From" formControlName="pValidfrom">
                   </div>
                   <div class="col">
-                    <input class="form-control" placeholder="Valid Thru">
+                    <input class="form-control" placeholder="Valid Thru" formControlName="pValidto">
                   </div>
                 </div>
                 <div class="mb-3">
-                  <input class="form-control" placeholder="Name on Card">
+                  <input class="form-control" placeholder="Name on Card" formControlName="pCardName">
                 </div>
+              </div>
+
+              <div class="mb-3">
+                <label>Name on Card</label>
+                <input class="form-control" formControlName="pCardName">
               </div>
             </div>
           </div>
-          <div class="col-md-4">
 
+          <div class="col-md-4">
             <div class="mb-3">
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="upiCheck">
+                <input type="checkbox" class="form-check-input" formControlName="pIsupiapplicable" id="upiCheck">
                 <label class="form-check-label" for="upiCheck">Add UPI</label>
               </div>
 
-              <div class="mt-3">
+              <div class="mt-3" *ngIf="bankupihideandshow">
                 <div class="mb-3">
-                  <input class="form-control" placeholder="UPI ID">
+                  <input class="form-control" placeholder="UPI ID" formControlName="pUpiid">
                 </div>
                 <div class="mb-3">
-                  <select class="form-select">
-                    <option value="" disabled selected>Select</option>
-                    <option>UPI 1</option>
-                    <option>UPI 2</option>
+                  <select class="form-select" formControlName="pUpiname">
+                    <option value="" disabled>Select</option>
+                    <option *ngFor="let u of upiname" [value]="u.pUpiname">{{ u.pUpiname }}</option>
                   </select>
                 </div>
               </div>
             </div>
           </div>
+
           <div class="col-md-4">
-            <input type="checkbox" class="form-check-input" id="BankSetup">
+            <input type="checkbox" class="form-check-input" formControlName="isprimary" id="BankSetup">
             <label class="form-check-label" for="BankSetup">Bank Setup</label>
+
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="isprimary">
+              <input type="checkbox" class="form-check-input" formControlName="isformanbank" id="isprimary">
               <label class="form-check-label" for="isprimary">isprimary</label>
             </div>
+
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="isformanbank">
+              <input type="checkbox" class="form-check-input" formControlName="isforemanpaymentbank" id="isformanbank">
               <label class="form-check-label" for="isformanbank">isformanbank</label>
             </div>
+
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="isforemanpaymentbank">
+              <input type="checkbox" class="form-check-input" formControlName="isintrestpaymentbank"
+                id="isforemanpaymentbank">
               <label class="form-check-label" for="isforemanpaymentbank">isforemanpaymentbank</label>
             </div>
             <div class="form-check">
@@ -234,8 +254,9 @@
             </div>
           </div>
         </div>
+
         <div class="d-flex justify-content-end gap-2 mb-4">
-          <button type="reset" class="btn btn-secondary">Clear</button>
+          <button type="button" class="btn btn-secondary" (click)="clear()">Clear</button>
           <button type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
