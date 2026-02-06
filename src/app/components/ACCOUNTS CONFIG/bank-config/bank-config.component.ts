@@ -164,6 +164,7 @@ export class BankConfigComponent implements OnInit {
       pIsupiapplicable: false
     });
   }
+  
 }
 
 
