@@ -5,14 +5,14 @@
     </div>
     <div class="screen-content">
 
-      <form class="section-content" autocomplete="off">
-        <div class="row g-3">
+      <form class="section-content" autocomplete="off" [formGroup]="bankmasterform" (ngSubmit)="save()">
 
+        <div class="row g-3">
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="required-field">Date</label>
               <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="todate"
-                [bsConfig]="dpConfig" bsDatepicker placement="bottom">
+                [bsConfig]="dpConfig" bsDatepicker placement="bottom" readonly>
               <small class="text-danger"
                 *ngIf="bankmasterform.get('todate')?.touched && bankmasterform.get('todate')?.invalid">
                 Date is required.
@@ -22,15 +22,13 @@
         </div>
 
         <div class="row">
-
-          <!-- A/C Type -->
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">A/C Type</label>
-              <select class="form-select">
-                <option value="" disabled selected>Select</option>
-                <option>Saving</option>
-                <option>Current</option>
+              <select class="form-select" formControlName="pAcctountype">
+                <option value="" disabled>Select</option>
+                <option value="Saving">Saving</option>
+                <option value="Current">Current</option>
               </select>
             </div>
           </div>
@@ -38,18 +36,16 @@
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Account No.</label>
-              <input class="form-control" type="text" maxlength="50">
+              <input class="form-control" type="text" maxlength="50" formControlName="pAccountnumber">
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Bank</label>
-              <select class="form-select">
-                <option value="" disabled selected>Select</option>
-                <option>Bank 1</option>
-                <option>Bank 2</option>
-                <option>Bank 3</option>
+              <select class="form-select" formControlName="pBankname">
+                <option value="" disabled>Select</option>
+                <option *ngFor="let bank of banksList" [value]="bank.pBankName">{{ bank.pBankName }}</option>
               </select>
             </div>
           </div>
@@ -57,31 +53,36 @@
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Account Name</label>
-              <input class="form-control" type="text" maxlength="150">
+              <input class="form-control" type="text" maxlength="150" formControlName="pAccountname">
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
             <div class="mb-3">
               <label class="form-label">Branch</label>
-              <input class="form-control" type="text" maxlength="125">
+              <input class="form-control" type="text" maxlength="125" formControlName="pBankbranch">
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
-            <label class="form-label">IFSC Code</label>
-            <div class="d-flex gap-2">
-              <input class="form-control" placeholder="IFSC Code" maxlength="12" formControlName="pIfsccode">
-              <input class="form-control text-end" placeholder="Overdraft" formControlName="pOverdraft">
+            <div class="row g-2">
+              <div class="col">
+                <label class="form-label">IFSC Code</label>
+                <input class="form-control" placeholder="IFSC Code" maxlength="12" formControlName="pIfsccode">
+              </div>
+              <div class="col">
+                <label class="form-label">Overdraft Limit</label>
+                <input class="form-control text-end" placeholder="Overdraft" formControlName="pOverdraft">
+              </div>
             </div>
           </div>
 
           <div class="col-md-6 col-xl-4">
             <label class="form-label">Opening Balance</label>
             <div class="input-group">
-              <input class="form-control text-end" placeholder="0.00">
-              <select class="form-select">
-                <option value="" disabled selected>Select</option>
+              <input class="form-control text-end" placeholder="0.00" formControlName="pOpeningBalance">
+              <select class="form-select" formControlName="pOpeningBalanceType">
+                <option value="" disabled>Select</option>
                 <option value="D">Debit</option>
                 <option value="C">Credit</option>
               </select>
@@ -90,8 +91,6 @@
         </div>
 
         <hr class="my-4">
-
-
         <div class="row">
           <div class="col-md-12 mb-2">
             <label class="form-check-label d-flex align-items-center" style="cursor:pointer; color: #0d6efd;"
@@ -106,110 +105,56 @@
             </label>
           </div>
 
-          <div class="col-md-6 col-xl-4">
-            <div class="form-group">
-              <label for="address1" title="Address Line 1">Address Line 1</label>
-              <input type="text" id="address1" class="form-control" maxlength="150" formControlName="address1">
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="form-group">
-              <label for="address2" title="Address Line 2">Address Line 2</label>
-              <input type="text" id="address2" class="form-control" maxlength="150" formControlName="address2">
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="form-group">
-              <label for="city" title="City / Village">City / Village</label>
-              <input type="text" id="city" class="form-control" maxlength="75" formControlName="city">
+          <div class="col-12" *ngIf="branchAddressExpanded">
+            <div class="row">
+              <div class="col-md-6 col-xl-4">
+                <label>Address Line 1</label>
+                <input class="form-control" formControlName="address1">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label>Address Line 2</label>
+                <input class="form-control" formControlName="address2">
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <label>City / Village</label>
+                <input class="form-control" formControlName="city">
+              </div>
+              <div class="col-md-6 col-xl-4 mt-2">
+                <label>Country</label>
+                <select class="form-select" formControlName="country">
+                  <option value="">Select</option>
+                  <option *ngFor="let c of countries" [value]="c.name">{{ c.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-6 col-xl-4 mt-2">
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label>State</label>
+                    <select class="form-select" formControlName="state">
+                      <option value="">Select</option>
+                      <option *ngFor="let s of states" [value]="s.name">{{ s.name }}</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <label>District</label>
+                    <select class="form-select" formControlName="district">
+                      <option value="">Select</option>
+                      <option *ngFor="let d of districts" [value]="d.name">{{ d.name }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-xl-4 mt-2">
+                <label>Pincode</label>
+                <input class="form-control" formControlName="pincode" readonly>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="row mt-2">
-          <div class="col-md-6 col-xl-4">
-            <div class="form-group">
-              <label for="country" title="Country">Country</label>
-              <select id="country" class="form-control" formControlName="country">
-                <option value="">Select</option>
-                <option *ngFor="let c of countries" [value]="c.name">{{ c.name }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="d-flex">
-
-              <div class="col-md-6 col-xl-6 pl-0">
-                <div class="form-group">
-                  <label for="state" title="State">State</label>
-                  <select id="state" class="form-control" formControlName="state">
-                    <option value="">Select</option>
-                    <option *ngFor="let s of states" [value]="s.name">{{ s.name }}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-xl-6 pr-0">
-                <div class="form-group">
-                  <label for="district" title="District">District</label>
-                  <select id="district" class="form-control" formControlName="district">
-                    <option value="">Select</option>
-                    <option *ngFor="let d of districts" [value]="d.name">{{ d.name }}</option>
-                  </select>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="form-group">
-              <label for="pincode" title="Pincode">Pincode</label>
-              <input type="text" id="pincode" class="form-control" maxlength="6" formControlName="pincode" readonly>
-            </div>
-          </div>
-
-        </div>
-
-        <hr class="light">       
-        <div class="row">          
-          <div class="col-md-4">
-            <div class="mb-3 d-flex align-items-center justify-content-between" style="cursor:pointer"
-              (click)="debitcardhideandshow = !debitcardhideandshow">
-              <span class="text-primary">Add Debit Card</span>
-              <i class="bi" [ngClass]="{
-                  'bi-chevron-right': !debitcardhideandshow,
-                  'bi-chevron-down': debitcardhideandshow
-                }"></i>
-            </div>
-
-            <div *ngIf="debitcardhideandshow">
-              <div class="mb-3">
-                <label>Card No</label>
-                <input class="form-control" formControlName="pCardNo">
-              </div>
-
-              <div class="row g-2 mb-3">
-                <div class="col">
-                  <label>Valid From</label>
-                  <input class="form-control" bsDatepicker formControlName="pValidfrom" readonly>
-                </div>
-                <div class="col">
-                  <label>Valid Thru</label>
-                  <input class="form-control" bsDatepicker formControlName="pValidto" readonly>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label>Name on The Card</label>
-                <input class="form-control" formControlName="pCardName">
-              </div>
-            </div>
-          </div> -->
-          <div class="col-md-4">
-            <!-- Add Debit Card Label -->
+        <hr class="light">
+        <div class="row">        
+          <div class="col-md-4">          
             <div class="mb-3 d-flex align-items-center justify-content-between" style="cursor:pointer"
               (click)="debitcardhideandshow = !debitcardhideandshow">
               <span class="text-primary">Add Debit Card</span>
@@ -218,11 +163,9 @@
         'bi-chevron-down': debitcardhideandshow
       }"></i>
             </div>
-
-            <!-- Debit Card Setup Box -->
+            
             <div *ngIf="debitcardhideandshow" class="border rounded p-2">
-
-              <!-- Debit Card Setup Header with Toggle -->
+             
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <span>Debit Card Setup</span>
                 <div class="form-check form-switch mb-0">
@@ -230,9 +173,7 @@
                     [checked]="bankmasterform.get('pIsdebitcardapplicable')?.value"
                     (change)="bankmasterform.get('pIsdebitcardapplicable')?.setValue($event.target.checked)">
                 </div>
-              </div>
-
-              <!-- Debit Card Fields -->
+              </div>             
               <div *ngIf="bankmasterform.get('pIsdebitcardapplicable')?.value">
                 <div class="mb-3">
                   <label>Card No</label>
@@ -259,52 +200,112 @@
 
             </div>
           </div>
-
-
           <div class="col-md-4">
-            <div class="form-check mb-3">
-              <input type="checkbox" class="form-check-input" formControlName="pIsupiapplicable">
-              <label class="form-check-label">Add UPI</label>
+            <div class="mb-3 d-flex align-items-center justify-content-between" style="cursor:pointer"
+              (click)="bankupihideandshow = !bankupihideandshow">
+              <span class="text-primary">UPI Setup</span>
+              <i class="bi" [ngClass]="{
+        'bi-chevron-right': !bankupihideandshow,
+        'bi-chevron-down': bankupihideandshow
+      }"></i>
             </div>
 
-            <div *ngIf="bankupihideandshow">
-              <input class="form-control mb-2" placeholder="UPI ID" formControlName="pUpiid">
-              <select class="form-select" formControlName="pUpiname">
-                <option value="" disabled>Select</option>
-                <option *ngFor="let u of upiname" [value]="u.pUpiname">{{ u.pUpiname }}</option>
-              </select>
+            <div *ngIf="bankupihideandshow" class="border rounded p-2">
+
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span>UPI Setup</span>
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox"
+                    [checked]="bankmasterform.get('pIsupiapplicable')?.value"
+                    (change)="bankmasterform.get('pIsupiapplicable')?.setValue($event.target.checked)">
+                </div>
+              </div>
+
+              <div *ngIf="bankmasterform.get('pIsupiapplicable')?.value">
+
+                <div class="mb-2">
+                  <label>UPI ID</label>
+                  <input class="form-control" formControlName="pUpiid">
+                </div>
+
+
+                <div class="d-flex align-items-center mb-2">
+                  <div class="flex-grow-1 me-2">
+                    <label>UPI Link With</label>
+                    <select class="form-select" formControlName="pUpiname">
+                      <option value="" disabled>Select</option>
+                      <option *ngFor="let u of upiname" [value]="u.pUpiname">{{ u.pUpiname }}</option>
+                    </select>
+                  </div>
+                  <div class="mt-4">
+                    <button type="button" class="btn btn-primary btn-sm">Add</button>
+                  </div>
+                </div>
+                 <div class="mb-2">
+                  <label>UPI ID Link With</label>
+                  <input class="form-control" formControlName="pUpiid">
+                </div>
+              </div>
+
             </div>
           </div>
+
           <div class="col-md-4">
-            <input type="checkbox" class="form-check-input" formControlName="isprimary" id="BankSetup">
-            <label class="form-check-label" for="BankSetup">Bank Setup</label>
-
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" formControlName="isformanbank" id="isprimary">
-              <label class="form-check-label" for="isprimary">isprimary</label>
+            <div class="d-flex justify-content-between mb-2" style="cursor:pointer"
+              (click)="bankSetupExpanded = !bankSetupExpanded">
+              <span class="text-primary">Bank Setup</span>
+              <i class="bi" [ngClass]="{
+         'bi-chevron-right': !bankSetupExpanded,
+         'bi-chevron-down': bankSetupExpanded
+       }"></i>
             </div>
 
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" formControlName="isforemanpaymentbank" id="isformanbank">
-              <label class="form-check-label" for="isformanbank">isformanbank</label>
-            </div>
+            <div *ngIf="bankSetupExpanded" class="border rounded p-2">
 
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" formControlName="isintrestpaymentbank"
-                id="isforemanpaymentbank">
-              <label class="form-check-label" for="isforemanpaymentbank">isforemanpaymentbank</label>
-            </div>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="isintrestpaymentbank">
-              <label class="form-check-label" for="isintrestpaymentbank">isintrestpaymentbank</label>
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Primary</span>
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="radio" name="bankStatus"
+                    [checked]="selectedBankStatus === 'isprimary'" (change)="selectBankStatus('isprimary', $event)">
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Foreman Bank</span>
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="radio" name="bankStatus"
+                    [checked]="selectedBankStatus === 'isformanbank'"
+                    (change)="selectBankStatus('isformanbank', $event)">
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>Foreman Payment Bank</span>
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="radio" name="bankStatus"
+                    [checked]="selectedBankStatus === 'isforemanpaymentbank'"
+                    (change)="selectBankStatus('isforemanpaymentbank', $event)">
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Interest Payment Bank</span>
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="radio" name="bankStatus"
+                    [checked]="selectedBankStatus === 'isintrestpaymentbank'"
+                    (change)="selectBankStatus('isintrestpaymentbank', $event)">
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
-
-        <div class="d-flex justify-content-end gap-2 mb-4">
+        <div class="d-flex justify-content-end gap-2 mt-3 mb-4">
           <button type="button" class="btn btn-secondary" (click)="clear()">Clear</button>
           <button type="submit" class="btn btn-primary">Save</button>
         </div>
+
       </form>
     </div>
   </div>

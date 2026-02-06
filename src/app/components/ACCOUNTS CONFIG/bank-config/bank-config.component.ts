@@ -166,5 +166,3 @@ export class BankConfigComponent implements OnInit {
   }
   
 }
-
-
