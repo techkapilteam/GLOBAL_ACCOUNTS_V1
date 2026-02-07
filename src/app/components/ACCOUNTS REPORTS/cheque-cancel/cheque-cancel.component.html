@@ -1,116 +1,101 @@
-<div class="surface-ground p-3">
-  <div class="surface-card p-4 border-round shadow-2">
-
-    <div class="mb-4">
-      <h2 class="m-0">Cheque Cancel</h2>
+<div class="screen-container">
+  <div class="screen-card">
+    <div class="screen-header">
+      <h2>Cheque Cancel</h2>
     </div>
 
-    <div class="flex justify-content-center p-3" *ngIf="loading">
-      <p-progressSpinner></p-progressSpinner>
-    </div>
+    <div class="screen-content">
+      <div class="container-fluid my-3">
 
-    <p-card class="mb-4">
-      <form [formGroup]="FrmChequeCancel" autocomplete="off">
-
-        <div class="grid align-items-end gap-3">
-
-          <div class="col-12 md:col-3">
-            <label class="block mb-2 font-semibold">From Date</label>
-            <p-datePicker
-              formControlName="fromdate"
-              dateFormat="dd-M-yy"
-              showIcon="true"
-              inputStyleClass="w-full"
-            ></p-datePicker>
+        <ng-template #customLoadingTemplate>
+          <div class="text-center p-3">
+            <div class="spinner-border text-primary"></div>
           </div>
+        </ng-template>
 
-          <div class="col-12 md:col-3">
-            <label class="block mb-2 font-semibold">To Date</label>
-            <p-datePicker
-              formControlName="todate"
-              dateFormat="dd-M-yy"
-              showIcon="true"
-              inputStyleClass="w-full"
-            ></p-datePicker>
-          </div>
+        <!-- <ngx-loading
+    [show]="loading"
+    [config]="{ backdropBorderRadius: '6px' }"
+    [template]="customLoadingTemplate">
+  </ngx-loading> -->
 
-          <div class="col-12 md:col-3">
-            <p-button
-              label="{{ savebutton }}"
-              icon="{{ disablesavebutton ? 'pi pi-spin pi-spinner' : 'pi pi-search' }}"
-              class="w-full"
-              (onClick)="GetChequeCancelDetails()"
-            ></p-button>
-          </div>
+        <div class="card shadow-sm p-3 mb-3">
+          <form [formGroup]="FrmChequeCancel" autocomplete="off">
 
+            <div class="row align-items-end">
+
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">From Date</label>
+                <input type="text" class="form-control form-control-sm" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }" #dp="bsDatepicker"
+                bsDatepicker
+                  formControlName="fromdate" >
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">To Date</label>
+                <input type="text" class="form-control form-control-sm" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }" #dp="bsDatepicker"
+                bsDatepicker
+                  formControlName="todate" readonly>
+              </div>
+
+              <div class="col-md-3">
+                <button type="button" class="btn btn-primary btn-sm w-100" (click)="GetChequeCancelDetails()">
+
+                  <i class="fa me-2"
+                    [ngClass]="{'fa-spinner fa-spin': disablesavebutton, 'fa-search': !disablesavebutton}">
+                  </i>
+                  {{ savebutton }}
+                </button>
+              </div>
+
+            </div>
+          </form>
         </div>
-      </form>
-    </p-card>
 
-    <p-card *ngIf="!showHide">
+        <div class="card shadow-sm p-3" *ngIf="!showHide">
+          <div class="text-center mb-1 fw-bold fs-5">
+            KAPIL CHITS (HYDERABAD) PVT. LTD.
+          </div>
 
-      <div class="text-center mb-2 text-lg font-bold">
-        KAPIL CHITS (HYDERABAD) PVT. LTD.
-      </div>
+          <div class="text-center mb-1">
+            Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old N.K-07, Kamarreddy
+          </div>
 
-      <div class="text-center mb-1">
-        Above TVS Showroom, 1st Floor, Opp: R&amp;B Guest House, Old N.K-07, Kamarreddy
-      </div>
+          <div class="text-center mb-2 fw-semibold">
+            CIN: U65992TG2008PTC060803
+          </div>
 
-      <div class="text-center font-semibold mb-3">
-        CIN: U65992TG2008PTC060803
-      </div>
+          <hr class="mt-2 mb-3">
 
-      <hr class="my-3">
+          <div class="text-center fw-bold fs-5">Cheque Cancel</div>
+          <div class="d-flex justify-content-end gap-2 mt-3" *ngIf="showicons">
+            <button class="btn btn-outline-danger btn-sm" (click)="pdfOrprint('pdf')">
+              <i class="fa fa-file-pdf me-1"></i> PDF
+            </button>
+            
+            <button class="btn btn-outline-success btn-sm" (click)="export()">
+              <i class="fa fa-file-excel me-1"></i> Excel
+            </button>
+            <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('print')">
+              <i class="fa fa-print me-1"></i> Print
+            </button>
+          </div>
 
-      <div class="text-center text-lg font-bold mb-3">
-        Cheque Cancel
-      </div>
+          <div class="row mt-3"  *ngIf="StartDate && EndDate">
+            <div class="col-md-6">
+              <strong>Between:</strong>
+              <span class="ms-2">
+                {{ StartDate | date:'dd-MMM-yyyy' }} And {{ EndDate | date:'dd-MMM-yyyy' }}
+              </span>
+            </div>
+          </div>
 
-      <div class="flex justify-content-end gap-2 mb-3" *ngIf="showicons">
-        <p-button
-          icon="pi pi-file-pdf"
-          label="PDF"
-          severity="danger"
-          outlined
-          size="small"
-          (onClick)="pdfOrprint('pdf')"
-        ></p-button>
+          <div class="row mt-3 fw-semibold text-primary">
+            <div class="col-md-7 text-center">Cheque Details</div>
+            <div class="col-md-5 text-center">Receipt Details</div>
+          </div>
 
-        <p-button
-          icon="pi pi-file-excel"
-          label="Excel"
-          severity="success"
-          outlined
-          size="small"
-          (onClick)="export()"
-        ></p-button>
-
-        <p-button
-          icon="pi pi-print"
-          label="Print"
-          severity="secondary"
-          outlined
-          size="small"
-          (onClick)="pdfOrprint('print')"
-        ></p-button>
-      </div>
-
-      <div class="grid mb-3" *ngIf="StartDate && EndDate">
-        <div class="col-12 md:col-6">
-          <span class="font-semibold">Between:</span>
-          <span class="ml-2">
-            {{ StartDate | date:'dd-MMM-yyyy' }} And {{ EndDate | date:'dd-MMM-yyyy' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="grid font-semibold text-primary mb-2">
-        <div class="col-12 md:col-7 text-center">Cheque Details</div>
-        <div class="col-12 md:col-5 text-center">Receipt Details</div>
-      </div>
-
-      <p-table
+          <p-table
         [value]="gridData"
         [paginator]="true"
         [rows]="pageCriteria.pageSize"
@@ -145,6 +130,12 @@
 
       </p-table>
 
-    </p-card>
+
+        </div>
+
+      </div>
+
+
+    </div>
   </div>
 </div>

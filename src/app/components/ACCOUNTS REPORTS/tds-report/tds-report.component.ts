@@ -3,12 +3,13 @@ import { Component,OnInit } from '@angular/core';
 import { FormsModule,FormBuilder, FormGroup,Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
 
 
 @Component({
  selector: 'app-tdsreport',
   standalone: true,
-  imports: [BsDatepickerModule, NgxDatatableModule, CommonModule, FormsModule],
+  imports: [BsDatepickerModule, NgxDatatableModule, CommonModule, FormsModule,TableModule],
   templateUrl: './tds-report.component.html',
   styleUrl: './tds-report.component.css',
   host: {
@@ -39,8 +40,8 @@ export class TdsReportComponent {
 
   selectedSection = '';
   sectionName = '';
-  fromDate!: Date;
-  toDate!: Date;
+  fromDate: Date| null = null;
+  toDate: Date| null = null;
   ngOnInit() {
     const today = new Date();
     this.fromDate = today;
@@ -103,6 +104,18 @@ export class TdsReportComponent {
       amount: 242412
     }
   ];
+  validateDates() {
+  if (this.fromDate && this.toDate) {
+
+    const from = new Date(this.fromDate);
+    const to = new Date(this.toDate);
+
+    if (from > to) {
+      alert('From Date should not be greater than To Date');
+      this.fromDate = null; 
+    }
+  }
+}
 
 }
 

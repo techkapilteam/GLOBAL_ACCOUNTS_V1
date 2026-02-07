@@ -1,15 +1,16 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+
 import { CommonService } from '../../../services/common.service';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { DateformatPipe } from './dateformat.pipe';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-comparison-tb',
-  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,BsDatepickerModule,DateformatPipe],
+  imports: [FormsModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,DateformatPipe,TableModule],
   templateUrl: './comparison-tb.component.html',
   styleUrl: './comparison-tb.component.css',
 })

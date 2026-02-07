@@ -8,10 +8,11 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { ChitTransactionsService } from '../../../services/chit-transactions.service';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-pending-transfer',
-  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,FormsModule,NgSelectModule],
+  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,FormsModule,NgSelectModule,TableModule],
   templateUrl: './pending-transfer.component.html',
   styleUrl: './pending-transfer.component.css',
 })

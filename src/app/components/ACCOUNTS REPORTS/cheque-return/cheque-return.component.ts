@@ -7,11 +7,12 @@ import { CommonService } from '../../../services/common.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PageCriteria } from '../../../Models/pageCriteria';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-cheque-return',
   standalone:true,
-  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,BsDatepickerModule],
+  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,BsDatepickerModule,TableModule],
   templateUrl: './cheque-return.component.html',
   styleUrl: './cheque-return.component.css',
 })

@@ -90,39 +90,66 @@
                 </div>
               </div>
 
-              <ngx-datatable class="material table mt-3" [rows]="gridData" columnMode="force" [headerHeight]="50"
-                [rowHeight]="50" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
-                [count]="pageCriteria.totalrows">
+              <p-table 
+  [value]="gridData"
+  [paginator]="true"
+  [rows]="pageCriteria.pageSize"
+  [first]="pageCriteria.offset * pageCriteria.pageSize"
+  [totalRecords]="pageCriteria.totalrows"
+  [rowsPerPageOptions]="[10,20,50,100]"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-gridlines mt-3">
 
-                <ngx-datatable-column name="Return Date" prop="pcleardate" sortable="false">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.pcleardate ? (row.pcleardate | date:'dd-MM-yyyy') : '--NA--' }}
-                  </ng-template>
-                </ngx-datatable-column>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Return Date</th>
+      <th>Cheque No.</th>
+      <th class="text-end">Cheque Amt.</th>
+      <th>Bank Name</th>
+      <th>Receipt No.</th>
+      <th>Receipt Date</th>
+      <th>Particulars</th>
+      <th>Referred By</th>
+    </tr>
+  </ng-template>
 
-                <ngx-datatable-column name="Cheque No." prop="preferencenumber" sortable="false"></ngx-datatable-column>
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>
+        {{ row.pcleardate ? (row.pcleardate | date:'dd-MM-yyyy') : '--NA--' }}
+      </td>
 
-                <ngx-datatable-column name="Cheque Amt." prop="ptotalreceivedamount" sortable="false" [cellClass]="'text-end'">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
-                  </ng-template>
-                </ngx-datatable-column>
+      <td>
+        {{ row.preferencenumber }}
+      </td>
 
-                <ngx-datatable-column name="Bank Name" prop="pbankname" sortable="false"></ngx-datatable-column>
+      <td class="text-end">
+        {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+      </td>
 
-                <ngx-datatable-column name="Receipt No." prop="preceiptid" sortable="false"></ngx-datatable-column>
+      <td>
+        {{ row.pbankname }}
+      </td>
 
-                <ngx-datatable-column name="Receipt Date" prop="pchequedate" sortable="false">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.pchequedate ? (row.pchequedate | date:'dd-MM-yyyy') : '--NA--' }}
-                  </ng-template>
-                </ngx-datatable-column>
+      <td>
+        {{ row.preceiptid }}
+      </td>
 
-                <ngx-datatable-column name="Particulars" prop="pparticulars" sortable="false"></ngx-datatable-column>
+      <td>
+        {{ row.pchequedate ? (row.pchequedate | date:'dd-MM-yyyy') : '--NA--' }}
+      </td>
 
-                <ngx-datatable-column name="Referred By" prop="pbranchname" sortable="false"></ngx-datatable-column>
+      <td>
+        {{ row.pparticulars }}
+      </td>
 
-              </ngx-datatable>
+      <td>
+        {{ row.pbranchname }}
+      </td>
+    </tr>
+  </ng-template>
+
+</p-table>
 
             </div>
 

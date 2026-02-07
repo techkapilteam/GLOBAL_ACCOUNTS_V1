@@ -51,102 +51,90 @@
             </li>
           </ul>
 
-          <ngx-datatable class="material table mt-3" [rows]="displayAllChequesDataBasedOnForm" columnMode="force"
-            [headerHeight]="50" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
-            [footerHeight]="pageCriteria.footerPageHeight" [scrollbarH]="true" [summaryRow]="true" [summaryHeight]="50">
+          <p-table [value]="displayAllChequesDataBasedOnForm" [paginator]="true" [rows]="pageCriteria.pageSize"
+            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+            [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll" styleClass="p-datatable-gridlines mt-3">
 
-            <ngx-datatable-column name="Cheque Status" prop="chequeStatus" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
-            </ngx-datatable-column>
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="text-center">Cheque Status</th>
+                <th class="text-center">Cheque / Reference No</th>
+                <th class="text-end">Amount</th>
+                <th class="text-center">Payment Id</th>
+                <th class="text-center">Payment Date</th>
+                <th class="text-center">Cleared Date</th>
+                <th class="text-center">Returned Date</th>
+                <th class="text-center">Cancelled Date</th>
+                <th class="text-center">Transaction Mode</th>
+                <th class="text-start">Party</th>
+                <th class="text-start">Account No</th>
+              </tr>
+            </ng-template>
 
-            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber" sortable="false"
-              [cellClass]="'text-center'" [headerClass]="'text-center'">
-            </ngx-datatable-column>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td class="text-center">{{ row.chequeStatus }}</td>
 
-            <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" sortable="false" [cellClass]="'text-end'"
-              [headerClass]="'text-end'">
+                <td class="text-center">{{ row.pChequenumber }}</td>
 
-              <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
-                {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
-              </ng-template>
+                <td class="text-end">
+                  {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+                </td>
 
-              <ng-template ngx-datatable-summary-template>
-                {{ currencySymbol }} {{ totalamount | number:'1.2-2' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td class="text-center">{{ row.preceiptid }}</td>
 
-            <ngx-datatable-column name="Payment Id" prop="preceiptid" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
-            </ngx-datatable-column>
+                <td class="text-center">
+                  {{ row.preceiptdate | date:'dd-MM-yyyy' }}
+                </td>
 
-            <ngx-datatable-column name="Payment Date" prop="preceiptdate" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
-            </ngx-datatable-column>
+                <td class="text-center">
+                  <span *ngIf="row.ptypeofpayment === 'CHEQUE' && row.pchequestatus === 'P'">
+                    {{ row.pdepositeddate | date:'dd-MM-yyyy' }}
+                  </span>
+                </td>
 
-            <ngx-datatable-column name="Cleared Date" prop="pdepositeddate" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <span *ngIf="row.ptypeofpayment === 'CHEQUE' && row.pchequestatus === 'P'">
-                  {{ row.pdepositeddate | date:'dd-MM-yyyy' }}
-                </span>
-              </ng-template>
-            </ngx-datatable-column>
+                <td class="text-center">
+                  <span *ngIf="row.pchequestatus === 'R'">
+                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
+                  </span>
+                </td>
 
-            <ngx-datatable-column name="Returned Date" prop="pCleardate" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <span *ngIf="row.pchequestatus === 'R'">
-                  {{ row.pCleardate | date:'dd-MM-yyyy' }}
-                </span>
-              </ng-template>
-            </ngx-datatable-column>
+                <td class="text-center">
+                  <span *ngIf="row.pchequestatus === 'C'">
+                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
+                  </span>
+                </td>
 
-            <ngx-datatable-column name="Cancelled Date" prop="pCleardate" sortable="false" [cellClass]="'text-center'"
-              [headerClass]="'text-center'">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                <span *ngIf="row.pchequestatus === 'C'">
-                  {{ row.pCleardate | date:'dd-MM-yyyy' }}
-                </span>
-              </ng-template>
-            </ngx-datatable-column>
+                <td class="text-center">{{ row.ptypeofpayment }}</td>
 
-            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" sortable="false"
-              [cellClass]="'text-center'" [headerClass]="'text-center'">
-            </ngx-datatable-column>
+                <td class="text-start">
+                  {{ row.ppartyname || '--NA--' }}
+                </td>
 
-            <ngx-datatable-column name="Party" prop="ppartyname" sortable="false" [cellClass]="'text-start'"
-              [headerClass]="'text-start'">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.ppartyname || '--NA--' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td class="text-start">
+                  {{ row.pAccountnumber || '--NA--' }}
+                </td>
+              </tr>
+            </ng-template>
 
-            <ngx-datatable-column name="Account No" prop="pAccountnumber" sortable="false" [cellClass]="'text-start'"
-              [headerClass]="'text-start'">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.pAccountnumber || '--NA--' }}
-              </ng-template>
-            </ngx-datatable-column>
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="2" class="text-end fw-bold">Total</td>
+                <td class="text-end fw-bold">
+                  {{ currencySymbol }} {{ totalamount | number:'1.2-2' }}
+                </td>
+                <td colspan="8"></td>
+              </tr>
 
-            <ngx-datatable-footer>
-              <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
-                let-curPage="curPage">
-
-                <div *ngIf="rowCount > 0">
+              <tr *ngIf="pageCriteria.totalrows > 0">
+                <td colspan="11">
                   Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }}
                   ({{ pageCriteria.totalrows }} items)
-                </div>
+                </td>
+              </tr>
+            </ng-template>
 
-                <!-- <datatable-pager
-            [page]="curPage"
-            [size]="pageSize"
-            [count]="rowCount"
-            (change)="onFooterPageChange($event)">
-          </datatable-pager> -->
-              </ng-template>
-            </ngx-datatable-footer>
-
-          </ngx-datatable>
+          </p-table>
         </div>
 
         <div *ngIf="showOrHideReceivedCheques" class="mt-3">
@@ -168,56 +156,60 @@
             </div>
           </div>
 
-          <ngx-datatable class="material table mt-3" [rows]="displayGridDataBasedOnForm" columnMode="force"
-            [headerHeight]="50" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
-            [footerHeight]="pageCriteria.footerPageHeight">
+          <p-table [value]="displayGridDataBasedOnForm" [paginator]="true" [rows]="pageCriteria.pageSize"
+            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+            responsiveLayout="scroll" styleClass="p-datatable-gridlines mt-3">
 
-            <ngx-datatable-column name="Cheque Status" prop="chequeStatus" sortable="false"></ngx-datatable-column>
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Cheque Status</th>
+                <th>Cheque / Reference No</th>
+                <th>Branch</th>
+                <th>Amount</th>
+                <th>Receipt Id</th>
+                <th>Receipt Date</th>
+                <th>Deposited Date</th>
+                <th>Cleared Date</th>
+                <th>Returned Date</th>
+                <th>Transaction Mode</th>
+                <th>Cheque Bank Name</th>
+                <th>Party</th>
+              </tr>
+            </ng-template>
 
-            <ngx-datatable-column name="Cheque / Reference No" prop="pChequenumber"
-              sortable="false"></ngx-datatable-column>
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.chequeStatus }}</td>
 
-            <ngx-datatable-column name="Branch" prop="pbranchname" sortable="false"></ngx-datatable-column>
+                <td>{{ row.pChequenumber }}</td>
 
-            <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td>{{ row.pbranchname }}</td>
 
-            <ngx-datatable-column name="Receipt Id" prop="preceiptid" sortable="false"></ngx-datatable-column>
+                <td>
+                  {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+                </td>
 
-            <ngx-datatable-column name="Receipt Date" prop="preceiptdate" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.preceiptdate | date:'dd-MM-yyyy' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td>{{ row.preceiptid }}</td>
 
-            <ngx-datatable-column name="Deposited Date" prop="pdepositeddate" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.pdepositeddate | date:'dd-MM-yyyy' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td>{{ row.preceiptdate | date:'dd-MM-yyyy' }}</td>
 
-            <ngx-datatable-column name="Cleared Date" prop="pCleardate" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.pCleardate | date:'dd-MM-yyyy' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td>{{ row.pdepositeddate | date:'dd-MM-yyyy' }}</td>
 
-            <ngx-datatable-column name="Returned Date" prop="pCleardate" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.pchequestatus === 'R' ? (row.pCleardate | date:'dd-MM-yyyy') : '' }}
-              </ng-template>
-            </ngx-datatable-column>
+                <td>{{ row.pCleardate | date:'dd-MM-yyyy' }}</td>
 
-            <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" sortable="false"></ngx-datatable-column>
+                <td>
+                  {{ row.pchequestatus === 'R' ? (row.pCleardate | date:'dd-MM-yyyy') : '' }}
+                </td>
 
-            <ngx-datatable-column name="Cheque Bank Name" prop="pbankname" sortable="false"></ngx-datatable-column>
+                <td>{{ row.ptypeofpayment }}</td>
 
-            <ngx-datatable-column name="Party" prop="ppartyname" sortable="false"></ngx-datatable-column>
+                <td>{{ row.pbankname }}</td>
 
-          </ngx-datatable>
+                <td>{{ row.ppartyname }}</td>
+              </tr>
+            </ng-template>
+
+          </p-table>
         </div>
 
         <div class="d-flex justify-content-end mt-4">

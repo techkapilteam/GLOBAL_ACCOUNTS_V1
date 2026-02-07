@@ -9,10 +9,11 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-gst-report',
-  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,NgSelectModule,BsDatepickerModule],
+  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,NgSelectModule,BsDatepickerModule,TableModule],
   templateUrl: './gst-report.component.html',
   styleUrl: './gst-report.component.css',
 })
