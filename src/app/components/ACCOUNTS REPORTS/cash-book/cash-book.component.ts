@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -14,59 +14,63 @@ import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker
     BsDatepickerModule
   ],
   templateUrl: './cash-book.component.html',
-  styleUrl: './cash-book.component.css'
+  providers: [DatePipe]
 })
 export class CashBookComponent implements OnInit {
 
-  today: Date = new Date();
-  fromDate: Date = this.today;
-  toDate: Date = this.today;
+  private datePipe = inject(DatePipe);
 
-  transactionType: string = '';
+  transactionType = '';
+  showTable = false;
 
-  show = true;
-
-  gridView: any[] = [];
+  fromDate!: Date;
+  toDate!: Date;
 
   dpConfig: Partial<BsDatepickerConfig> = {};
 
+  // Static Data
+  rows = [
+    { txnNo: 'TXC001', particulars: new Date('2026-01-01'), narration: 'Opening Balance', receipts: 10000, payments: 0, balance: 10000 },
+    { txnNo: 'TXC002', particulars: new Date('2026-01-02'), narration: 'Cash Sale', receipts: 5000, payments: 0, balance: 15000 },
+    { txnNo: 'TXC003', particulars: new Date('2026-01-03'), narration: 'Office Expenses', receipts: 0, payments: 2000, balance: 13000 },
+    { txnNo: 'TXC004', particulars: new Date('2026-01-04'), narration: 'Cash Received', receipts: 3000, payments: 0, balance: 16000 }
+  ];
+
   ngOnInit(): void {
+    const today = new Date();
+    this.fromDate = today;
+    this.toDate = today;
+
     this.dpConfig = {
-      maxDate: new Date(),
-      containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
-      showWeekNumbers: false
+      containerClass: 'theme-dark-blue',
+      showWeekNumbers: false,
+      maxDate: new Date()
     };
   }
 
-  GenerateReport() {
+  generateReport() {
     if (!this.fromDate || !this.toDate || !this.transactionType) {
-      alert('Please select From Date, To Date and Transaction Type');
+      alert('Please select From Date, To Date, and Transaction Type.');
       return;
     }
-
-    this.show = false;
-    this.gridView = this.getDummyData();
-  }
-
-  getDummyData() {
-    return [
-      { ptransactiondate: '01-Feb-2026', description: 'Opening Balance', amount: 10000 },
-      { ptransactiondate: '04-Feb-2026', description: 'Cash Receipt', amount: 5000 },
-      { ptransactiondate: '05-Feb-2026', description: 'Office Expense', amount: -2000 },
-      { ptransactiondate: '06-Feb-2026', description: 'Cash Receipt', amount: 3000 }
-    ];
+    this.showTable = true;
   }
 
   pdfOrprint(type: 'Pdf' | 'Print') {
     if (type === 'Print') {
       window.print();
     } else {
-      alert('PDF export not implemented');
+      alert('PDF export not implemented in demo mode');
     }
   }
 
   exportExcel() {
-    alert('Excel export not implemented');
+    alert('Excel export not implemented in demo mode');
+  }
+
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
   }
 }

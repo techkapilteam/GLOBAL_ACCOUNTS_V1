@@ -4,142 +4,179 @@
       <h2>Petty Receipt Cancel</h2>
     </div>
     <div class="screen-content">
-      <form [formGroup]="pettycashcancelform" autocomplete="off">
-        <div class="row g-3">
-          <!-- Receipt No. -->
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label class="form-label required-field" title="Receipt No.">Receipt No.</label>
-              <select id="receiptid" class="form-select">
-                <option value="" disabled selected>Select</option>
-                <option value="1">REC001</option>
-                <option value="2">REC002</option>
-                <option value="3">REC003</option>
-                <!-- Add more options as needed -->
-              </select>
-              <div class="invalid-feedback">
-                <!-- Validation message placeholder -->
+      <form [formGroup]="PettyCashCancel" autocomplete="off">
+        <div class="row">
+          <div class="col-lg-12 col-md-12">
+            <div class="screen-content">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                  <label id="receiptid" title="Receipt No." class="required-field">Receipt No.</label>
+                  <ng-select [items]="receiptdata" bindLabel="receiptnumber" bindValue="receiptid"
+                    formControlName="receiptid" (change)="getreceiptdata($event)" [multiple]="false"
+                    placeholder="Select" [searchable]="true" [clearable]="true" appendTo="body"
+                    dropdownPosition="bottom" [clearOnBackspace]="true">
+                  </ng-select>
+                </div>
+                <div class="col-md-2">
+                  <button type="button" class="btn btn-primary mb-1" (click)="showdata()">
+                    Show
+                  </button>
+                </div>
+                <div class="col-md-4">
+                  <label id="ppaymentdate" title="Date" class="required-field">Date</label>
+                  <fieldset [disabled]="!disabletransactiondate">
+                    <input class="form-control" type="text" bsDatepicker [bsConfig]="pDobConfig"
+                      formControlName="ppaymentdate" maxlength="10" readonly />
+                  </fieldset>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="section-content mt-2" *ngIf="show">
+            <div class="row">
+              <div class="col-md-6 col-xl-6">
+                <div class="form-group m-0">
+                  <label class="w-25">Credit To</label>
+                  <label class="bc-2">: {{ creditto }}</label>
+                </div>
+                <div class="form-group">
+                  <label class="w-25">Received From</label>
+                  <label class="bc-2">: {{ receivedfrom }}</label>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-xl-6 text-end">
+                <div class="form-group">
+                  <label>Receipt Date :</label>
+                  <label class="bc-2">{{ receiptdate | date:'dd-MMM-yyyy' }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 col-xl-12">
+                <ngx-datatable class="material expandable table" [rows]="lstdetails" [headerHeight]="50"
+                  [rowHeight]="50" [footerHeight]="50" [offset]="pageCriteria.offset" [limit]="pageCriteria.pageSize">
+
+                  <ngx-datatable-column name="S.No" sortable="false">
+                    <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                      <span>{{ rowIndex + 1 }}</span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-column name="Particulars" prop="pAccountname" [width]="300" sortable="false"></ngx-datatable-column>
+
+                  <ngx-datatable-column name="Amount" prop="pLedgeramount" [width]="275" sortable="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <span>{{ currencysymbol }} {{ row.pLedgeramount | currency: currencysymbol:'symbol':'1.2-2'
+                        }}</span>
+                    </ng-template>
+                  </ngx-datatable-column>
+
+                  <ngx-datatable-footer *ngIf="lstdetails?.length">
+                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-curPage="curPage">
+                      <div class="p-2" *ngIf="lstdetails.length > 0">
+                        Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }} ({{
+                        pageCriteria.totalrows }} items)
+                      </div>
+                      <!-- <datatable-pager
+                    [page]="curPage"
+                    [size]="pageCriteria.pageSize"
+                    [count]="rowCount"
+                    (change)="onFooterPageChange($event)">
+                  </datatable-pager> -->
+                    </ng-template>
+                  </ngx-datatable-footer>
+                </ngx-datatable>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <div class="col-md-4 col-xl-3">
+                <div class="form-group">
+                  <label>Total Amount :</label>
+                  <label class="sec-head-bold ms-2">{{ showtotalamount | currency: currencysymbol:'symbol':'1.2-2'}}</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 col-xl-6">
+                <label>Narration :</label>
+                <div class="font-14 bc-2">{{ narration }}</div>
+              </div>
+
+              <div class="col-md-3 col-xl-3">
+                <label>Mode of Transaction :</label>
+                <div class="font-14 bc-2">{{ pmodofPayment }}</div>
+              </div>
+
+              <div class="col-md-3 col-xl-3">
+                <label>Done By :</label>
+                <div class="font-14 bc-2">{{ doneby }}</div>
               </div>
             </div>
           </div>
 
-          <!-- Show Button -->
-          <div class="col-md-4  mt-4 pt-4">
-            <button type="button" class="btn btn-primary" (click)="onshow()">Show</button>
-          </div>
-          <!-- Date -->
-          <div class="col-md-4">
-
-            <div class="form-group">
-              <label class="required-field"> Date</label>
-              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="toDate"
-                placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                [disabled]="false">
-            </div>
-
-          </div>
-
-          <div class="row" *ngIf="show">
-
-
-
-
-            <!-- Displayed Receipt Details -->
-            <div class="mt-3 border rounded shadow-sm p-3 bg-light">
-              <div class="row mb-2">
-                <div class="col-md-6">
-                  <label class="fw-bold">Credit To: <span class="fw-light">John Doe</span></label>
-                  <br>
-                  <label class="fw-bold">Received From: <span class="fw-light">John Doe</span></label>
-                </div>
-                <div class="col-md-6 text-end">
-                  <label class="fw-bold">Receipt Date:</label>
-                  <span>16-Jan-2026</span>
-                </div>
+          <div class="section-content mt-2" *ngIf="show">
+            <div class="row">
+              <div class="col-md-6 col-xl-6">
+                <label id="cancellationreason" class="required-field">Reason</label>
+                <textarea class="form-control" formControlName="cancellationreason" maxlength="250"
+                  [ngClass]="{ 'is-invalid': pettycashValidation['cancellationreason'] }">
+            </textarea>
+                <!-- <app-validation-message [messgae]="pettycashValidation?.cancellationreason"></app-validation-message> -->
               </div>
 
-              <!-- Table of Receipt Items -->
-              <div class="table-responsive">
-                <table class="table table-striped table-bordered">
-                  <thead class="table-light">
-                    <tr>
-                      <th>S.No</th>
-                      <th>Particulars</th>
-                      <th class="text-end">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Service Charges</td>
-                      <td class="text-end">$100.00</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Consulting Fees</td>
-                      <td class="text-end">$250.00</td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="2" class="text-end fw-bold">Total</td>
-                      <td class="text-end fw-bold">$350.00</td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
+              <div class="col-md-4 col-xl-4">
+                <label id="autorizedcontactid" class="required-field">Authorised by</label>
+                <ng-select class="custom-ng-select" [items]="(authorizedbylist$ | async) ?? []"
+                  bindLabel="subintroducedname" bindValue="subintroducedid" formControlName="autorizedcontactid"
+                  [typeahead]="contactSearchevent" [multiple]="false" [searchable]="true" [clearable]="true"
+                  (change)="subIntroducedGridRowSelect($event)"
+                  [ngClass]="{ 'is-invalid': pettycashValidation['autorizedcontactid'] }">
 
-              <!-- Additional Info -->
-              <div class="row mt-2">
-                <div class="col-md-6">
-                  <label class="fw-bold">Narration:</label>
-                  <span>Payment received for consulting services</span>
-                </div>
-                <div class="col-md-3">
-                  <label class="fw-bold">Mode of Transaction:</label>
-                  <span>Bank Transfer</span>
-                </div>
-                <div class="col-md-3">
-                  <label class="fw-bold">Done By:</label>
-                  <span>Jane Smith</span>
-                </div>
-              </div>
-            </div>
+                  <ng-template ng-header-tmp>
+                    <div class="row">
+                      <span class="col-3">Code</span>
+                      <span class="col-3">Contact Name</span>
+                      <span class="col-3 text-center">Mobile No.</span>
+                      <span class="col-3">Email Id</span>
+                    </div>
+                  </ng-template>
 
-            <!-- Cancellation Reason & Authorized By -->
-            <div class="row mt-3 g-3">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label class="form-label required-field" title="Reason">Reason</label>
-                  <textarea class="form-control" maxlength="250"></textarea>
-                  <div class="invalid-feedback">
-                    <!-- Validation message placeholder -->
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="mb-3">
-                  <label class="form-label required-field" title="Authorized By">Authorized By</label>
-                  <select class="form-select">
-                    <option value="" disabled selected>Select</option>
-                    <option value="1">John Manager</option>
-                    <option value="2">Alice Supervisor</option>
-                    <option value="3">Bob Admin</option>
-                  </select>
-                  <div class="invalid-feedback">
-                    <!-- Validation message placeholder -->
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <ng-template ng-option-tmp let-item="item">
+                    <div class="row">
+                      <span class="col-3">{{ item.subintroducedcode }}</span>
+                      <span class="col-3">{{ item.subintroducedname }}</span>
+                      <span class="col-3 text-center">{{ item.subintroducedmobilenumber }}</span>
+                      <span class="col-3">{{ item.subintroducedemailid }}</span>
+                    </div>
+                  </ng-template>
+                </ng-select>
 
-            <!-- Buttons -->
-            <div class="d-flex justify-content-end gap-2 mb-4">
-              <button type="reset" class="btn btn-secondary">cancel</button>
-              <button type="submit" class="btn btn-primary">Save</button>
+                <!-- <app-validation-message [messgae]="pettycashValidation?.autorizedcontactid"></app-validation-message> -->
+              </div>
             </div>
           </div>
+
+          <div class="row mt-3" *ngIf="show">
+            <div class="col-md-12 col-xl-12">
+              <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-g-icon me-4 px-3 border-0" (click)="clear()">Cancel</button>
+                <button type="button" (click)="Save()" class="btn btn-s-icon px-3 border-0"
+                  [disabled]="disablesavebutton">
+                  <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': disablesavebutton }"></i>
+                  {{ ButtonType }}
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </form>
     </div>
   </div>

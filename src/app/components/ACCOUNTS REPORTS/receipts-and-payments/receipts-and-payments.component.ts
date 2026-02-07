@@ -19,18 +19,18 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 
 export class ReceiptsAndPaymentsComponent {
   public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
-  FormReceiptsandPaymentsGroup!:FormGroup
-FormReceiptsandPaymentsGroup1!:FormGroup
+  FormReceiptsandPaymentsGroup!: FormGroup
+  FormReceiptsandPaymentsGroup1!: FormGroup
   // private fb = inject(FormBuilder);
 
- 
+
   disablesavebutton = signal(false);
   disablesavebutton1 = signal(false);
 
   savebutton = signal('Show');
   savebutton1 = signal('Show Extract');
 
-  
+
   GroupCodes = signal([
     { groupcode: 'GRP001' },
     { groupcode: 'GRP002' },
@@ -43,7 +43,7 @@ FormReceiptsandPaymentsGroup1!:FormGroup
     { pparticulars: 'Journal Entry' }
   ]);
 
- 
+
   // dpConfig = {
   //   dateInputFormat: 'DD-MM-YYYY',
   //   showWeekNumbers: false
@@ -56,8 +56,8 @@ FormReceiptsandPaymentsGroup1!:FormGroup
 
 
 
- constructor(private fb: FormBuilder) { 
-      this.dpConfig.maxDate = new Date();
+  constructor(private fb: FormBuilder) {
+    this.dpConfig.maxDate = new Date();
     this.dpConfig.containerClass = 'theme-dark-blue';
     this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.dpConfig.showWeekNumbers = false;
@@ -65,14 +65,14 @@ FormReceiptsandPaymentsGroup1!:FormGroup
 
   ngOnInit(): void {
     this.FormReceiptsandPaymentsGroup = this.fb.group({
-  groupcode: [null, Validators.required],
-  fromdate: new Date(),
-  todate: new Date()
-});
+      groupcode: [null, Validators.required],
+      fromdate: new Date(),
+      todate: new Date()
+    });
 
-this.FormReceiptsandPaymentsGroup1 = this.fb.nonNullable.group({
-  extractcode: [null, Validators.required]
-});
+    this.FormReceiptsandPaymentsGroup1 = this.fb.nonNullable.group({
+      extractcode: [null, Validators.required]
+    });
   }
   // FormReceiptsandPaymentsGroup = this.fb.nonNullable.group({
   //   groupcode: ['', Validators.required],
