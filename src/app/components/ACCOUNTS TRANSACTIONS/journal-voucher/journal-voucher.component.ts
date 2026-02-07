@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-journal-voucher',
@@ -18,6 +20,8 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
     NgIf,
     // CustomCurrencyPipe,
     BsDatepickerModule,
+    ButtonModule,
+    TableModule
 
   ],
 

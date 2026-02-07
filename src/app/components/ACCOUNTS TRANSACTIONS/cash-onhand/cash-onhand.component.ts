@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
 declare var $: any;
 @Component({
   selector: 'app-cash-onhand',
@@ -11,7 +12,7 @@ declare var $: any;
     ReactiveFormsModule,
     NgxDatatableModule,
     BsDatepickerModule,
-
+TableModule
 
   ],
   standalone: true,

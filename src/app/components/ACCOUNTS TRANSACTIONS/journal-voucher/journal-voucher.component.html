@@ -25,8 +25,8 @@
                                         formControlName="pjvdate" [bsConfig]="ppaymentdateConfig" #dp="bsDatepicker"
                                         bsDatepicker [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }"> -->
                                     <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
-                                        formControlName="pjvdate" placeholder="" 
-                                        [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom">
+                                        formControlName="pjvdate" placeholder="" [bsConfig]="dpConfig"
+                                        #dp="bsDatepicker" bsDatepicker placement="bottom">
 
                                 </fieldset>
                             </div>
@@ -537,7 +537,63 @@
                                     </ng-template>
                                 </ngx-datatable-column>
                             </ngx-datatable>
+                            <p-table [value]="paymentslist" dataKey="ppartyname" [paginator]="false" [rows]="10"
+                                [showCurrentPageReport]="false" [resizableColumns]="true" columnResizeMode="fit"
+                                scrollable="true" scrollHeight="400px"
+                                styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
 
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width:100px">Actions</th>
+                                        <th>Party Name</th>
+                                        <th>Ledger Name</th>
+                                        <th>Sub Ledger Name</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                                    <tr>
+                                        <td class="text-center">
+                                            <button pButton type="button" icon="pi pi-trash"
+                                                class="p-button-text p-button-sm"
+                                                (click)="removeHandler(row, rowIndex)">
+                                            </button>
+                                        </td>
+
+                                        <td>{{ row.ppartyname }}</td>
+                                        <td>{{ row.pledgername }}</td>
+                                        <td>{{ row.psubledgername }}</td>
+
+                                        <td class="text-right" *ngIf="row.ptotaldebitamount != 0">
+                                            {{ row.ptotaldebitamount | currency:'INR':'symbol':'1.2-2' }}
+                                        </td>
+                                        <td class="text-right" *ngIf="row.ptotaldebitamount == 0"></td>
+
+                                        <td class="text-right" *ngIf="row.ptotalcreditamount != 0">
+                                            {{ row.ptotalcreditamount | currency:'INR':'symbol':'1.2-2' }}
+                                        </td>
+                                        <td class="text-right" *ngIf="row.ptotalcreditamount == 0"></td>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="footer">
+                                    <tr>
+                                        <td colspan="4" class="text-right"><strong>Total:</strong></td>
+                                        <td class="text-right"><strong>{{ debittotalamount |
+                                                currency:'INR':'symbol':'1.2-2' }}</strong></td>
+                                        <td class="text-right"><strong>{{ credittotalamount |
+                                                currency:'INR':'symbol':'1.2-2' }}</strong></td>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="6" class="text-center">No records found</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
                             <div>
                             </div>
                         </div>
@@ -577,6 +633,48 @@
                                         </ng-template>
                                     </ngx-datatable-column>
                                 </ngx-datatable>
+
+
+
+                                <p-table [value]="paymentslist" dataKey="pledgername" [rows]="10" [paginator]="false"
+                                    [resizableColumns]="true" columnResizeMode="fit" scrollable="true"
+                                    scrollHeight="400px"
+                                    styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
+
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Journal Entry</th>
+                                            <th class="text-right">Dr</th>
+                                            <th class="text-right">Cr</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-row>
+                                        <tr>
+                                            <td>{{ row.pledgername }}</td>
+                                            <td class="text-right">
+                                                <ng-container *ngIf="row.ptotaldebitamount != 0; else emptyDr">
+                                                    {{ currencySymbol }} {{ row.ptotaldebitamount |
+                                                    currency:'INR':'symbol':'1.2-2' }}
+                                                </ng-container>
+                                                <ng-template #emptyDr></ng-template>
+                                            </td>
+                                            <td class="text-right">
+                                                <ng-container *ngIf="row.ptotalcreditamount != 0; else emptyCr">
+                                                    {{ currencySymbol }} {{ row.ptotalcreditamount |
+                                                    currency:'INR':'symbol':'1.2-2' }}
+                                                </ng-container>
+                                                <ng-template #emptyCr></ng-template>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="3" class="text-center">No records found</td>
+                                        </tr>
+                                    </ng-template>
+
+                                </p-table>
+
                             </div>
 
                         </div>
@@ -644,7 +742,7 @@
                             [disabled]="disablesavebutton">
                             <!-- <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
                     *ngIf="!disablesavebutton"> -->
-                             {{savebutton}}
+                            {{savebutton}}
                         </button>
 
                         <!--<a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false" appButtonDoubleClick [debounceTime]="500" (debounceClick)="saveJournalVoucher()"><img src="assets/images/icon-check-white.svg" width="20px" height="20px" class="mr-3">Save</a>-->

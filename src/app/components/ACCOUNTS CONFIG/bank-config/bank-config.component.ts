@@ -3,15 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
 
+import { IftaLabelModule } from 'primeng/iftalabel';
 @Component({
   selector: 'app-bank-config',
-  imports: [],
+
+  imports: [FloatLabelModule, IftaLabelModule,InputTextModule, FormsModule],
   templateUrl: './bank-config.component.html',
   styleUrl: './bank-config.component.css'
 })
 export class BankConfigComponent {
-
+value1: string | undefined;
+value: string | undefined;
   bankmasterform!: FormGroup;
 
   loading: boolean = false;
