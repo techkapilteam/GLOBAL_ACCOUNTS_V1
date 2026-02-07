@@ -15,14 +15,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatatableComponent, NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { Router, RouterLink } from '@angular/router';
 import { PageCriteria } from '../../../Models/pageCriteria';
+import { Table, TableModule } from 'primeng/table';
+import { CurrencyPipe } from '@angular/common';
 // import { PageCriteria } from 'src/app/Models/pagecriteria';
 // import { PageCriteria } from '../Models/pageCriteria';
 // import { CurrencyPipe } from '@angular/common';
 // import { CustomCurrencyPipe } from '../pipes/custom-currency-pipe';
 @Component({
   selector: 'app-journal-voucher-view',
-  imports: [NgxDatatableModule,
-    // CurrencyPipe,
+  imports: [NgxDatatableModule,TableModule,
+    CurrencyPipe,
     // CustomCurrencyPipe,
     RouterLink
   ],
@@ -134,10 +136,7 @@ currencyCode = 'INR';
     debugger;
     let receipt = btoa(row.pjvnumber + ',' + 'Journal Voucher');
     window.open('/#/JournalVoucherReport?id=' + receipt + '', "_blank");
-    // this.router.navigate(['/Reports/JournalVoucherReport', receipt]);
-
-    //window.open('/#/Reports/JournalVoucherReport?id=' + receipt);
-    // window.open('/#/EmiChartReport');
+   
   }
   // filters results
   filterDatatable(event:any) {

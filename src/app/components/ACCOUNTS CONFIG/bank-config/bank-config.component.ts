@@ -7,6 +7,7 @@ interface District { name: string; pincodes: string[]; }
 interface State { name: string; districts: District[]; }
 interface Country { name: string; states: State[]; }
 
+import { IftaLabelModule } from 'primeng/iftalabel';
 @Component({
   selector: 'app-bank-config',
   standalone: true,

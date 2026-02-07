@@ -1,35 +1,34 @@
 <div class="screen-container">
     <div class="screen-card">
-      <div  class="screen-header">
-        <h2>Journal Voucher View</h2>
-      </div>
-      <div class="screen-content">
-        
-    <div class="row">
+        <div class="screen-header">
+            <h2>Journal Voucher View</h2>
+        </div>
+        <div class="screen-content">
 
-            <div class="col d-flex flex-wrap align-items-center">
-                 <!-- [routerLink]="['/Transactions','journalvochernew']"
+            <div class="row">
+
+                <div class="col d-flex flex-wrap align-items-center">
+                    <!-- [routerLink]="['/Transactions','journalvochernew']"
                   routerLink="/journalvochernew"
                        [routerLink]="['/ACCOUNTS TRANSACTIONS','JournalVocher']"
                   /dashboard/accounts/accounts-transactions/journal-voucher-->
-                <a class="btn btn-primary border-0" 
-                 routerLink="/dashboard/accounts/accounts-transactions/journal-voucher" 
-                 >
-                    New
-                </a>
-            </div>
-        </div>
-    <div class="row mt-3">
-        <div class="col-md-12 col-xl-12">
-            <div class="row ">
-                <div class="col-md-6 col-xl-6">
-                    <div class="form-group mr-0 custom-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control" (keyup)="filterDatatable($event)">
-                        </div>
-                    </div>
+                    <a class="btn btn-primary border-0"
+                        routerLink="/dashboard/accounts/accounts-transactions/journal-voucher">
+                        New
+                    </a>
                 </div>
-                <!-- <div class="col-md-6 col-xl-6">
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 col-xl-12">
+                    <div class="row ">
+                        <div class="col-md-6 col-xl-6">
+                            <div class="form-group mr-0 custom-search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" (keyup)="filterDatatable($event)">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-6 col-xl-6">
             <div class="d-flex justify-content-end">
               <a href="" class="export-icons"><img class="" src="assets/images/pdf-icon-blue.svg " title="pdf"
                   width="18px"></a>
@@ -39,58 +38,58 @@
                   width="18px"></a>
             </div>
           </div> -->
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col-md-12 col-xl-12">
-            <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force" [headerHeight]="50"
-            [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize"
-            >
+            <div class="row mt-4">
+                <div class="col-md-12 col-xl-12">
+                    <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force"
+                        [headerHeight]="50" [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight"
+                        [limit]="pageCriteria.pageSize">
 
-            <!-- <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force" [scrollbarH]="true"
+                        <!-- <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force" [scrollbarH]="true"
                 [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize">
                 
                  -->
-                <ngx-datatable-column name="Actions" prop="" editable="true" [width]="100" title="View" [cellClass]="'cell-center'"
-                [headerClass]="'header-center'"  >
-                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row"
-                        let-group="group">
-                        <label for="View{{ rowIndex }}">
-                            <div id="icon-view" (click)="viewHandler($event, row)"></div>
-                        </label>
-                    </ng-template>
-                </ngx-datatable-column>
+                        <ngx-datatable-column name="Actions" prop="" editable="true" [width]="100" title="View"
+                            [cellClass]="'cell-center'" [headerClass]="'header-center'">
+                            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                                let-row="row" let-group="group">
+                                <label for="View{{ rowIndex }}">
+                                    <div id="icon-view" (click)="viewHandler($event, row)"></div>
+                                </label>
+                            </ng-template>
+                        </ngx-datatable-column>
 
-                <ngx-datatable-column name="Date" prop="pjvdate" [cellClass]="'cell-center'"
-                    [headerClass]="'header-center'"  >
-                </ngx-datatable-column>
+                        <ngx-datatable-column name="Date" prop="pjvdate" [cellClass]="'cell-center'"
+                            [headerClass]="'header-center'">
+                        </ngx-datatable-column>
 
-                <ngx-datatable-column name="JV No." prop="pjvnumber" [cellClass]="'cell-center'"
-                    [headerClass]="'header-center'" >
-                </ngx-datatable-column>
+                        <ngx-datatable-column name="JV No." prop="pjvnumber" [cellClass]="'cell-center'"
+                            [headerClass]="'header-center'">
+                        </ngx-datatable-column>
 
-                <ngx-datatable-column name="Amount" prop="ptotalpaidamount" [cellClass]="'cell-right'"
-                    [headerClass]="'header-right'" [width]="200" >
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span title="{{currencySymbol}} {{row.ptotalpaidamount }}">
-                            
-                            {{currencySymbol}} {{row.ptotalpaidamount.toFixed(2) }}</span>
+                        <ngx-datatable-column name="Amount" prop="ptotalpaidamount" [cellClass]="'cell-right'"
+                            [headerClass]="'header-right'" [width]="200">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <span title="{{currencySymbol}} {{row.ptotalpaidamount }}">
 
-                            <!-- <span
+                                    {{currencySymbol}} {{row.ptotalpaidamount.toFixed(2) }}</span>
+
+                                <!-- <span
       [title]="row.ptotalpaidamount | currency:currencyCode:'symbol':'1.2-2'">
       {{ row.ptotalpaidamount | currency:currencyCode:'symbol':'1.2-2' }}
     </span> -->
 
 
 
-                    </ng-template>
-                </ngx-datatable-column>
+                            </ng-template>
+                        </ngx-datatable-column>
 
-                <ngx-datatable-column name="Narration" prop="pnarration"  [width]="500">
+                        <ngx-datatable-column name="Narration" prop="pnarration" [width]="500">
 
-                </ngx-datatable-column>
-                <!-- <ngx-datatable-footer *ngIf="Journalvoucherlist">
+                        </ngx-datatable-column>
+                        <!-- <ngx-datatable-footer *ngIf="Journalvoucherlist">
                     <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
                       let-selectedCount="selectedCount" let-curPage="curPage" let-offset="pageCriteria.offset"
                       let-isVisible=" ">
@@ -105,10 +104,70 @@
                     </ng-template>
                   </ngx-datatable-footer> -->
 
-            </ngx-datatable>
+                    </ngx-datatable>
 
+                    <p-table [value]="Journalvoucherlist" dataKey="pjvnumber" [rows]="pageCriteria.pageSize"
+                        [paginator]="false" [totalRecords]="pageCriteria.totalrows" [rowsPerPageOptions]="[10, 20, 50]"
+                        [showCurrentPageReport]="true" scrollable="true" scrollHeight="400px" [resizableColumns]="true"
+                        columnResizeMode="fit" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
+
+
+                        <!-- currentPageReportTemplate="Page {currentPage} of {totalPages} ({totalRecords} items)" -->
+
+                        <!-- HEADER -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:100px" class="text-center">Actions</th>
+                                <th style="width:150px" class="text-center">Date</th>
+                                <th style="width:150px" class="text-center">JV No.</th>
+                                <th style="width:200px" class="text-right">Amount</th>
+                                <th style="width:500px">Narration</th>
+                            </tr>
+                        </ng-template>
+
+
+                        <ng-template pTemplate="body" let-row>
+                            <tr>
+
+                                <td class="text-center">
+                                    <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm"
+                                        (click)="viewHandler($event, row)">
+                                    </button>
+                                </td>
+
+                                <td class="text-center">
+                                    {{ row.pjvdate }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ row.pjvnumber }}
+                                </td>
+
+                                <td class="text-right">
+                                    {{ row.ptotalpaidamount | currency:'INR':'symbol':'1.2-2' }}
+                                </td>
+
+                                <td>
+                                    {{ row.pnarration }}
+                                </td>
+
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+
+                    </p-table>
+                  
+
+
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
 </div>
