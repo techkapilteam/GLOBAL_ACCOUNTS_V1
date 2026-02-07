@@ -48,6 +48,7 @@ import { GeneralReceiptViewComponent } from './components/ACCOUNTS TRANSACTIONS/
 import { PettyCashViewComponent } from './components/ACCOUNTS TRANSACTIONS/petty-cash-view/petty-cash-view.component';
 import { GeneralReceiptNewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-new/general-receipt-new.component';
 import { ScheduleTbComponent } from './components/ACCOUNTS REPORTS/schedule-tb/schedule-tb.component';
+import { ChequeManagementnewComponent } from './components/ACCOUNTS CONFIG/cheque-managementnew/cheque-managementnew.component';
 
 export const routes: Routes = [
   {
@@ -76,6 +77,10 @@ export const routes: Routes = [
         component: ChequeManagementComponent
       },
       {
+        path: 'accounts/accounts-config/cheque-managementnew',
+        component: ChequeManagementnewComponent
+      },
+      {
         path: 'accounts/accounts-config/create-account',
         component: CreateAccountComponent
       },
@@ -83,7 +88,7 @@ export const routes: Routes = [
         path: 'accounts/accounts-config/:screen',
         component: ScreenViewComponent
       },
-      
+
       {
         path: 'accounts/accounts-transactions/general-receipt-cancel',
         component: GeneralReceiptCancelComponent
@@ -116,19 +121,19 @@ export const routes: Routes = [
         path: 'accounts/accounts-transactions/online-settlement',
         component: OnlineSettlementComponent
       },
-      
+
       {
         path: 'accounts/accounts-transactions/petty-cash',
         component: PettyCashComponent
       },
-      
-      
-    
+
+
+
       {
         path: 'accounts/accounts-transactions/cheques-issued',
         component: ChequesIssuedComponent
       },
-      
+
       {
         path: 'accounts/accounts-transactions/cheques-onhand',
         component: ChequesOnhandComponent
@@ -200,12 +205,12 @@ export const routes: Routes = [
       {
         path: 'accounts/accounts-reports/account-summary',
         component: AccountSummaryComponent
-      }, 
+      },
       {
         path: 'accounts/accounts-reports/receipts-and-payments',
         component: ReceiptsAndPaymentsComponent
       },
-     
+
       {
         path: 'accounts/accounts-reports/cheque-enquiry',
         component: ChequeEnquiryComponent
@@ -246,14 +251,14 @@ export const routes: Routes = [
         path: 'accounts/accounts-reports/issued-cheque',
         component: IssuedChequeComponent
       },
-       {
+      {
         path: 'accounts/accounts-reports/bank-book',
         component: BankBookComponent
       },
       {
         path: 'accounts/accounts-reports/day-book',
         component: DayBookComponent
-      },    
+      },
       {
         path: 'transactions/deposits/:screen',
         component: ScreenViewComponent
@@ -286,7 +291,7 @@ export const routes: Routes = [
         path: 'settings/system-config/:screen',
         component: ScreenViewComponent
       },
-       {
+      {
         path: 'accounts/accounts-reports/:screen',
         component: ScreenViewComponent
       }

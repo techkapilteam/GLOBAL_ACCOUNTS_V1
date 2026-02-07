@@ -1,93 +1,114 @@
-<div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>Cheque Management</h2>
+<div class="section-content">
+
+  <div class="row">
+    <div class="col d-flex flex-wrap align-items-center">
+      <div class="col-8 d-flex flex-wrap align-items-center">
+        <a routerLink="/dashboard/accounts/accounts-config/cheque-managementnew"
+          class="btn btn-primary border-0">New</a>
+      </div>
     </div>
-    <div class="screen-content">
-      <form [formGroup]="chequeform">
-        <div class="section-content">
-          <div class="row g-3">
 
-            <!-- Select Bank -->
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label required-field">Select Bank</label>
-                <select class="form-select" id="pBankname" title="Select Bank">
-                  <option value="">-- Select Bank --</option>
-                  <option value="Bank 1">Bank 1</option>
-                  <option value="Bank 2">Bank 2</option>
-                  <option value="Bank 3">Bank 3</option>
-                </select>
-                <div class="invalid-feedback">
-                  <!-- Validation message -->
-                </div>
-              </div>
-            </div>
+    <div class="col-md-2 col-xl-2 mt-1">
+      <div class="d-flex justify-content-end mb-2">
+        <div class="dropdown">
+          <button type="button" class="btn btn-b-icon border-0 mt-1 me-2 dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fa fa-filter" aria-hidden="true"></i>
+            Filters
+          </button>
 
-            <!-- Entry Date -->
-            <div class="col-md-3">
-              <div class="mb-3">
-                <!-- <label class="form-label" title="Entry Date">Entry Date</label>
-                <input type="date" class="form-control" id="pChequeGenerateDate" placeholder="Select date"> -->
-
-                <div class="form-group">
-                  <label class="required-field">Date</label>
-               
-
-                    <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
-                      formControlName="pjvdate" placeholder="" [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker
-                      placement="bottom">
-
-                  
-                </div>
-              </div>
-            </div>
-            <!-- Number of Cheques -->
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label required-field">Number Of Cheques</label>
-                <input type="text" class="form-control" id="pNoofcheques" min="1" max="999"
-                  placeholder="Enter number of cheques">
-                <div class="invalid-feedback">
-                  <!-- Validation message -->
-                </div>
-              </div>
-            </div>
-
-            <!-- From No. and To No. -->
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label required-field">From No.</label>
-                <input type="text" class="form-control" id="pChequefrom" min="0" placeholder="From cheque number">
-                <div class="invalid-feedback">
-                  <!-- Validation message -->
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label class="form-label required-field">To No.</label>
-                <input type="text" class="form-control" id="pChequeto" readonly placeholder="To cheque number">
-                <div class="invalid-feedback">
-                  <!-- Validation message -->
-                </div>
-              </div>
-            </div>
-
-            <div class="col-4 mt-5">
-              <button type="button" class="btn btn-primary">
-                Add
-              </button>
-              <button type="button" class="btn btn-secondary ms-2">
-                Clear
-              </button>
-            </div>
-            <!-- Add Button -->
-
+          <div class="dropdown-menu">
+            <a class="dropdown-item" (click)="filterByCodeStatus('All')">All</a>
+            <a class="dropdown-item" (click)="filterByCodeStatus('Used')">Used</a>
+            <a class="dropdown-item" (click)="filterByCodeStatus('Un Used')">Un Used</a>
           </div>
         </div>
-
-      </form>
+      </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end">
+      <a *ngIf="hideprint" class="export-icons" (click)="pdforprint('Pdf')">
+        <img src="assets/images/pdf-icon-blue.svg" title="Pdf" width="18" />
+      </a>
+
+      <a *ngIf="hideprint" class="export-icons" (click)="pdforprint('Print')">
+        <img src="assets/images/print-icon-blue.svg" title="Print" width="18" />
+      </a>
+
+      <a *ngIf="hideprint" class="export-icons" (click)="excel()">
+        <img src="assets/images/icon-excel.svg" title="Excel" width="18" />
+      </a>
+    </div>
+  </div>
+
+  <div class="my-container">
+    <ng-template #customLoadingTemplate>
+      <div class="custom-class">
+        <h3>Loading...</h3>
+      </div>
+    </ng-template>
+
+    <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+          </ngx-loading> -->
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-12 col-xl-12">
+      <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force" [headerHeight]="50"
+        [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize"
+        [offset]="pageCriteria.offset">
+
+        <ngx-datatable-column name="Book ID" prop="pChqbookid" [cellClass]="'cell-center'"
+          [headerClass]="'header-center'" [width]="50"></ngx-datatable-column>
+
+        <ngx-datatable-column name="No. of Cheques" prop="pNoofcheques" [cellClass]="'cell-center'"
+          [headerClass]="'header-center'"></ngx-datatable-column>
+
+        <ngx-datatable-column name="From" prop="pChequefrom" [cellClass]="'cell-center'"
+          [headerClass]="'header-center'"></ngx-datatable-column>
+
+        <ngx-datatable-column name="To" prop="pChequeto" [cellClass]="'cell-center'"
+          [headerClass]="'header-center'"></ngx-datatable-column>
+
+        <ngx-datatable-column name="Cheque Status" prop="pChqegeneratestatus" [cellClass]="'cell-center'"
+          [headerClass]="'header-center'">
+          <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+            <span *ngIf="value === true">Active</span>
+            <a *ngIf="value === false" class="a-link" (click)="editClick(row)">
+              Generate Cheques
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Bank Name" prop="pBankname" [cellClass]="'cell-left'" [headerClass]="'header-left'"
+          [width]="300"></ngx-datatable-column>
+
+        <ngx-datatable-column name="Account No." prop="pAccountnumber" [cellClass]="'cell-left'"
+          [headerClass]="'header-left'" [width]="200"></ngx-datatable-column>
+
+        <ngx-datatable-column name="Book Status" prop="pchequestatus" [cellClass]="'cell-left'"
+          [headerClass]="'header-left'" [width]="300"></ngx-datatable-column>
+
+        <ngx-datatable-footer *ngIf="gridData">
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+            let-curPage="curPage">
+            <div *ngIf="gridData.length > 0" style="padding: 5px 10px">
+              Page {{ pageCriteria.CurrentPage }}
+              of {{ pageCriteria.TotalPages }}
+              ({{ pageCriteria.totalrows }} items)
+            </div>
+
+            <!-- <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
+                    [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+                    [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+                    [hidden]="!((rowCount / pageSize) > 0)" (change)="onFooterPageChange($event)">
+                  </datatable-pager> -->
+          </ng-template>
+        </ngx-datatable-footer>
+
+      </ngx-datatable>
+    </div>
+  </div>
+
 </div>
