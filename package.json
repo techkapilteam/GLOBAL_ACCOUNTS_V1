@@ -20,6 +20,8 @@
     "@angular/router": "^20.3.16",
     "@ng-select/ng-select": "^20.4.0",
     "@primeuix/themes": "^2.0.3",
+    "@progress/kendo-angular-grid": "^22.0.1",
+    "@progress/kendo-data-query": "^1.7.3",
     "@swimlane/ngx-datatable": "^22.0.0",
     "bootstrap": "^5.3.8",
     "file-saver": "^2.0.5",

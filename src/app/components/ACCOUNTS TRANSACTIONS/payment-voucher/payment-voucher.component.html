@@ -31,48 +31,56 @@
             </div>
           </div>
 
-          <ngx-datatable class="material expandable table " [rows]="rows" [columnMode]="'force'" [headerHeight]="50" 
-            [rowHeight]="'auto'" [limit]="page.limit" [count]="page.count" [offset]="page.offset">
 
-            <!-- Actions -->
-            <ngx-datatable-column name="Actions" [width]="100">
-              <ng-template ngx-datatable-cell-template>
-                <a href="#">View</a>
-              </ng-template>
-            </ngx-datatable-column>
 
-            <!-- Payment Date -->
-            <ngx-datatable-column name="Payment Date" prop="paymentDate">
-            </ngx-datatable-column>
 
-            <!-- Voucher No -->
-            <ngx-datatable-column name="Voucher No." prop="voucherNo">
-            </ngx-datatable-column>
 
-            <!-- Payment Details -->
-            <ngx-datatable-column name="Payment Details" prop="paymentDetails">
-            </ngx-datatable-column>
 
-            <!-- Bank Name -->
-            <ngx-datatable-column name="Bank Name" prop="bankName">
-            </ngx-datatable-column>
+          <p-table [value]="gridData" dataKey="ppaymentid" [paginator]="false" [rows]="pageCriteria.pageSize"
+            [totalRecords]="pageCriteria.totalrows" [rowsPerPageOptions]="[10, 20, 50]" [showCurrentPageReport]="true"
+            [resizableColumns]="true" columnResizeMode="fit" scrollable="true" scrollHeight="400px"
+            styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
+            <!--   currentPageReportTemplate="Page {currentPage} of {totalPages} ({totalRecords} items)"  -->
 
-            <!-- Paid Amount -->
-            <ngx-datatable-column name="Paid Amount" prop="paidAmount">
-            </ngx-datatable-column>
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width:100px" class="text-center">Actions</th>
+                <th class="text-left">Payment Date</th>
+                <th class="text-center">Voucher No.</th>
+                <th class="text-left">Payment Details</th>
+                <th class="text-left">Bank Name</th>
+                <th class="text-right">Paid Amount</th>
+              </tr>
+            </ng-template>
 
-            <!-- Custom Footer -->
-            <!-- <ngx-datatable-footer>
-              <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
-                let-curPage="curPage">
-                <div style="padding: 5px 10px">
-                  Page {{ curPage + 1 }} of {{ Math.ceil(rowCount / pageSize) }}
-                  ({{ rowCount }} items)
-                </div>
-              </ng-template>
-            </ngx-datatable-footer> -->
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td class="text-center">
+                  <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm"
+                    (click)="removeHandler($event, row)"></button>
+                </td>
+                <td class="text-left">{{ row.ppaymentdate }}</td>
+                <td class="text-center">{{ row.ppaymentid }}</td>
+                <td class="text-left">
+                  <ng-container *ngIf="row.pmodofPayment === 'CASH'">
+                    {{ row.pmodofPayment }}
+                  </ng-container>
+                  <ng-template #chequeDetails>
+                    {{ row.pmodofPayment }} ({{ row.ptypeofpayment }} - {{ row.pChequenumber }})
+                  </ng-template>
+                </td>
+                <td class="text-left">{{ row.pBankName ? row.pBankName : '-- NA --' }}</td>
+                <td class="text-right">{{ formatCurrency(row.ptotalpaidamount) }}</td>
+              </tr>
+            </ng-template>
 
-          </ngx-datatable>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6" class="text-center">No records found</td>
+              </tr>
+            </ng-template>
+
+          </p-table>
 
 
         </div>
