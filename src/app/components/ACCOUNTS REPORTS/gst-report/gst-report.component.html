@@ -73,58 +73,104 @@
 
   <div class="card shadow-sm mt-4" *ngIf="showhidegstreport">
     <div class="card-body p-0">
-      <ngx-datatable class="material" [rows]="GstReportDetails" columnMode="force" [headerHeight]="50" [rowHeight]="50"
-        [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset">
+      <p-table
+  [value]="GstReportDetails"
+  [paginator]="true"
+  [rows]="pageCriteria.pageSize"
+  [first]="pageCriteria.offset * pageCriteria.pageSize"
+  [totalRecords]="pageCriteria.totalrows"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-gridlines">
 
-        <ngx-datatable-column name="Chit No" prop="groupcode" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="GST No" prop="gstnumber" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="Name" prop="accountname" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="City" prop="city" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="State" prop="state" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="Amount" prop="receiptamount" sortable="false"></ngx-datatable-column>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Chit No</th>
+      <th>GST No</th>
+      <th>Name</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Amount</th>
+    </tr>
+  </ng-template>
 
-      </ngx-datatable>
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ row.groupcode }}</td>
+      <td>{{ row.gstnumber }}</td>
+      <td>{{ row.accountname }}</td>
+      <td>{{ row.city }}</td>
+      <td>{{ row.state }}</td>
+      <td>{{ row.receiptamount }}</td>
+    </tr>
+  </ng-template>
+
+</p-table>
     </div>
   </div>
 
   <div class="card shadow-sm mt-4" *ngIf="showhidegstsummary">
     <div class="card-body p-0">
-      <ngx-datatable class="material" [rows]="GstSummaryDetails">
-        <ngx-datatable-column name="Company" prop="companyname" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="State" prop="state" sortable="false"></ngx-datatable-column>
-        <ngx-datatable-column name="Count" prop="count" sortable="false"></ngx-datatable-column>
-      </ngx-datatable>
+      <p-table
+  [value]="GstSummaryDetails"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-gridlines">
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Company</th>
+      <th>State</th>
+      <th>Count</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ row.companyname }}</td>
+      <td>{{ row.state }}</td>
+      <td>{{ row.count }}</td>
+    </tr>
+  </ng-template>
+
+</p-table>
     </div>
   </div>
 
   <div class="card shadow-sm mt-4" *ngIf="showpayments">
     <div class="card-body p-0">
-      <ngx-datatable class="material" [rows]="gstpaymentsdata" [columnMode]="'force'" [headerHeight]="45"
-        [footerHeight]="40" [rowHeight]="'auto'">
+      <p-table
+  [value]="gstpaymentsdata"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-gridlines">
 
-        <ngx-datatable-column name="GST Voucher No." prop="pgstvoucherno" sortable="false"></ngx-datatable-column>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>GST Voucher No.</th>
+      <th>Name</th>
+      <th>State</th>
+      <th>GST Voucher Date</th>
+      <th>Taxable Amount</th>
+      <th>CGST Amount</th>
+      <th>SGST Amount</th>
+      <th>IGST Amount</th>
+      <th>Total Amount</th>
+    </tr>
+  </ng-template>
 
-        <ngx-datatable-column name="Name" prop="vendorname" sortable="false"></ngx-datatable-column>
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ row.pgstvoucherno }}</td>
+      <td>{{ row.vendorname }}</td>
+      <td>{{ row.state }}</td>
+      <td>{{ row.gstVoucherDate | date:'dd-MM-yyyy' }}</td>
+      <td>{{ row.taxableAmount }}</td>
+      <td>{{ row.cgstAmount }}</td>
+      <td>{{ row.sgstAmount }}</td>
+      <td>{{ row.igstAmount }}</td>
+      <td>{{ row.invoice_total_amount }}</td>
+    </tr>
+  </ng-template>
 
-        <ngx-datatable-column name="State" prop="state" sortable="false"></ngx-datatable-column>
-
-        <ngx-datatable-column name="GST Voucher Date" prop="gstVoucherDate" sortable="false">
-          <ng-template let-row="row" ngx-datatable-cell-template>
-            {{ row.gstVoucherDate | date:'dd-MM-yyyy' }}
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column name="Taxable Amount" prop="taxableAmount" sortable="false"></ngx-datatable-column>
-
-        <ngx-datatable-column name="CGST Amount" prop="cgstAmount" sortable="false"></ngx-datatable-column>
-
-        <ngx-datatable-column name="SGST Amount" prop="sgstAmount" sortable="false"></ngx-datatable-column>
-
-        <ngx-datatable-column name="IGST Amount" prop="igstAmount" sortable="false"></ngx-datatable-column>
-
-        <ngx-datatable-column name="Total Amount" prop="invoice_total_amount" sortable="false"></ngx-datatable-column>
-
-      </ngx-datatable>
+</p-table>
 
     </div>
   </div>

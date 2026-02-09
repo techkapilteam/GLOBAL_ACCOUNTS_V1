@@ -8,10 +8,11 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { ChitTransactionsService } from '../../../services/chit-transactions.service';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-pending-transfer',
-  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,FormsModule,NgSelectModule],
+  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,FormsModule,NgSelectModule,TableModule],
   templateUrl: './pending-transfer.component.html',
   styleUrl: './pending-transfer.component.css',
 })
@@ -79,9 +80,9 @@ export class PendingTransferComponent implements OnInit {
       kgms?.setValidators(Validators.required);
       kgms?.updateValueAndValidity();
 
-      this._ChitTransactionsService
-        .getBranchesByCAO(this.loginBranchschema, this.loginBranchschema)
-        .subscribe((res: any) => this.CAOBranchList = res);
+      // this._ChitTransactionsService
+      //   .getBranchesByCAO(this.loginBranchschema, this.loginBranchschema)
+      //   .subscribe((res: any) => this.CAOBranchList = res);
 
     } else if (this.userBranchType === 'KGMS') {
       this.branchkgms = true;

@@ -11,7 +11,7 @@
       <div class="col-md-8">
         <div class="row">
 
-          
+
           <div class="col-md-6">
             <div class="form-group">
               <label class="font-weight-bold">Section</label>
@@ -26,7 +26,7 @@
             </div>
           </div>
 
-         
+
           <div class="col-md-6">
             <div class="form-group">
               <label>Section Name</label>
@@ -54,7 +54,8 @@
           <div class="form-group">
             <label>Date</label>
             <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" onkeydown="return false">
+              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+              onkeydown="return false">
           </div>
         </div>
 
@@ -63,7 +64,7 @@
             <label>From Date</label>
             <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
               [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-              onkeydown="return false">
+              onkeydown="return false" (ngModelChange)="validateDates()">
           </div>
         </div>
 
@@ -72,7 +73,7 @@
             <label class="required-field">To Date</label>
             <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
               [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-              onkeydown="return false">
+              onkeydown="return false" (ngModelChange)="validateDates()">
           </div>
         </div>
 
@@ -107,52 +108,52 @@
 <div class="row mt-3" *ngIf="showResult && !isSummary">
   <div class="col-md-12">
 
-    <ngx-datatable class="material" [rows]="rows" [columnMode]="'force'" [headerHeight]="45" [rowHeight]="'auto'"
-      [scrollbarH]="true">
+    <p-table [value]="rows" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50,100]" [scrollable]="true"
+      scrollHeight="400px" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
 
-      <ngx-datatable-column name="Particulars" prop="particulars" sortable="false">
-      </ngx-datatable-column>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Particulars</th>
+          <th>PAN Number</th>
+          <th>PAN Status</th>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Transaction Date</th>
+          <th class="text-end">Paid Amount</th>
+          <th class="text-end">TDS calculated Amount</th>
+          <th class="text-end">Amount</th>
+          <th>Effective JV</th>
+          <th>Subscriber Branch</th>
+        </tr>
+      </ng-template>
 
-      <ngx-datatable-column name="PAN Number" prop="panNumber" sortable="false">
-      </ngx-datatable-column>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>{{ row.particulars }}</td>
+          <td>{{ row.panNumber }}</td>
+          <td>{{ row.panStatus }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.code }}</td>
+          <td>{{ row.transactionDate }}</td>
 
-      <ngx-datatable-column name="PAN Status" prop="panStatus" sortable="false">
-      </ngx-datatable-column>
+          <td class="text-end">
+            ₹ {{ row.paidAmount }}
+          </td>
 
-      <ngx-datatable-column name="Name" prop="name" sortable="false">
-      </ngx-datatable-column>
+          <td class="text-end">
+            ₹ {{ row.tdsAmount }}
+          </td>
 
-      <ngx-datatable-column name="Code" prop="code" sortable="false">
-      </ngx-datatable-column>
+          <td class="text-end">
+            ₹ {{ row.amount }}
+          </td>
 
-      <ngx-datatable-column name="Transaction Date" prop="transactionDate" sortable="false">
-      </ngx-datatable-column>
+          <td>{{ row.effectiveJV }}</td>
+          <td>{{ row.subscriberBranch }}</td>
+        </tr>
+      </ng-template>
 
-      <ngx-datatable-column name="Paid Amount" prop="paidAmount" [cellClass]="'text-right'" sortable="false">
-        <ng-template ngx-datatable-cell-template let-row="row">
-          ₹ {{ row.paidAmount }}
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="TDS calculated Amount" prop="tdsAmount" sortable="false">
-        <ng-template ngx-datatable-cell-template let-row="row">
-          ₹ {{ row.tdsAmount }}
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="Amount" prop="amount" [cellClass]="'text-right'" sortable="false">
-        <ng-template ngx-datatable-cell-template let-row="row">
-          ₹ {{ row.amount }}
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="Effective JV" prop="effectiveJV" sortable="false">
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="Subscriber Branch" prop="subscriberBranch" sortable="false">
-      </ngx-datatable-column>+
-
-    </ngx-datatable>
+    </p-table>
 
   </div>
 </div>

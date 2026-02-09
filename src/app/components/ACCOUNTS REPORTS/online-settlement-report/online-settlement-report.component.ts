@@ -3,11 +3,12 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormsModule } from '@angular/forms';
 import { NgxDatatableModule, ColumnMode } from '@swimlane/ngx-datatable';
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-online-settlement',
   standalone: true,
-  imports: [BsDatepickerModule, FormsModule, NgxDatatableModule, CommonModule],
+  imports: [BsDatepickerModule, FormsModule, NgxDatatableModule, CommonModule,TableModule],
   templateUrl: './online-settlement-report.component.html',
   styleUrl: './online-settlement-report.component.css',
 })

@@ -2,17 +2,18 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { CommonService } from '../../../services/common.service';
 import { BankBookService } from '../../../services/Transactions/AccountingReports/bank-book.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from 'primeng/table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-issued-cheque',
-  imports: [NgxDatatableModule, FormsModule, CommonModule, ReactiveFormsModule, NgSelectModule],
+  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, NgSelectModule,NgxDatatableModule],
   templateUrl: './issued-cheque.component.html',
   styleUrl: './issued-cheque.component.css',
 })

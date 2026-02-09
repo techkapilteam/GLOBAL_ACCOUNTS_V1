@@ -5,11 +5,12 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-cheque-enquiry',
   standalone: true,
-  imports: [FormsModule, CommonModule, NgxDatatableModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, NgxDatatableModule, ReactiveFormsModule,TableModule],
   templateUrl: './cheque-enquiry.component.html',
   styleUrl: './cheque-enquiry.component.css',
 })

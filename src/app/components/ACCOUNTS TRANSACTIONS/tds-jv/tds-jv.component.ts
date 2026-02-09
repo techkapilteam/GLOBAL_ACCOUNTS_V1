@@ -9,7 +9,7 @@ import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { CommonService } from '../../../services/common.service';
 // import { ValidationMessage } from "../shared/validation-message/validation-message";
-
+import { TableModule } from 'primeng/table';
 @Component({
   selector: 'app-tds-jv',
   imports: [
@@ -18,6 +18,7 @@ import { CommonService } from '../../../services/common.service';
     NgSelectModule,
     NgxDatatableModule,
     BsDatepickerModule,
+    TableModule
 
     // ValidationMessage
   ],

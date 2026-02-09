@@ -10,11 +10,12 @@ import { Router } from '@angular/router';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { NumberToWordsPipe } from './number-to-words.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-re-print',
   standalone:true,
-  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,NgSelectModule],
+  imports: [NgxDatatableModule,ReactiveFormsModule,CommonModule,NgSelectModule,TableModule],
   templateUrl: './re-print.component.html',
   styleUrl: './re-print.component.css',
   providers: [NumberToWordsPipe]
