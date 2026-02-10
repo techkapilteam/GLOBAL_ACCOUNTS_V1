@@ -1,8 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { Table, TableModule } from 'primeng/table';
+import { CommonService } from '../../../services/common.service';
+import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 
 @Component({
   selector: 'app-trial-balance',
@@ -11,7 +14,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     CommonModule,
     ReactiveFormsModule,
     BsDatepickerModule,
-    NgxDatatableModule
+    NgxDatatableModule, TableModule
   ],
   providers: [DatePipe],
   templateUrl: './trial-balance.component.html',
@@ -21,107 +24,207 @@ export class TrialBalanceComponent {
 
   TrialBalanceForm!: FormGroup;
 
-  showhideason = false;
-  ShowAsOn = true;
-  withGroupingFlag = false;
-
+  currencysymbol!: string;
+  groupType = 'BETWEEN';
+  showhideason = true;
+  datelabel = 'From Date';
   showhidetable = false;
-  dataisempty = true;
-
-  Trialbalancelst: any[] = [];
-  currencysymbol = '₹';
+  dataisempty = false;
+  totalcreditamount = 0;
+  totaldebitamount = 0;
+  TrialBalanceDifference = false;
+  difference = 0;
+  savebutton = 'Generate Report';
+  withgrouping = false;
 
   fromdate!: Date;
   todate!: Date;
 
-  savebutton = 'Generate Report';
+  Trialbalancelst: any[] = [];
 
   dpConfig: Partial<BsDatepickerConfig> = {};
+  dppConfig: Partial<BsDatepickerConfig> = {};
 
-  constructor(private fb: FormBuilder,
-    private datePipe: DatePipe) { }
+  @ViewChild('dt') table!: Table;
+
+  constructor(
+    private fb: FormBuilder,
+    private commonService: CommonService,
+    private accountingService: AccountingReportsService
+  ) {}
 
   ngOnInit(): void {
-    const today = new Date();
+
+    this.currencysymbol = '₹',
+      // this.commonService.datePickerPropertiesSetup('currencysymbol');
 
     this.dpConfig = {
-      dateInputFormat: 'DD-MMM-YYYY',
+      dateInputFormat:'DD-MMM-YYYY',
+        // this.commonService.datePickerPropertiesSetup('dateInputFormat'),
+      containerClass: 'theme-dark-blue',
+        // this.commonService.datePickerPropertiesSetup('containerClass'),
       showWeekNumbers: false,
-      containerClass: 'theme-dark-blue'
+      maxDate: new Date()
     };
 
+    this.dppConfig = {
+      dateInputFormat:'DD-MMM-YYYY',
+        // this.commonService.datePickerPropertiesSetup('dateInputFormat'),
+      containerClass:'theme-dark-blue',
+        // this.commonService.datePickerPropertiesSetup('containerClass'),
+      showWeekNumbers: false,
+      maxDate: new Date(),
+      minDate: new Date()
+    };
+
+    this.fromdate = new Date();
+    this.todate = new Date();
+
     this.TrialBalanceForm = this.fb.group({
-      fromdate: [today],
-      todate: [today]
+      fromdate: [this.fromdate],
+      todate: [this.todate],
+      grouptype: ['BETWEEN']
     });
 
-    this.fromdate = today;
-    this.todate = today;
-
-    this.TrialBalanceForm.get('fromdate')?.valueChanges.subscribe(v => {
-      this.fromdate = v;
-    });
-
-    this.TrialBalanceForm.get('todate')?.valueChanges.subscribe(v => {
-      this.todate = v;
-    });
+    this.GetTrialBalance(this.fromdate, this.todate, this.groupType);
   }
 
   checkboxChecked(event: any) {
-    this.showhideason = event.target.checked;
-    this.ShowAsOn = event.target.checked;
-    this.resetGrid();
+    if (event.target.checked) {
+      this.groupType = 'ASON';
+      this.showhideason = false;
+      this.datelabel = 'Date';
+    } else {
+      this.groupType = 'BETWEEN';
+      this.showhideason = true;
+      this.datelabel = 'From Date';
+    }
+
+    this.TrialBalanceForm.patchValue({
+      grouptype: this.groupType,
+      fromdate: new Date(),
+      todate: new Date()
+    });
   }
 
   withGrouping(event: any) {
-    this.withGroupingFlag = event.target.checked;
+    this.withgrouping = event.target.checked;
+  }
+
+  DateChange(event: Date) {
+    this.dppConfig = {
+      ...this.dppConfig,
+      minDate: event
+    };
   }
 
   GenerateReport() {
-    this.resetGrid();
 
-    if (this.showhideason) {
-      this.Trialbalancelst = [
-        {
-          pparentname: 'ASSETS',
-          paccountname: 'ADVANCES',
-          pdebitamount: 300,
-          pcreditamount: 0
+    this.savebutton = 'Processing...';
+
+    const fromdate = this.TrialBalanceForm.value.fromdate;
+    const todate =
+      this.groupType === 'ASON'
+        ? fromdate
+        : this.TrialBalanceForm.value.todate;
+
+    this.GetTrialBalance(fromdate, todate, this.groupType);
+  }
+
+  GetTrialBalance(fromdate: Date, todate: Date, grouptype: string) {
+
+    const fdate = this.commonService.getFormatDateNormal(fromdate)??'';
+    const tdate = this.commonService.getFormatDateNormal(todate)??'';
+
+    this.accountingService
+      .GetTrialBalanceData(fdate, tdate, grouptype)
+      .subscribe({
+        next: (res: any[]) => {
+          this.Trialbalancelst = res.filter(
+            x => !(x.pdebitamount === 0 && x.pcreditamount === 0)
+          );
+
+          if (this.Trialbalancelst.length > 0) {
+            this.TrialBalanceTotalCalculations();
+            this.showhidetable = true;
+            this.dataisempty = false;
+          } else {
+            this.totalcreditamount = 0;
+            this.totaldebitamount = 0;
+            this.showhidetable = false;
+            this.dataisempty = true;
+          }
+
+          this.savebutton = 'Generate Report';
         },
-        {
-          pparentname: 'EXPENSES',
-          paccountname: 'BANK CHARGES',
-          pdebitamount: 1047.30,
-          pcreditamount: 0
+        error: (err) => {
+          this.commonService.showErrorMessage(err);
+          this.savebutton = 'Generate Report';
         }
-      ];
-    }
-
-    if (this.Trialbalancelst.length > 0) {
-      this.showhidetable = true;
-      this.dataisempty = false;
-    }
+      });
   }
 
-  resetGrid() {
-    this.Trialbalancelst = [];
-    this.showhidetable = false;
-    this.dataisempty = true;
-  }
+  TrialBalanceTotalCalculations() {
 
-  formatDate(date: Date | string): string {
-    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
-  }
+    this.totaldebitamount = this.Trialbalancelst
+      .reduce((sum, c) => sum + c.pdebitamount, 0);
 
-  pdfOrprint(type: 'Pdf' | 'Print') {
-    if (type === 'Print') {
-      window.print();
+    this.totalcreditamount = this.Trialbalancelst
+      .reduce((sum, c) => sum + c.pcreditamount, 0);
+
+    if (
+      Math.round(this.totaldebitamount * 100) !==
+      Math.round(this.totalcreditamount * 100)
+    ) {
+      this.TrialBalanceDifference = true;
+      this.difference = Math.abs(
+        this.totaldebitamount - this.totalcreditamount
+      );
     } else {
-      alert('PDF export not implemented in demo mode');
+      this.TrialBalanceDifference = false;
     }
   }
 
-  exportExcel() {
-    alert('Excel export not implemented in demo mode');
+  export(): void {
+
+    const rows = this.Trialbalancelst.map(element => ({
+      Type: element.pparentname,
+      Particulars: element.paccountname,
+      Debit:
+        element.pdebitamount !== 0
+          ? this.commonService.currencyformat(element.pdebitamount)
+          : '',
+      Credit:
+        element.pcreditamount !== 0
+          ? this.commonService.currencyformat(element.pcreditamount)
+          : ''
+    }));
+
+    this.commonService.exportAsExcelFile(rows, 'TrialBalance');
   }
+
+  pdfOrprint(type: string) {
+
+  const fromDate: Date =
+    this.TrialBalanceForm.get('fromdate')?.value ?? new Date();
+
+  const toDate: Date =
+    this.TrialBalanceForm.get('todate')?.value ?? new Date();
+
+  this.commonService._downloadTrialBalanceReportsPdf(
+    'Trial Balance',
+    this.Trialbalancelst,
+    ['Particulars', 'Debit', 'Credit'],
+    {},
+    'a4',
+    this.groupType,
+    this.commonService.getFormatDateGlobal(fromDate)??'',
+    this.commonService.getFormatDateGlobal(toDate)??'',
+    type,
+    {
+      debittotal: this.totaldebitamount,
+      credittotal: this.totalcreditamount
+    }
+  );
+}
 }

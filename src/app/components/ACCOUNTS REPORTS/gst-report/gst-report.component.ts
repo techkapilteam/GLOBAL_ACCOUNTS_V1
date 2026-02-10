@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
@@ -82,10 +82,29 @@ export class GstReportComponent implements OnInit {
       receiptsPayments: ['receipts'],
       fromdate: [today],
       todate: [today]
-    });
+    },{ validators: this.dateRangeValidator() });
     this.gstReportType('receipts');
     this.blurEventAllControls(this.GstReportForm);
   }
+  dateRangeValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+
+   
+    if (!this.showpayments) return null;
+
+    const from = group.get('fromdate')?.value;
+    const to = group.get('todate')?.value;
+
+    if (!from || !to) return null;
+
+    const fromTime = new Date(from).setHours(0,0,0,0);
+    const toTime = new Date(to).setHours(0,0,0,0);
+
+    return fromTime > toTime
+      ? { dateRangeInvalid: true }
+      : null;
+  };
+}
 
   setPageModel() {
     this.pageCriteria.pageSize = 10;
@@ -115,6 +134,15 @@ export class GstReportComponent implements OnInit {
   }
 
   click_GstReport() {
+    this.GstReportForm.markAllAsTouched();
+
+  if (this.GstReportForm.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    this.GstReportForm.get('todate')?.setValue(null);  
+    return;
+  }
+
+  if (this.GstReportForm.invalid) return;
     this.GstReportDetails = [];
     this.GstSummaryDetails = [];
     this.gstpaymentsdata = [];

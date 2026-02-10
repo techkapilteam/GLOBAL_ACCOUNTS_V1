@@ -1,5 +1,5 @@
 import { Component, signal, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -68,7 +68,7 @@ export class ReceiptsAndPaymentsComponent {
       groupcode: [null, Validators.required],
       fromdate: new Date(),
       todate: new Date()
-    });
+    }, { validators: this.dateRangeValidator() });
 
     this.FormReceiptsandPaymentsGroup1 = this.fb.nonNullable.group({
       extractcode: [null, Validators.required]
@@ -87,6 +87,22 @@ export class ReceiptsAndPaymentsComponent {
 
   formErrors = signal<Record<string, string>>({});
   formErrors1 = signal<Record<string, string>>({});
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+
+      const from = group.get('fromdate')?.value;
+      const to = group.get('todate')?.value;
+
+      if (!from || !to) return null;
+
+      const fromTime = new Date(from).setHours(0, 0, 0, 0);
+      const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+      return fromTime > toTime
+        ? { dateRangeInvalid: true }
+        : null;
+    };
+  }
 
 
   GroupChange(): void {
@@ -98,6 +114,14 @@ export class ReceiptsAndPaymentsComponent {
 
   Show(): void {
     this.formErrors.set({});
+    this.FormReceiptsandPaymentsGroup.markAllAsTouched();
+
+  if (this.FormReceiptsandPaymentsGroup.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
+
+  if (this.FormReceiptsandPaymentsGroup.invalid) return;
 
     if (this.FormReceiptsandPaymentsGroup.invalid) {
       this.formErrors.set({

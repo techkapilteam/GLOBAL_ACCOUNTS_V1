@@ -84,6 +84,13 @@ export class ChequeCancelComponent implements OnInit {
 
     const fromDate = new Date(fromRaw);
     const toDate = new Date(toRaw);
+    const fromTime = fromDate.setHours(0,0,0,0);
+  const toTime = toDate.setHours(0,0,0,0);
+
+  if (fromTime > toTime) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
 
     this.StartDate = fromDate;
     this.EndDate = toDate;

@@ -210,7 +210,7 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 import { Router } from '@angular/router';
 // import { SubscriberJVService } from 'src/app/Services/Transactions/subscriber/subscriberjv.service';
 // import { parse } from 'path';
-import { DataResult, GroupDescriptor, State } from '@progress/kendo-data-query';
+// import { DataResult, GroupDescriptor, State } from '@progress/kendo-data-query';
 import { SelectableSettings } from '@progress/kendo-angular-grid';
 import { CommonService } from '../../../services/common.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
@@ -288,6 +288,7 @@ export class PaymentVoucherViewComponent implements OnInit {
 
   bankBalance: any; cashRestrictAmount: any;
   bankexists!: boolean;
+  groups: any[]=[];
   ;
   bankbookBalance: any;;
   bankpassbookBalance: any;;
@@ -308,11 +309,11 @@ export class PaymentVoucherViewComponent implements OnInit {
   JSONdataItem: any = [];
   availableAmount: any
 
-  public gridState: State = {
-    sort: [],
-    skip: 0,
-    take: 10
-  };
+  // public gridState: State = {
+  //   sort: [],
+  //   skip: 0,
+  //   take: 10
+  // };
   gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}([a-zA-Z0-9]){1}([a-zA-Z]){1}([a-zA-Z0-9]){1}?";
   public selectableSettings!: SelectableSettings;
   public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
@@ -336,10 +337,10 @@ export class PaymentVoucherViewComponent implements OnInit {
     // this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
   }
   paymentVoucherForm!: FormGroup;
-  public groups: GroupDescriptor[] = [{ field: 'type' }];
+  // public groups: GroupDescriptor[] = [{ field: 'type' }];
 
 
-  public gridView!: DataResult;
+  // public gridView!: DataResult;
   ngOnInit(): void {
 
     this.currencySymbol = this._commonService.currencysymbol;
@@ -429,7 +430,9 @@ export class PaymentVoucherViewComponent implements OnInit {
       ptotalamount: [''],
     })
   }
-  public groupChange(groups: GroupDescriptor[]): void {
+  public groupChange(groups: any[]
+    // GroupDescriptor[]
+  ): void {
     this.groups = groups;
     this.loadgrid();
   }

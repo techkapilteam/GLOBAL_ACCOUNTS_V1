@@ -5,132 +5,239 @@
     </div>
 
     <div class="screen-content">
-      <form [formGroup]="Daybook">
+      <form [formGroup]="dayBookForm">
 
-        <div class="row">
-          <div class="col-xl-2 col-md-2 mt-4">
-            <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="asdate" type="checkbox" formControlName="date"
-                (change)="checkox($event)">
-              <label for="asdate"> Date :</label>
-            </div>
-          </div>
+    <div class="row align-items-end">
 
-          <div class="col-xl-2 col-md-2 form-group">
-            <label>{{ isSingleDate ? 'Date' : 'From Date' }}</label>
-            <input type="text" class="form-control" formControlName="dfromdate" bsDatepicker [bsConfig]="dpConfig"
-              onkeydown="return false">
-          </div>
-
-          <div class="col-xl-2 col-md-2 form-group" [hidden]="isSingleDate">
-            <label>To Date</label>
-            <input type="text" class="form-control" formControlName="dtodate" bsDatepicker [bsConfig]="dpConfig"
-              onkeydown="return false">
-          </div>
-
-          <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary px-3 border-0" (click)="getdaybookdata()">
-              Generate Report
-            </button>
-          </div>
-
-          <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary px-3 border-0" (click)="GetChequeonHandDetails()">
-              Cheques On Hand
-            </button>
-          </div>
+      <div class="col-xl-2 col-md-3 d-flex align-items-center">
+        <div class="form-check">
+          <input class="form-check-input"
+                 type="checkbox"
+                 id="asdate"
+                 formControlName="date"
+                 (change)="dte = !dte">
+          <label class="form-check-label ms-2" for="asdate">
+            Date :
+          </label>
         </div>
+      </div>
+      <div class="col-xl-2 col-md-3" *ngIf="dte">
+  <label class="form-label">Date</label>
+  <input type="text"
+         class="form-control"
+         readonly
+         [bsConfig]="dpConfig"
+         formControlName="dfromdate"
+         bsDatepicker>
+</div>
 
-        <div class="row mt-2">
-          <div class="col-xl-2 col-md-2 mt-4">
-            <div class="form-check form-check-inline check-btn-secondary">
-              <input class="form-check-input" id="kgms" type="checkbox" #kgmsChk (change)="toggleKgmsGenerate($event)">
-              <label for="kgms"> Kgms :</label>
-            </div>
-          </div>
+      <div class="col-xl-2 col-md-3" *ngIf="!dte">
+        <label class="form-label">From Date</label>
+        <input type="text"
+               class="form-control"
+               readonly
+               [bsConfig]="dpConfig"
+               formControlName="dfromdate"
+               bsDatepicker>
+      </div>
 
-          <div class="col-xl-4 col-md-4" [hidden]="!kgmsChk.checked">
-            <label>Branch</label>
-            <div class="custom-select-wrapper">
-              <select class="form-control custom-select" formControlName="branch">
-                <option value="">Select</option>
-                <option value="KGMS1">KGMS Branch 1</option>
-                <option value="KGMS2">KGMS Branch 2</option>
-                <option value="KGMS3">KGMS Branch 3</option>
-              </select>
-            </div>
-          </div>
+      <div class="col-xl-2 col-md-3" *ngIf="!dte">
+        <label class="form-label">To Date</label>
+        <input type="text"
+               class="form-control"
+               readonly
+               [bsConfig]="dppConfig"
+               formControlName="dtodate"
+               bsDatepicker>
+      </div>
 
-          <div class="col-xl-3 col-md-3 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary px-3 border-0"
-              [disabled]="!isKgmsChecked || !Daybook.value.branch" (click)="getsummaryReport()">
-              Generate Report
-            </button>
-          </div>
+      <div class="col-xl-3 col-md-3">
+        <button type="button"
+                class="btn btn-primary w-100"
+                (click)="getDayBookData()"
+                [disabled]="loading">
+          <i class="pi pi-spin pi-spinner me-2" *ngIf="loading"></i>
+          Generate Report
+        </button>
+      </div>
+
+      <div class="col-xl-3 col-md-3">
+        <button type="button"
+                class="btn btn-primary w-100"
+                (click)="GetChequeonHandDetails()">
+          Cheques On Hand
+        </button>
+      </div>
+
+    </div>
+
+    <div class="row mt-4 align-items-end">
+
+      <div class="col-xl-2 col-md-3 d-flex align-items-center">
+        <div class="form-check">
+          <input class="form-check-input"
+                 type="checkbox"
+                 id="kgms"
+                 (change)="kgms = !kgms">
+          <label class="form-check-label ms-2" for="kgms">
+            KGMS :
+          </label>
         </div>
-      </form>
-      <form *ngIf="showGrid" class="mt-4 p-3 border" style="background-color:white;">
-        <div class="d-flex justify-content-end mb-2">
-          <button class="btn btn-outline-danger me-2"
-                  (click)="pdfOrprint('Pdf')">
-            <i class="fa fa-file-pdf me-1"></i> PDF
-          </button>
+      </div>
 
-          <button class="btn btn-outline-secondary" (click)="pdfOrprint('Print')">
-            <i class="fa fa-print me-1"></i> Print
-          </button>
-        </div>
+      <div class="col-xl-4 col-md-4" *ngIf="kgms">
+        <label class="form-label">Branch</label>
+        <ng-select
+          [items]="kgmsBranchList"
+          bindLabel="branch_name"
+          bindValue="branch_code"
+          formControlName="branch_code"
+          [searchable]="true"
+          [clearable]="false">
+        </ng-select>
+      </div>
 
-        <div class="text-center mb-3">
-          <h4>KAPIL CHITS(HYDERABAD) PVT. LTD.</h4>
-          <p class="mb-1">
-            Above TVS Showroom, 1st Floor, Opp:R&B Guest House,
-            Old NK-07, Kamareddy
-          </p>
-          <p class="mb-1">CIN : U65992TG2008PTC060803</p>
-          <p class="text-end">
-            <b>Branch : {{ Daybook.value.branch || 'Main Branch' }}</b>
-          </p>
-          <h5>Day Book</h5>
-          <p class="text-start">
-            <b>Date :</b> {{ formatDate(StartDate) }}
-            <span *ngIf="!isSingleDate">
-              To {{ formatDate(EndDate) }}
-            </span>
-          </p>
-        </div>
+      <div class="col-xl-3 col-md-3">
+        <button type="button"
+                class="btn btn-success w-100"
+                (click)="getSummaryReport()"
+                [disabled]="!kgms">
+          KGMS Summary Report
+        </button>
+      </div>
 
-        <ngx-datatable class="bootstrap" [rows]="transactions" [headerHeight]="40" [rowHeight]="40"
-          [columnMode]="'force'">
+    </div>
 
-          <ngx-datatable-column name="Transaction No" sortable="false" prop="rTxn"></ngx-datatable-column>
-          <ngx-datatable-column name="Particulars" sortable="false" prop="rPart"></ngx-datatable-column>
-          <ngx-datatable-column name="Type" sortable="false" prop="rType"></ngx-datatable-column>
+  </form>
+</div>
 
-          <ngx-datatable-column name="Amount" sortable="false">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              ₹ {{ row.amount | number:'1.2-2' }}
-            </ng-template>
-          </ngx-datatable-column>
+<div class="section-content mt-4" *ngIf="gridData?.length">
 
-          <ngx-datatable-column name="Transaction No" sortable="false" prop="pTxn"></ngx-datatable-column>
-          <ngx-datatable-column name="Particulars" sortable="false" prop="pPart"></ngx-datatable-column>
-          <ngx-datatable-column name="Type" sortable="false" prop="pType"></ngx-datatable-column>
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-outline-danger btn-sm me-2" (click)="pdfOrprint('Pdf')">
+      <i class="pi pi-file-pdf"></i> PDF
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('Print')">
+      <i class="pi pi-print"></i> Print
+    </button>
+  </div>
 
-        </ngx-datatable>
+  <p-table
+    #myTable
+    [value]="gridData"
+    sortField="prcpttransactiondate"
+    rowGroupMode="subheader"
+    groupRowsBy="prcpttransactiondate"
+    [scrollable]="true"
+    scrollHeight="450px"
+    styleClass="p-datatable-gridlines">
 
-        <ngx-datatable class="bootstrap mt-4" [rows]="bankSummary" [headerHeight]="40" [rowHeight]="40"
-          [columnMode]="'force'">
+    <ng-template pTemplate="rowgroupheader" let-rowData>
+      <tr>
+        <td colspan="8" class="bg-light fw-bold">
+          {{ rowData.prcpttransactiondate | date:'dd-MMM-yyyy' }}
+        </td>
+      </tr>
+    </ng-template>
 
-          <ngx-datatable-column name="Bank Name" sortable="false" prop="bank"></ngx-datatable-column>
-          <ngx-datatable-column name="Opening Balance" sortable="false" prop="opening"></ngx-datatable-column>
-          <ngx-datatable-column name="Receipts" sortable="false" prop="receipts"></ngx-datatable-column>
-          <ngx-datatable-column name="Payments" sortable="false" prop="payments"></ngx-datatable-column>
-          <ngx-datatable-column name="Closing Balance" sortable="false" prop="closing"></ngx-datatable-column>
 
-        </ngx-datatable>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Transaction No.</th>
+        <th>Particulars</th>
+        <th>Type</th>
+        <th class="text-end">Amount</th>
+        <th>Transaction No.</th>
+        <th>Particulars</th>
+        <th>Type</th>
+        <th class="text-end">Amount</th>
+      </tr>
+    </ng-template>
 
-      </form>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.prcpttransactionno }}</td>
+        <td>{{ row.prcptparticulars }}</td>
+        <td>{{ row.prcptaccountname }}</td>
+
+        <td class="text-end">
+          <ng-container *ngIf="row.prcptdebitamount">
+            {{ currencysymbol }} {{ row.prcptdebitamount | number:'1.2-2' }}
+          </ng-container>
+        </td>
+
+        <td>{{ row.ptransactionno }}</td>
+        <td>{{ row.pparticulars }}</td>
+        <td>{{ row.paccountname }}</td>
+
+        <td class="text-end">
+          <ng-container *ngIf="row.pcreditamount">
+            {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+  <div class="row mt-3">
+    <div class="col-md-6 text-end fw-bold text-danger">
+      Received Amount:
+      {{ currencysymbol }} {{ receiptsAmount | number:'1.2-2' }}
+    </div>
+    <div class="col-md-6 text-end fw-bold text-danger">
+      Paid Amount:
+      {{ currencysymbol }} {{ paymentsAmount | number:'1.2-2' }}
+    </div>
+  </div>
+
+  <p-table
+    [value]="totalBalanceGrid"
+    [scrollable]="true"
+    scrollHeight="300px"
+    styleClass="p-datatable-gridlines mt-4">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Bank Name</th>
+        <th class="text-end">Opening Balance</th>
+        <th class="text-end">Receipts</th>
+        <th class="text-end">Payments</th>
+        <th class="text-end">Closing Balance</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.paccountname }}</td>
+
+        <td class="text-end">
+          <ng-container *ngIf="row.popeningbal">
+            {{ currencysymbol }} {{ row.popeningbal }}
+          </ng-container>
+        </td>
+
+        <td class="text-end">
+          <ng-container *ngIf="row.pdebitamount">
+            {{ currencysymbol }} {{ row.pdebitamount | number:'1.2-2' }}
+          </ng-container>
+        </td>
+
+        <td class="text-end">
+          <ng-container *ngIf="row.pcreditamount">
+            {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
+          </ng-container>
+        </td>
+
+        <td class="text-end">
+          <ng-container *ngIf="row.pclosingbal">
+            {{ currencysymbol }} {{ row.pclosingbal }}
+          </ng-container>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
     </div>
   </div>
 </div>
