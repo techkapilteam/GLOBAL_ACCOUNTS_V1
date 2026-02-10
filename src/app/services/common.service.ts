@@ -1438,7 +1438,14 @@ export class CommonService {
     });
   }
 
-
+ GetGlobalBanks(): Observable<any> {
+    debugger;
+    return this.getAPI('/Common/GetGlobalBanks', '', 'NO');
+  }
+  GetGlobalUPINames(): Observable<any> {
+    debugger;
+    return this.getAPI('/Common/GetGlobalUPINames', '', 'NO');
+  }
   //  _MultipleGroupingGridExportData(griddata:any, groupdcol:any, isgroupedcolDate:any) {
   //   debugger;
 
