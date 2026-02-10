@@ -965,6 +965,10 @@ fileUploadS3(formName: string, data: any) {
   );
 }
 
+
+  removeCommasForEntredNumber(enteredNumber:any) {
+    return this.removeCommasInAmount(enteredNumber);
+  }
 }
 
 
