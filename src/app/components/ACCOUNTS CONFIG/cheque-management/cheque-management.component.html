@@ -108,6 +108,71 @@
         </ngx-datatable-footer>
 
       </ngx-datatable>
+
+      <p-table [value]="gridData" [paginator]="true" [rows]="pageCriteria.pageSize"
+        [first]="pageCriteria.offset * pageCriteria.pageSize" 
+        responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-sm">
+<!-- [rowsPerPageOptions]="[10, 25, 50]" -->
+        <!-- Header -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="text-center">Book ID</th>
+            <th class="text-center">No. of Cheques</th>
+            <th class="text-center">From</th>
+            <th class="text-center">To</th>
+            <th class="text-center">Cheque Status</th>
+            <th class="text-left">Bank Name</th>
+            <th class="text-left">Account No.</th>
+            <th class="text-left">Book Status</th>
+          </tr>
+        </ng-template>
+
+        <!-- Body -->
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td class="text-center">{{ row.pChqbookid }}</td>
+            <td class="text-center">{{ row.pNoofcheques }}</td>
+            <td class="text-center">{{ row.pChequefrom }}</td>
+            <td class="text-center">{{ row.pChequeto }}</td>
+
+            <td class="text-center">
+              <span *ngIf="row.pChqegeneratestatus">Active</span>
+              <a *ngIf="!row.pChqegeneratestatus" class="a-link" (click)="editClick(row)">
+                Generate Cheques
+              </a>
+            </td>
+
+            <td class="text-left">{{ row.pBankname }}</td>
+            <td class="text-left">{{ row.pAccountnumber }}</td>
+            <td class="text-left">{{ row.pchequestatus }}</td>
+          </tr>
+
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8" class="text-center">
+              No data to display
+            </td>
+          </tr>
+        </ng-template>
+
+
+        <!-- Footer -->
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="8">
+              <div *ngIf="gridData && gridData.length > 0" style="padding: 5px 10px">
+                Page {{ pageCriteria.CurrentPage }}
+                of {{ pageCriteria.TotalPages }}
+                ({{ pageCriteria.totalrows }} items)
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+
     </div>
   </div>
 

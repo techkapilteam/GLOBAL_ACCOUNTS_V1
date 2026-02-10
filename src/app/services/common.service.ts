@@ -20,8 +20,11 @@ import { AbstractControl } from '@angular/forms';
 export class CommonService {
 
 
-  showSuccessMsg(message: string) {
-    this.toastr.warning(message);
+   showSuccessMessage() {
+    this.toastr.success("Saved successfully", "Success", { timeOut: this.messageShowTimeOut });
+  }
+  showSuccessMsg(message:any) {
+    this.toastr.success(message, "Success", { timeOut: this.messageShowTimeOut });
   }
   showErrorMessage(error: any) {
     console.warn('API disabled (mock mode):', error?.message || error);
@@ -969,6 +972,111 @@ fileUploadS3(formName: string, data: any) {
   removeCommasForEntredNumber(enteredNumber:any) {
     return this.removeCommasInAmount(enteredNumber);
   }
+
+
+
+  transform(items: any[], searchText: string, columnName: string): any[] {
+    debugger
+    if (!items) return [];
+    if (!searchText) return items;
+    searchText = searchText.toString().toLowerCase();
+    return items.filter(it => {
+      return it[columnName].toString().toLowerCase().startsWith(searchText);
+      //return it[columnName].toString().toLowerCase().includes(searchText);
+    });
+  }
+
+
+   _MultipleGroupingGridExportData(griddata:any, groupdcol:any, isgroupedcolDate:any) {
+    debugger;
+
+    let a = [];
+    let Ajv = [];
+    let keys = [];
+    let Jvlist = [];
+    for (var i = 0; i < griddata.length; i++) {
+      let Jsongroupcol;
+      let Ajvlistgroupcol;
+      if (isgroupedcolDate == true) {
+        //Jsongroupcol = formatDate(griddata[i][groupdcol], 'dd-MM-yyyy', 'en-IN');
+        Jsongroupcol = this.getFormatDateGlobal(griddata[i][groupdcol]);
+        Ajvlistgroupcol = griddata[i]["ptransactionno"];
+      }
+      else {
+        Jsongroupcol = griddata[i][groupdcol];
+        Ajvlistgroupcol = griddata[i]["ptransactionno"];
+      }
+
+      if (!a[Jsongroupcol]) {
+
+
+        keys.push(Jsongroupcol);
+        let k = { ...griddata[i] }
+        a[Jsongroupcol] = [k];
+
+      }
+      a[Jsongroupcol].push(griddata[i]);
+
+
+      if (!Ajv[Ajvlistgroupcol]) {
+
+        Jvlist.push(Ajvlistgroupcol);
+        let k = { ...griddata[i] }
+        Ajv[Ajvlistgroupcol] = [k];
+      }
+
+      Ajv[Ajvlistgroupcol].push(griddata[i]);
+    }
+
+    let final = [];
+    for (var j = 0; j < Jvlist.length; j++) {
+
+      let keypair = Ajv[Jvlist[j]]
+      for (var k = 0; k < keypair.length; k++) {
+        let groupcolHead
+
+        if (k == 0) {
+          if (isgroupedcolDate == true) {
+            // groupcolHead = formatDate(keypair[k][groupdcol], 'dd-MM-yyyy', 'en-IN');
+            groupcolHead = (keypair[k]["ptransactionno"]);
+          }
+          else {
+            groupcolHead = keypair[k]["ptransactionno"];
+          }
+          keypair[k]["group"] = {
+            content: '               ' + groupcolHead + '',
+            colSpan: 15,
+            styles: { halign: 'left', fontStyle: 'bold', textColor: "#663300" }
+          };
+        }
+        final.push(keypair[k])
+      }
+    }
+    debugger;
+    let NewdataArray = [];
+    for (var RRR = 0; RRR < keys.length; RRR++) {
+      let KeysN = keys[RRR];
+      NewdataArray.push({
+        group: {
+          content: '' + KeysN + '',
+          colSpan: 15,
+          styles: { halign: 'left', fontStyle: 'bold', textColor: "#009933" }
+        }
+      });
+      for (var AAA = 0; AAA < final.length; AAA++) {
+
+        if (KeysN == this.getFormatDateGlobal(final[AAA][groupdcol])) {
+
+          NewdataArray.push(final[AAA]);
+        }
+
+      }
+
+    }
+    return NewdataArray;
+
+  }
+
 }
 
 

@@ -95,6 +95,48 @@
                     </ngx-datatable-column>
 
                   </ngx-datatable>
+                  <p-table
+  [value]="gridData"
+  [rows]="5"
+  responsiveLayout="scroll"
+  styleClass="p-datatable-gridlines p-datatable-sm"
+>
+
+  <!-- Header -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="text-center">No. of Cheques</th>
+      <th class="text-left">From No.</th>
+      <th class="text-left">To No.</th>
+      <th class="text-center">Action</th>
+    </tr>
+  </ng-template>
+
+  <!-- Body -->
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td class="text-center">{{ row.pNoofcheques }}</td>
+      <td class="text-left">{{ row.pChequefrom }}</td>
+      <td class="text-left">{{ row.pChequeto }}</td>
+
+      <td class="text-center">
+        <span *ngIf="row.pStatusname === true">Active</span>
+        <span *ngIf="row.pStatusname === false">InActive</span>
+      </td>
+    </tr>
+  </ng-template>
+
+  <!-- No Data -->
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4" class="text-center">
+        No data to display
+      </td>
+    </tr>
+  </ng-template>
+
+</p-table>
+
 
                 </div>
               </div>
