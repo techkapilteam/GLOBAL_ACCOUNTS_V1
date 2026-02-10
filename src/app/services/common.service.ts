@@ -1418,6 +1418,13 @@ _downloadTrialBalanceReportsPdf(
 
 
 
+  removeCommasForEntredNumber(enteredNumber:any) {
+    return this.removeCommasInAmount(enteredNumber);
+  }
+}
+
+
+
 
 
 function isNullOrEmptyString(pCinNo: any) {
