@@ -6,111 +6,115 @@
       </div>
 
       <div class="screen-content">
-        <form [formGroup]="TrialBalanceForm" class="row g-3 align-items-end">
+        <form [formGroup]="TrialBalanceForm">
+  <div class="row">
 
-          <div class="col-xl-2 col-md-2 mt-4">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" id="asdate" type="checkbox" [checked]="showhideason"
-                (change)="checkboxChecked($event)">
-              <label class="mt-2" for="asdate">As On</label>
-            </div>
-          </div>
-
-          <div class="col-xl-2 col-md-2">
-            <label>{{ showhideason ? 'Date' : 'From Date' }}</label>
-            <input type="text" class="form-control" bsDatepicker formControlName="fromdate" [bsConfig]="dpConfig"
-              readonly onkeydown="return false">
-          </div>
-
-          <div class="col-xl-2 col-md-2" *ngIf="!showhideason">
-            <label>To Date</label>
-            <input type="text" class="form-control" bsDatepicker formControlName="todate" [bsConfig]="dpConfig" readonly
-              onkeydown="return false">
-          </div>
-
-          <div class="col-xl-2 col-md-2 mt-4">
-            <div class="form-check">
-              <input class="form-check-input" id="grouping" type="checkbox" [checked]="withGroupingFlag"
-                (change)="withGrouping($event)">
-              <label class="mt-2" for="grouping">With Grouping</label>
-            </div>
-          </div>
-
-          <div class="col-xl-4 col-md-1 form-group mt-2 pt-3">
-            <button type="button" class="btn btn-primary btn-lg w-80" (click)="GenerateReport()">
-              {{ savebutton }}
-            </button>
-          </div>
-
-        </form>
+    <div class="col-md-2 mt-3">
+      <div class="form-check">
+        <input class="form-check-input"
+               type="checkbox"
+               id="asdate"
+               (change)="checkboxChecked($event)">
+        <label class="form-check-label" for="asdate">
+          As On
+        </label>
       </div>
     </div>
 
-
-    <div *ngIf="dataisempty && !showhidetable" class="text-start">
-      <p>No Records to Display</p>
+    <div class="col-md-3">
+      <label>{{ groupType === 'ASON' ? 'Date' : 'From Date' }}</label>
+      <input type="text"
+             class="form-control"
+             readonly
+             [bsConfig]="dpConfig"
+             formControlName="fromdate"
+             bsDatepicker>
     </div>
 
-
-    <div *ngIf="showhidetable" class="mt-4 border rounded shadow-sm bg-white p-3">
-
-       <div class="card-body">
-
-            
-            <div class="d-flex justify-content-end mb-2">
-              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
-                <i class="fa fa-file-pdf me-1"></i> PDF
-              </button>
-
-              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
-                <i class="fa fa-print me-1"></i> Print
-              </button>
-
-              <button class="btn btn-outline-success" (click)="exportExcel()">
-                <i class="fa fa-file-excel me-1"></i> Excel
-              </button>
-            </div>
-<div *ngIf="showhidetable" class="mt-4 border rounded shadow-sm bg-white p-3">
-      <div class="text-center">
-        <h2 class="m-0 font-weight-bold">KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
-        <p class="m-0">Above TVS Showroom, 1st Floor, Kamareddy</p>
-        <p>CIN : U65992TG2008PTC060803</p>
-      </div>
-      
-
-      <p class="text-end fw-bold">Branch : Ca-hyderabad-co</p>
-
-      <h4 class="text-center fw-bold">Trial Balance</h4>
-
-      <div *ngIf="ShowAsOn" class="mb-3">
-        <strong>As On : {{ formatDate(fromdate) }}</strong>
-      </div>
-
-      <ngx-datatable class="material" [rows]="Trialbalancelst" [headerHeight]="50" [rowHeight]="50">
-
-        <ngx-datatable-column name="Type" sortable="false" prop="pparentname"></ngx-datatable-column>
-
-        <ngx-datatable-column name="Particulars" sortable="false" prop="paccountname"></ngx-datatable-column>
-
-        <ngx-datatable-column name="Debit" sortable="false">
-          <ng-template let-row="row" ngx-datatable-cell-template>
-            <span *ngIf="row.pdebitamount">
-              {{ currencysymbol }} {{ row.pdebitamount | number:'1.2-2' }}
-            </span>
-          </ng-template>
-        </ngx-datatable-column>
-
-        <ngx-datatable-column name="Credit" sortable="false">
-          <ng-template let-row="row" ngx-datatable-cell-template>
-            <span *ngIf="row.pcreditamount">
-              {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
-            </span>
-          </ng-template>
-        </ngx-datatable-column>
-
-      </ngx-datatable>
-
+    <div class="col-md-3" *ngIf="showhideason">
+      <label>To Date</label>
+      <input type="text"
+             class="form-control"
+             readonly
+             [bsConfig]="dppConfig"
+             formControlName="todate"
+             bsDatepicker>
     </div>
+
+    <div class="col-md-2 mt-3">
+      <div class="form-check">
+        <input class="form-check-input"
+               type="checkbox"
+               id="grouping"
+               (change)="withGrouping($event)">
+        <label class="form-check-label" for="grouping">
+          With Grouping
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-2 mt-3">
+      <button type="button"
+              class="btn btn-primary"
+              (click)="GenerateReport()">
+        {{savebutton}}
+      </button>
+    </div>
+
+  </div>
+</form>
+
+<div *ngIf="showhidetable" class="mt-4">
+
+  <p-table
+    [value]="Trialbalancelst"
+    [paginator]="true"
+    [rows]="10"
+    responsiveLayout="scroll">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Type</th>
+        <th>Particulars</th>
+        <th class="text-end">Debit</th>
+        <th class="text-end">Credit</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>{{ row.pparentname }}</td>
+        <td>{{ row.paccountname }}</td>
+
+        <td class="text-end">
+          <span *ngIf="row.pdebitamount !== 0">
+            {{currencysymbol}} {{ row.pdebitamount | number:'1.2-2' }}
+          </span>
+        </td>
+
+        <td class="text-end">
+          <span *ngIf="row.pcreditamount !== 0">
+            {{currencysymbol}} {{ row.pcreditamount | number:'1.2-2' }}
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <tr>
+        <td colspan="2" class="text-end fw-bold">Total</td>
+        <td class="text-end fw-bold">
+          {{currencysymbol}} {{ totaldebitamount | number:'1.2-2' }}
+        </td>
+        <td class="text-end fw-bold">
+          {{currencysymbol}} {{ totalcreditamount | number:'1.2-2' }}
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>
   </div>
 </div>
 </div>

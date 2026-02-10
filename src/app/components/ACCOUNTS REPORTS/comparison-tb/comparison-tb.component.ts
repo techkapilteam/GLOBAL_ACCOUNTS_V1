@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 import { CommonService } from '../../../services/common.service';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -81,8 +81,25 @@ export class ComparisonTbComponent {
       fromDate: [this.today, Validators.required],
       toDate: [this.today, Validators.required],
       grouping: [false]
-    });
+    }, { validators: this.dateRangeValidator() });
   }
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+
+      const from = group.get('fromDate')?.value;
+      const to = group.get('toDate')?.value;
+
+      if (!from || !to) return null;
+
+      const fromTime = new Date(from).setHours(0, 0, 0, 0);
+      const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+      return fromTime > toTime
+        ? { dateRangeInvalid: true }
+        : null;
+    };
+  }
+
 
   setPageModel() {
     this.pageCriteria.pageSize = this.commonService.pageSize;
@@ -145,6 +162,14 @@ export class ComparisonTbComponent {
   }
 
   GetComparisionTBReports() {
+    this.ComparisionTBForm.markAllAsTouched();
+
+    if (this.ComparisionTBForm.errors?.['dateRangeInvalid']) {
+      alert('From Date should not be greater than To Date');
+      return;
+    }
+
+    if (this.ComparisionTBForm.invalid) return;
     this.loading = this.isLoading = true;
     this.savebutton = 'Processing';
 

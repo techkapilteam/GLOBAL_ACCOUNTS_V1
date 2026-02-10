@@ -1,13 +1,14 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-brs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, BsDatepickerModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, BsDatepickerModule, TableModule],
   templateUrl: './brs.component.html',
   styleUrls: ['./brs.component.css'],
   providers: [DatePipe]
@@ -38,6 +39,7 @@ export class BrsComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private datePipe: DatePipe) { }
 
+
   ngOnInit() {
     const today = new Date();
 
@@ -48,7 +50,7 @@ export class BrsComponent implements OnInit {
       fromDate: [today],
       toDate: [today],
       pDocStorePath: ['']
-    });
+    },{ validators: this.dateRangeValidator() });
 
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
@@ -65,8 +67,28 @@ export class BrsComponent implements OnInit {
       this.gridView = [];
     });
   }
+  dateRangeValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+
+    const from = group.get('fromDate')?.value;
+    const to = group.get('toDate')?.value;
+
+    if (!from || !to) return null;
+
+    return from > to ? { dateRangeInvalid: true } : null;
+  };
+}
 
   getBRStatmentReports() {
+    this.BRStatmentForm.markAllAsTouched();
+
+  if (this.BRStatmentForm.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
+
+  if (this.BRStatmentForm.invalid) return;
+    
     const chequeInfoChecked = this.BRStatmentForm.get('chequeInfo')?.value;
 
     if (chequeInfoChecked) {

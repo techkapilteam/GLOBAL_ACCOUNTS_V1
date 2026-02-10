@@ -5,105 +5,168 @@
     </div>
     <div class="screen-content">
       <div class="container-fluid my-3">
-        <form>
-          <div class="card shadow-sm p-3 mb-4">
-            <div class="row g-3 align-items-end">
-              <div class="col-md-2">
+        <form [formGroup]="cashBookForm" autocomplete="off">
+
+          <div class="section-content">
+            <div class="row">
+
+              <div class="col-12">
+                <p class="bc-2">Cash Book Details</p>
+              </div>
+
+              <div class="col-md-3 form-group">
                 <label>From Date</label>
-                <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-                  [bsConfig]="dpConfig" readonly onkeydown="return false">
+                <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
+                  readonly>
+
+                <small class="text-danger" *ngIf="cashBookForm.get('fromDate')?.touched &&
+                 cashBookForm.get('fromDate')?.invalid">
+                  From Date is required
+                </small>
               </div>
-              <div class="col-md-2">
+
+              <div class="col-md-3 form-group">
                 <label>To Date</label>
-                <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
-                  [bsConfig]="dpConfig" readonly onkeydown="return false">
+                <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig"
+                  readonly>
+
+                <small class="text-danger" *ngIf="cashBookForm.get('toDate')?.touched &&
+                 cashBookForm.get('toDate')?.invalid">
+                  To Date is required
+                </small>
+
+                <small class="text-danger" *ngIf="cashBookForm.errors?.['dateRangeInvalid']">
+                  From Date cannot be greater than To Date
+                </small>
               </div>
 
-              <div class="col-md-3">
+              <div class="col-md-4 form-group">
                 <label>Transaction Type</label>
-                <div class="d-flex gap-3 mt-1">
-                  <label class="form-check form-check-inline mb-0">
-                    <input class="form-check-input" type="radio" name="transactionType" value="CASH"
-                      [(ngModel)]="transactionType">
-                    <span class="form-check-label">Cash</span>
-                  </label>
-                  <label class="form-check form-check-inline mb-0">
-                    <input class="form-check-input" type="radio" name="transactionType" value="CHEQUE"
-                      [(ngModel)]="transactionType">
-                    <span class="form-check-label">Cheque</span>
-                  </label>
-                  <label class="form-check form-check-inline mb-0">
-                    <input class="form-check-input" type="radio" name="transactionType" value="BOTH"
-                      [(ngModel)]="transactionType">
-                    <span class="form-check-label">Both</span>
-                  </label>
+
+                <div class="d-flex gap-3 mt-2">
+
+                  <div>
+                    <input type="radio" value="CASH" formControlName="ptranstype">
+                    Cash
+                  </div>
+
+                  <div>
+                    <input type="radio" value="CHEQUE" formControlName="ptranstype">
+                    Cheque
+                  </div>
+
+                  <div>
+                    <input type="radio" value="BOTH" formControlName="ptranstype">
+                    Both
+                  </div>
+
                 </div>
+
+                <small class="text-danger" *ngIf="cashBookForm.get('ptranstype')?.touched &&
+                 cashBookForm.get('ptranstype')?.invalid">
+                  Select Transaction Type
+                </small>
               </div>
 
-              <div class="col-auto ms-auto mt-2">
-                <button type="button" class="btn btn-primary btn-sm" (click)="generateReport()">Generate Report</button>
+              <div class="col-md-2 text-end mt-4">
+                <button type="button" class="btn btn-primary" (click)="generateReport()" [disabled]="isLoading">
+
+                  <span *ngIf="!isLoading">Generate</span>
+                  <span *ngIf="isLoading">
+                    <i class="pi pi-spin pi-spinner"></i> Processing
+                  </span>
+
+                </button>
               </div>
+
             </div>
           </div>
+
         </form>
-        <div class="card shadow-sm" *ngIf="showTable">
-          <div class="card-body">
-            <div class="d-flex justify-content-end mb-2">
-              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
-                <i class="fa fa-file-pdf me-1"></i> PDF
-              </button>
-              <button class="btn btn-outline-success me-2" (click)="exportExcel()">
-                <i class="fa fa-file-excel me-1"></i> Excel
-              </button>
-              <button class="btn btn-outline-secondary" (click)="pdfOrprint('Print')">
-                <i class="fa fa-print me-1"></i> Print
-              </button>
-            </div>
-            <div class="text-center mb-1 fw-bold fs-5">
-              KAPIL CHITS (HYDERABAD) PVT. LTD.
-            </div>
-            <div class="text-center mb-1">
-              Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy
-            </div>
-            <div class="text-center mb-2 fw-semibold">
-              CIN : U65992TG2008PTC060803
-            </div>
-            <hr>
-            <h6 class="text-center fw-bold">
-              Cash Book - {{ transactionType }}
-            </h6>
-            <div class="row mt-2">
-              <div class="col-md-6">
-                <span class="fw-bold">Between :</span>
-                {{ formatDate(fromDate) }} And {{ formatDate(toDate) }}
-              </div>
-            </div>
-            <ngx-datatable class="bootstrap mt-3" [rows]="rows" [columnMode]="'force'" [headerHeight]="50"
-              [rowHeight]="'auto'" [footerHeight]="50" [limit]="10">
-              <ngx-datatable-column name="Transaction No" sortable="false" prop="txnNo"></ngx-datatable-column>
-              <ngx-datatable-column name="Particulars" sortable="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{ formatDate(row.particulars) }}
-                </ng-template>
-              </ngx-datatable-column>
-              <ngx-datatable-column name="Narration" sortable="false" prop="narration"></ngx-datatable-column>
-              <ngx-datatable-column name="Receipts" sortable="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  ₹ {{ row.receipts | number:'1.2-2' }}
-                </ng-template>
-              </ngx-datatable-column>
-              <ngx-datatable-column name="Payments" sortable="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  ₹ {{ row.payments | number:'1.2-2' }}
-                </ng-template>
-              </ngx-datatable-column>
-              <ngx-datatable-column name="Balance" sortable="false">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  ₹ {{ row.balance | number:'1.2-2' }}
-                </ng-template>
-              </ngx-datatable-column>
-            </ngx-datatable>
+        <div class="section-content mt-4" *ngIf="gridView?.length">
+
+          <div class="mb-3 text-end" *ngIf="showicons">
+            <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">PDF</button>
+
+            <button class="btn btn-outline-secondary me-2" (click)="pdfOrPrint('Print')">Print</button>
+
+            <button class="btn btn-outline-success" (click)="export()">Excel</button>
           </div>
+
+          <div class="text-center mb-1 fw-bold fs-5">
+            KAPIL CHITS (HYDERABAD) PVT. LTD.
+          </div>
+          <div class="text-center mb-1">
+            Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy
+          </div>
+          <div class="text-center mb-2 fw-semibold">
+            CIN : U65992TG2008PTC060803
+          </div>
+          <hr>
+          <p-table [value]="gridView" [paginator]="true" [rows]="10" [loading]="isLoading" [rowGroupMode]="'subheader'"
+            groupRowsBy="ptransactiondate" sortField="ptransactiondate" responsiveLayout="scroll">
+
+            <!-- Group Header -->
+            <ng-template pTemplate="rowgroupheader" let-rowData>
+              <tr class="bg-light">
+                <td colspan="6">
+                  <b>{{ rowData.ptransactiondate | date:'dd-MM-yyyy' }}</b>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Transaction No.</th>
+                <th>Particulars</th>
+                <th>Narration</th>
+                <th class="text-end">Receipts</th>
+                <th class="text-end">Payments</th>
+                <th class="text-end">Balance</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr>
+
+                <td>
+                  <span *ngIf="!row.ptransactionno">--NA--</span>
+                  <a *ngIf="row.ptransactionno" (click)="clickTransNo(row)" style="cursor:pointer">
+                    {{ row.ptransactionno }}
+                  </a>
+                </td>
+
+                <td>{{ row.pparticulars }}</td>
+
+                <td>{{ row.pdescription || '--NA--' }}</td>
+
+                <td class="text-end">
+                  <span *ngIf="row.pdebitamount">
+                    {{ currencysymbol }}
+                    {{ row.pdebitamount | number:'1.2-2' }}
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  <span *ngIf="row.pcreditamount">
+                    {{ currencysymbol }}
+                    {{ row.pcreditamount | number:'1.2-2' }}
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  <span *ngIf="row.pclosingbal">
+                    {{ currencysymbol }}
+                    {{ row.pclosingbal | number:'1.2-2' }}
+                    {{ row.pBalanceType }}
+                  </span>
+                </td>
+
+              </tr>
+            </ng-template>
+
+          </p-table>
+
         </div>
       </div>
     </div>

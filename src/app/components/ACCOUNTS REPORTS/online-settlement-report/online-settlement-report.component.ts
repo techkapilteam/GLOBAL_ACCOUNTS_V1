@@ -119,8 +119,23 @@ displayedRows: any[] = [];
     { name: 'UPI Name', prop: 'upiName', sortable: false },
     { name: 'Party', prop: 'party', sortable: false }
   ];
-  fromDate!: Date;
-  toDate!: Date;
+  fromDate: Date | null = null;
+toDate: Date | null = null;
+
+validateDates() {
+
+  if (this.fromDate && this.toDate) {
+
+    const fromTime = new Date(this.fromDate).setHours(0,0,0,0);
+    const toTime = new Date(this.toDate).setHours(0,0,0,0);
+
+    if (fromTime > toTime) {
+      alert('From Date should not be greater than To Date');   
+      this.fromDate=null;
+      this.toDate=null; 
+    }
+  }
+}
 
   ngOnInit() {
     const today = new Date();

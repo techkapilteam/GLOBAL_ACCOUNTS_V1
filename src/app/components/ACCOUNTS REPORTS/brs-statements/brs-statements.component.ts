@@ -1,14 +1,15 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-brs-statements',
   standalone: true,
-  imports: [NgxDatatableModule, ReactiveFormsModule, CommonModule, BsDatepickerModule, NgSelectModule],
+  imports: [NgxDatatableModule, ReactiveFormsModule, CommonModule, BsDatepickerModule, NgSelectModule, TableModule],
   providers: [DatePipe],
   templateUrl: './brs-statements.component.html',
   styleUrls: ['./brs-statements.component.css']
@@ -42,7 +43,21 @@ export class BrsStatementsComponent {
       bankId: [''],
       fromDate: [today],
       toDate: [today]
-    });
+    }, { validators: this.dateRangeValidator() });
+  }
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+
+      const from = group.get('fromDate')?.value;
+      const to = group.get('toDate')?.value;
+
+      const fromTime = new Date(from).setHours(0, 0, 0, 0);
+      const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+      return fromTime > toTime
+        ? { dateRangeInvalid: true }
+        : null;
+    };
   }
 
   onBankTypeChange(type: 'CREDIT' | 'DEBIT') {
@@ -51,6 +66,14 @@ export class BrsStatementsComponent {
   }
 
   getReport() {
+    this.form.markAllAsTouched();
+
+    if (this.form.errors?.['dateRangeInvalid']) {
+      alert('From Date should not be greater than To Date');
+      return;
+    }
+
+    if (this.form.invalid) return;
     if (this.bankType === 'CREDIT') {
       this.gridView = [
         {
@@ -91,7 +114,7 @@ export class BrsStatementsComponent {
     console.log('Excel Export');
   }
 
-   exportExcel() {
+  exportExcel() {
     alert('Excel export not implemented in demo mode');
   }
 }

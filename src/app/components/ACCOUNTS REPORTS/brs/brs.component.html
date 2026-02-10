@@ -52,100 +52,105 @@
 
     <div *ngIf="gridView.length" class="mt-4 bg-white border rounded p-3">
 
-    <div class="card-body">
+      <div class="card-body">
 
-            
-            <div class="d-flex justify-content-end mb-2">
-              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
-                <i class="fa fa-file-pdf me-1"></i> PDF
-              </button>
 
-              <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
-                <i class="fa fa-print me-1"></i> Print
-              </button>
+        <div class="d-flex justify-content-end mb-2">
+          <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+            <i class="fa fa-file-pdf me-1"></i> PDF
+          </button>
 
-              
-            </div>
+          <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
+            <i class="fa fa-print me-1"></i> Print
+          </button>
 
-      <div class="mt-2 border rounded shadow-sm bg-white">
-        <div class="temp-head float-md-center pt-3">
-          <h2 class="font text-center m-0 font-weight-bold"> KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
-          <p class="font-16 text-center m-0">Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old NK-07,Kamareddy.</p>
-          <p class="font-14 text-center">CIN : U65992TG2008PTC060803</p>
-          <p class="font-14 text-end m-0 font-weight-bold">Branch : Ca-hyderabad-co</p>
+
         </div>
 
-        <div class="report-head mt-2 text-center"><b>Bank Reconciliation</b></div>
+        <div class="mt-2 border rounded shadow-sm bg-white">
+          <div class="temp-head float-md-center pt-3">
+            <h2 class="font text-center m-0 font-weight-bold"> KAPIL CHITS(HYDERABAD) PVT. LTD.</h2>
+            <p class="font-16 text-center m-0">Above TVS Showroom, 1st Floor, Opp:R&B Guest House,Old NK-07,Kamareddy.
+            </p>
+            <p class="font-14 text-center">CIN : U65992TG2008PTC060803</p>
+            <p class="font-14 text-end m-0 font-weight-bold">Branch : Ca-hyderabad-co</p>
+          </div>
 
-        <div class="d-flex justify-content-between mt-2 mb-3">
-          <strong>As on: {{ formatDate(startDate) }}</strong>
-          <b>{{ selectedBankName }} - {{ selectedBankAccount }}</b>
-        </div>
+          <div class="report-head mt-2 text-center"><b>Bank Reconciliation</b></div>
 
-        <div class="border shadow-sm bg-white p-3" style="overflow:hidden; height:auto !important;">
-          <ngx-datatable #myTable class="material expandable" [rows]="gridView" [headerHeight]="45" [rowHeight]="45"
-            [groupRowsBy]="'pGroupType'" [groupExpansionDefault]="true" [columnMode]="'force'" [scrollbarH]="true">
+          <div class="d-flex justify-content-between mt-2 mb-3">
+            <strong>As on: {{ formatDate(startDate) }}</strong>
+            <b>{{ selectedBankName }} - {{ selectedBankAccount }}</b>
+          </div>
 
-            <ngx-datatable-group-header>
-              <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
-                <a (click)="toggleExpandGroup(group)">
-                  <b>{{ group.value[0].pGroupType }}</b>
-                </a>
+          <div class="border shadow-sm bg-white p-3" style="overflow:hidden; height:auto !important;">
+            <p-table [value]="gridView" rowGroupMode="subheader" groupRowsBy="pGroupType" sortField="pGroupType"
+              [sortOrder]="1" responsiveLayout="scroll" class="p-datatable-gridlines p-datatable-striped">
+
+              <ng-template pTemplate="groupheader" let-rowData>
+                <tr>
+                  <td colspan="4">
+                    <b>{{ rowData.pGroupType }}</b>
+                  </td>
+                </tr>
               </ng-template>
-            </ngx-datatable-group-header>
 
-            <ngx-datatable-row-detail [rowHeight]="60">
-              <ng-template let-row="row" ngx-datatable-row-detail-template>
-                <div class="text-end pe-3">
-                  <strong>Total :5000</strong> {{ currencysymbol }} {{ getGroupTotal(row.value[0].pGroupType) |
-                  number:'1.2-2' }}
-                </div>
+              <ng-template pTemplate="groupfooter" let-rowData>
+                <tr>
+                  <td colspan="4" class="text-end pe-3">
+                    <strong>Total :</strong>
+                    {{ currencysymbol }}
+                    {{ getGroupTotal(rowData.pGroupType) | number:'1.2-2' }}
+                  </td>
+                </tr>
               </ng-template>
-            </ngx-datatable-row-detail>
 
-            <ngx-datatable-column name="Transaction Date" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ formatDate(row.ptransactiondate) }}
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Transaction Date</th>
+                  <th>Cheque No</th>
+                  <th>Particulars</th>
+                  <th class="text-end">Amount</th>
+                </tr>
               </ng-template>
-            </ngx-datatable-column>
 
-            <ngx-datatable-column name="Cheque No" sortable="false" prop="pChequeNumber"></ngx-datatable-column>
-            <ngx-datatable-column name="Particulars" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ row.pparticulars || '--NA--' }}
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td>{{ formatDate(row.ptransactiondate) }}</td>
+                  <td>{{ row.pChequeNumber }}</td>
+                  <td>{{ row.pparticulars || '--NA--' }}</td>
+                  <td class="text-end">
+                    {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+                  </td>
+                </tr>
               </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Amount" sortable="false">
-              <ng-template ngx-datatable-cell-template let-row="row">
-                {{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
-              </ng-template>
-            </ngx-datatable-column>
 
-          </ngx-datatable>
-        </div>
-        <div class="temp-box-inner border rounded shadow-sm bg-white p-3 mt-4">
-          <p><b>Balance as per bank book :</b> ₹ 1,50,000.00</p>
-          <p><b>Less: Cheques deposited but not credited :</b> ₹ 25,000.00</p>
-          <p><b>Add: Cheques issued but not cleared :</b> ₹ 12,000.00</p>
-          <p><b>Balance as per pass book :</b> ₹ 1,37,000.00</p>
+            </p-table>
+          </div>
+          <div class="temp-box-inner border rounded shadow-sm bg-white p-3 mt-4">
+            <p><b>Balance as per bank book :</b> ₹ 1,50,000.00</p>
+            <p><b>Less: Cheques deposited but not credited :</b> ₹ 25,000.00</p>
+            <p><b>Add: Cheques issued but not cleared :</b> ₹ 12,000.00</p>
+            <p><b>Balance as per pass book :</b> ₹ 1,37,000.00</p>
 
-          <div class="row">
-            <div class="col-md-6">
-              <p class="mt-2">
-                <b>Bank Balance :</b>
-                <input type="text" class="form-control d-inline-block ml-2" style="width:200px" value="137000.00">
-              </p>
-            </div>
-            <div class="col-md-6 col-xl-4">
-              <div class="form-group">
-                <label id="pDocStorePath" title="Upload Identification Proof">Upload Document</label>
-                <div class="input-group">
-                  <input #input type="text" class="form-control" placeholder="" formControlName="pDocStorePath">
-                  <div class="input-group-append">
-                    <button class="btn btn-lg-icon px-2 p-0" [attr.disabled]="disablereference ? '' : null">
-                      <img src="assets/images/icon-upload-blue.svg" width="18px" height="18px">
-                    </button>
-                    <input id="fileInput1" style="display: none" type="file" #fileInput>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mt-2">
+                  <b>Bank Balance :</b>
+                  <input type="text" class="form-control d-inline-block ml-2" style="width:200px" value="137000.00">
+                </p>
+              </div>
+              <div class="col-md-6 col-xl-4">
+                <div class="form-group">
+                  <label id="pDocStorePath" title="Upload Identification Proof">Upload Document</label>
+                  <div class="input-group">
+                    <input #input type="text" class="form-control" placeholder="" formControlName="pDocStorePath">
+                    <div class="input-group-append">
+                      <button class="btn btn-lg-icon px-2 p-0" [attr.disabled]="disablereference ? '' : null">
+                        <img src="assets/images/icon-upload-blue.svg" width="18px" height="18px">
+                      </button>
+                      <input id="fileInput1" style="display: none" type="file" #fileInput>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -155,4 +160,3 @@
       </div>
     </div>
   </div>
-</div>

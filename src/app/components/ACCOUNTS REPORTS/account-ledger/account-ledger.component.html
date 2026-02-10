@@ -10,7 +10,7 @@
       <div class="container-fluid my-3">
 
 
-        <form>
+        <!-- <form>
           <div class="card shadow-sm p-3 mb-4">
             <div class="row g-3 align-items-end">
 
@@ -31,13 +31,13 @@
 
               <div class="col-md-3">
                 <label>From Date</label>
-                <input class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate" [bsConfig]="dpConfig"
+                <input class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate" [bsConfig]="dpConfig" (ngModelChange)="validateDates()"
                   readonly onkeydown="return false">
               </div>
 
               <div class="col-md-3">
                 <label>To Date</label>
-                <input class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate" [bsConfig]="dpConfig"
+                <input class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate" [bsConfig]="dpConfig" (ngModelChange)="validateDates()"
                   readonly onkeydown="return false">
               </div>
 
@@ -53,7 +53,70 @@
               </div>
             </div>
           </div>
+        </form> -->
+        <form [formGroup]="accountLedgerForm" autocomplete="off">
+
+          <div class="section-content">
+            <div class="row">
+
+              <div class="col-xl-3 col-md-4 form-group">
+                <label class="required-field">Ledger</label>
+
+                <ng-select [items]="ledgeraccountslist" formControlName="pledgerid" bindLabel="pledgername"
+                  bindValue="pledgerid" groupBy="pAccounttype" placeholder="Select" (change)="onLedgerChange($event)"
+                  [searchable]="true" [clearable]="false">
+                </ng-select>
+
+                <small class="text-danger" *ngIf="accountLedgerForm.get('pledgerid')?.touched &&
+                 accountLedgerForm.get('pledgerid')?.invalid">
+                  Ledger is required
+                </small>
+              </div>
+
+              <!-- Sub Ledger -->
+              <div class="col-xl-3 col-md-4 form-group">
+                <label>Sub Ledger</label>
+
+                <ng-select [items]="subledgeraccountslist" formControlName="psubledgerid" bindLabel="psubledgername"
+                  bindValue="psubledgerid" placeholder="Select" [searchable]="true" [clearable]="false">
+                </ng-select>
+              </div>
+
+              <div class="col-xl-3 col-md-3 form-group">
+                <label>From Date</label>
+                <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
+                  readonly>
+              </div>
+
+              <div class="col-xl-3 col-md-3 form-group">
+                <label>To Date</label>
+                <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig"
+                  readonly>
+              </div>
+
+              <div class="col-xl-3 col-md-3 form-group mt-3">
+                <input type="checkbox" (change)="checkNarration($event)" id="WithNarration">
+                <label for="WithNarration" class="ms-2">
+                  With Narration
+                </label>
+              </div>
+
+              <div class="col-md-9 col-xl-9 text-end">
+                <button type="button" class="btn btn-primary" (click)="generateReport()" [disabled]="isLoading">
+
+                  <span *ngIf="!isLoading">Generate Report</span>
+                  <span *ngIf="isLoading">
+                    <i class="pi pi-spin pi-spinner"></i> Processing...
+                  </span>
+
+                </button>
+              </div>
+
+            </div>
+          </div>
+
         </form>
+
 
         <div class="card shadow-sm" *ngIf="showReport">
           <div class="card-body">
@@ -62,7 +125,7 @@
               <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">
                 <i class="fa fa-file-pdf me-1"></i> PDF
               </button>
-              <button class="btn btn-outline-success me-2" (click)="exportExcel()">
+              <button class="btn btn-outline-success me-2" (click)="exportToExcel()">
                 <i class="fa fa-file-excel me-1"></i> Excel
               </button>
               <button class="btn btn-outline-secondary" (click)="pdfOrPrint('Print')">
@@ -96,9 +159,28 @@
             </div>
 
 
-            <ngx-datatable class="bootstrap mt-3" [rows]="gridView" [columns]="columns" [headerHeight]="50"
-              [rowHeight]="'auto'" [footerHeight]="50" [limit]="10">
-            </ngx-datatable>
+            <p-table [value]="gridView" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,20]"
+              responsiveLayout="scroll" class="mt-3">
+
+              <!-- Header -->
+              <ng-template pTemplate="header">
+                <tr>
+                  <th *ngFor="let col of columns">
+                    {{ col.name }}
+                  </th>
+                </tr>
+              </ng-template>
+
+              <!-- Body -->
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td *ngFor="let col of columns">
+                    {{ row[col.prop] }}
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
 
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
@@ -11,8 +11,8 @@ import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-cheque-return',
-  standalone:true,
-  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,BsDatepickerModule,TableModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule, TableModule],
   templateUrl: './cheque-return.component.html',
   styleUrl: './cheque-return.component.css',
 })
@@ -58,7 +58,7 @@ export class ChequeReturnComponent implements OnInit {
     this.buildForm();
     this.setPageModel();
     this.updateFormattedDates();
-    
+
   }
 
   // ------------------ INIT ------------------
@@ -69,7 +69,23 @@ export class ChequeReturnComponent implements OnInit {
     this.FrmChequeReturn = this.fb.group({
       fromdate: [today, Validators.required],
       todate: [today, Validators.required]
-    }) as any;
+    }, { validators: this.dateRangeValidator() }) as any;
+  }
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+
+      const from = group.get('fromdate')?.value;
+      const to = group.get('todate')?.value;
+
+      if (!from || !to) return null;
+
+      const fromTime = new Date(from).setHours(0, 0, 0, 0);
+      const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+      return fromTime > toTime
+        ? { dateRangeInvalid: true }
+        : null;
+    };
   }
 
   private initializeDatePickers() {
@@ -145,6 +161,14 @@ export class ChequeReturnComponent implements OnInit {
   GetChequeReturnDetails() {
     const from = this.f.fromdate.value!;
     const to = this.f.todate.value!;
+    this.FrmChequeReturn.markAllAsTouched();
+
+  if (this.FrmChequeReturn.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
+
+  if (this.FrmChequeReturn.invalid) return;
 
     this.loading = this.isLoading = true;
     this.savebutton = 'Processing';
@@ -240,6 +264,7 @@ export class ChequeReturnComponent implements OnInit {
       "Between",
       this.StartDate ?? '',
       this.EndDate ?? '',
-      type   
+      type
     );
-  }}
+  }
+}

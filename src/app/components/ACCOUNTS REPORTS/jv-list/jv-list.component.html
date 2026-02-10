@@ -5,117 +5,219 @@
     </div>
 
     <div class="screen-content">
-      <form autocomplete="off">
+      <div class="container-fluid">
 
-        <div class="row g-3">
-          <div class="col-md-2">
-            <label>From Date</label>
-            <input type="text" class="form-control"
-              bsDatepicker
-              [(ngModel)]="fromDate"
-              name="fromDate"
-              [bsConfig]="dpConfig"
-              readonly
-              onkeydown="return false">
-          </div>
+  <form [formGroup]="JvlistReportForm" autocomplete="off">
+  <div class="row">
 
-          <div class="col-md-2">
-            <label>To Date</label>
-            <input type="text" class="form-control"
+    <!-- From & To Section -->
+    <div class="col-md-4">
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="required-field">From Date</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="fromDate"
               bsDatepicker
-              [(ngModel)]="toDate"
-              name="toDate"
               [bsConfig]="dpConfig"
+              placement="bottom"
               readonly
-              onkeydown="return false">
+              (bsValueChange)="ToDateChange($event)"
+              [ngClass]="{
+                'is-invalid':
+                submitted && JvlistReportForm.controls['fromDate'].invalid
+              }"
+            />
+            <div class="invalid-feedback"
+              *ngIf="submitted && JvlistReportForm.controls['fromDate'].errors?.['required']">
+              From Date is required
+            </div>
           </div>
         </div>
 
-        <div class="row g-3 align-items-end mt-2">
-          <div class="col-md-3">
-            <label class="required-field">Form Name</label>
-            <select class="form-select" [(ngModel)]="pformname" name="pformname">
-              <option value="">Select</option>
-              <option value="All">All</option>
-              <option value="A1">A1</option>
-              <option value="A2">A2</option>
-            </select>
-          </div>
-
-          <div class="col-md-3">
-            <label class="required-field">Transaction Type</label>
-            <select class="form-select" [(ngModel)]="ptranstype" name="ptranstype">
-              <option value="">Select</option>
-              <option value="All">All</option>
-              <option value="Auto">Auto</option>
-              <option value="Manual">Manual</option>
-            </select>
-          </div>
-
-          <div class="col-md-3">
-            <button type="button" class="btn btn-primary w-100" (click)="generateReport()">
-              Generate Report
-            </button>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="required-field">To Date</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="toDate"
+              bsDatepicker
+              [bsConfig]="dpConfig1"
+              placement="bottom"
+              readonly
+              (bsValueChange)="FromDateChange($event)"
+              [ngClass]="{
+                'is-invalid':
+                submitted && JvlistReportForm.controls['toDate'].invalid
+              }"
+            />
+            <div class="invalid-feedback"
+              *ngIf="submitted && JvlistReportForm.controls['toDate'].errors?.['required']">
+              To Date is required
+            </div>
           </div>
         </div>
-      </form>
+
+      </div>
     </div>
 
-    
-    <div class="section-content mt-3">
-      <div class="mt-2 border rounded shadow-sm bg-white p-3">
-        <ngx-datatable
-          class="bootstrap"
-          [rows]="rows"
-          [columnMode]="'force'"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [rowHeight]="'auto'"
-          [limit]="10">
+    <!-- Form Name -->
+    <div class="col-md-2 form-group">
+      <label class="required-field">Form Name</label>
+      <select
+        class="form-control"
+        formControlName="formName"
+      >
+        <option value="">Select</option>
+        <option value="AUCTION">AUCTION</option>
+        <option value="RECEIPT">RECEIPT</option>
+        <option value="PAYMENT">PAYMENT</option>
+      </select>
+    </div>
 
-          
-          <ngx-datatable-column name="Particulars" prop="particulars" [sortable]="false">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row.particulars }}
-            </ng-template>
-          </ngx-datatable-column>
+    <!-- Transaction Type -->
+    <div class="col-md-3 form-group">
+      <label class="required-field">Transaction Type</label>
+      <select
+        class="form-control"
+        formControlName="ptranstype"
+        (change)="SelectTransactiontype()"
+        [ngClass]="{
+          'is-invalid':
+          submitted && JvlistReportForm.controls['ptranstype'].invalid
+        }"
+      >
+        <option value="">Select</option>
+        <option value="All">All</option>
+        <option value="Auto">Auto</option>
+        <option value="Manual">Manual</option>
+      </select>
 
-         
-          <ngx-datatable-column name="Debit Amount" [sortable]="false">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span class="text-end">₹ {{ row.debit | number:'1.2-2' }}</span>
-            </ng-template>
-          </ngx-datatable-column>
+      <div class="invalid-feedback"
+        *ngIf="submitted && JvlistReportForm.controls['ptranstype'].errors?.['required']">
+        Select Transaction Type
+      </div>
+    </div>
 
-          
-          <ngx-datatable-column name="Credit Amount" [sortable]="false">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span class="text-end">₹ {{ row.credit | number:'1.2-2' }}</span>
-            </ng-template>
-          </ngx-datatable-column>
-
-          
-          <ngx-datatable-row-detail *ngIf="rows.length === 0">
-            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
-              <div class="text-center text-muted py-9" style="width:100%;">
-                No data to display
-              </div>
-            </ng-template>
-          </ngx-datatable-row-detail>
-
-         
-          <ngx-datatable-footer *ngIf="rows.length > 0">
-            <div class="fw-bold d-flex justify-content-end">
-              <div class="me-4">Total Debit: ₹ {{ totalDebit | number:'1.2-2' }}</div>
-              <div>Total Credit: ₹ {{ totalCredit | number:'1.2-2' }}</div>
-            </div>
-          </ngx-datatable-footer>
-
-        </ngx-datatable>
+    <!-- Button -->
+    <div class="col-md-3">
+      <div class="form-group mt-4">
+        <button
+          type="button"
+          class="btn btn-s-icon px-3 border-0"
+          (click)="getjvListReports()"
+        >
+          <img
+            src="assets/images/icon-check-white.svg"
+            class="mr-2"
+            width="18"
+            height="18"
+          />
+          {{ savebutton }}
+        </button>
       </div>
     </div>
 
   </div>
+</form>
+
+  <div id="temp-box" [hidden]="showHide" class="section-content mt-4">
+
+    <!-- PDF / Print -->
+    <div class="d-flex justify-content-end mb-3">
+      <img
+        src="assets/images/pdf-icon-blue.svg"
+        width="20"
+        class="me-3"
+        style="cursor:pointer"
+        title="PDF"
+        (click)="pdfOrprint('Pdf')"
+      />
+      <img
+        src="assets/images/print-icon-blue.svg"
+        width="20"
+        style="cursor:pointer"
+        title="Print"
+        (click)="pdfOrprint('Print')"
+      />
+    </div>
+
+    <!-- Company Header -->
+    <div class="border rounded shadow-sm bg-white p-3 mb-3">
+      <!-- <app-company-details
+        [PrintedDateShowhide]="printedDate">
+      </app-company-details> -->
+
+      <p class="text-center fw-bold m-0">JV List</p>
+    </div>
+
+    <!-- Date + Type Info -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Between :</strong>
+        {{ startDate | date:'DD-MMM-YYYY' }} And {{ endDate | date:'DD-MMM-YYYY' }}
+      </div>
+      <div class="col-md-6 text-end">
+        <strong>JV Type :</strong> {{ jvtype }}
+      </div>
+    </div>
+
+
+    <p-table
+      [value]="jvlistDataa"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [responsiveLayout]="'scroll'"
+      class="p-datatable-sm">
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Particulars</th>
+          <th class="text-end">Debit Amount</th>
+          <th class="text-end">Credit Amount</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>
+            {{ row.formOrModulename || row.pparticulars }}
+          </td>
+
+          <td class="text-end">
+            <ng-container *ngIf="row.pdebitamount != 0">
+              {{ currencysymbol }}
+              {{ row.pdebitamount | number:'1.2-2' }}
+            </ng-container>
+          </td>
+
+          <td class="text-end">
+            <ng-container *ngIf="row.pcreditamount != 0">
+              {{ currencysymbol }}
+              {{ row.pcreditamount | number:'1.2-2'}}
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="text-center">
+            No Records Found
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
 </div>
-
-
+  </div>
+</div>

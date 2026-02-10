@@ -21,7 +21,6 @@ export const appConfig: ApplicationConfig = {
     //  importProvidersFrom(
     //   BsDatepickerModule.forRoot()
     // ),
-    CommonService,
      providePrimeNG({
       theme: {
         preset: Aura
