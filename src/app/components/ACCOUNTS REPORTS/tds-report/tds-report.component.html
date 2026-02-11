@@ -1,4 +1,3 @@
-<!-- <form> -->
 <div class="screen-container">
 
   <div class="screen-card">
@@ -8,197 +7,145 @@
 
 
     <div class="screen-content">
-      <div class="col-md-8">
-        <div class="row">
+      <form [formGroup]="TDSReport" class="screen-container">
 
+        <div class="screen-card">
 
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="font-weight-bold">Section</label>
-              <select class="form-control" name="section" [(ngModel)]="selectedSection"
-                (ngModelChange)="onSectionChange()">
+          <div class="screen-content">
+            <div class="row">
 
-                <option value="">--Select--</option>
-                <option *ngFor="let s of sections" [ngValue]="s.code">
-                  {{ s.code }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Section Name</label>
-              <!-- <input type="text" class="form-control" [value]="sectionName" readonly /> -->
-              <input type="text" class="form-control" name="sectionName" [(ngModel)]="sectionName" readonly />
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </div>
-
-    <div class="screen-content">
-      <div class="row align-items-end">
-
-        <div class="col-md-2">
-          <div class="form-check mt-4">
-            <input type="checkbox" class="form-check-input" id="asOn" (change)="onAsOnChange($event)" />
-            <label class="form-check-label" for="asOn">As On</label>
-          </div>
-        </div>
-
-        <div class="col-md-3" *ngIf="asOnChecked">
-          <div class="form-group">
-            <label>Date</label>
-            <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-              onkeydown="return false">
-          </div>
-        </div>
-
-        <div class="col-md-3" *ngIf="!asOnChecked">
-          <div class="form-group">
-            <label>From Date</label>
-            <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-              onkeydown="return false" (ngModelChange)="validateDates()">
-          </div>
-        </div>
-
-        <div class="col-md-3" *ngIf="!asOnChecked">
-          <div class="form-group">
-            <label class="required-field">To Date</label>
-            <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate"
-              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-              onkeydown="return false" (ngModelChange)="validateDates()">
-          </div>
-        </div>
-
-        <div class="col-md-2">
-          <div class="form-check mt-4">
-            <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)" />
-            <label class="form-check-label" for="summary">Summary</label>
-          </div>
-        </div>
-
-        <div class="col-md-2">
-          <button class="btn btn-primary mt-4" (click)="onShowClick()">Show</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- <div class="row">
-            <div class="col-md-4">
-                <div class="form-check mt-2">
-                    <input type="checkbox" class="form-check-input" id="asOn" />
-                    <label class="form-check-label" for="summary">
-                        summary
-                    </label>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="required-field">TDS Section</label>
+                  <select class="form-control" formControlName="pTdsSection" (change)="sectionchange($event)">
+                    <option value="">-- Select Section --</option>
+                    <option *ngFor="let section of tdssectionlist; trackBy: trackByFn" [value]="section.pTdsSection">
+                      {{ section.pTdsSection }}
+                    </option>
+                  </select>
                 </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Section Name</label>
+                  <input type="text" class="form-control" [value]="sectionName" readonly>
+                </div>
+              </div>
+
             </div>
-        </div> -->
+          </div>
 
+          <div class="screen-content">
+            <div class="row align-items-end">
 
-<div class="row mt-3" *ngIf="showResult && !isSummary">
-  <div class="col-md-12">
+              <div class="col-md-2">
+                <div class="form-check mt-4">
+                  <input type="checkbox" class="form-check-input" id="asOn" (change)="onAsOnChange($event)">
+                  <label class="form-check-label" for="asOn">
+                    As On
+                  </label>
+                </div>
+              </div>
 
-    <p-table [value]="rows" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10,20,50,100]" [scrollable]="true"
-      scrollHeight="400px" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="required-field">
+                    {{ asOnChecked ? 'Date' : 'From Date' }}
+                  </label>
+                  <input type="text" class="form-control" bsDatepicker formControlName="fromDate"
+                    [bsConfig]="dpFromConfig" (bsValueChange)="FromDateChange($event)" onkeydown="return false">
+                </div>
+              </div>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Particulars</th>
-          <th>PAN Number</th>
-          <th>PAN Status</th>
-          <th>Name</th>
-          <th>Code</th>
-          <th>Transaction Date</th>
-          <th class="text-end">Paid Amount</th>
-          <th class="text-end">TDS calculated Amount</th>
-          <th class="text-end">Amount</th>
-          <th>Effective JV</th>
-          <th>Subscriber Branch</th>
-        </tr>
-      </ng-template>
+              <div class="col-md-3" *ngIf="!asOnChecked">
+                <div class="form-group">
+                  <label class="required-field">To Date</label>
+                  <input type="text" class="form-control" bsDatepicker formControlName="toDate" [bsConfig]="dpToConfig"
+                    (bsValueChange)="ToDateChange($event)" onkeydown="return false">
+                </div>
+              </div>
 
-      <ng-template pTemplate="body" let-row>
-        <tr>
-          <td>{{ row.particulars }}</td>
-          <td>{{ row.panNumber }}</td>
-          <td>{{ row.panStatus }}</td>
-          <td>{{ row.name }}</td>
-          <td>{{ row.code }}</td>
-          <td>{{ row.transactionDate }}</td>
+              <div class="col-md-2">
+                <div class="form-check mt-4">
+                  <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)">
+                  <label class="form-check-label" for="summary">
+                    Summary
+                  </label>
+                </div>
+              </div>
 
-          <td class="text-end">
-            ₹ {{ row.paidAmount }}
-          </td>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-primary w-100 mt-3" (click)="generatetdsreport()"
+                  [disabled]="isLoading">
+                  {{ savebutton }}
+                </button>
+              </div>
 
-          <td class="text-end">
-            ₹ {{ row.tdsAmount }}
-          </td>
+            </div>
+          </div>
 
-          <td class="text-end">
-            ₹ {{ row.amount }}
-          </td>
+        </div>
+      </form>
 
-          <td>{{ row.effectiveJV }}</td>
-          <td>{{ row.subscriberBranch }}</td>
-        </tr>
-      </ng-template>
+      <div class="row mt-4" *ngIf="showResult && !isSummary">
 
-    </p-table>
+        <div class="col-md-12">
 
+          <p-table [value]="gridData" [paginator]="true" [rows]="10" [scrollable]="true" scrollHeight="400px"
+            responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Section</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th class="text-end">Amount</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.pTdsSection }}</td>
+                <td>{{ row.fromDate }}</td>
+                <td>{{ row.toDate }}</td>
+                <td class="text-end">
+                  ₹ {{ row.amount | number:'1.2-2' }}
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+
+        </div>
+      </div>
+
+      <div class="row mt-4" *ngIf="showResult && isSummary">
+
+        <div class="col-md-12">
+
+          <p-table [value]="summaryData" [scrollable]="true" scrollHeight="400px" styleClass="p-datatable-gridlines">
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Section</th>
+                <th class="text-end">Total Amount</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.pTdsSection }}</td>
+                <td class="text-end">
+                  ₹ {{ row.amount | number:'1.2-2' }}
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
-<div class="row mt-4" *ngIf="showResult && isSummary">
-  <div class="col-md-12">
-
-    <ngx-datatable class="material" [rows]="agentRows" [columnMode]="'force'" [headerHeight]="45" [rowHeight]="'auto'"
-      [scrollbarH]="true">
-
-      <ngx-datatable-column name="Agent Name" prop="agentName" sortable="false">
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="Agent Code" prop="agentCode" sortable="false">
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="PAN Number" prop="panNumber" sortable="false">
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="Paid Amount" prop="paidAmount" [cellClass]="'text-right'" sortable="false">
-
-        <ng-template ngx-datatable-cell-template let-row="row">
-          ₹ {{ row.paidAmount | number:'1.2-2' }}
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="TDS Calculated Amount" prop="tdsAmount" [cellClass]="'text-right'" sortable="false">
-
-        <ng-template ngx-datatable-cell-template let-row="row">
-          ₹ {{ row.tdsAmount | number:'1.2-2' }}
-        </ng-template>
-      </ngx-datatable-column>
-
-      <ngx-datatable-column name="Amount" prop="amount" [cellClass]="'text-right'" sortable="false">
-
-        <ng-template ngx-datatable-cell-template let-row="row">
-          ₹ {{ row.amount | number:'1.2-2' }}
-        </ng-template>
-      </ngx-datatable-column>
-
-    </ngx-datatable>
-
-  </div>
-</div>
-
-
-
-<!-- </form> -->

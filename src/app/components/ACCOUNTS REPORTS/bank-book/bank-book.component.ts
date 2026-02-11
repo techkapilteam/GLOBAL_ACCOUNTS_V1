@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -107,7 +107,19 @@ private fb = inject(FormBuilder);
     fromDate: [new Date(), Validators.required],
     toDate: [new Date(), Validators.required],
     pbankname: ['', Validators.required]
-  });
+  }, { validators: this.dateRangeValidator() });
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+
+      const from = group.get('fromDate')?.value;
+      const to = group.get('toDate')?.value;
+
+      if (from && to && new Date(from) > new Date(to)) {
+      return { dateRangeInvalid: true };
+    }
+    return null;
+    };
+  }
 
   loading = false;
   saveButton = 'Generate Report';
@@ -150,6 +162,10 @@ private fb = inject(FormBuilder);
     }
 
     const { fromDate, toDate, pbankname='' } = this.bankBookForm.value;
+    if (this.bankBookForm.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
 
     this.loading = true;
     this.saveButton = 'Processing';

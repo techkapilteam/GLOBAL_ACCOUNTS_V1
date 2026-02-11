@@ -81,12 +81,12 @@ today = new Date();
     // this.fromDate = today;
     // this.toDate = today;
 
-    // this.dpConfig = {
-    //   dateInputFormat: 'DD-MMM-YYYY',
-    //   containerClass: 'theme-dark-blue',
-    //   showWeekNumbers: false,
-    //   maxDate: today
-    // };
+    this.dpConfig = {
+      dateInputFormat: 'DD-MMM-YYYY',
+      containerClass: 'theme-dark-blue',
+      showWeekNumbers: false,
+      maxDate: this.today
+    };
     this.initForm();
     this.loadLedgers();
   }

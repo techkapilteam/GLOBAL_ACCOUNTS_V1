@@ -138,6 +138,9 @@
             <label>To Date</label>
             <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig"
               readonly>
+              <small class="text-danger" *ngIf="bankBookForm.errors?.['dateRangeInvalid']">
+                  From Date cannot be greater than To Date
+              </small>
           </div>
 
           <div class="col-md-3">
