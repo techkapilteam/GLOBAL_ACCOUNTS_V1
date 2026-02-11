@@ -51,7 +51,7 @@ export class PendingTransferComponent implements OnInit {
 
   branchname: any;
   caoschema: any;
-  formname = 'Pending Transfer In';
+  formname = '';
   branchkgms = false;
   branchcao = true;
 
@@ -80,9 +80,9 @@ export class PendingTransferComponent implements OnInit {
       kgms?.setValidators(Validators.required);
       kgms?.updateValueAndValidity();
 
-      // this._ChitTransactionsService
-      //   .getBranchesByCAO(this.loginBranchschema, this.loginBranchschema)
-      //   .subscribe((res: any) => this.CAOBranchList = res);
+      this._ChitTransactionsService
+        .getBranchesByCAO(this.loginBranchschema, this.loginBranchschema)
+        .subscribe((res: any) => this.CAOBranchList = res);
 
     } else if (this.userBranchType === 'KGMS') {
       this.branchkgms = true;

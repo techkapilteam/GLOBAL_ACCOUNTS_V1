@@ -4,75 +4,108 @@
       <h2>Receipts and Payments</h2>
     </div>
     <div class="screen-content">
-      <form [formGroup]="FormReceiptsandPaymentsGroup">
-        <div class="row g-3">
+      <form [formGroup]="FormReceiptsandPaymentsGroup" (ngSubmit)="Show()">
+        <div class="row">
 
-          <div class="col-md-3">
-            <label class="required-field">Group Code</label>
-            <ng-select [items]="GroupCodes()" bindLabel="groupcode" bindValue="groupcode" formControlName="groupcode"
-              class="form-control" placeholder="Select Group Code" (change)="GroupChange()"
-              [ngClass]="{'is-invalid': formErrors()['groupcode']}">
-            </ng-select>
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group">
+              <label class="required-field">Group Code</label>
 
+              <ng-select [items]="GroupCodes" formControlName="groupcode" bindLabel="groupcode" bindValue="groupcode"
+                placeholder="Select" [searchable]="true" [clearable]="false" appendTo="body" (change)="GroupChange()"
+                [class.is-invalid]="
+            FormReceiptsandPaymentsGroup.get('groupcode')?.invalid &&
+            FormReceiptsandPaymentsGroup.get('groupcode')?.touched
+          ">
+              </ng-select>
 
-            @if (formErrors()['groupcode']) {
-            <div class="invalid-feedback d-block">
-              {{ formErrors()['groupcode'] }}
+              <div class="invalid-feedback" *ngIf="FormReceiptsandPaymentsGroup.get('groupcode')?.invalid &&
+                    FormReceiptsandPaymentsGroup.get('groupcode')?.touched">
+                Group Code is required
+              </div>
             </div>
-            }
           </div>
 
           <div class="col-md-3">
-            <label>From Date</label>
-            <input class="form-control" readonly bsDatepicker [bsConfig]="dpConfig" formControlName="fromdate">
+            <div class="form-group">
+              <label>From Date</label>
+              <input type="text" class="form-control" bsDatepicker [bsConfig]="dpConfig" formControlName="fromdate"
+                readonly [class.is-invalid]="
+        FormReceiptsandPaymentsGroup.get('fromdate')?.invalid &&
+        FormReceiptsandPaymentsGroup.get('fromdate')?.touched
+      ">
+
+              <div class="invalid-feedback" *ngIf="FormReceiptsandPaymentsGroup.get('fromdate')?.invalid &&
+                FormReceiptsandPaymentsGroup.get('fromdate')?.touched">
+                From Date is required
+              </div>
+            </div>
           </div>
 
           <div class="col-md-3">
-            <label>To Date</label>
-            <input class="form-control" readonly bsDatepicker [bsConfig]="dpConfig" formControlName="todate">
+            <div class="form-group">
+              <label>To Date</label>
+              <input type="text" class="form-control" bsDatepicker [bsConfig]="dpConfig" formControlName="todate"
+                readonly [class.is-invalid]="
+        FormReceiptsandPaymentsGroup.get('todate')?.invalid &&
+        FormReceiptsandPaymentsGroup.get('todate')?.touched
+      ">
+
+              <div class="invalid-feedback" *ngIf="FormReceiptsandPaymentsGroup.get('todate')?.invalid &&
+                FormReceiptsandPaymentsGroup.get('todate')?.touched">
+                To Date is required
+              </div>
+            </div>
           </div>
 
+          <div class="col-md-3">
+            <div class="d-flex justify-content-start mt-4">
+              <button type="submit" class="btn btn-primary px-3" [disabled]="disablesavebutton">
 
-
-          <div class="col-md-3 d-flex align-items-end">
-            <button class="btn btn-primary w-100" type="button" (click)="Show()" [disabled]="disablesavebutton()">
-              {{ savebutton() }}
-            </button>
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
+                {{ savebutton }}
+              </button>
+            </div>
           </div>
 
         </div>
       </form>
+      <form [formGroup]="FormReceiptsandPaymentsGroup1" (ngSubmit)="ShowExtract()">
+        <div class="row">
 
-      <hr class="my-4">
+          <div class="col-md-6 col-xl-6">
+            <div class="form-group">
+              <label class="required-field">Extract Code</label>
 
+              <ng-select [items]="ExtractCodes" formControlName="extractcode" appendTo="body" bindLabel="pparticulars"
+                bindValue="pparticulars" placeholder="Select" [searchable]="true" [clearable]="false"
+                [class.is-invalid]="
+            FormReceiptsandPaymentsGroup1.get('extractcode')?.invalid &&
+            FormReceiptsandPaymentsGroup1.get('extractcode')?.touched
+          ">
+              </ng-select>
 
-      <form [formGroup]="FormReceiptsandPaymentsGroup1">
-        <div class="row g-3">
-
-          <div class="col-md-6">
-            <label class="required-field">Extract Code</label>
-            <ng-select [items]="ExtractCodes()" bindLabel="pparticulars" bindValue="pparticulars" class="form-control"
-              formControlName="extractcode" placeholder="Select Extract Code"
-              [ngClass]="{'is-invalid': formErrors1()['extractcode']}">
-            </ng-select>
-
-            @if (formErrors1()['extractcode']) {
-            <div class="invalid-feedback d-block">
-              {{ formErrors1()['extractcode'] }}
+              <div class="invalid-feedback" *ngIf="
+               FormReceiptsandPaymentsGroup1.get('extractcode')?.invalid &&
+               FormReceiptsandPaymentsGroup1.get('extractcode')?.touched
+             ">
+                Extract Code is required
+              </div>
             </div>
-            }
           </div>
 
-          <div class="col-md-3 d-flex align-items-end">
-            <button class="btn btn-primary w-100" type="button" (click)="ShowExtract()"
-              [disabled]="disablesavebutton1()">
-              {{ savebutton1() }}
-            </button>
+          <div class="col-md-3">
+            <div class="d-flex justify-content-start mt-4">
+              <button type="submit" class="btn btn-primary px-3" [disabled]="disablesavebutton1">
+
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}"></i>
+                {{ savebutton1 }}
+              </button>
+            </div>
           </div>
 
         </div>
       </form>
-
     </div>
   </div>
 </div>

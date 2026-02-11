@@ -4,94 +4,131 @@
             <h2>Online Settlement Report</h2>
         </div>
 
-        <form>
-            <div class="screen-content">
-                <div class="row align-items-end">
-                    <div class="col-md-3">
-                        <label class="required-field">From Date</label>
-                        <input type="text" class="form-control" bsDatepicker [(ngModel)]="fromDate" name="fromDate" (ngModelChange)="validateDates()"
-                            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
-                            onkeydown="return false">
+        <form [formGroup]="onlinecollectionreportForm">
+
+            <div class="section-content">
+                <div class="row">
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <input class="form-control" type="text" readonly formControlName="fromdate" bsDatepicker
+                                [bsConfig]="dpConfig" (bsValueChange)="DateChange($event)">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <input class="form-control" type="text" readonly formControlName="todate" bsDatepicker
+                                [bsConfig]="dpConfig1">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group">
+                            <label>Online Account</label>
+                            <select class="form-control" formControlName="paytmname">
+                                <option value="">Select</option>
+                                @for (bank of PaytmList; track bank.paccountid) {
+                                <option [value]="bank.paccountid">
+                                    {{ bank.pdepositbankname }}
+                                </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xl-3">
+                        <div class="d-flex justify-content-start mt-4 gap-2">
+
+                            <button type="button" class="btn btn-primary px-3" (click)="Show()"
+                                [disabled]="disablesavebutton">
+
+                                <i class="fa" [class.fa-spin]="disablesavebutton"
+                                    [class.fa-spinner]="disablesavebutton">
+                                </i>
+                                {{ savebutton }}
+                            </button>
+
+                            <button type="button" class="btn btn-outline-primary px-3" (click)="View()"
+                                [disabled]="disableviewbutton">
+
+                                @if (disableviewbutton) {
+                                <i class="fa fa-spinner fa-spin me-1"></i>
+                                Processing...
+                                } @else {
+                                View
+                                }
+                            </button>
+
+                        </div>
                     </div>
 
+                </div>
 
-                    <div class="col-md-3">
-                        <label class="required-field">To Date</label>
-                        <input type="text" class="form-control" bsDatepicker [(ngModel)]="toDate" name="toDate" (ngModelChange)="validateDates()"
-                            [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
-                            onkeydown="return false">
-                    </div>
+                <br>
 
-                    <div class="col-md-3">
-                        <label>Online Account</label>
-                        <select class="form-control" [(ngModel)]="selectedUPI" name="selectedUPI">
-                            <option value="">--Select--</option>
-                            <option>Paytm</option>
-                            <option>PhonePe</option>
-                            <option>Google Pay</option>
-                        </select>
+                <div class="row">
+                    <div class="col-md-12 col-xl-12">
+                        <div class="d-flex justify-content-end me-3">
+                            <ul class="d-flex align-items-center mb-0 list-unstyled gap-3">
+                                <li>
+                                    <img src="images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')">
+                                </li>
+                                <li>
+                                    <img src="images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')">
+                                </li>
+                                <li>
+                                    <img src="images/icon-excel.svg" width="18" (click)="export()">
+                                </li>
+                            </ul>
+                        </div>
+
+                        <ngx-datatable #myTable class="material expandable table" [rows]="GridData"
+                            [columnMode]="ColumnMode.force" [headerHeight]="50" [scrollbarH]="true"
+                            [offset]="pageCriteria.offset" [limit]="pageCriteria.pageSize" [summaryRow]="true"
+                            [summaryHeight]="40" summaryPosition="bottom" [footerHeight]="pageCriteria.footerPageHeight"
+                            [rowHeight]="50">
+
+                            <ngx-datatable-column name="Transaction No" prop="transactionNo">
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Transaction Date">
+                                <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{ row.transactiondate | date:'dd-MM-yyyy' }}
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Chit Receipt No" prop="chitReceiptNo">
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Reference No" prop="pChequenumber">
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Cheque Date">
+                                <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{ row.pchequedate | date:'dd-MM-yyyy' }}
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Amount">
+                                <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{ currencysymbol }}
+                                    {{ row.ptotalreceivedamount | number:'1.2-2' }}
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Chit No.">
+                                <ng-template ngx-datatable-cell-template let-row="row">
+                                    {{ row.chitgroupcode }} - {{ row.ticketno }}
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                        </ngx-datatable>
+
                     </div>
                 </div>
-                <div class="col-md-3 mt-4">
-                    <button type="button" class="btn btn-primary me-2" (click)="showFiltered()">
-                        <i class="fa fa-search"></i> Show
-                    </button>
-                    <button type="button" class="btn btn-primary" (click)="showAll()">
-                        View
-                    </button>
-                </div>
+
             </div>
         </form>
+
+
     </div>
-    <br />
-    <br />
-    <div class="download-icons d-flex justify-content-end gap-2">
-        <!-- <i class="fa-solid fa-file-pdf fa-2x text-danger" title="Download PDF" (click)="downloadPDF()"></i>
-        <i class="fa-solid fa-file-excel fa-2x text-success" title="Download Excel" (click)="downloadExcel()"></i>
-        <i class="fa-solid fa-print fa-2x text-primary" title="Print" (click)="printPage()"></i> -->
-        <button class="btn btn-outline-danger me-2" (click)="downloadPDF()">
-            <i class="fa fa-file-pdf me-1"></i> PDF
-        </button>
-
-        <button class="btn btn-outline-success" (click)="downloadExcel()">
-            <i class="fa fa-file-excel me-1"></i> Excel
-        </button>
-
-        <button class="btn btn-outline-secondary me-2" (click)="printPage()">
-            <i class="fa fa-print me-1"></i> Print
-        </button>
-    </div>
-
-
-
-    <hr>
-
-    <p-table
-  [value]="displayedRows"
-  [columns]="columns"
-  [scrollable]="true"
-  scrollHeight="400px"
-  responsiveLayout="scroll"
-  styleClass="p-datatable-gridlines mt-3">
-
-  <ng-template pTemplate="header" let-columns>
-    <tr>
-      <th *ngFor="let col of columns">
-        {{ col.name || col.header }}
-      </th>
-    </tr>
-  </ng-template>
-
-  <ng-template pTemplate="body" let-row let-columns="columns">
-    <tr>
-      <td *ngFor="let col of columns">
-        {{ row[col.prop || col.field] }}
-      </td>
-    </tr>
-  </ng-template>
-
-</p-table>
-
-
-
 </div>

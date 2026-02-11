@@ -21,6 +21,9 @@ import { DatePipe } from '@angular/common';
   providedIn: 'root',
 })
 export class CommonService {
+  _downloadReportsPdf(reportname: string, rows: any[][], gridheaders: string[], colWidthHeight: { 0: { cellWidth: string; halign: string; }; 1: { cellWidth: number; halign: string; }; 2: { cellWidth: number; halign: string; }; 3: { cellWidth: number; halign: string; }; 4: { cellWidth: string; halign: string; }; 5: { cellWidth: string; halign: string; }; 6: { cellWidth: string; halign: string; }; 7: { cellWidth: string; halign: string; }; }, arg4: string, arg5: string, startDate: any, endDate: any, printorpdf: any) {
+    throw new Error('Method not implemented.');
+  }
 
 
 
@@ -1414,13 +1417,144 @@ _downloadTrialBalanceReportsPdf(
   // getKapilGroupLogo(): string { return ''; }
   // _getRupeeSymbol(): string { return ''; }
   // pdfProperties(key: string): any { return ''; }
-}
+
 
 
 
   removeCommasForEntredNumber(enteredNumber:any) {
     return this.removeCommasInAmount(enteredNumber);
   }
+  getFormatDateYYYMMDD(date: Date | string | null | undefined): string | null {
+  if (!date) {
+    return null;
+  }
+
+  return this.datepipe.transform(date, 'yyyy-MM-dd');
+}
+_downloadBRSReportsPdf(
+  reportName: string,
+  gridData: any[],
+  gridheaders: any[],
+  colWidthHeight: any,
+  pagetype: any,
+  betweenorason: string,
+  fromdate: string,
+  todate: string,
+  BankBalance: any,
+  chequesdepositedbutnotcredited: any,
+  CHEQUESISSUEDBUTNOTCLEARED: any,
+  balanceperbankbook: any,
+  printorpdf: string,
+  bankname: string
+) {
+
+  const doc = new jsPDF({
+    orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const totalPagesExp = '{total_pages_count_string}';
+  const today = this.pdfProperties("Date");
+  const currencyformat = this.currencysymbol;
+  const kapil_logo = this.getKapilGroupLogo();
+
+  let pageHeight = doc.internal.pageSize.getHeight();
+  let pageWidth = doc.internal.pageSize.getWidth();
+
+  autoTable(doc, {
+  head: [gridheaders],
+  body: gridData,
+  startY: 46,
+  theme: 'grid',
+
+  headStyles: {
+    fillColor: this.pdfProperties("Header Color") as any,
+    halign: (this.pdfProperties("Header Alignment") as 'left' | 'center' | 'right') ?? 'center',
+    fontSize: Number(this.pdfProperties("Header Fontsize")) || 10
+  },
+
+  styles: {
+    fontSize: Number(this.pdfProperties("Cell Fontsize")) || 9,
+    cellPadding: 1,
+    overflow: 'linebreak'
+  },
+
+  columnStyles: {
+    0: { halign: 'center' as const },
+    1: { halign: 'center' as const },
+    3: { halign: 'right' as const, cellWidth: 30 }
+  },
+
+    didDrawPage: (data) => {
+
+      doc.setFont('times', 'bold');
+      doc.setFontSize(14);
+      doc.text("Bank Reconciliation - " + bankname, 15, 20);
+
+      doc.setFontSize(10);
+      if (betweenorason === "Between") {
+        doc.text(`Between : ${fromdate} And ${todate}`, 15, 26);
+      } else {
+        doc.text(`As On : ${fromdate}`, 15, 26);
+      }
+
+      doc.addImage(kapil_logo, 'JPEG', pageWidth - 40, 10, 25, 15);
+
+      let str = "Page " + doc.getNumberOfPages();
+      if (typeof doc.putTotalPages === 'function') {
+        str = str + " of " + totalPagesExp;
+      }
+
+      doc.setFontSize(9);
+      doc.text("Printed on : " + today, 15, pageHeight - 10);
+      doc.text(str, pageWidth - 40, pageHeight - 10);
+    }
+  });
+
+  let finalY = (doc as any).lastAutoTable.finalY + 15;
+
+  const addCurrencyIcon = (y: number) => {
+    if (currencyformat === "₹") {
+      doc.text("₹", 90, y);
+    }
+  };
+
+  if (finalY + 50 > pageHeight) {
+    doc.addPage();
+    finalY = 20;
+  }
+
+  doc.setFontSize(10);
+
+  addCurrencyIcon(finalY);
+  doc.text(`Balance as per bank book : ${BankBalance}`, 15, finalY);
+
+  addCurrencyIcon(finalY + 8);
+  doc.text(`Less: Cheques deposited but not credited : ${chequesdepositedbutnotcredited}`, 15, finalY + 8);
+
+  addCurrencyIcon(finalY + 16);
+  doc.text(`Add: Cheques issued but not cleared : ${CHEQUESISSUEDBUTNOTCLEARED}`, 15, finalY + 16);
+
+  addCurrencyIcon(finalY + 24);
+  doc.text(`Balance as per pass book / statement : ${balanceperbankbook}`, 15, finalY + 24);
+
+  doc.text("Account Officer", 15, finalY + 50);
+  doc.text("Manager", pageWidth / 2 - 20, finalY + 50);
+  doc.text("Verified by", pageWidth - 50, finalY + 50);
+
+  if (typeof doc.putTotalPages === 'function') {
+    doc.putTotalPages(totalPagesExp);
+  }
+
+  if (printorpdf === "Pdf") {
+    doc.save(`${reportName}.pdf`);
+  }
+
+  if (printorpdf === "Print") {
+    this.setiFrameForPrint(doc);
+  }
+}
 }
 
 

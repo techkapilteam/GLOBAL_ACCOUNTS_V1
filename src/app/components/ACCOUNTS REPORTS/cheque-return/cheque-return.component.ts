@@ -8,6 +8,7 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { TableModule } from 'primeng/table';
+import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 
 @Component({
   selector: 'app-cheque-return',
@@ -21,6 +22,7 @@ export class ChequeReturnComponent implements OnInit {
   private fb = inject(FormBuilder);
   private datePipe = inject(DatePipe);
   private router = inject(Router);
+    private reportService = inject(AccountingTransactionsService);
   private commonService = inject(CommonService);
   private accReportService = inject(AccountingReportsService);
 
@@ -60,8 +62,6 @@ export class ChequeReturnComponent implements OnInit {
     this.updateFormattedDates();
 
   }
-
-  // ------------------ INIT ------------------
 
   private buildForm() {
     const today = new Date();
@@ -119,44 +119,61 @@ export class ChequeReturnComponent implements OnInit {
     this.EndDate = this.datePipe.transform(this.f.todate.value, 'dd-MMM-yyyy');
   }
 
-  // ------------------ DUMMY DATA ------------------
+  // private getDummyChequeReturnData(): any[] {
+  //   return [
+  //     {
+  //       pcleardate: new Date('2026-01-05'),
+  //       preferencenumber: 'CHQ2001',
+  //       ptotalreceivedamount: 9000,
+  //       pbankname: 'HDFC Bank',
+  //       preceiptid: 'RCPT-010',
+  //       pchequedate: new Date('2026-01-02'),
+  //       pparticulars: 'Cheque bounced',
+  //       pbranchname: 'Hyderabad'
+  //     },
+  //     {
+  //       pcleardate: new Date('2026-01-15'),
+  //       preferencenumber: 'CHQ2002',
+  //       ptotalreceivedamount: 12000,
+  //       pbankname: 'SBI',
+  //       preceiptid: 'RCPT-011',
+  //       pchequedate: new Date('2026-01-13'),
+  //       pparticulars: 'Signature mismatch',
+  //       pbranchname: 'Mumbai'
+  //     },
+  //     {
+  //       pcleardate: new Date('2026-01-25'),
+  //       preferencenumber: 'CHQ2003',
+  //       ptotalreceivedamount: 7000,
+  //       pbankname: 'ICICI Bank',
+  //       preceiptid: 'RCPT-012',
+  //       pchequedate: new Date('2026-01-20'),
+  //       pparticulars: 'Funds not available',
+  //       pbranchname: 'Chennai'
+  //     }
+  //   ];
+  // }
+  FromDateChange(date: Date) {
+    this.dpConfig.maxDate = date;
+    this.updateFormattedDates();
 
-  private getDummyChequeReturnData(): any[] {
-    return [
-      {
-        pcleardate: new Date('2026-01-05'),
-        preferencenumber: 'CHQ2001',
-        ptotalreceivedamount: 9000,
-        pbankname: 'HDFC Bank',
-        preceiptid: 'RCPT-010',
-        pchequedate: new Date('2026-01-02'),
-        pparticulars: 'Cheque bounced',
-        pbranchname: 'Hyderabad'
-      },
-      {
-        pcleardate: new Date('2026-01-15'),
-        preferencenumber: 'CHQ2002',
-        ptotalreceivedamount: 12000,
-        pbankname: 'SBI',
-        preceiptid: 'RCPT-011',
-        pchequedate: new Date('2026-01-13'),
-        pparticulars: 'Signature mismatch',
-        pbranchname: 'Mumbai'
-      },
-      {
-        pcleardate: new Date('2026-01-25'),
-        preferencenumber: 'CHQ2003',
-        ptotalreceivedamount: 7000,
-        pbankname: 'ICICI Bank',
-        preceiptid: 'RCPT-012',
-        pchequedate: new Date('2026-01-20'),
-        pparticulars: 'Funds not available',
-        pbranchname: 'Chennai'
-      }
-    ];
+    if (this.f.todate.value && date > this.f.todate.value) {
+      this.validation = true;
+      this.commonService.showWarningMessage("Please select To Date greater than From Date");
+    } else {
+      this.validation = false;
+    }
   }
 
-  // ------------------ FETCH REPORT (DUMMY) ------------------
+  ToDateChange(date: Date) {
+    this.dpConfig1.minDate = date;
+    this.updateFormattedDates();
+    this.validation = !!(this.f.fromdate.value && this.f.fromdate.value > date);
+  }
+
+  private isDateValid(from: Date, to: Date): boolean {
+    return !to || from <= to;
+  }
 
   GetChequeReturnDetails() {
     const from = this.f.fromdate.value!;
@@ -173,35 +190,35 @@ export class ChequeReturnComponent implements OnInit {
     this.loading = this.isLoading = true;
     this.savebutton = 'Processing';
     this.updateFormattedDates();
+    const fromdate = this.commonService.getFormatDateNormal(from);
+    const todate = this.commonService.getFormatDateNormal(to);
 
-    setTimeout(() => {
-      const allData = this.getDummyChequeReturnData();
-
-      this.gridData = allData.filter(d =>
-        new Date(d.pcleardate) >= from &&
-        new Date(d.pcleardate) <= to
-      );
-
-      this.showicons = this.gridData.length > 0;
-      this.showHide = this.gridData.length === 0;
-
-      this.updatePagination();
-
-      this.loading = this.isLoading = false;
-      this.savebutton = 'Generate Report';
-    }, 800);
+    this.reportService.GetChequeReturnDetails(fromdate, todate).subscribe({
+      next: (res: any[]) => {
+        this.gridData = res || [];
+        this.showicons = this.gridData.length > 0;
+        this.showHide = false;
+        this.updatePagination();
+      },
+      error: err => this.commonService.showErrorMessage(err),
+      complete: () => {
+        this.loading = this.isLoading = false;
+        this.savebutton = 'Generate Report';
+      }
+    });
   }
 
-  // ------------------ PAGINATION ------------------
 
   onFooterPageChange(event: any): void {
     this.pageCriteria.offset = event.page - 1;
     this.pageCriteria.CurrentPage = event.page;
+    this.pageCriteria.currentPageRows =
+      Math.min(this.pageCriteria.pageSize, this.pageCriteria.totalrows - (this.pageCriteria.offset * this.pageCriteria.pageSize));
   }
 
   private updatePagination() {
     this.pageCriteria.totalrows = this.gridData.length;
-    this.pageCriteria.TotalPages = Math.ceil(this.gridData.length / this.pageCriteria.pageSize);
+    this.pageCriteria.TotalPages = Math.ceil(this.pageCriteria.totalrows / this.pageCriteria.pageSize);
     this.pageCriteria.currentPageRows = Math.min(this.gridData.length, this.pageCriteria.pageSize);
   }
 
