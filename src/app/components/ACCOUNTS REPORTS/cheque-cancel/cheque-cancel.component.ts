@@ -7,6 +7,8 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { TableModule } from 'primeng/table';
+import { Router } from '@angular/router';
+import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 @Component({
   selector: 'app-cheque-cancel',
   imports: [CommonModule,TableModule, FormsModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule],
@@ -16,42 +18,52 @@ import { TableModule } from 'primeng/table';
 })
 export class ChequeCancelComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private commonService = inject(CommonService);
-  private accReportService = inject(AccountingReportsService);
+  private router = inject(Router);
   private datePipe = inject(DatePipe);
-  FrmChequeCancel!: FormGroup;
-  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
-  // dpConfig: Partial<BsDatepickerConfig> = {};
+  private commonService = inject(CommonService);
+  private reportService = inject(AccountingTransactionsService);
+  private accReportService = inject(AccountingReportsService);
+
+  FrmChequeCancel!: FormGroup<{
+    fromdate: FormGroup<any> | any;
+    todate: FormGroup<any> | any;
+  }>;
+
+  dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
 
-  loading = false;
-  disablesavebutton = false;
   savebutton = 'Generate Report';
+  loading = false;
+  isLoading = false;
+  disablesavebutton = false;
 
+  StartDate!: Date;
+  EndDate!: Date;
+  validation = false;
 
   gridData: any[] = [];
   pageCriteria = new PageCriteria();
   showHide = true;
   showicons = false;
-  reportDateRange = '';
   currencysymbol: string;
-  StartDate: Date | null = null;
-  EndDate: Date | null = null;
 
   constructor() {
-    this.currencysymbol = this.commonService.datePickerPropertiesSetup("currencysymbol") as string;
-     this.dpConfig.maxDate = new Date();
-    this.dpConfig.containerClass = 'theme-dark-blue';
-    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
-    this.dpConfig.showWeekNumbers = false;
+    this.currencysymbol = '₹';
+    // this.commonService.datePickerPropertiesSetup("currencysymbol");
 
-    // this.dpConfig = {
-    //   dateInputFormat: 'DD-MM-YYYY',
-    //   containerClass: 'theme-default',
-    //   maxDate: new Date()
-    // };
+    this.dpConfig = {
+      dateInputFormat: 'DD-MMM-YYYY',
+      // this.commonService.datePickerPropertiesSetup("dateInputFormat"),
+      containerClass: 'theme-dark-blue',
+      // this.commonService.datePickerPropertiesSetup("containerClass"),
+      showWeekNumbers: false,
+      maxDate: new Date()
+    };
 
-   // this.dpConfig1 = { ...this.dpConfig };
+    this.dpConfig1 = {
+      ...this.dpConfig,
+      minDate: new Date()
+    };
   }
 
   ngOnInit(): void {
@@ -60,117 +72,105 @@ export class ChequeCancelComponent implements OnInit {
       todate: [new Date(), Validators.required]
     });
 
-    this.pageCriteria.pageSize = 10;
+    this.setPageModel();
   }
 
-  get f() { return this.FrmChequeCancel.controls; }
-
-  private getDummyChequeCancelData(): any[] {
-    return [
-      { pdepositeddate: new Date('2026-01-05'), preferencenumber: 'CHQ1001', ptotalreceivedamount: 12500, pbankname: 'HDFC Bank', preceiptid: 'RCPT-001', pchequedate: new Date('2026-01-02'), pparticulars: 'Signature mismatch' },
-      { pdepositeddate: new Date('2026-01-15'), preferencenumber: 'CHQ1002', ptotalreceivedamount: 8400, pbankname: 'ICICI Bank', preceiptid: 'RCPT-002', pchequedate: new Date('2026-01-14'), pparticulars: 'Insufficient funds' },
-      { pdepositeddate: new Date('2026-01-25'), preferencenumber: 'CHQ1003', ptotalreceivedamount: 15000, pbankname: 'SBI', preceiptid: 'RCPT-003', pchequedate: new Date('2026-01-22'), pparticulars: 'Account closed' }
-    ];
+  get f() {
+    return this.FrmChequeCancel.controls;
   }
-  updateFormattedDates() {
-    this.StartDate = this.f['fromdate'].value ? new Date(this.f['fromdate'].value) : null;
-    this.EndDate = this.f['todate'].value ? new Date(this.f['todate'].value) : null;
+
+  private updateDates() {
+    this.StartDate = this.f.fromdate.value;
+    this.EndDate = this.f.todate.value;
+    this.validation = this.StartDate > this.EndDate;
+  }
+
+  FromDateChange(date: Date) {
+    this.dpConfig.maxDate = date;
+    this.updateDates();
+
+    if (this.validation) {
+      this.commonService.showWarningMessage('From date cannot be greater than To date');
+    }
+  }
+
+  ToDateChange(date: Date) {
+    this.dpConfig1.minDate = date;
+    this.updateDates();
+  }
+
+  setPageModel() {
+    this.pageCriteria.pageSize = this.commonService.pageSize;
+    this.pageCriteria.offset = 0;
+    this.pageCriteria.pageNumber = 1;
+    this.pageCriteria.footerPageHeight = 50;
+  }
+
+  onFooterPageChange(event: any): void {
+    this.pageCriteria.offset = event.page - 1;
+    this.pageCriteria.CurrentPage = event.page;
   }
 
   GetChequeCancelDetails() {
-    const fromRaw = this.f['fromdate'].value;
-    const toRaw = this.f['todate'].value;
-    if (!fromRaw || !toRaw) return
+    if (this.validation) return;
 
-    const fromDate = new Date(fromRaw);
-    const toDate = new Date(toRaw);
-    const fromTime = fromDate.setHours(0,0,0,0);
-  const toTime = toDate.setHours(0,0,0,0);
+    const startdate = this.commonService.getFormatDateNormal(this.f.fromdate.value);
+    const enddate = this.commonService.getFormatDateNormal(this.f.todate.value);
 
-  if (fromTime > toTime) {
-    alert('From Date should not be greater than To Date');
-    return;
-  }
-
-    this.StartDate = fromDate;
-    this.EndDate = toDate;
-
-    this.loading = true;
+    this.loading = this.isLoading = true;
+    this.savebutton = 'Processing';
     this.disablesavebutton = true;
-    this.savebutton = 'Processing...';
 
-    setTimeout(() => {
-      const allData = this.getDummyChequeCancelData();
+    this.reportService.GetChequeCancelDetails(startdate, enddate).subscribe({
+      next: (res: any[]) => {
+        this.gridData = res || [];
+        this.showicons = this.gridData.length > 0;
 
-      this.gridData = allData.filter(d =>
-        new Date(d.pdepositeddate) >= fromDate &&
-        new Date(d.pdepositeddate) <= toDate
-      );
+        this.pageCriteria.totalrows = this.gridData.length;
+        this.pageCriteria.currentPageRows = Math.min(this.pageCriteria.pageSize, this.gridData.length);
 
-      // this.reportDateRange = `Between : ${this.commonService.getFormatDateGlobal(fromDate)} And ${this.commonService.getFormatDateGlobal(toDate)}`;
-
-      this.showicons = this.gridData.length > 0;
-      this.showHide = this.gridData.length === 0;
-      this.pageCriteria.totalrows = this.gridData.length;
-
-      this.loading = false;
-      this.disablesavebutton = false;
-      this.savebutton = 'Generate Report';
-    }, 800);
+        this.showHide = false;
+      },
+      error: (err) => this.commonService.showErrorMessage(err),
+      complete: () => {
+        this.loading = this.isLoading = false;
+        this.savebutton = 'Generate Report';
+        this.disablesavebutton = false;
+      }
+    });
   }
 
   export(): void {
-
-    if (!this.gridData || this.gridData.length === 0) {
-      this.commonService.showWarningMessage('No records to export');
-      return;
-    }
-
-    const rows = this.gridData.map(e => ({
-      "Return Date": this.commonService.getFormatDateGlobal(e.pcleardate),
-      "Cheque No.": e.preferencenumber,
-      "Cheque Amt.": this.commonService.currencyformat(e.ptotalreceivedamount),
-      "Bank Name": e.pbankname,
-      "Receipt No.": e.preceiptid,
-      "Receipt Date": this.commonService.getFormatDateGlobal(e.pchequedate),
-      "Particulars": e.pparticulars,
-      "Referred By": e.pbranchname || '--NA--'
+    const rows = this.gridData.map(element => ({
+      "Cancel Date": this.commonService.getFormatDateGlobal(element.pdepositeddate),
+      "Cheque No.": element.preferencenumber,
+      "Cheque Amt.": this.commonService.convertAmountToPdfFormat(
+        this.commonService.currencyformat(element.ptotalreceivedamount || 0)
+      ),
+      "Bank Name": element.pbankname,
+      "Receipt No.": element.preceiptid,
+      "Receipt Date": this.commonService.getFormatDateGlobal(element.pchequedate),
+      "Particulars": element.pparticulars
     }));
 
     this.commonService.exportAsExcelFile(rows, 'Cheque_Cancel');
   }
 
-
-  pdfOrprint(type: 'pdf' | 'print') {
-
-    if (!this.gridData || this.gridData.length === 0) {
-      this.commonService.showWarningMessage('No records to export');
-      return;
-    }
+  pdfOrprint(printorpdf: 'pdf' | 'print') {
+    const fromDate = this.commonService.getFormatDateGlobal(this.f.fromdate.value);
+    const toDate = this.commonService.getFormatDateGlobal(this.f.todate.value);
 
     const rows = this.gridData.map(e => ([
-      this.commonService.getFormatDateGlobal(e.pcleardate),
+      this.commonService.getFormatDateGlobal(e.pdepositeddate),
       e.preferencenumber,
-      this.commonService.convertAmountToPdfFormat(
-        this.commonService.currencyformat(e.ptotalreceivedamount)
-      ),
+      this.commonService.currencyformat(e.ptotalreceivedamount),
       e.pbankname,
       e.preceiptid,
       this.commonService.getFormatDateGlobal(e.pchequedate),
-      e.pparticulars,
-      e.pbranchname || '--NA--'
+      e.pparticulars
     ]));
 
-    const headers = [
-      "Cancel Date",
-      "Cheque No.",
-      "Cheque Amt.",
-      "Bank Name",
-      "Receipt No.",
-      "Receipt Date",
-      "Particulars",
-      "Referred By"
-    ];
+    const headers = ["Cancel Date", "Cheque No.", "Cheque Amt.", "Bank Name", "Receipt No.", "Receipt Date", "Particulars"];
 
     this.accReportService._ChequeReturnCancelReportsPdf(
       "Cheque Cancel",
@@ -179,11 +179,10 @@ export class ChequeCancelComponent implements OnInit {
       {},
       "landscape",
       "Between",
-      this.StartDate ? this.datePipe.transform(this.StartDate, 'dd-MM-yyyy') ?? '' : '',
-      this.EndDate ? this.datePipe.transform(this.EndDate, 'dd-MM-yyyy') ?? '' : '',
-      type
+      fromDate,
+      toDate,
+      printorpdf
     );
   }
-
 
 }

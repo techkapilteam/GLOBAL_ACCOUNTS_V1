@@ -5,7 +5,7 @@
     </div>
 
     <div class="screen-content">
-      <form [formGroup]="BRStatmentForm">
+      <!-- <form [formGroup]="BRStatmentForm">
         <div class="row align-items-end">
           <div class="col-md-3">
             <label class="form-label">Bank Name</label>
@@ -156,7 +156,88 @@
               </div>
             </div>
           </div>
+        </div> -->
+      <form [formGroup]="BRStatmentForm" (ngSubmit)="getBRStatmentReports()" autocomplete="off">
+
+        <div class="row">
+
+          <div class="col-md-3 form-group">
+            <label class="required-field">Bank Name</label>
+
+            <select class="form-control" formControlName="pbankname"
+              [class.is-invalid]="BRStatmentForm.get('pbankname')?.invalid && BRStatmentForm.get('pbankname')?.touched">
+
+              <option value="">Select</option>
+              <option *ngFor="let bank of bankData" [value]="bank.pbankaccountid">
+                {{ bank.pbankname }}
+              </option>
+
+            </select>
+
+            <div class="invalid-feedback" *ngIf="BRStatmentForm.get('pbankname')?.hasError('required')">
+              Bank Name is required
+            </div>
+          </div>
+
+          <div class="col-md-3 mt-4">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" (change)="ChequesInfo($event)">
+              <label class="form-check-label">
+                Cheques Info
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="chequesInfo">
+
+            <div class="row">
+
+              <div class="col-6 form-group">
+                <label>From Date</label>
+                <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
+                  readonly>
+
+                <div class="invalid-feedback" *ngIf="BRStatmentForm.get('fromDate')?.invalid">
+                  From Date is required
+                </div>
+              </div>
+
+              <div class="col-6 form-group">
+                <label>To Date</label>
+                <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig1"
+                  readonly>
+
+                <div class="invalid-feedback" *ngIf="BRStatmentForm.get('toDate')?.invalid">
+                  To Date is required
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-md-3 form-group" *ngIf="!chequesInfo">
+
+            <label>As on Date</label>
+
+            <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
+              readonly>
+
+          </div>
+
+          <div class="col-md-3 pt-4">
+            <button type="submit" class="btn btn-primary border-0" [disabled]="BRStatmentForm.invalid || isLoading">
+
+              <img src="assets/images/icon-check-white.svg" width="20" height="20" class="mr-2">
+
+              {{ savebutton }}
+
+            </button>
+          </div>
+
         </div>
-      </div>
+
+      </form>
     </div>
   </div>
+</div>

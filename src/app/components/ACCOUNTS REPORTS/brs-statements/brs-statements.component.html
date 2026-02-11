@@ -4,124 +4,193 @@
         <div class="screen-header mb-3">
             <h4>BRS Statements</h4>
         </div>
+        <div class="section-content">
+            <div class="container-fluid mt-3">
 
-        <form [formGroup]="form" class="mb-3">
+                    <form [formGroup]="BrsStatementsReport" autocomplete="off">
 
-            <div class="row ms-4">
+                        <div class="col-md-12 col-xl-12">
+                            <div class="row">
 
-                <div class="form-check form-check-inline col-md-4">
-                    <input class="form-check-input" type="radio" name="bankType" value="CREDIT"
-                        (change)="onBankTypeChange('CREDIT')">
-                    <label class="form-check-label">Bank Credit</label>
-                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check form-check-inline radio-btn-secondary">
+                                        <input class="form-check-input" type="radio" name="Bank" formControlName="Bank"
+                                            id="BankCredit" value="CREDIT" (change)="relesechange('CREDIT')">
+                                        <label class="mt-1" for="BankCredit">Bank Credit</label>
+                                    </div>
+                                </div>
 
-                <div class="form-check form-check-inline col-md-4" style="margin-left: -220px;">
-                    <input class="form-check-input" type="radio" name="bankType" value="DEBIT"
-                        (change)="onBankTypeChange('DEBIT')">
-                    <label class="form-check-label">Bank Debit</label>
-                </div>
+                                <div class="col-md-2">
+                                    <div class="form-check form-check-inline radio-btn-secondary">
+                                        <input class="form-check-input" type="radio" name="Bank" formControlName="Bank"
+                                            id="BankDebit" value="DEBIT" (change)="relesechange('DEBIT')">
+                                        <label class="mt-1" for="BankDebit">Bank Debit</label>
+                                    </div>
+                                </div>
 
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xl-12">
+                            <div class="row mt-2">
+
+                                <div class="col-md-5">
+                                    <label class="required-field">Bank Name:</label>
+                                    <select class="form-control" formControlName="pbankname" (change)="Bankname($event)"
+                                        [ngClass]="{ 'is-invalid': f.pbankname.errors && submitted }">
+                                        <option value="">Select</option>
+                                        <option *ngFor="let bankDataDetails of bankData"
+                                            [value]="bankDataDetails.pbankaccountid">
+                                            {{ bankDataDetails.pbankname }}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="submitted && f.pbankname.errors?.['required']" class="invalid-feedback">
+                                        Select Bank
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label>From Date</label>
+                                    <input type="text" class="form-control" formControlName="fromDate"
+                                        (ngModelChange)="ToDateChange($event)" [bsConfig]="dpConfig" bsDatepicker
+                                        placement="bottom" readonly>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label>To Date</label>
+                                    <input type="text" class="form-control" formControlName="toDate"
+                                        (ngModelChange)="FromDateChange($event)" [bsConfig]="dpConfig1" bsDatepicker
+                                        placement="bottom" readonly>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="d-flex justify-content-start mt-4">
+                                        <button (click)="Show()" class="btn btn-primary border-0 mt-1"
+                                            [disabled]="disablesavebutton">
+                                            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}">
+                                            </i>
+                                            {{ savebutton }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-xl-12 mt-3">
+
+                            <!-- Credit Export -->
+                            <div class="d-flex justify-content-end mr-3" *ngIf="BankCreditShow">
+                                <ul class="temp-ul">
+                                    <li class="temp-ico ml-2">
+                                        <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
+                                            (click)="pdfOrprintCredit('Pdf')">
+                                    </li>
+                                    <li class="temp-ico ml-2">
+                                        <img src="assets/images/print-icon-blue.svg" width="18px" class="pt-2"
+                                            title="print" (click)="pdfOrprintCredit('Print')">
+                                    </li>
+                                    <li class="temp-ico ml-2">
+                                        <a (click)="exportBankCredit()">
+                                            <img src="assets/images/icon-excel.svg" width="18px" class="pt-2"
+                                                title="Excel">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="d-flex justify-content-end mr-3" *ngIf="BankDebitShow">
+                                <ul class="temp-ul">
+                                    <li class="temp-ico ml-2">
+                                        <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
+                                            (click)="pdfOrprintDebit('Pdf')">
+                                    </li>
+                                    <li class="temp-ico ml-2">
+                                        <img src="assets/images/print-icon-blue.svg" width="18px" class="pt-2"
+                                            title="print" (click)="pdfOrprintDebit('Print')">
+                                    </li>
+                                    <li class="temp-ico ml-2">
+                                        <a (click)="exportBankDebit()">
+                                            <img src="assets/images/icon-excel.svg" width="18px" class="pt-2"
+                                                title="Excel">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <p-table *ngIf="BankCreditShow" [value]="GridData" [paginator]="true"
+                                [rows]="pageCriteria.pageSize" [first]="pageCriteria.offset * pageCriteria.pageSize"
+                                (onPage)="onPrimePageChange($event)" responsiveLayout="scroll" class="mt-3">
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Receipt Date</th>
+                                        <th>Receipt No</th>
+                                        <th>Amount</th>
+                                        <th>Cheque No</th>
+                                        <th>Cheque Date</th>
+                                        <th>Deposit Date</th>
+                                        <th>Cleared Date</th>
+                                        <th>Particular</th>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="body" let-row>
+                                    <tr>
+                                        <td>{{ row.pissuedate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.ptransactionno }}</td>
+                                        <td>{{ currencysymbol }} {{ row.ptotalamount | number:'1.2-2' }}</td>
+                                        <td>{{ row.preferencenumber || '--NA--' }}</td>
+                                        <td>
+                                            <span *ngIf="row.preferencenumber != ''">
+                                                {{ row.pissuedate | date:'DD-MMM-YYYY' }}
+                                            </span>
+                                            <span *ngIf="row.preferencenumber == ''">--NA--</span>
+                                        </td>
+                                        <td>{{ row.pdepositdate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>
+                                            <span *ngIf="row.preferencenumber != ''">
+                                                {{ row.pclearDate | date:'DD-MMM-YYYY' }}
+                                            </span>
+                                            <span *ngIf="row.preferencenumber == ''">--NA--</span>
+                                        </td>
+                                        <td>{{ row.pparticulars }}</td>
+                                    </tr>
+                                </ng-template>
+
+                            </p-table>
+
+                            <p-table *ngIf="BankDebitShow" [value]="GridData" [paginator]="true"
+                                [rows]="pageCriteria.pageSize" [first]="pageCriteria.offset * pageCriteria.pageSize"
+                                (onPage)="onPrimePageChange($event)" responsiveLayout="scroll" class="mt-3">
+
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Trans Date</th>
+                                        <th>Trans No</th>
+                                        <th>Cheque No</th>
+                                        <th>Amount</th>
+                                        <th>Cleared Date</th>
+                                        <th>Particular</th>
+                                    </tr>
+                                </ng-template>
+
+                                <ng-template pTemplate="body" let-row>
+                                    <tr>
+                                        <td>{{ row.pissuedate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.ptransactionno }}</td>
+                                        <td>{{ row.preferencenumber }}</td>
+                                        <td>{{ currencysymbol }} {{ row.ptotalamount | number:'1.2-2' }}</td>
+                                        <td>{{ row.pclearDate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.pparticulars || '--NA--' }}</td>
+                                    </tr>
+                                </ng-template>
+
+                            </p-table>
+
+                        </div>
+
+                    </form>
             </div>
-
-            <br>
-
-            <div class="row ms-2">
-
-                <div class="form-group col-md-3 me-3">
-                    <label>Bank Name</label>
-                    <ng-select id="bankId" title="Select Bank Name" [items]="bankData" formControlName="bankId"
-                        bindLabel="name" bindValue="name" [multiple]="false" placeholder="Select Bank Name"
-                        [searchable]="true" [clearable]="true" dropdownPosition="bottom" [clearOnBackspace]="true"
-                        [virtualScroll]="true">
-                    </ng-select>
-                </div>
-
-                <div class="form-group col-md-3 me-3">
-                    <label>From Date</label>
-                    <input type="text" class="form-control" bsDatepicker formControlName="fromDate"
-                        [bsConfig]="dpConfig" readonly onkeydown="return false">
-                </div>
-
-                <div class="form-group col-md-3 me-3">
-                    <label>To Date</label>
-                    <input type="text" class="form-control" bsDatepicker formControlName="toDate" [bsConfig]="dpConfig"
-                        readonly onkeydown="return false">
-                </div>
-
-                <div class="form-group col-md-2 mt-4">
-                    <button type="button" class="btn btn-primary" (click)="getReport()" [disabled]="!bankType">
-                        Show
-                    </button>
-                </div>
-
-            </div>
-        </form>
-
-        <div class="d-flex justify-content-end align-items-center gap-3 mb-3" *ngIf="bankType">
-
-            <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
-                <i class="fa fa-file-pdf me-1"></i> PDF
-            </button>
-
-            <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
-                <i class="fa fa-print me-1"></i> Print
-            </button>
-
-            <button class="btn btn-outline-success" (click)="exportExcel()">
-                <i class="fa fa-file-excel me-1"></i> Excel
-            </button>
-
         </div>
-
-        <p-table *ngIf="bankType" [value]="gridView" responsiveLayout="scroll"
-            class="p-datatable-gridlines p-datatable-striped">
-
-            <ng-template pTemplate="header">
-                <tr *ngIf="bankType === 'CREDIT'">
-                    <th>Receipt Date</th>
-                    <th>Receipt No</th>
-                    <th>Amount</th>
-                    <th>Cheque No</th>
-                    <th>Cheque Date</th>
-                    <th>Deposit Date</th>
-                    <th>Cleared Date</th>
-                    <th>Particular</th>
-                </tr>
-
-                <tr *ngIf="bankType === 'DEBIT'">
-                    <th>Trans Date</th>
-                    <th>Trans No</th>
-                    <th>Cheque No</th>
-                    <th>Amount</th>
-                    <th>Cleared Date</th>
-                    <th>Particular</th>
-                </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-row>
-                <tr *ngIf="bankType === 'CREDIT'">
-                    <td>{{ formatDate(row.receiptDate) }}</td>
-                    <td>{{ row.receiptNo }}</td>
-                    <td>{{ row.amount }}</td>
-                    <td>{{ row.chequeNo }}</td>
-                    <td>{{ formatDate(row.chequeDate) }}</td>
-                    <td>{{ formatDate(row.depositDate) }}</td>
-                    <td>{{ formatDate(row.clearedDate) }}</td>
-                    <td>{{ row.particular }}</td>
-                </tr>
-
-                <tr *ngIf="bankType === 'DEBIT'">
-                    <td>{{ formatDate(row.transDate) }}</td>
-                    <td>{{ row.transNo }}</td>
-                    <td>{{ row.chequeNo }}</td>
-                    <td>{{ row.amount }}</td>
-                    <td>{{ formatDate(row.clearedDate) }}</td>
-                    <td>{{ row.particular }}</td>
-                </tr>
-            </ng-template>
-
-        </p-table>
-
-        <div class="text-center mt-3" *ngIf="bankType && gridView.length === 0"></div>
     </div>
 </div>

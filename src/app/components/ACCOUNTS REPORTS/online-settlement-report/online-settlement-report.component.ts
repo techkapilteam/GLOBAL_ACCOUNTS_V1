@@ -1,186 +1,329 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { FormsModule } from '@angular/forms';
-import { NgxDatatableModule, ColumnMode } from '@swimlane/ngx-datatable';
+import { Component, ViewChild, OnInit, inject } from '@angular/core';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
+import { CommonService } from '../../../services/common.service';
+import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
+import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { PageCriteria } from '../../../Models/pageCriteria';
 
 @Component({
   selector: 'app-online-settlement',
   standalone: true,
-  imports: [BsDatepickerModule, FormsModule, NgxDatatableModule, CommonModule,TableModule],
+  imports: [BsDatepickerModule, FormsModule, CommonModule, TableModule, ReactiveFormsModule],
   templateUrl: './online-settlement-report.component.html',
   styleUrl: './online-settlement-report.component.css',
 })
-export class OnlineSettlementReportComponent {
-onlineSettlementRows: any[] = [];
-  ColumnMode = ColumnMode;
+export class OnlineSettlementReportComponent implements OnInit {
+  @ViewChild('myTable') table: any;
 
-  rows = [
-    {
-      transactionNo: 'TXN001',
-      transactionDate: '12/01/2026',
-      chitReceiptNo: 'CR123',
-      referenceNo: 'REF456',
-      chequeDate: '12/01/2026',
-      amount: '₹ 5,000.00',
-      chitNo: 'CH001 - 10',
-      receiptDate: '12/01/2026',
-      depositedDate: '13/01/2026',
-      receiptId: 'R001',
-      upiName: 'Paytm',
-      party: 'Ramesh'
-    },
-    {
-      transactionNo: 'TXN002',
-      transactionDate: '13/01/2026',
-      chitReceiptNo: 'CR124',
-      referenceNo: 'REF457',
-      chequeDate: '13/01/2026',
-      amount: '₹ 3,200.00',
-      chitNo: 'CH002 - 12',
-      receiptDate: '13/01/2026',
-      depositedDate: '14/01/2026',
-      receiptId: 'R002',
-      upiName: 'PhonePe',
-      party: 'Suresh'
-    },
-    {
-      transactionNo: 'TXN003',
-      transactionDate: '14/01/2026',
-      chitReceiptNo: 'CR125',
-      referenceNo: 'REF458',
-      chequeDate: '14/01/2026',
-      amount: '₹ 7,500.00',
-      chitNo: 'CH003 - 15',
-      receiptDate: '14/01/2026',
-      depositedDate: '15/01/2026',
-      receiptId: 'R003',
-      upiName: 'Google Pay',
-      party: 'Anita'
-    },
-    {
-      transactionNo: 'TXN004',
-      transactionDate: '15/01/2026',
-      chitReceiptNo: 'CR126',
-      referenceNo: 'REF459',
-      chequeDate: '15/01/2026',
-      amount: '₹ 2,800.00',
-      chitNo: 'CH004 - 8',
-      receiptDate: '15/01/2026',
-      depositedDate: '16/01/2026',
-      receiptId: 'R004',
-      upiName: 'Paytm',
-      party: 'Rohit'
-    },
-    {
-      transactionNo: 'TXN005',
-      transactionDate: '16/01/2026',
-      chitReceiptNo: 'CR127',
-      referenceNo: 'REF460',
-      chequeDate: '16/01/2026',
-      amount: '₹ 4,200.00',
-      chitNo: 'CH005 - 9',
-      receiptDate: '16/01/2026',
-      depositedDate: '17/01/2026',
-      receiptId: 'R005',
-      upiName: 'PhonePe',
-      party: 'Priya'
-    },
-    {
-      transactionNo: 'TXN006',
-      transactionDate: '17/01/2026',
-      chitReceiptNo: 'CR128',
-      referenceNo: 'REF461',
-      chequeDate: '17/01/2026',
-      amount: '₹ 6,000.00',
-      chitNo: 'CH006 - 11',
-      receiptDate: '17/01/2026',
-      depositedDate: '18/01/2026',
-      receiptId: 'R006',
-      upiName: 'Google Pay',
-      party: 'Vikram'
-    }
-  ];
-displayedRows: any[] = [];  
-  selectedUPI: string = '';
+  onlinecollectionreportForm!: FormGroup;
 
-  columns = [
-    { name: 'Transaction No', prop: 'transactionNo', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Transaction Date', prop: 'transactionDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Chit Receipt No', prop: 'chitReceiptNo', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Reference No', prop: 'referenceNo', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Cheque Date', prop: 'chequeDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Amount', prop: 'amount', headerClass: 'text-center', cellClass: 'text-center fw-bold', sortable: false },
-    { name: 'Chit No', prop: 'chitNo', sortable: false },
-    { name: 'Receipt Date', prop: 'receiptDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Deposited Date', prop: 'depositedDate', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'Receipt Id', prop: 'receiptId', headerClass: 'text-center', cellClass: 'text-center', sortable: false },
-    { name: 'UPI Name', prop: 'upiName', sortable: false },
-    { name: 'Party', prop: 'party', sortable: false }
-  ];
-  fromDate: Date | null = null;
-toDate: Date | null = null;
+  GridData: any[] = [];
+  GetUPIClearedData_SummaryReport: any[] = [];
 
-validateDates() {
+  PaytmList: any[] = [];
 
-  if (this.fromDate && this.toDate) {
+  disablesavebutton = false;
+  disableviewbutton = false;
 
-    const fromTime = new Date(this.fromDate).setHours(0,0,0,0);
-    const toTime = new Date(this.toDate).setHours(0,0,0,0);
+  savebutton = 'Show';
+  viewbutton = 'View';
 
-    if (fromTime > toTime) {
-      alert('From Date should not be greater than To Date');   
-      this.fromDate=null;
-      this.toDate=null; 
-    }
-  }
-}
+  dpConfig: Partial<BsDatepickerConfig> = {};
+  dpConfig1: Partial<BsDatepickerConfig> = {};
 
-  ngOnInit() {
-    const today = new Date();
-    this.fromDate = today;
-    this.toDate = today;
-  }
-  downloadPDF() {
-    const link = document.createElement('a');
-    link.href = 'assets/sample.pdf';  // replace with your PDF path
-    link.download = 'Report.pdf';
-    link.click();
-  }
+  pageCriteria = new PageCriteria();
 
-  downloadExcel() {
-    const link = document.createElement('a');
-    link.href = 'assets/sample.xlsx'; // replace with your Excel path
-    link.download = 'Report.xlsx';
-    link.click();
-  }
+  Amttotal = 0;
+  currencysymbol: any;
 
-  printPage() {
-    window.print();
-  }
+  constructor(
+    private fb: FormBuilder,
+    private _commonService: CommonService,
+    private _accountingtransaction: AccountingTransactionsService,
+    private _legalServices: AccountingReportsService
+  ) { }
 
+  ngOnInit(): void {
 
+    this.currencysymbol =
+      this._commonService.datePickerPropertiesSetup('currencysymbol');
 
-  showFiltered() {
-    this.displayedRows = this.rows.filter(row => {
-      const matchUPI = this.selectedUPI ? row.upiName === this.selectedUPI : true;
+    this.dpConfig = {
+      dateInputFormat:
+        this._commonService.datePickerPropertiesSetup('dateInputFormat'),
+      containerClass: 'theme-dark-blue',
+      // this._commonService.datePickerPropertiesSetup('containerClass'),
+      showWeekNumbers: false,
+      maxDate: new Date()
+    };
 
-      let matchDate = true;
-      if (this.fromDate && this.toDate) {
-        const txDate = new Date(row.transactionDate.split('/').reverse().join('-'));
-        matchDate = txDate >= this.fromDate && txDate <= this.toDate;
-      }
+    this.dpConfig1 = {
+      ...this.dpConfig,
+      minDate: new Date()
+    };
 
-      return matchUPI && matchDate;
+    this.setPageModel();
+
+    this.onlinecollectionreportForm = this.fb.group({
+      fromdate: [new Date(), Validators.required],
+      todate: [new Date(), Validators.required],
+      paytmname: ['', Validators.required]
     });
+
+    this.loadPaytmList();
   }
 
-  showAll() {
-    this.displayedRows = [...this.rows];
-    this.selectedUPI = '';
+  loadPaytmList(): void {
+    this._accountingtransaction
+      .GetPayTmBanksList(this._commonService.getschemaname())
+      .subscribe(res => {
+        this.PaytmList = res || [];
+      });
   }
 
+  setPageModel(): void {
+    this.pageCriteria.pageSize = this._commonService.pageSize;
+    this.pageCriteria.offset = 0;
+    this.pageCriteria.pageNumber = 1;
+    this.pageCriteria.footerPageHeight = 50;
+  }
+
+  DateChange(event: Date): void {
+    this.dpConfig1.minDate = event;
+    this.onlinecollectionreportForm.get('todate')?.setValue(new Date());
+  }
+
+  Show(): void {
+
+    if (this.onlinecollectionreportForm.invalid) {
+      this.onlinecollectionreportForm.markAllAsTouched();
+      return;
+    }
+
+    this.disablesavebutton = true;
+    this.savebutton = 'Processing...';
+
+    const { fromdate, todate, paytmname } =
+      this.onlinecollectionreportForm.value;
+
+    const formattedFrom =
+      this._commonService.getFormatDateNormal(fromdate);
+    const formattedTo =
+      this._commonService.getFormatDateNormal(todate);
+
+    this._accountingtransaction
+      .GetUPIClearedData_SettlementReport(formattedFrom, formattedTo, paytmname)
+      .subscribe({
+        next: (res: any) => {
+
+          this.GridData = res?.pchequesOnHandlist || [];
+          this.GetUPIClearedData_SummaryReport = this.GridData;
+
+          this.Amttotal = this.GridData.reduce(
+            (sum, x) => sum + (x.ptotalreceivedamount || 0),
+            0
+          );
+
+          this.pageCriteria.totalrows = this.GridData.length;
+          this.disablesavebutton = false;
+          this.savebutton = 'Show';
+        },
+        error: () => {
+          this.disablesavebutton = false;
+          this.savebutton = 'Show';
+        }
+      });
+  }
+
+  export(): void {
+
+    const rows = this.GridData.map(element => ({
+      "Chit Receipt No": element.chitReceiptNo,
+      "Transaction No": element.transactionNo,
+      "Transaction Date":
+        this._commonService.getFormatDateGlobal(element.transactiondate),
+      "Reference No": element.pChequenumber,
+      "Cheque Date":
+        this._commonService.getFormatDateGlobal(element.pchequedate),
+      "Amount":
+        this._commonService.currencyformat(element.ptotalreceivedamount),
+      "Chit No.": `${element.chitgroupcode} - ${element.ticketno}`,
+      "Receipt Date":
+        this._commonService.getFormatDateGlobal(element.preceiptdate),
+      "Deposited Date":
+        this._commonService.getFormatDateGlobal(element.pdepositeddate),
+      "Receipt Id": element.preceiptid,
+      "Party": element.ppartyname
+    }));
+
+    this._commonService.exportAsExcelFile(rows, 'Online Settlement Report');
+  }
+
+  View(): void {
+
+    if (this.onlinecollectionreportForm.invalid) {
+      this.onlinecollectionreportForm.markAllAsTouched();
+      return;
+    }
+
+    this.disableviewbutton = true;
+    this.viewbutton = 'Processing...';
+
+    const fromDate =
+      this._commonService.getFormatDate1(
+        this.onlinecollectionreportForm.value.fromdate
+      );
+
+    const toDate =
+      this._commonService.getFormatDate1(
+        this.onlinecollectionreportForm.value.todate
+      );
+
+    this._commonService
+      .GetUPIClearedData_SummaryReport(fromDate, toDate)
+      .subscribe({
+        next: (res: any[]) => {
+
+          if (!res?.length) {
+            alert('No data found.');
+            this.disableviewbutton = false;
+            this.viewbutton = 'View';
+            return;
+          }
+
+          const excelRows = res.map(element => ({
+            "Date":
+              this._commonService.getFormatDate1(element.ptransactiondate),
+            "Cash Receipt Count": element.pcashreceiptcnt,
+            "Cash Settled Count": element.pcashsettlleedcnt,
+            "Paytm Receipt Count": element.ppaytmreceiptcnt,
+            "Paytm Settled Count": element.ppaytmsettlleedcnt,
+            "Cash Receipt Amount": element.pcashreceiptamt,
+            "Cash Settled Amount": element.pcashsettlleedamt,
+            "Paytm Receipt Amount": element.ppaytmreceiptamt,
+            "Paytm Settled Amount": element.ppaytmsettlleedamt,
+            "Difference Count": element.pdiffcount,
+            "Difference Amount": element.pdiffamount
+          }));
+
+          this._commonService.exportAsExcelFile(
+            excelRows,
+            'Online Settlement Report'
+          );
+
+          this.disableviewbutton = false;
+          this.viewbutton = 'View';
+        },
+        error: () => {
+          this.disableviewbutton = false;
+          this.viewbutton = 'View';
+        }
+      });
+  }
+  pdfOrprint(type: 'Pdf' | 'Print'): void {
+
+  if (this.onlinecollectionreportForm.invalid) {
+    this.onlinecollectionreportForm.markAllAsTouched();
+    return;
+  }
+
+  const fromDate = this._commonService.getFormatDateGlobal(
+    this.onlinecollectionreportForm.value.fromdate
+  );
+
+  const toDate = this._commonService.getFormatDateGlobal(
+    this.onlinecollectionreportForm.value.todate
+  );
+
+  const selectedId = this.onlinecollectionreportForm.value.paytmname;
+
+  const selectedBank = this.PaytmList?.find(
+    x => x.paccountid === selectedId
+  );
+
+  const UPI = selectedBank ? `for ${selectedBank.pdepositbankname}` : '';
+
+  const reportName = `Online Settlement Report ${UPI}`;
+
+  const gridHeaders = [
+    'S No.',
+    'Chit Receipt No',
+    'Transaction No',
+    'Transaction Date',
+    'Reference No.',
+    'Cheque Date',
+    'Amount',
+    'Chit No.',
+    'Receipt Date',
+    'Deposited Date',
+    'Receipt Id',
+    'Party'
+  ];
+
+  const colWidthHeight: any = {
+    0: { cellWidth: 'auto', halign: 'center' },
+    1: { cellWidth: 'auto', halign: 'center' },
+    2: { cellWidth: 'auto', halign: 'center' },
+    3: { cellWidth: 'auto', halign: 'center' },
+    4: { cellWidth: 'auto', halign: 'left' },
+    5: { cellWidth: 'auto', halign: 'center' },
+    6: { cellWidth: 'auto', halign: 'right' },
+    7: { cellWidth: 'auto', halign: 'center' },
+    8: { cellWidth: 'auto', halign: 'center' },
+    9: { cellWidth: 'auto', halign: 'center' },
+    10: { cellWidth: 'auto', halign: 'center' },
+    11: { cellWidth: 'auto', halign: 'left' }
+  };
+
+  const rows = this.GridData.map((element, index) => {
+
+    return [
+      index + 1,
+      element.chitReceiptNo,
+      element.transactionNo,
+      this._commonService.getFormatDateGlobal(element.transactiondate),
+      element.pChequenumber,
+      this._commonService.getFormatDateGlobal(element.pchequedate),
+      this._commonService.currencyformat(element.ptotalreceivedamount),
+      `${element.chitgroupcode}-${element.ticketno}`,
+      this._commonService.getFormatDateGlobal(element.preceiptdate),
+      this._commonService.getFormatDateGlobal(element.pdepositeddate),
+      element.preceiptid,
+      element.ppartyname
+    ];
+  });
+
+  rows.push([
+    '',
+    '',
+    '',
+    '',
+    '',
+    'Grand Total:',
+    this._commonService.currencyformat(this.Amttotal),
+    '',
+    '',
+    '',
+    '',
+    ''
+  ]);
+
+  this._commonService._OnlineSettlementReportPdf(
+    reportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
+    'landscape',
+    'Between',
+    fromDate,
+    toDate,
+    type,
+    ''
+  );
+}
 }
 
 

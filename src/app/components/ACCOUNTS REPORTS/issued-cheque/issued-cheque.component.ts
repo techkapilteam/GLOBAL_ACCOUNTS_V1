@@ -79,7 +79,8 @@ export class IssuedChequeComponent implements OnInit {
   ngOnInit() {
     this.initForm();
     this.setPageModel();
-    this.loadDummyBanks();
+    // this.loadDummyBanks();
+    this.bankBookDetails();
   }
 
   private initForm() {
@@ -102,18 +103,18 @@ export class IssuedChequeComponent implements OnInit {
     this.pageCriteria.footerPageHeight = 50;
   }
 
-  // bankBookDetails() {
-  //   this.bankBookService.GetBankNames().subscribe({
-  //     next: (res: any) => (this.BankData = res),
-  //     error: (err: any) => this.commonService.showErrorMessage(err)
-  //   });
-  // }
-  loadDummyBanks() {
-    this.BankData = [
-      { pbankaccountid: 1, pbankname: 'HDFC Bank' },
-      { pbankaccountid: 2, pbankname: 'ICICI Bank' }
-    ];
+  bankBookDetails() {
+    this.bankBookService.GetBankNames().subscribe({
+      next: (res: any) => (this.BankData = res),
+      error: (err: any) => this.commonService.showErrorMessage(err)
+    });
   }
+  // loadDummyBanks() {
+  //   this.BankData = [
+  //     { pbankaccountid: 1, pbankname: 'HDFC Bank' },
+  //     { pbankaccountid: 2, pbankname: 'ICICI Bank' }
+  //   ];
+  // }
   BankName_Cahange(event: any) {
     this.gridData = [];
     this.gridDataDetails = [];
@@ -125,14 +126,14 @@ export class IssuedChequeComponent implements OnInit {
     const bankId = event.pbankaccountid;
     this.BankName = event.pbankname;
 
-    // this.reportService.GetBankChequeDetails(bankId).subscribe({
-    //   next: res => (this.lstBankChequeDetails = res ?? []),
-    //   error: err => this.commonService.showErrorMessage(err)
-    // });
-    this.lstBankChequeDetails = [
-      { pchkBookId: 101, pchqfromto: '1001-1010' },
-      { pchkBookId: 102, pchqfromto: '2001-2010' }
-    ];
+    this.reportService.GetBankChequeDetails(bankId).subscribe({
+      next: res => (this.lstBankChequeDetails = res ?? []),
+      error: err => this.commonService.showErrorMessage(err)
+    });
+    // this.lstBankChequeDetails = [
+    //   { pchkBookId: 101, pchqfromto: '1001-1010' },
+    //   { pchkBookId: 102, pchqfromto: '2001-2010' }
+    // ];
   }
 
   GetIssuedBankDetails(event: any) {
@@ -158,42 +159,42 @@ export class IssuedChequeComponent implements OnInit {
     this._ChqToNo = to;
     this.ShowReport = false;
 
-    // this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to)
-    //   .subscribe((res: any) => {
-    //     this.gridData = res ?? [];
-    //     this.pageCriteria.totalrows = this.gridData.length;
-    //   });
+    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to)
+      .subscribe((res: any) => {
+        this.gridData = res ?? [];
+        this.pageCriteria.totalrows = this.gridData.length;
+      });
 
-    // this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to)
-    //   .subscribe((res: any) => {
-    //     this.datagrid = res ?? [];
-    //     this.gridDataDetails = [...this.datagrid];
-    //     this.commencementgridPage.totalElements = this.gridDataDetails.length;
-    //   });
-    this.gridData = [
-      { pchequenumber: from, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false },
-      { pchequenumber: +from + 1, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false }
-    ];
+    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to)
+      .subscribe((res: any) => {
+        this.datagrid = res ?? [];
+        this.gridDataDetails = [...this.datagrid];
+        this.commencementgridPage.totalElements = this.gridDataDetails.length;
+      });
+    // this.gridData = [
+    //   { pchequenumber: from, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false },
+    //   { pchequenumber: +from + 1, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false }
+    // ];
 
-    this.pageCriteria.totalrows = this.gridData.length;
+    // this.pageCriteria.totalrows = this.gridData.length;
 
-    this.datagrid = [
-      {
-        pchequestatus: 'Issued',
-        pchequenumber: from,
-        ppaymentid: 'PAY001',
-        pparticulars: 'Vendor Payment',
-        ppaymentdate: new Date(),
-        pcleardate: new Date(),
-        ppaidamount: 15000,
-        pbankname: this.BankName,
-        pchkBookId: this._ChqBookId,
-        pstatus: 'Cleared'
-      }
-    ];
+    // this.datagrid = [
+    //   {
+    //     pchequestatus: 'Issued',
+    //     pchequenumber: from,
+    //     ppaymentid: 'PAY001',
+    //     pparticulars: 'Vendor Payment',
+    //     ppaymentdate: new Date(),
+    //     pcleardate: new Date(),
+    //     ppaidamount: 15000,
+    //     pbankname: this.BankName,
+    //     pchkBookId: this._ChqBookId,
+    //     pstatus: 'Cleared'
+    //   }
+    // ];
 
-    this.gridDataDetails = [...this.datagrid];
-    this.commencementgridPage.totalElements = this.gridDataDetails.length;
+    // this.gridDataDetails = [...this.datagrid];
+    // this.commencementgridPage.totalElements = this.gridDataDetails.length;
   }
 
   export() {

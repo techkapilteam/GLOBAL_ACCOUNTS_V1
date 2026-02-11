@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
+import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { ChequesIssuedComponent } from '../../ACCOUNTS TRANSACTIONS/cheques-issued/cheques-issued.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-cheque-enquiry',
@@ -16,133 +19,197 @@ import { TableModule } from 'primeng/table';
 })
 export class ChequeEnquiryComponent implements OnInit {
 
-  private fb = inject(FormBuilder);
+  private fb = inject(NonNullableFormBuilder);
   private commonService = inject(CommonService);
+  private accountingService = inject(AccountingTransactionsService);
+  private destroyRef = inject(DestroyRef);
 
-  spinner = false;
+  @ViewChild(ChequesIssuedComponent)
+  chequesissued!: ChequesIssuedComponent;
+
+  ChequesIssuedForm!: FormGroup;
+  BrsCancelForm!: FormGroup;
+
   showOrHideIssuedCheques = true;
   showOrHideReceivedCheques = false;
+  showOrHideOtherChequesGrid = false;
+  showOrHideAllChequesGrid = true;
+  brsdateshowhidecancelled = false;
+
+  bankid = 0;
+  bankname = '';
+  bankbalance = 0;
+  bankbalancetype = '';
+
+  BanksList: any[] = [];
+  ChequesIssuedData: any[] = [];
+  ChequesInBankData: any[] = [];
+  ChequesClearReturnData: any[] = [];
 
   displayAllChequesDataBasedOnForm: any[] = [];
+  displayAllChequesDataBasedOnFormTemp: any[] = [];
   displayGridDataBasedOnForm: any[] = [];
-
-  totalamount = 0;
-  totalReceivedAmount = 0;
+  displayGridDataBasedOnFormTemp: any[] = [];
 
   pageCriteria = new PageCriteria();
   currencySymbol = this.commonService.currencysymbol;
 
-  ChequesIssuedForm: FormGroup = this.fb.group({
-    pchequestype: ['Issued'],
-    chequeNumber: [''],
-    bankname: [''],
-    fromDate: [null],
-    toDate: [null],
-    schemaname: [this.commonService.getschemaname()]
-  });
+  totalamount = 0;
+  totalreceivedcheques = 0;
+  spinner = false;
+  tabname = 'Cheques';
 
-  dateConfig: Partial<BsDatepickerConfig> = {
-    dateInputFormat: String(this.commonService.datePickerPropertiesSetup('dateInputFormat')),
-    maxDate: new Date(),
-    showWeekNumbers: Boolean(this.commonService.datePickerPropertiesSetup('showWeekNumbers')),
-    containerClass: String(this.commonService.datePickerPropertiesSetup('containerClass'))
-  };
-
-  private dummyIssuedOnHand = [
-    {
-      pChequenumber: '100001',
-      ptotalreceivedamount: 15000,
-      preceiptid: 'RCPT001',
-      preceiptdate: new Date(2026, 0, 10),
-      pdepositeddate: null,
-      pCleardate: null,
-      ptypeofpayment: 'CHEQUE',
-      ppartyname: 'Ramesh Kumar',
-      pAccountnumber: '1234567890',
-      pchequestatus: ''
-    }
-  ];
-
-  private dummyIssuedCleared = [
-    {
-      pChequenumber: '100002',
-      ptotalreceivedamount: 20000,
-      preceiptid: 'RCPT002',
-      preceiptdate: new Date(2026, 0, 12),
-      pdepositeddate: new Date(2026, 0, 15),
-      pCleardate: null,
-      ptypeofpayment: 'CHEQUE',
-      ppartyname: 'Suresh',
-      pAccountnumber: '999888777',
-      pchequestatus: 'P'
-    },
-    {
-      pChequenumber: '100003',
-      ptotalreceivedamount: 12000,
-      preceiptid: 'RCPT003',
-      preceiptdate: new Date(2026, 0, 14),
-      pdepositeddate: null,
-      pCleardate: new Date(2026, 0, 18),
-      ptypeofpayment: 'CHEQUE',
-      ppartyname: 'Anita',
-      pAccountnumber: '444555666',
-      pchequestatus: 'R'
-    }
-  ];
-
-  private dummyReceived = [
-    {
-      chequeStatus: 'Deposited',
-      pChequenumber: '200001',
-      pbranchname: 'Hyderabad',
-      ptotalreceivedamount: 18000,
-      preceiptid: 'REC001',
-      preceiptdate: new Date(2026, 0, 5),
-      pdepositeddate: new Date(2026, 0, 6),
-      pCleardate: null,
-      ptypeofpayment: 'CHEQUE',
-      pbankname: 'HDFC Bank',
-      ppartyname: 'Vikas',
-      pchequestatus: 'N'
-    }
-  ];
+  public brsfromConfig: Partial<BsDatepickerConfig> = {};
+  public brstoConfig: Partial<BsDatepickerConfig> = {};
+  amounttotal!: number;
+  dummyReceived: any;
 
   ngOnInit(): void {
+    this.initializeForms();
+    this.initializeDatePicker();
+    this.loadBanks();
     this.setPageModel();
-    this.loadDefaultIssuedData();
   }
 
-  private loadDefaultIssuedData() {
-    const statusMap: Record<string, string> = { P: 'Cleared', R: 'Returned', C: 'Cancelled' };
+  private initializeForms() {
+    this.ChequesIssuedForm = this.fb.group({
+      pchequestype: ['Issued'],
+      ptransactiondate: [new Date()],
+      bankname: [''],
+      pfrombrsdate: [''],
+      ptobrsdate: [''],
+      SearchClear: [''],
+      schemaname: [this.commonService.getschemaname()]
+    });
 
-    const issuedMapped = this.dummyIssuedOnHand.map(c => ({
-      ...c,
-      chequeStatus: 'Issued'
-    }));
+    this.BrsCancelForm = this.fb.group({
+      frombrsdate: [''],
+      tobrsdate: ['']
+    });
+  }
 
-    const clearedMapped = this.dummyIssuedCleared.map(c => ({
-      ...c,
-      chequeStatus: statusMap[c.pchequestatus] || 'Unknown'
-    }));
+  private initializeDatePicker() {
+    this.brsfromConfig = {
+      dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat'),
+      maxDate: new Date(),
+      showWeekNumbers: true,
+      // this.commonService.datePickerPropertiesSetup('showWeekNumbers'),
+      containerClass: 'theme-dark-blue',
+      // this.commonService.datePickerPropertiesSetup('containerClass')
+    };
 
-    this.displayAllChequesDataBasedOnForm = [...issuedMapped, ...clearedMapped];
-    this.totalamount = this.displayAllChequesDataBasedOnForm
-      .reduce((s, c) => s + c.ptotalreceivedamount, 0);
+    this.brstoConfig = { ...this.brsfromConfig };
+  }
+
+  private loadBanks() {
+    this.accountingService
+      .GetBanksList(this.commonService.getschemaname())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (banks) => (this.BanksList = banks),
+        error: (err) => this.commonService.showErrorMessage(err)
+      });
+  }
+
+  setPageModel() {
+    this.pageCriteria.pageSize = this.commonService.pageSize;
+    this.pageCriteria.offset = 0;
+    this.pageCriteria.pageNumber = 1;
+    this.pageCriteria.CurrentPage = 1;
   }
 
   selectChequesType(type: 'Issued' | 'Received') {
-    this.ChequesIssuedForm.patchValue({ pchequestype: type });
-
     this.showOrHideIssuedCheques = type === 'Issued';
     this.showOrHideReceivedCheques = type === 'Received';
+    this.brsdateshowhidecancelled = type === 'Received';
 
     if (type === 'Issued') {
-      this.loadDefaultIssuedData();
+      this.tabname = 'Cheques';
+      this.chequesStatusInfoGridForChequesIssued();
     } else {
-      this.displayGridDataBasedOnForm = [...this.dummyReceived];
+      this.chequesStatusInfoGrid();
     }
   }
 
+  SelectBank(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    if (!value) {
+      this.bankid = 0;
+      this.bankname = '';
+      return;
+    }
+
+    const bank = this.BanksList.find(b => b.pdepositbankname === value);
+    if (!bank) return;
+
+    this.bankid = bank.pbankid;
+    this.bankname = bank.pdepositbankname;
+
+    this.bankbalance = Math.abs(bank.pbankbalance);
+    this.bankbalancetype =
+      bank.pbankbalance < 0 ? 'Cr' :
+      bank.pbankbalance > 0 ? 'Dr' : '';
+  }
+
+  chequesStatusInfoGridForChequesIssued() {
+
+    const grid = [
+      ...this.ChequesIssuedData.filter(c => c.ptypeofpayment !== 'CASH')
+        .map(c => ({ ...c, chequeStatus: 'Cheques Issued' })),
+
+      ...this.ChequesClearReturnData
+        .filter(c => ['P', 'R', 'C'].includes(c.pchequestatus))
+        .map(c => ({
+          ...c,
+          chequeStatus:
+            c.pchequestatus === 'P' ? 'Cleared' :
+            c.pchequestatus === 'R' ? 'Returned' : 'Cancelled'
+        }))
+    ];
+
+    this.displayAllChequesDataBasedOnForm = grid;
+    this.displayAllChequesDataBasedOnFormTemp = structuredClone(grid);
+
+    this.totalamount = grid.reduce(
+      (sum, item) => sum + (item.ptotalreceivedamount || 0),
+      0
+    );
+  }
+
+  chequesStatusInfoGrid() {
+
+    const grid = this.ChequesInBankData
+      ?.filter(item => item.ptotalreceivedamount !== 0)
+      ?.map(item => ({
+        ...item,
+        chequeStatus:
+          item.pchequestatus === 'N' ? 'Deposited' :
+          item.pchequestatus === 'Y' ? 'Cleared' :
+          item.pchequestatus === 'R' ? 'Returned' : ''
+      }));
+
+    this.displayGridDataBasedOnForm = grid;
+    this.displayGridDataBasedOnFormTemp = structuredClone(grid);
+
+    this.totalreceivedcheques = grid.reduce(
+      (sum, item) => sum + (item.ptotalreceivedamount || 0),
+      0
+    );
+
+    this.amounttotal = this.totalreceivedcheques;
+  }
+
+  Clear() {
+    this.ChequesIssuedForm.reset({
+      pchequestype: 'Issued',
+      ptransactiondate: new Date()
+    });
+
+    this.bankid = 0;
+    this.displayAllChequesDataBasedOnForm = [];
+    this.displayGridDataBasedOnForm = [];
+  }
   onSearchForCheque(value: string) {
     if (value.length < 3) return;
 
@@ -164,22 +231,11 @@ export class ChequeEnquiryComponent implements OnInit {
     if (value.length < 3) return;
 
     this.displayGridDataBasedOnForm =
-      this.dummyReceived.filter(c => c.pChequenumber.includes(value));
+      this.dummyReceived.filter((c:any) => c.pChequenumber.includes(value));
   }
 
   pdfOrprint(type: string) {
     alert(type + ' option clicked (dummy)');
-  }
-
-  Clear() {
-    this.ChequesIssuedForm.reset({ pchequestype: 'Issued' });
-    this.selectChequesType('Issued');
-  }
-
-  setPageModel() {
-    this.pageCriteria.pageSize = 5;
-    this.pageCriteria.offset = 0;
-    this.pageCriteria.footerPageHeight = 50;
   }
 }
 

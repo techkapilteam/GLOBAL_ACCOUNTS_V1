@@ -7,6 +7,8 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { DateformatPipe } from './dateformat.pipe';
 import { TableModule } from 'primeng/table';
+import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-comparison-tb',
@@ -17,6 +19,7 @@ import { TableModule } from 'primeng/table';
 export class ComparisonTbComponent {
   private fb = inject(FormBuilder);
   private commonService = inject(CommonService);
+  private reportService = inject(AccountingReportsService);
   private datePipe = inject(DatePipe);
   private destroyRef = inject(DestroyRef);
 
@@ -118,48 +121,61 @@ export class ComparisonTbComponent {
   }
 
   show() {
-    this.GetComparisionTBReports();
+    // this.GetComparisionTBReports();
+    this.ComparisionTBForm.value.grouping
+      ? this.crystalreport()
+      : this.GetComparisionTBReports();
+  }
+  crystalreport() {
+    const fromDate = this.commonService.getFormatDateNormal(this.ComparisionTBForm.value.fromDate);
+    const toDate = this.commonService.getFormatDateNormal(this.ComparisionTBForm.value.toDate);
+    const BranchSchema = this.commonService.getschemaname();
+
+    // window.open(
+    //   `${this.urldata?.CrystalReportsApiHostUrl}AccountsReports/getComptbGrouping/?fromDate=${fromDate}&toDate=${toDate}&BranchSchema=${BranchSchema}`,
+    //   '_blank'
+    // );
   }
 
-  private loadDummyData() {
-    this.gridData = [
-      {
-        pparentaccountName: 'Assets',
-        paccountName: 'Cash',
-        pdebitamount1: 5000,
-        pcreditamount1: 0,
-        pdebitamount2: 3000,
-        pcreditamount2: 0,
-        pdebittotal: 8000,
-        pcredittotal: 0
-      },
-      {
-        pparentaccountName: 'Assets',
-        paccountName: 'Bank',
-        pdebitamount1: 2000,
-        pcreditamount1: 0,
-        pdebitamount2: 1000,
-        pcreditamount2: 0,
-        pdebittotal: 3000,
-        pcredittotal: 0
-      },
-      {
-        pparentaccountName: 'Liabilities',
-        paccountName: 'Loans',
-        pdebitamount1: 0,
-        pcreditamount1: 4000,
-        pdebitamount2: 0,
-        pcreditamount2: 2000,
-        pdebittotal: 0,
-        pcredittotal: 6000
-      }
-    ];
+  // private loadDummyData() {
+  //   this.gridData = [
+  //     {
+  //       pparentaccountName: 'Assets',
+  //       paccountName: 'Cash',
+  //       pdebitamount1: 5000,
+  //       pcreditamount1: 0,
+  //       pdebitamount2: 3000,
+  //       pcreditamount2: 0,
+  //       pdebittotal: 8000,
+  //       pcredittotal: 0
+  //     },
+  //     {
+  //       pparentaccountName: 'Assets',
+  //       paccountName: 'Bank',
+  //       pdebitamount1: 2000,
+  //       pcreditamount1: 0,
+  //       pdebitamount2: 1000,
+  //       pcreditamount2: 0,
+  //       pdebittotal: 3000,
+  //       pcredittotal: 0
+  //     },
+  //     {
+  //       pparentaccountName: 'Liabilities',
+  //       paccountName: 'Loans',
+  //       pdebitamount1: 0,
+  //       pcreditamount1: 4000,
+  //       pdebitamount2: 0,
+  //       pcreditamount2: 2000,
+  //       pdebittotal: 0,
+  //       pcredittotal: 6000
+  //     }
+  //   ];
 
-    this.showHide = false;
-    this.loading = this.isLoading = false;
-    this.savebutton = 'Generate Report';
-    this.calculateTotals();
-  }
+  //   this.showHide = false;
+  //   this.loading = this.isLoading = false;
+  //   this.savebutton = 'Generate Report';
+  //   this.calculateTotals();
+  // }
 
   GetComparisionTBReports() {
     this.ComparisionTBForm.markAllAsTouched();
@@ -173,12 +189,24 @@ export class ComparisonTbComponent {
     this.loading = this.isLoading = true;
     this.savebutton = 'Processing';
 
-    this.from = this.ComparisionTBForm.value.fromDate;
-    this.to = this.ComparisionTBForm.value.toDate;
+    // this.from = this.ComparisionTBForm.value.fromDate;
+    // this.to = this.ComparisionTBForm.value.toDate;
 
-    setTimeout(() => {
-      this.loadDummyData();
-    }, 800);
+    // setTimeout(() => {
+    //   this.loadDummyData();
+    // }, 800);
+    const fromdate = this.commonService.getFormatDateNormal(this.ComparisionTBForm.value.fromDate)??'';
+    const todate = this.commonService.getFormatDateNormal(this.ComparisionTBForm.value.toDate)??'';
+
+    this.reportService.GetComparisionTB(fromdate, todate)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(res => {
+        this.gridData = res || [];
+        this.showHide = false;
+        this.loading = this.isLoading = false;
+        this.savebutton = 'Generate Report';
+        this.calculateTotals();
+      });
   }
 
   pdfOrprint(type: 'Pdf' | 'Print') {
