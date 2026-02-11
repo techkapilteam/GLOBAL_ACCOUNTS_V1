@@ -14,7 +14,6 @@ import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker
 export class ChequesOnhandComponent {
 
   datePipe = inject(DatePipe);
-
   activeTab: string = 'ALL';
   showCheckbox: boolean = true;
 
