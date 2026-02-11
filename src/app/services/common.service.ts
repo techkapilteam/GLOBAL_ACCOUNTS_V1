@@ -1536,6 +1536,41 @@ export class CommonService {
 
   // }
 
+
+hrmsjvtypes = [
+    { "name": 'ESI', "value": 'ESI' },
+    { "name": 'PROVIDENT FUND', "value": 'PF' },
+    { "name": 'AO ALLOWANCES', "value": 'AO ALLOWANCES' },
+    { "name": 'PROFISSIONAL TAX', "value": 'PT' },
+    { "name": 'VDA', "value": 'VDA' },
+    { "name": 'HRA', "value": 'HRA' },
+    { "name": 'CHIT ACT ALLOWANCE', "value": 'CHIT ACT' },
+    { "name": 'PRO ALLOWANCE', "value": 'PRO' },
+    { "name": 'FOREMAN ALLOWANCE', "value": 'FOREMAN' },
+    { "name": 'DRIVER ALLOWANCE', "value": 'DRIVER ALLOWANCE' },
+    { "name": 'LOYALTY ALLOWANCES', "value": 'LOYALTY ALLOWANCES' },
+    { "name": 'VEHICLE ALLOWANCE', "value": 'VEHICLE' },
+    { "name": 'RISK ALLOWANCE', "value": 'RISK ALLOWANCE' },
+    { "name": 'BIDPAYABLE ALLOWANCE', "value": 'BID PAYABLE' },
+    { "name": 'ASSISTANT - AO ALLOWANCE', "value": 'ASSISTANT-AO' },
+    { "name": 'CHILDREN EDUCATION ALLOWANCE', "value": 'CHILDREN EDUCATION' },
+    { "name": 'CITY ALLOWANCE', "value": 'CITY ALLOWANCE' },
+    { "name": 'WASHING ALLOWANCE', "value": 'WASHING ALLOWANCE' },
+    { "name": 'CONVEYANCE ALLOWANCE', "value": 'CONVEYANCE ALLOWANCE' },
+    { "name": 'SPECIAL ALLOWANCE', "value": 'SPECIAL ALLOWANCE' },
+    { "name": 'STAFF SALARIES', "value": 'STAFF SALARIES' },
+    { "name": 'WELFARE-INSURANCE', "value": 'WELFARE-INSURANCE' },
+    { "name": 'COLLECTION TARGET DEDUCTION', "value": 'COLLECTION TARGET DEDUCTION' },
+    { "name": 'REAL ESTATE DEDUCTION', "value": 'REAL ESTATE DEDUCTION' },
+    { "name": 'TARGET RELEASE', "value": 'TARGET RELEASE' }
+
+  ]
+
+  exceptionHandlingMessages(formName: string, methodName: string, errorMessage: string) {
+    this.toastr.error(errorMessage, "Error!", { timeOut: 2500 });
+  }
+
+
 }
 
 
