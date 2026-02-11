@@ -1,19 +1,20 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { mergeMap, Subject } from 'rxjs';
+import { mergeMap, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../envir/environment.prod';
+// import { environment } from '../envir/environment.prod';
 import { jsPDF } from 'jspdf';
 import autoTable, { ColumnInput, RowInput } from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { AbstractControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { environment } from '../envir/environment';
 
 
 
@@ -185,7 +186,7 @@ export class CommonService {
   messageShowTimeOut = 1500;
   dateFormat!: string | null;
   // datepipe: any;
-
+  private apiHostUrl: string | null = null;
 
   currencysymbol = sessionStorage.getItem("currencyformat");
   constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe) {
@@ -202,10 +203,23 @@ export class CommonService {
   // }
 
   getschemaname(): string {
-    return sessionStorage.getItem('schemaname') ?? '';
+    // return sessionStorage.getItem('schemaname') ?? '';
+    return 'global';
   }
   getbranchname(): string {
-    return sessionStorage.getItem('loginBranchName') ?? '';
+    // return sessionStorage.getItem('loginBranchName') ?? '';
+    return 'accounts';
+  }
+
+
+
+   getCompanyCode(): string {
+    // return sessionStorage.getItem('CompanyCode') ?? '';
+    return 'KAPILCHITS';
+  }
+  getBranchCode(): string {
+    // return sessionStorage.getItem('BranchCode') ?? '';
+    return 'KLC01';
   }
   getbrachid(): number | null {
     let companyDetailsRaw = sessionStorage.getItem('companydetails');
@@ -257,27 +271,65 @@ export class CommonService {
   }
 
 
+
+
+    private loadApiHostUrl() {
+    debugger;
+    this.apiHostUrl = environment.apiURL
+    if (this.apiHostUrl) {
+      return of(this.apiHostUrl);
+    }
+    return this.http.get<any>(environment.apiURL).pipe(
+      map(config => {
+        this.apiHostUrl = config['ApiHostUrl'];
+        return this.apiHostUrl;
+      })
+    )
+  }
   getAPI(apiPath: string, params: any, parameterStatus: string): Observable<any> {
-    const urldata = environment.apiURL;
+    // debugger;
+    // const urldata = environment.apiURL;
 
-    return this.http.get<any[]>(urldata).pipe(
-      mergeMap(json => {
-        const apiUrl = json[0].ApiHostUrl + apiPath;
+    // return this.http.get<any>(urldata).pipe(
+    //   mergeMap(json => {
+    //     debugger;
+    //     const apiUrl = json[0].ApiHostUrl + apiPath;
 
-        if (parameterStatus.toUpperCase() === 'YES') {
-          return this.http.get(apiUrl, { params }).pipe(
-            map(this.extractData),
-            catchError(this.handleError)
+    //     if (parameterStatus.toUpperCase() === 'YES') {
+    //       return this.http.get(apiUrl, { params }).pipe(
+    //         map(this.extractData),
+    //         catchError(this.handleError)
+    //       );
+    //     } else {
+    //       return this.http.get(apiUrl).pipe(
+    //         map(this.extractData),
+    //         catchError(this.handleError)
+    //       );
+    //     }
+    //   }),
+    //   catchError(this.handleError)
+    // );
+     debugger;
+    let urldata = environment.apiURL;
+
+    if (parameterStatus.toUpperCase() == 'YES')
+      return this.loadApiHostUrl().pipe(
+        switchMap(apiBaseUrl => { debugger
+          const fullUrl = apiBaseUrl + apiPath + "?" + params;
+          return this.http.get(fullUrl).pipe(
+            map((res: any) => this.extractData(res)),
+            catchError(error => this.handleError(error))
           );
-        } else {
-          return this.http.get(apiUrl).pipe(
-            map(this.extractData),
-            catchError(this.handleError)
+        }));
+    else
+      return this.loadApiHostUrl().pipe(
+        switchMap(apiBaseUrl => {
+          const fullUrl = apiBaseUrl + apiPath;
+          return this.http.get(fullUrl).pipe(
+            map((res: any) => this.extractData(res)),
+            catchError(error => this.handleError(error))
           );
-        }
-      }),
-      catchError(this.handleError)
-    );
+        }));
   }
 
   postAPI(apiPath: string, data: any): Observable<any> {

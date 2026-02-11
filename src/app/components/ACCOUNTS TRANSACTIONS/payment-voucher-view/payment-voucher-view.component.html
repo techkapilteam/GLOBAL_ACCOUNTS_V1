@@ -75,11 +75,11 @@
                   <div class="col-md-3">
                     <div class="form-group" *ngIf="showbankcard">
                       <label>Bank Name</label>
-                      <select class="form-control" id="pbankname" title="Bank Name" formControlName="pbankid"
+                      <select class="form-control" id="pbankname" title="Bank Name" formControlName="bankName"
                         (change)="bankName_Change($event)">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let bank of banklist;trackBy: trackByFn" [value]="bank.pbankid">
-                          {{bank.pbankname}}</option>
+                        <option *ngFor="let bank of banklist;trackBy: trackByFn" [value]="bank.bankName">
+                          {{bank.bankName}}</option>
                       </select>
                       <!-- <app-validation-message [messgae]="formValidationMessages?.pbankname">
                       </app-validation-message> 

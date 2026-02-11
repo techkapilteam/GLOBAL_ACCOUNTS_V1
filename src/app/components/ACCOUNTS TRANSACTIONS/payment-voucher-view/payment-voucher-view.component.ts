@@ -236,9 +236,9 @@ import { TableModule } from 'primeng/table';
     NgSelectModule,
     TableModule
   ],
-  
+
   styleUrls: ['./payment-voucher-view.component.css'],
-  providers: [DecimalPipe,CurrencyPipe]
+  providers: [DecimalPipe, CurrencyPipe]
 })
 export class PaymentVoucherViewComponent implements OnInit {
   currencyCode = 'INR';
@@ -288,7 +288,7 @@ export class PaymentVoucherViewComponent implements OnInit {
 
   bankBalance: any; cashRestrictAmount: any;
   bankexists!: boolean;
-  groups: any[]=[];
+  groups: any[] = [];
   ;
   bankbookBalance: any;;
   bankpassbookBalance: any;;
@@ -439,7 +439,7 @@ export class PaymentVoucherViewComponent implements OnInit {
   private loadgrid(): void {
 
   }
-  BlurEventAllControll(fromgroup: FormGroup) :any{
+  BlurEventAllControll(fromgroup: FormGroup): any {
 
     try {
 
@@ -981,34 +981,102 @@ export class PaymentVoucherViewComponent implements OnInit {
 
   getLoadData() {
 
-    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('PAYMENT VOUCHER', this._commonService.getschemaname()).subscribe(json => {
-      debugger;
-      //console.log(json)
-      if (json != null) {
+    // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('PAYMENT VOUCHER', this._commonService.getschemaname()).subscribe(json => {
+    //   this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
+    //     this._commonService.getschemaname(),
+    //      this._commonService.getbranchname(),
+    //      this._commonService.getBranchCode(),
+    //      this._commonService.getCompanyCode()
+    //     ).
+    //   subscribe({
+    //    next: (json:any) => {
+    //     debugger;
+    //      if (json != null) {
 
-        this.banklist = json.banklist;
-        this.modeoftransactionslist = json.modeofTransactionslist;
-        this.typeofpaymentlist = this.gettypeofpaymentdata();
-        this.ledgeraccountslist = json.accountslist;
-        this.partylist = json.partylist;
-        this.gstlist = json.gstlist;
+    //       this.banklist = json.banklist;
+    //       console.log('bank list:',this.banklist);
 
-        this.debitcardlist = json.bankdebitcardslist;
-        // console.log(this.debitcardlist);
-        this.setBalances('CASH', json.cashbalance);
-        this.setBalances('BANK', json.bankbalance);
-        console.log(json);
-        this.cashRestrictAmount = json.cashRestrictAmount;
-        //this.lstLoanTypes = json
-        //this.titleDetails = json as string
-        //this.titleDetails = eval("(" + this.titleDetails + ')');
-        //this.titleDetails = this.titleDetails.FT;
-      }
-    },
-      (error) => {
+    //       this.modeoftransactionslist = json.modeofTransactionslist;
+    //       this.typeofpaymentlist = this.gettypeofpaymentdata();
+    //       this.ledgeraccountslist = json.accountslist;
+    //       this.partylist = json.partylist;
+    //       this.gstlist = json.gstlist;
 
-        this._commonService.showErrorMessage(error);
-      });
+    //       this.debitcardlist = json.bankdebitcardslist;
+    //       // console.log(this.debitcardlist);
+    //       this.setBalances('CASH', json.cashbalance);
+    //       this.setBalances('BANK', json.bankbalance);
+    //       console.log(json);
+    //       this.cashRestrictAmount = json.cashRestrictAmount;
+    //       //this.lstLoanTypes = json
+    //       //this.titleDetails = json as string
+    //       //this.titleDetails = eval("(" + this.titleDetails + ')');
+    //       //this.titleDetails = this.titleDetails.FT;
+    //     }
+    //   },
+    // // },
+    //    error: (error:any) => {
+
+    //       this._commonService.showErrorMessage(error);
+    //     }
+    //     })
+
+debugger;
+
+ this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
+  this._commonService.getschemaname(),
+  this._commonService.getbranchname(),
+   this._commonService.getCompanyCode(),
+  this._commonService.getBranchCode()
+ 
+).subscribe({
+  next: (res: any) => {
+    // bankName
+     this.banklist = res;
+    
+    console.log('SUCCESS:', res);
+    alert('hello');
+  },
+  error: (err: any) => {
+    console.log('ERROR:', err);
+    alert('API Error');
+  }
+});
+
+  
+    // this._AccountingTransactionsService
+    //   .GetReceiptsandPaymentsLoadingData1(
+    //     this._commonService.getschemaname(),
+    //     this._commonService.getbranchname(),
+    //     this._commonService.getBranchCode(),
+    //     this._commonService.getCompanyCode()
+    //   )
+    //   .subscribe({
+    //     next: (json: any) => {
+    //       debugger;
+
+    //       if (json) {
+    //         console.log('Full Response:', json);
+
+    //         this.banklist = json.banklist;
+    //         this.modeoftransactionslist = json.modeofTransactionslist;
+    //         this.typeofpaymentlist = this.gettypeofpaymentdata();
+    //         this.ledgeraccountslist = json.accountslist;
+    //         this.partylist = json.partylist;
+    //         this.gstlist = json.gstlist;
+    //         this.debitcardlist = json.bankdebitcardslist;
+
+    //         this.setBalances('CASH', json.cashbalance);
+    //         this.setBalances('BANK', json.bankbalance);
+
+    //         this.cashRestrictAmount = json.cashRestrictAmount;
+    //       }
+    //     },
+    //     error: (error: any) => {
+    //       this._commonService.showErrorMessage(error);
+    //     }
+    //   });
+
   }
 
   // gettypeofpaymentdata(): any {
@@ -2827,114 +2895,114 @@ export class PaymentVoucherViewComponent implements OnInit {
 
 
   savePaymentVoucher() {
-  debugger;
+    debugger;
 
-  this.disablesavebutton = true;
-  this.savebutton = 'Processing';
-  let count = 0;
+    this.disablesavebutton = true;
+    this.savebutton = 'Processing';
+    let count = 0;
 
-  // Calculate total paid amount
-  // const totalPaid = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptotalamount ?? 0), 0);
-  const totalPaid = this.paymentslist.reduce((sum: number, c: any) => sum + parseFloat(c.ptotalamount ?? 0), 0);
+    // Calculate total paid amount
+    // const totalPaid = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptotalamount ?? 0), 0);
+    const totalPaid = this.paymentslist.reduce((sum: number, c: any) => sum + parseFloat(c.ptotalamount ?? 0), 0);
 
-  this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
+    this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
 
-  if (!this.validatesavePaymentVoucher()) {
-    this.disablesavebutton = false;
-    this.savebutton = 'Save';
-    return;
-  }
+    if (!this.validatesavePaymentVoucher()) {
+      this.disablesavebutton = false;
+      this.savebutton = 'Save';
+      return;
+    }
 
-  // Collect subledger IDs
-  // const accountIds = this.paymentslist.map(p => p.psubledgerid).join(',');
-  
-const accountIds = this.paymentslist.map((p: any) => p.psubledgerid).join(',');
+    // Collect subledger IDs
+    // const accountIds = this.paymentslist.map(p => p.psubledgerid).join(',');
 
-  let trans_date = this.paymentVoucherForm.controls['ppaymentdate'].value;
-  trans_date = this._commonService.getFormatDateNormal(trans_date);
+    const accountIds = this.paymentslist.map((p: any) => p.psubledgerid).join(',');
 
-  this._AccountingTransactionsService.GetCashAmountAccountWise("PAYMENT VOUCHER", accountIds, trans_date)
-    .subscribe(result => {
-      debugger;
+    let trans_date = this.paymentVoucherForm.controls['ppaymentdate'].value;
+    trans_date = this._commonService.getFormatDateNormal(trans_date);
 
-      // Check Cash restriction for Cash payment
-      if (this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' && !this.bankexists) {
-        for (const payment of this.paymentslist) {
-          const amount = parseFloat(this._commonService.removeCommasInAmount(payment.ptotalamount).toString());
+    this._AccountingTransactionsService.GetCashAmountAccountWise("PAYMENT VOUCHER", accountIds, trans_date)
+      .subscribe(result => {
+        debugger;
 
-          // const matchingResult = result.find(r => r.psubledgerid === payment.psubledgerid);
-          const matchingResult = result.find((r: any) => r.psubledgerid === (payment as any).psubledgerid);
+        // Check Cash restriction for Cash payment
+        if (this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' && !this.bankexists) {
+          for (const payment of this.paymentslist) {
+            const amount = parseFloat(this._commonService.removeCommasInAmount(payment.ptotalamount).toString());
 
-          if (matchingResult) {
-            const totalAmount = matchingResult.accountbalance + amount;
-            if (parseFloat(this.cashRestrictAmount.toString()) < totalAmount) {
-              count = 1;
-              break;
+            // const matchingResult = result.find(r => r.psubledgerid === payment.psubledgerid);
+            const matchingResult = result.find((r: any) => r.psubledgerid === (payment as any).psubledgerid);
+
+            if (matchingResult) {
+              const totalAmount = matchingResult.accountbalance + amount;
+              if (parseFloat(this.cashRestrictAmount.toString()) < totalAmount) {
+                count = 1;
+                break;
+              }
             }
           }
         }
-      }
 
-      if (count !== 0) {
-        this._commonService.showWarningMessage(
-          `Subledger per day Cash transactions limit below ${this._commonService.currencysymbol}${this._commonService.currencyformat(this.cashRestrictAmount)} only`
-        );
-        this.disablesavebutton = false;
-        this.savebutton = 'Save';
-        return;
-      }
+        if (count !== 0) {
+          this._commonService.showWarningMessage(
+            `Subledger per day Cash transactions limit below ${this._commonService.currencysymbol}${this._commonService.currencyformat(this.cashRestrictAmount)} only`
+          );
+          this.disablesavebutton = false;
+          this.savebutton = 'Save';
+          return;
+        }
 
-      if (!confirm("Do You Want To Save ?")) {
-        this.disablesavebutton = false;
-        this.savebutton = 'Save';
-        return;
-      }
+        if (!confirm("Do You Want To Save ?")) {
+          this.disablesavebutton = false;
+          this.savebutton = 'Save';
+          return;
+        }
 
-      // Prepare Payment Voucher data
-      if (this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH') {
-        this.paymentVoucherForm.controls['pbankid'].setValue(0);
-      }
+        // Prepare Payment Voucher data
+        if (this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH') {
+          this.paymentVoucherForm.controls['pbankid'].setValue(0);
+        }
 
-      this.paymentVoucherForm.controls['pipaddress'].setValue(this._commonService.getIpAddress());
-      this.paymentVoucherForm.controls['pCreatedby'].setValue(this._commonService.getCreatedBy());
+        this.paymentVoucherForm.controls['pipaddress'].setValue(this._commonService.getIpAddress());
+        this.paymentVoucherForm.controls['pCreatedby'].setValue(this._commonService.getCreatedBy());
 
-      const paymentVoucherData = {
-        ...this.paymentVoucherForm.value,
-        ppaymentslist: this.paymentslist
-      };
+        const paymentVoucherData = {
+          ...this.paymentVoucherForm.value,
+          ppaymentslist: this.paymentslist
+        };
 
-      // Format dates
-      paymentVoucherData.ppaymentdate = this._commonService.getFormatDateNormal(paymentVoucherData.ppaymentdate);
-      paymentVoucherData.pchequedate = this._commonService.getFormatDateNormal(paymentVoucherData.pchequedate);
+        // Format dates
+        paymentVoucherData.ppaymentdate = this._commonService.getFormatDateNormal(paymentVoucherData.ppaymentdate);
+        paymentVoucherData.pchequedate = this._commonService.getFormatDateNormal(paymentVoucherData.pchequedate);
 
-      // Save via service
-      this._AccountingTransactionsService.savePaymentVoucher(paymentVoucherData)
-        .subscribe({
-          next: (res: any) => {
-            debugger;
-            if (res[0] === 'TRUE') {
-              this.JSONdataItem = res;
+        // Save via service
+        this._AccountingTransactionsService.savePaymentVoucher(paymentVoucherData)
+          .subscribe({
+            next: (res: any) => {
+              debugger;
+              if (res[0] === 'TRUE') {
+                this.JSONdataItem = res;
+                this.disablesavebutton = false;
+                this.savebutton = 'Save';
+                this._commonService.showInfoMessage("Saved successfully");
+                this.clearPaymentVoucher();
+
+                const receipt = btoa(`${res[1]},Payment Voucher`);
+                window.open(`/#/PaymentVoucherReport?id=${receipt}`, "_blank");
+              } else {
+                this.disablesavebutton = false;
+                this.savebutton = 'Save';
+                this._commonService.showErrorMessage("Error while saving..!");
+              }
+            },
+            error: (err) => {
+              this._commonService.showErrorMessage(err);
               this.disablesavebutton = false;
               this.savebutton = 'Save';
-              this._commonService.showInfoMessage("Saved successfully");
-              this.clearPaymentVoucher();
-
-              const receipt = btoa(`${res[1]},Payment Voucher`);
-              window.open(`/#/PaymentVoucherReport?id=${receipt}`, "_blank");
-            } else {
-              this.disablesavebutton = false;
-              this.savebutton = 'Save';
-              this._commonService.showErrorMessage("Error while saving..!");
             }
-          },
-          error: (err) => {
-            this._commonService.showErrorMessage(err);
-            this.disablesavebutton = false;
-            this.savebutton = 'Save';
-          }
-        });
-    });
-}
+          });
+      });
+  }
 
   // getpartyJournalEntryData() {
   //   debugger;
@@ -3032,115 +3100,115 @@ const accountIds = this.paymentslist.map((p: any) => p.psubledgerid).join(',');
   // }
 
 
-getpartyJournalEntryData() {
-  debugger;
-  try {
-    const tdsJournalEntries: any[] = [];
-    const ledgerNames = [...new Set(this.paymentslist.map((item: any) => item.pledgername))];
-    this.partyjournalentrylist = [];
-    let journalIndex = 1;
+  getpartyJournalEntryData() {
+    debugger;
+    try {
+      const tdsJournalEntries: any[] = [];
+      const ledgerNames = [...new Set(this.paymentslist.map((item: any) => item.pledgername))];
+      this.partyjournalentrylist = [];
+      let journalIndex = 1;
 
-    // Process each ledger
-    for (const ledger of ledgerNames) {
-      const ledgerPayments = this.paymentslist.filter((p: any) => p.pledgername === ledger);
+      // Process each ledger
+      for (const ledger of ledgerNames) {
+        const ledgerPayments = this.paymentslist.filter((p: any) => p.pledgername === ledger);
 
-      // Total debit amount for the ledger (payment + TDS)
-      const ledgerDebit = ledgerPayments.reduce(
-        (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.pamount) + this._commonService.removeCommasInAmount(p.ptdsamount),
-        0
-      );
+        // Total debit amount for the ledger (payment + TDS)
+        const ledgerDebit = ledgerPayments.reduce(
+          (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.pamount) + this._commonService.removeCommasInAmount(p.ptdsamount),
+          0
+        );
 
-      // Push ledger debit entry
-      this.partyjournalentrylist.push({
-        type: 'Payment Voucher',
-        accountname: ledger,
-        debitamount: ledgerDebit,
-        creditamount: ''
-      });
+        // Push ledger debit entry
+        this.partyjournalentrylist.push({
+          type: 'Payment Voucher',
+          accountname: ledger,
+          debitamount: ledgerDebit,
+          creditamount: ''
+        });
 
-      // Process TDS per section
-      const tdsSections = [...new Set(ledgerPayments.map((p: any) => p.pTdsSection))];
-      for (const section of tdsSections) {
-        const tdsAmount = ledgerPayments
-          .filter((p: any) => p.pTdsSection === section)
-          .reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
+        // Process TDS per section
+        const tdsSections = [...new Set(ledgerPayments.map((p: any) => p.pTdsSection))];
+        for (const section of tdsSections) {
+          const tdsAmount = ledgerPayments
+            .filter((p: any) => p.pTdsSection === section)
+            .reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
 
-        if (tdsAmount > 0) {
+          if (tdsAmount > 0) {
+            tdsJournalEntries.push({
+              type: `Journal Voucher${journalIndex}`,
+              accountname: `TDS-${section} RECEIVABLE`,
+              debitamount: tdsAmount,
+              creditamount: ''
+            });
+          }
+        }
+
+        // Ledger credit for total TDS
+        const totalTDS = ledgerPayments.reduce(
+          (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount),
+          0
+        );
+        if (totalTDS > 0) {
           tdsJournalEntries.push({
             type: `Journal Voucher${journalIndex}`,
-            accountname: `TDS-${section} RECEIVABLE`,
-            debitamount: tdsAmount,
+            accountname: ledger,
+            debitamount: '',
+            creditamount: totalTDS
+          });
+        }
+
+        journalIndex++;
+      }
+
+      // Add GST entries if present
+      const gstTypes = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
+      const gstNames = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
+
+      gstTypes.forEach((key, idx) => {
+        const totalGST = this.paymentslist.reduce(
+          (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p[key]),
+          0
+        );
+        if (totalGST > 0) {
+          this.partyjournalentrylist.push({
+            type: 'Payment Voucher',
+            accountname: gstNames[idx],
+            debitamount: totalGST,
             creditamount: ''
           });
         }
-      }
+      });
 
-      // Ledger credit for total TDS
-      const totalTDS = ledgerPayments.reduce(
-        (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount),
+      // Total paid amount
+      const totalPaid = this.paymentslist.reduce(
+        (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptotalamount),
         0
       );
-      if (totalTDS > 0) {
-        tdsJournalEntries.push({
-          type: `Journal Voucher${journalIndex}`,
-          accountname: ledger,
-          debitamount: '',
-          creditamount: totalTDS
-        });
-      }
+      if (totalPaid > 0) {
+        this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
 
-      journalIndex++;
-    }
-
-    // Add GST entries if present
-    const gstTypes = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
-    const gstNames = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
-
-    gstTypes.forEach((key, idx) => {
-      const totalGST = this.paymentslist.reduce(
-        (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p[key]),
-        0
-      );
-      if (totalGST > 0) {
+        const accountName = this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' ? 'CASH ON HAND' : 'BANK';
         this.partyjournalentrylist.push({
           type: 'Payment Voucher',
-          accountname: gstNames[idx],
-          debitamount: totalGST,
-          creditamount: ''
+          accountname: accountName,
+          debitamount: '',
+          creditamount: totalPaid.toFixed(2)
         });
       }
-    });
 
-    // Total paid amount
-    const totalPaid = this.paymentslist.reduce(
-      (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptotalamount),
-      0
-    );
-    if (totalPaid > 0) {
-      this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
+      // Append TDS journal entries
+      this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
 
-      const accountName = this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' ? 'CASH ON HAND' : 'BANK';
-      this.partyjournalentrylist.push({
-        type: 'Payment Voucher',
-        accountname: accountName,
-        debitamount: '',
-        creditamount: totalPaid.toFixed(2)
-      });
+      this.loadgrid();
+    } catch (e) {
+      this._commonService.showErrorMessage(e);
     }
-
-    // Append TDS journal entries
-    this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
-
-    this.loadgrid();
-  } catch (e) {
-    this._commonService.showErrorMessage(e);
   }
-}
 
 
 
   //dataItem
-  public removeHandler(rowIndex:any) {
+  public removeHandler(rowIndex: any) {
     debugger;
     //const index: number = this.paymentslist.indexOf(value);
     const index: number = rowIndex;
@@ -3150,9 +3218,9 @@ getpartyJournalEntryData() {
       this.paymentslist1 = [...this.paymentslist1];
     }
     let journalentryamount = this.paymentslist.reduce(
-  (sum: number, c: any) => sum + parseFloat(c.ptotalamount ?? 0),
-  0
-);
+      (sum: number, c: any) => sum + parseFloat(c.ptotalamount ?? 0),
+      0
+    );
     // let journalentryamount = this.paymentslist.reduce((sum, c) => sum + parseFloat((c.ptotalamount)), 0);
     this.paymentVoucherForm['controls']['ptotalpaidamount'].setValue((journalentryamount));
     this.getpartyJournalEntryData();
@@ -3160,7 +3228,7 @@ getpartyJournalEntryData() {
     this.getPaymentListColumnWisetotals();
   }
 
-  uploadAndProgress(event: any, files:any) {
+  uploadAndProgress(event: any, files: any) {
     debugger;
     var extention = event.target.value.substring(event.target.value.lastIndexOf('.') + 1);
     if (!this.validateFile(event.target.value)) {
@@ -3214,7 +3282,7 @@ getpartyJournalEntryData() {
       })
     }
   }
-  validateFile(fileName:any):any {
+  validateFile(fileName: any): any {
     try {
       debugger
       if (fileName == undefined || fileName == "") {
@@ -3229,7 +3297,7 @@ getpartyJournalEntryData() {
       }
       return false
     }
-    catch (e:any) {
+    catch (e: any) {
       this.showErrorMessage(e);
     }
   }

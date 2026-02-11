@@ -43,6 +43,12 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema);
     return this._CommonService.getAPI('/accountingtransactions/GetReceiptsandPaymentsLoadingData', params, 'YES');
   }
+
+    GetReceiptsandPaymentsLoadingData1(GlobalSchema:any, AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+  }
   GetProductnamesandHSNcodes(): Observable<any> {
     //const params = new HttpParams().set('GlobalSchema',GlobalSchema);
     return this._CommonService.getAPI('/Configuration/GlobalConfiguration/GetProductnamesandHSNcodes', "params", 'NO');
