@@ -687,6 +687,7 @@ isgstapplicableChange() {
 
   getLoadData() {
 
+    // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('JOURNAL VOUCHER', this._commonService.getschemaname()).subscribe((json:any) => {
     this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('JOURNAL VOUCHER', this._commonService.getschemaname()).subscribe((json:any) => {
 
       //console.log(json)
