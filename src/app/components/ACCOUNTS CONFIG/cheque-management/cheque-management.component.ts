@@ -8,10 +8,15 @@ import { AccountingMasterService } from '../../../services/accounting-master.ser
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-cheque-management',
-  imports: [BsDatepickerModule,ReactiveFormsModule,CommonModule,RouterModule,NgxDatatableModule],
+  imports: [BsDatepickerModule,ReactiveFormsModule,CommonModule,RouterModule,NgxDatatableModule,
+     TableModule,
+    ButtonModule
+  ],
   templateUrl: './cheque-management.component.html',
   styleUrl: './cheque-management.component.css'
 })

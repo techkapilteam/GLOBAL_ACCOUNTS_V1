@@ -1,170 +1,117 @@
-<div class="screen-container">
-    <div class="screen-card">
-        <div class="screen-header">
-            <h2>Cash On Hand</h2>
+<form [formGroup]="CashOnHandForm">
+    <!-- <app-loading [loading]="gridLoading"></app-loading> -->
+    <div class="section-content">
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                <!-- <p class="bc-2">Bank Pay-in (Cheques On Hand)</p> -->
+            </div>
         </div>
-        <div class="screen-content">
-            <form [formGroup]="CashOnHandForm">
-                <!-- <app-loading [loading]="gridLoading"></app-loading> -->
-                <div class="section-content">
-                    <div class="row">
-                        <div class="col-md-12 col-xl-12">
-                            <!-- <p class="bc-2">Bank Pay-in (Cheques On Hand)</p> -->
-                        </div>
-                    </div>
-                    @if (pcashonhandbalance !== 0) {
-                    <div class="row">
-                        <!-- *ngIf="pcashonhandbalance!=0" -->
-                        <!-- <div class="col-md-6 col-xl-4" *ngIf="bankDropdowmHide">
+
+        <div class="row" *ngIf="pcashonhandbalance!==0">
+            <div class="col-md-6 col-xl-4" *ngIf="bankDropdowmHide">
                 <div class="form-group">
                     <label class="required-field">Bank</label>
                     <select class="form-control" id="banknameForLegal" formControlName="banknameForLegal" title="Bank"
-                        [ngClass]="{ 'is-invalid': CashOnHandValidation.banknameForLegal }"
                         (change)="BankChange($event)">
                         <option value="">Select</option>
                         <option *ngFor="let bank of BankNamesList" [value]="bank.pdepositbankname">
                             {{bank.pdepositbankname}}
                         </option>
                     </select>
+                    <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.banknameForLegal }"
+                     <app-validation-message [messgae]="CashOnHandValidation?.banknameForLegal"></app-validation-message> -->
                 </div>
+            </div>
+            <div class="col-md-3 col-xl-3">
+                <div class="form-group mt-4 ml-4">
+                    <input class="form-check-input" type="checkbox" title="As On Date" id="asondate"
+                    (change)="asOnChange($event)" formControlName="asondate">
+                    <label class="required-field ml-3">As on</label>
+                </div>
+            </div>
+            <div class="col-md-3 col-xl-3" *ngIf="fromdatevisible">
+                <div class="form-group">
+                    <label class="required-field">From Date</label>
+                    <input class="form-control w-auto" type="text" title="Date" id="fromdate"
+                         formControlName="fromdate" placeholder="" readonly (ngModelChange)="fromdateChange($event)"
+                        [bsConfig]="fromdate" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                        >
+                    <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.fromdate }"
+                        <app-validation-message [messgae]="CashOnHandValidation?.fromdate"></app-validation-message> -->
+                </div>
+                <!-- (ngModelChange)="change_date($event)" -->
+            </div>
+            <div class="col-md-3 col-xl-3">
+                <div class="form-group">
+                    <label class="required-field">{{datelable}}</label>
+                    <input class="form-control w-auto" type="text" title="Date" id="todate"
+                         formControlName="todate" placeholder="" readonly
+                        [bsConfig]="todate" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                        [disabled]="true">
+                    <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.todate }" 
+                        <app-validation-message [messgae]="CashOnHandValidation?.todate"></app-validation-message> -->
+                </div>
+                <!-- (ngModelChange)="change_date($event)" -->
+            </div>
+        </div>
+        <div class="row" *ngIf="pcashonhandbalance!==0">
+            <div class="col-md-3 col-xl-3">
+                <div class="form-group">
+                    <label class="required-field">CAO </label>
+                    <select class="form-control" (change)="SelectBank($event)" id="bankname" formControlName="bankname"
+                        title="Bank" [ngClass]="{ 'is-invalid': CashOnHandValidation.bankname }">
+                        <option value="">Select</option>
+                        <option *ngFor="let bank of BanksList" [value]="bank.branch_name">{{bank.branch_name}}</option>
 
-            </div> -->
-                        <!-- <app-validation-message [messgae]="CashOnHandValidation?.banknameForLegal"></app-validation-message> -->
+                    </select>
+                    <!--
+                     <app-validation-message [messgae]="CashOnHandValidation?.bankname"></app-validation-message> -->
+                    <!-- <div *ngIf="ShowBankErrorMsg" style="color:red">Select Bank</div> -->
+                </div>
+            </div>
+            <div class="col-md-3 col-xl-3">
+                <div class="form-group">
+                    <label class="required-field">Transaction Date</label>
+                    <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate" [disabled]="!pdatepickerenablestatus"
+                        (ngModelChange)="change_date($event)" formControlName="ptransactiondate" placeholder="" readonly
+                        [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                       >
+                    <!--  [ngClass]="{ 'is-invalid': CashOnHandValidation.ptransactiondate }"
+                        <app-validation-message [messgae]="CashOnHandValidation?.ptransactiondate"></app-validation-message> -->
+                </div>
+            </div>
+            <div class="col-md-3 col-xl-3">
+                <div class="d-flex justify-content mt-4">
+                    <button (click)="getCashOnHandData()" class="btn btn-s-icon px-3 border-0" [disabled]="disableShowbutton">
+                        <i class="fa" [ngClass]="{'fa-spin fa-spinner': disableShowbutton}"></i>{{showbuttontext}}
+                      </button>
+                </div>
+            </div>
 
-                        @if (!bankDropdowmHide) {
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group">
-                                <label class="required-field">Bank</label>
-                                <select class="form-control" formControlName="banknameForLegal"
-                                    (change)="BankChange($event)">
-                                    <option value="">Select</option>
-
-                                    @for (bank of BankNamesList; track bank.pdepositbankname) {
-                                    <option [value]="bank.pdepositbankname">
-                                        {{ bank.pdepositbankname }}
-                                    </option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        }
-
-                        <div class="col-md-2 col-xl-2">
-                            <div class="form-group mt-4 ml-4">
-                                <input class="form-check-input" type="checkbox" title="As On Date" id="asondate"
-                                    formControlName="asondate" (change)="asOnChange($event)">
-                                <!-- (change)="asOnChange()" -->
-                                <label class="required-field ml-3">As on</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-xl-3">
-                            <!-- *ngIf="fromdatevisible" -->
-                            <div class="form-group">
-
-                                <label class="required-field">{{FromDate}}</label>
-                                <input class="form-control w-auto" type="text" title="Date" id="fromdate"
-                                    formControlName="fromdate" placeholder="" (ngModelChange)="fromdateChange($event)"
-                                    [bsConfig]="fromdate" #dp="bsDatepicker" bsDatepicker placement="bottom">
-                                <!-- <app-validation-message [messgae]="CashOnHandValidation?.fromdate"></app-validation-message> -->
-                            </div>
-
-
-                            <!-- (ngModelChange)="change_date($event)" -->
-                        </div>
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group" *ngIf="showTodate">
-                                <label class="required-field">To Date</label>
-                                <input class="form-control w-auto" type="text" title="Date" id="todate"
-                                    formControlName="todate" placeholder="" [bsConfig]="todate" #dp="bsDatepicker"
-                                    bsDatepicker placement="bottom" [disabled]="false">
-                                <!-- <app-validation-message [messgae]="CashOnHandValidation?.todate"></app-validation-message> -->
-                            </div>
-                            <!-- (ngModelChange)="change_date($event)" -->
-                        </div>
-                    </div>
-
-                    }
-
-
-
-                    <div class="row">
-                        @if (pcashonhandbalance != 0) {
-                        <!-- *ngIf="pcashonhandbalance!=0" -->
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group">
-                                <label class="required-field">CAO </label>
-                                <select class="form-control" (change)="SelectBank($event)" id="bankname"
-                                    formControlName="bankname" title="Bank">
-                                    <option value="">Select</option>
-                                    <option *ngFor="let bank of BanksList" [value]="bank.branch_name">
-                                        {{bank.branch_name}}</option>
-                                    <!-- <option @for (bank of BanksList; track bank.branch_name)  [ngValue]="bank">
-                            {{ bank.branch_name }}
-                        </option> -->
-                                </select>
-                                <!-- <app-validation-message [messgae]="CashOnHandValidation?.bankname"></app-validation-message> -->
-                                <!-- <div *ngIf="ShowBankErrorMsg" style="color:red">Select Bank</div> -->
-                            </div>
-                        </div>
-                        }
-
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group">
-                                <label class="required-field">Transaction Date</label>
-                                <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
-                                    [disabled]="!pdatepickerenablestatus" (ngModelChange)="change_date($event)"
-                                    formControlName="ptransactiondate" placeholder="" readonly [bsConfig]="dpConfig"
-                                    #dp="bsDatepicker" bsDatepicker placement="bottom">
-                                <!-- <app-validation-message [messgae]="CashOnHandValidation?.ptransactiondate"></app-validation-message> -->
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-xl-3">
-                            <div class="d-flex justify-content mt-4">
-                                <button (click)="getCashOnHandData()" class="btn btn-primary px-3 border-0"
-                                    [disabled]="disableShowbutton">
-                                    <i class="fa"
-                                        [ngClass]="{'fa-spin fa-spinner': disableShowbutton}"></i>{{showbuttontext}}
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- <div class="row" *ngIf="pcashonhandbalance==0">
+        </div>
+        <div class="row" *ngIf="pcashonhandbalance!=0">
             <div class="col-md-6 col-xl-4">
                 <div class="form-group">
-                    <label>Cash On Hand Balance :{{currencySymbol}} {{pcashonhandbalance| currency}}</label>
+                    <label>Cash On Hand Balance :{{currencySymbol}} 
+                        {{pcashonhandbalance| currency }}</label>
+<!-- {{ pcashonhandbalance | currency:currencyCode:'symbol':'1.2-2' }} -->
 
                 </div>
             </div>
-        </div> -->
-                    @if (pcashonhandbalance === 0) {
-                    <div class="row">
-                        <div class="col-md-6 col-xl-4">
-                            <div class="form-group">
-                                <label>
-                                    Cash On Hand Balance : {{ currencySymbol }} {{ pcashonhandbalance | currency }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    }
+        </div>
+    </div>
 
-                </div>
-
-
-
-
-
-
-                <div class="section-content mt-2">
-
-
-                    <!-- <div class="row" *ngIf="false">
+    <div class="section-content mt-2">
+        <div class="row" *ngIf="false">
             <div class="col-md-6">
                 <div class="form-group mr-0 custom-search">
-                    <input (input)="onSearch($event)" type="search" #search id="search" class="form-control"
-                        placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+                    <!-- <input (input)="onSearch($event.target.value)" type="search" #search id="search"
+                        class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1"> -->
+
+
+                        <input (input)="onSearch($event)" type="search" #search id="search"
+                         class="form-control">
+
                 </div>
             </div>
             <div class="d-flex justify-content-end mr-3 mt-4">
@@ -184,66 +131,31 @@
                 </ul>
 
             </div>
-        </div> -->
+        </div>
+        <!-- <ul class="nav filtered-tab nav-tabs">
+            <li class="active"> <a class="active" (click)="All()" data-toggle="tab" href="#all" role="tab" aria-controls="fresh" aria-selected="true">All <span class="badge badge-warning ml-2">{{all}}</span></a></li>
+
+            <li><a data-toggle="tab" href="#all" (click)="ChequesReceived()">Cheques Received<span
+            class="badge badge-secondary ml-2">{{chequesreceived}}</span></a></li>
+            <li><a data-toggle="tab" href="#all" (click)="OnlineReceipts()">Online Receipts <span
+            class="badge badge-primary ml-2">{{onlinereceipts}}</span></a></li>
+            <li><a data-toggle="tab" href="#all" (click)="Deposited()">Deposited <span
+            class="badge badge-success ml-2">{{deposited}}</span></a></li>
+            <li><a data-toggle="tab" href="#all" (click)="Cancelled()">Cancelled <span
+            class="badge badge-danger ml-2">{{cancelled}}</span></a></li>
+
+        </ul>
+        <br /> -->
 
 
-                    @if (false) {
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mr-0 custom-search">
-                                <input (input)="onSearch($event)" type="search" #search id="search" class="form-control"
-                                    placeholder="Search" aria-label="Search" aria-describedby="basic-addon1" />
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end mr-3 mt-4">
-                            <ul class="temp-ul">
-                                <li class="temp-ico ml-2">
-                                    <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
-                                        style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
-                                </li>
-                                <li class="temp-ico ml-2">
-                                    <img src="assets/images/print-icon-blue.svg" width="18px" class="pt-2" title="print"
-                                        style="cursor: pointer;" (click)="pdfOrprint('Print')" />
-                                </li>
-                                <li class="temp-ico ml-2">
-                                    <img src="assets/images/icon-excel.svg" width="18px" class="pt-2" title="Excel"
-                                        style="cursor: pointer;" (click)="export()" />
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    }
+        <!-- <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade active show " id="all" role="tabpanel" aria-labelledby="fresh-tab"> -->
+        <div class="row">
+            <div class="col-md-12 col-xl-12">
+                
 
 
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <!-- <ngx-datatable class="ngx-datatable material" [rows]="gridData"  
-                                 [headerHeight]="50" [rowHeight]="'auto'" [summaryRow]="true"> 
-                                <ngx-datatable-column name="Subscriber Name" prop="ppartyname"></ngx-datatable-column>
-                            </ngx-datatable> -->
-                            <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force"
-                                [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="10">
-
-                                <ngx-datatable-column name="Subscriber Name" prop="ppartyname"></ngx-datatable-column>
-
-                                <ngx-datatable-column name="Amount" prop="ptotalreceivedamount">
-                                </ngx-datatable-column>
-
-                                <ngx-datatable-column name="Receipt No" prop="preceiptno"></ngx-datatable-column>
-                                <ngx-datatable-column name="Receipt Id" prop="preceiptid"></ngx-datatable-column>
-                                <ngx-datatable-column name="Receipt Date" prop="preceiptdate">
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{ row.preceiptdate | date }}
-                                    </ng-template>
-                                </ngx-datatable-column>
-
-
-
-                            </ngx-datatable>
-
-
-                            <p-table [value]="gridData" dataKey="preceiptid" [rows]="10" [paginator]="false"
+                     <p-table [value]="gridData" dataKey="preceiptid" [rows]="10" [paginator]="false"
                                 [resizableColumns]="true" columnResizeMode="fit" scrollable="true" scrollHeight="400px"
                                 styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
                                 <ng-template pTemplate="header">
@@ -271,25 +183,22 @@
                                 </ng-template>
 
                             </p-table>
+            </div>
 
-                        </div>
-                    </div>
-                    <!-- </div> -->
-
-
-                    <!-- </div> -->
-
-                </div>
-
-                <div class=" d-flex justify-content-end mt-3">
-                    <a (click)="Clear()" data-toggle="tab" class="btn btn-secondary mr-4 px-3 border-0" role="tab"
-                        aria-controls="hot" aria-selected="false">Clear</a>
+        </div>
+        <!-- </div> -->
 
 
-                    @if (saveshowhide) {
-                    <!-- *ngIf="saveshowhide" -->
-                    <div>
-                        <!-- <button (click)="Save()" data-toggle="tab" class="btn btn-b-icon px-3 ml-3 border-0" role="tab" aria-controls="hot"
+        <!-- </div> -->
+
+    </div>
+
+    <div class=" d-flex justify-content-end mt-3">
+        <a (click)="Clear()" data-toggle="tab" class="btn btn-g-icon mr-4 px-3 border-0" role="tab" aria-controls="hot"
+            aria-selected="false"><img src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px"
+                height="20px">Clear</a>
+        <div *ngIf="saveshowhide">
+            <!-- <button (click)="Save()" data-toggle="tab" class="btn btn-b-icon px-3 ml-3 border-0" role="tab" aria-controls="hot"
           aria-selected="false" [disabled]="disablesavebutton">
           <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton,'fa-check': !disablesavebutton}"></i>
           <span *ngIf="!disablesavebutton">
@@ -297,76 +206,35 @@
     
         </button> -->
 
-                        @if (!disablesavebutton) {
-                        <button (click)="Save()" class="btn btn-primary px-3 border-0 ms-2"
-                            [disabled]="disablesavebutton">
-
-                            <!-- *ngIf="!disablesavebutton" -->
-                            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}
-                        </button>
-                        }
-                    </div>
-                    <!--  -->
-                    }
-
-                </div>
-
-
-                <!-- The Modal -->
-                <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" style="margin-right:0px !important; ">
-                        <div class="model-cst modal-content">
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <div class="form-group">
-                                    <label for="">Enter The Cancel Amount Charges For The
-                                        Cheque:{{chequenumber}}</label>
-                                    <input type="text" class="form-control" style="text-align:right;"
-                                        name="cancelcharges" maxlength="3" id="cancelcharges" #ref appNumbersonly
-                                        appMycurrencyFormatter>
-                                </div>
-                                <div class="d-flex justify-content-end mt-4">
-                                    <a (click)="CancelChargesOk(ref.value)" data-toggle="tab"
-                                        class="btn btn-b-icon px-3 border-0 mr-3" role="tab" aria-controls="hot"
-                                        aria-selected="false" data-dismiss="modal"><img
-                                            src="assets/images/icon-check-white.svg" class="mr-3" width="20px"
-                                            height="20px">Ok</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <!-- <div class="row">
-
-
-
-        <ngx-datatable class="material" [rows]="gridData1" [columnMode]="'force'" [headerHeight]="50"
-            [rowHeight]="'auto'">
-
-            <ngx-datatable-column name="ID" prop="id"></ngx-datatable-column>
-
-            <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
-
-            <ngx-datatable-column name="Amount" prop="amount">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    ${{ row.amount }}
-                </ng-template>
-            </ngx-datatable-column>
-
-            <ngx-datatable-column name="Date" prop="date">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.date | date:'yyyy-MM-dd' }}
-                </ng-template>
-            </ngx-datatable-column>
-
-        </ngx-datatable>
-
-    </div> -->
-            </form>
+            <button (click)="Save()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
+                <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
+                    *ngIf="!disablesavebutton">
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}
+            </button>
         </div>
     </div>
-</div>
+
+
+    <!-- The Modal -->
+    <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
+        <div class="modal-dialog" style="margin-right:0px !important; ">
+            <div class="model-cst modal-content">
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="form-group">
+                        <label for="">Enter The Cancel Amount Charges For The Cheque:{{chequenumber}}</label>
+                        <input type="text" class="form-control" style="text-align:right;" name="cancelcharges"
+                            maxlength="3" id="cancelcharges" #ref appNumbersonly appMycurrencyFormatter>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <a (click)="CancelChargesOk(ref.value)" data-toggle="tab"
+                            class="btn btn-b-icon px-3 border-0 mr-3" role="tab" aria-controls="hot"
+                            aria-selected="false" data-dismiss="modal"><img src="assets/images/icon-check-white.svg"
+                                class="mr-3" width="20px" height="20px">Ok</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

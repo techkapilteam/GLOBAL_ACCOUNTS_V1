@@ -8,12 +8,14 @@ import { ToastrService } from 'ngx-toastr';
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../envir/environment.prod';
-import { jsPDF } from 'jspdf';
+// import { jsPDF } from 'jspdf';
 import autoTable, { ColumnInput, RowInput } from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { AbstractControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import jsPDF from 'jspdf';
+// import autoTable from 'jspdf-autotable';
 
 
 
@@ -27,8 +29,11 @@ export class CommonService {
 
 
 
-  showSuccessMsg(message: string) {
-    this.toastr.warning(message);
+  showSuccessMessage() {
+    this.toastr.success("Saved successfully", "Success", { timeOut: this.messageShowTimeOut });
+  }
+  showSuccessMsg(message: any) {
+    this.toastr.success(message, "Success", { timeOut: this.messageShowTimeOut });
   }
   showErrorMessage(error: any) {
     console.warn('API disabled (mock mode):', error?.message || error);
@@ -188,7 +193,7 @@ export class CommonService {
 
 
   currencysymbol = sessionStorage.getItem("currencyformat");
-  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService,private datepipe: DatePipe) {
+  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe) {
     this.pCreatedby = 'admin'; // or from auth/user session
     this.ipaddress = '127.0.0.1';
     console.log('DatePipe injected:', this.datepipe);
@@ -376,7 +381,7 @@ export class CommonService {
   // getFormatDateGlobal(date: any)  {
 
   //   this.dateFormat = sessionStorage.getItem("dateformat");
-    
+
   //   if (this.dateFormat == "MM DD YYYY") {
   //     return this.datepipe.transform(date, 'MM dd yyyy')
   //   }
@@ -418,30 +423,30 @@ export class CommonService {
   //   }
   // }
   getFormatDateGlobal(date: any): string {
-  if (!date) return '';
+    if (!date) return '';
 
-  const storedFormat = sessionStorage.getItem('dateformat') ?? '';
+    const storedFormat = sessionStorage.getItem('dateformat') ?? '';
 
-  let format = 'dd/MM/yyyy'; 
+    let format = 'dd/MM/yyyy';
 
-  switch (storedFormat) {
-    case "MM DD YYYY": format = 'MM dd yyyy'; break;
-    case "DD MM YYYY": format = 'dd MM yyyy'; break;
-    case "YYYY MM DD": format = 'yyyy MM dd'; break;
-    case "DD/MM/YYYY": format = 'dd/MM/yyyy'; break;
-    case "MM/DD/YYYY": format = 'MM/dd/yyyy'; break;
-    case "YYYY/MM/DD": format = 'yyyy/MM/dd'; break;
-    case "DD-MM-YYYY": format = 'dd-MM-yyyy'; break;
-    case "MM-DD-YYYY": format = 'MM-dd-yyyy'; break;
-    case "YYYY-MM-DD": format = 'yyyy-MM-dd'; break;
-    case "DD-MMM-YYYY": format = 'dd-MMM-yyyy'; break;
-    case "MMM-DD-YYYY": format = 'MMM-dd-yyyy'; break;
-    case "YYYY-MMM-DD": format = 'yyyy-MMM-dd'; break;
-    case "YYYY-DD-MMM": format = 'dd-MMM-yyyy'; break;
+    switch (storedFormat) {
+      case "MM DD YYYY": format = 'MM dd yyyy'; break;
+      case "DD MM YYYY": format = 'dd MM yyyy'; break;
+      case "YYYY MM DD": format = 'yyyy MM dd'; break;
+      case "DD/MM/YYYY": format = 'dd/MM/yyyy'; break;
+      case "MM/DD/YYYY": format = 'MM/dd/yyyy'; break;
+      case "YYYY/MM/DD": format = 'yyyy/MM/dd'; break;
+      case "DD-MM-YYYY": format = 'dd-MM-yyyy'; break;
+      case "MM-DD-YYYY": format = 'MM-dd-yyyy'; break;
+      case "YYYY-MM-DD": format = 'yyyy-MM-dd'; break;
+      case "DD-MMM-YYYY": format = 'dd-MMM-yyyy'; break;
+      case "MMM-DD-YYYY": format = 'MMM-dd-yyyy'; break;
+      case "YYYY-MMM-DD": format = 'yyyy-MMM-dd'; break;
+      case "YYYY-DD-MMM": format = 'dd-MMM-yyyy'; break;
+    }
+
+    return this.datepipe.transform(date, format) ?? '';
   }
-
-  return this.datepipe.transform(date, format) ?? '';
-}
   _getRupeeSymbol() {
     return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALgAAAESCAMAAAB5He/JAAAAkFBMVEUAAAD////t7e3u7u7s7Oz29vb09PT5+fn7+/vx8fGbm5vAwMCioqKQkJDNzc3Hx8eysrKoqKiWlpalpaV4eHjX19fh4eG5ubmvr6+BgYGMjIxVVVU6OjpnZ2cXFxfl5eVFRUVwcHAkJCROTk5oaGgyMjJBQUEODg4vLy9fX19ycnIlJSV8fHwdHR0TExNLS0uVx27cAAATPElEQVR4nNVdi3rbKgwOtsEm914SN0m79LK2S9dt7/92BzB2MAZb8iU+4dvGtgL5gyUB0o88IaKEYRjImsv6uFrN0jSdrbI6lfV6vU5nooh6PZulswdR5M8ebm5u5P+J+k7+5eFOFPnDuSh5Ldrk9c18Op3Oi/ruTtbTO/HDW1Hmup6K/xXVQv7sdrFY3Fr1QradWMBD9ntyDSW1gdP7sSGByolkwIMgUsAjPhsbEqxEZCJmO8zFJCH0z9iQQGVKw4mpmAm5DkF5FmBLwMlqbEiwspTAg1y+gyDkn2NDApUFFaCVcnJRElF/jQ0JVH4rnTTN4ZVYlBmzgNOxEcHKCzVmXMn5z7EhwUqUme+Jkm9R4vXYiGAlJUkiMRfm8Dg2Ilh5kljFpJ/t+GlsSLBylFiD8GzH07ERwcqcqhmXdjyO44TRKxGUA4mZKIkAnVkVehgbEqwcpXwHZ3NI52MjgpWplu8C+HZsRLDyqOU7A04pTd7GhgQry0SAFeIdi4pOgpBNx0YEKzsijAkvrErIN2MjgpXXRMo3L+x4yJ7HhgQrK5JE5oyTKxGUn0SJdlEmV7L0TI5hMduZVTm9Ph4Op59fu/3+VvqIpnPtX5qLPxf73W739fT2/to/kj+zpSjSP+arV6Je6XrDDfk+L0CUqlOFWE/VDxNRy6McEctrrBoIE0TYdrm+278cPnr6Fgd9amT56dGsqa5jUUsISWFR8pVT2kW5/iv7KGrqqGUDKvbsROxrEpKE283D4md3+F8kG9mEAIGiGpin/EjOMhO1/IpUCJOci5Iqq2cVZM8qjlbzr8dOyHesJLaRAwpVn+SAYjmERGtRK+ACn2ptGM+g7GiUDzNa7TqAv4lNsQ0cUBRwBxR1kNBfU7cOCuCBbp0LlwVcd0j4dt56c7m0gFegaOAVKGFx5mRSC0QttYIatdQOJhvkDSsdhPCR6KHdfuc3JzUj10Epe2u1cAn5LoTLKYWhrRAh49t9G+QHWh05hxIbUBIbiu0fL8QkFy6uhcsrhblCiA4P73jkU1rRoKQGStmOm2JrtQ5KrSMbuN3hBu993DBTvsFQSr5Dpq29EiqSWX+lFebykNR0EAJ/iwX+Tl2f0Ailasejs3DZxlM1tDuYCiE7HLGOjjumV4iKHT+PXIHSyY5nHUwpVE+d3iCRy32IT4Nq7bhXbLHAdQe6wa1JP6kHeNWOl4EbMSD1NcPMwumvGerWeUOzQ95QDX/uwPkLCvmSV0bOoVgjn6FYUbeK2Eb1dtynEGyHAX5w2PGoYsejYey46lA8zJAuMMg3Xe14b8ADHPKntsA7L/kOg0Ux0hKF6CU/N8th5BXbyG3H/QoRZTqG2DPuzU/gkdeORwPa8UKuwggO/NUniAg73hvwgCPivRs08ABq4RCikisEwihOCWzJz1UtcFsV2/LXWJXSIpTYuv8DCvzAylbFHhlmDgufQO48CC1xAZjDrCE4lPfn2NWOk+1sNpPMps1mu1mKP0JO6TGKsmF5tjiz3OvBmPpihFGWO2JUlKZwj4BPdFvezY4H9Fft+J8/Xn+9Pz4+fvw7nE5P4tfP++/d7lv83kuq1OJ2On9Yr9OHdZpK/9MS7JlcZcC5nprcIZTo/XnhmxIzo6ZGHpZDfTZQ9Vg+0JRF2414wFvxnFcrSWVbzVIxBWm6friRdDPJMFvs93KW7r9e7m1zGI6EG1tSGzhuPzpaeWLW0W05NiJgOYYT0xNDWTdf4MXKmiQlcxijj+jjlJNtx68lOhHZdvw6OFlqX0MmylEuPY0svhLy3ptcjNjZzRw2rJn/m7ItE204vRLNnFr7cX4lTIR3cibaqMjntZDglnFGRMityrVE9Hc0LDuE+HWsmT8KP52ecXYlHKFliWgjhCYYGxGsfJEzCSGzKtdBeP+MQsshdCWauWZlv0pAPsaGBCpPLDRCKZJ/+DA2JFg5UoOIIK0KGxsRrGSBf9Oxj4oejFbemO1XuRLN3HANXM94QlrEsUco00QREGIulVKUSbidZvcAFQ1rPi+u8e1FWYjf39/399/ijxdRvr5eXp5OshwOb//+Pf8Tvz8+HmV5//Xr9+/X36+vf7Ly48ffv5+fKkLexyWdZ1IN0GayQ7UbMCncgUy7A8XCqmvl+6K6TnRNijou/q06cJY9XAY5WT3Ky5Dz+d06na1m6Wy23Gw2S+m6jCIeHKOKS9U4SDQRbSqO/cAXoLV80hTi1btX3zSbw9ylSjlXrmbD230mIuREG5LXWdS/qDN2C9HOF2I01HSYooPdMPfWkBiy058T/8g5lNLIw0XdNPNMdIDcWEz5WESbqhTqkUOQt2bDByXauGgCtREJ+W9IVOKT2QFaGNHGQUDwRv/rOuQNE4OxED8BgJ/ihpErUDpE3aoKoTrYCpFARPzW/ISRiDa2QoA810vzEy5PtHECh2zh/kY+DfITbRzcWg3cw62t2E4Z8VLDnzuYogIJdT4xlxAyx8gGY9/s0QPRpsxYiDjoLlqKItqo+RvajscgTlz4PyLaaOsG2uyfWjM9BxMVBuIJpThOViYqNeawqsr24/FZlaJDDMqsEDXS9y5tDhnIf/DNWvIOh1uAOIj2sWzF9OyTW1sh2oCIAYd23FrVUhMQWMj1zobrnQ3XOxt9JslpH74OoqHeZKmGDDThM8jIFSiDbmtBDpvH2BwZDGVIOw6LKqXMBj4yYTIkoCDHP87tkXMo9Ue37rdSHA1lTWCXPZak5a2UwdwTMAbJk0uDQPeAhrLjIYy5F9WpPs6O19x1c9txx400geMZhDs/srnteO1dNyVUmohAjVoJlVGzvKHdgVodVAPQCXky+SB1I9dC0ValfMnMYTyD/B6Q92IcNaUQGAzbEkNstVVx23FDvod0CAFDBXO3BnWw4/lhD2zHy6dCIO5D9YBateMaStWOUyO7AK2pY1ftaphQ4A2mzwg5cgmKaVUC5yk/8J/yA9cpP4LGHpfcmkQXFP8pv287DuZHrYkttp3teL1fxWHHi3mhwHV+Im9FNI5cP+O0vxKTJZjW9ZJ0/LB6qxI0W5XgrPshnMogCfout1dJg+qtii22Le04ZxxBRjsUN+l6s+MVQ+GccVshEoq6sfymbFVus2AzbkPJyWSszoCaFpZVOohvsEHxXd5YAhu5Dop/dwi1Ksn2DscaeeLcfahxPU//7rCLHRf/z1PsTd9dEnocjWjHPjoTguoQ8+Pq9hmJejK5c2342mRCYDIlCWSLnUf/hYglQj5W+1Z5G2akMrK524dDKVmVPL9KrL0xiTZa0l2TZUEJo+N2drP7aMkreN8y53Gp9pTfZMdnz6eX+93+br1aqhQyx+NR3W+R1XI1Wz9M9/enx05MiG8Z9fOKbVvH/vCJGlO3SyDHg8yEkPspyNCMskNEyi4SWnw00mujOhR2fOhEdjfKHeBzTjV5a2vs+LC89xMHBIzaBWhx99Fx5UdKSL1rt0MmhHg44Lec+XgFOWPBSXGo5UKc7fhQonIfucW2cpu3Kerms+PDAH/aMPPp14Xo2trxVimAGsr9hnJwbLHVQUL06p+ououyy8Sk1icdlBcgjwuu4g082/Geue/v8yMNSwfUxmAxIBOCy473CvywOq/eYQgJGLnMIcyO93d39nGxdYltz8ALUekpOfPf/SosctPheAUQUbEyIUiN6AP4r+8VL4Ut7bCOVzmb/ONV5cwfJumc5fgw3YrNXHuqRVs73gn4r+80cont0MClcP1rifnzsF8dKePOnaqL4tDTkp/vbJI2xP2P/XobMspKZGnfngnNI63fZOUPM8a8Tufz8bSbpxs1Cg2rm8+SdSvMYe/bWtUaxCTVZSWHyWnpTYTJoe14/BcO/NEUWxBjIe/Q49EtZ+sThKRM7hOdOqHhSEvqzr6uw3Jth/JhOX+Y8Kw5ssxZfYAWsQCF5QUIT7TB3WNacihjf3A7jvMIfaoXOgCy8zbzClq64M4eR9xt1INNE/B6Set8mO0oDryUCUE8A9Tiuaf+fVOJsRA2MRZyXgHOzWz66UPUq7rWFER8H9qOS6FCKuiG24wFr9jaQRqYHa8NpZQiRgSVR/QXi+0QE9OhJeaISTljUUaH+uCVPXI5XBgyVIqVL1IT1LOtipOxAA/QVsKFuRRq4cK942BK/w92XH3NMEIp6IrhGAsuXkHLGbeD+wku41TUlUzQtlQDtDgP/wEmtlXGgmMxxNE+qgFahlpBd8RhbS9tx/VyxVEh7gfadsZtscVRm6S8WIYzPqKCgpu4mXUGpTggyGSWKme8AlTiqdekhVUB7w5xRBucgj6NaMdtiirOdzslDl5BfgLykl87uuB8TFzUFncV+3kFTo5vZYuNJwX7iDaINL+iBJjdoe9Q49gdtnjlSIJ6W+fz5e24l2iDS+R0X/VkmQf3JpdAi6sG/hsVCWqL+0B8t0BArpK6hvhXjjxjkG9sKVSTCHBOod1ezYRJXC7YeAQ77nEf4V6ne3LgsPWtjmjT4sqY92YcbgVd2Jf0ziOL/9Yu75bX/6qX9BquRaJW0HVsSqFtx+uCDC2uRfrseE6YfMYg35CL2vHaq78RZov7mPQKHBSR8F22xinoy0DAHTOu/mKFdMu3eVFOottyVBkTLO4/EwJKQVfUnMRL2XFPa9QZ9HhJ4LWigtzivplP3hbCHkUl0H/xXmCSu2eUF/eenjkOGktlZJ9fpQIF4VexzGH2MO8wyB/oyObQlEKUgi6dF78Hcgg1JT96RgB/LZlCCK8AvOSXiTYAmgDfYlbQJ8qrL8hq5BUAoeh0U/nDzL6qey8pnxFFeXEXtMO2NqmBgrPj2SqOUtAZu7Bjv45XgFLQjBMy4NHNjP67cvUZ2QBDTOLpZ2KOnOTZANskJDTTBhYdMJkQcLnV7+lg7gmMHVetGUpB7+iFHft1mRBQCrriYBecL0DbnAlBeWAYZ9oTw7QHpqh19D/BJLT/ZMS4TFUamVZGdjS0oZTTv2Zz4qfDlHy7QRhhFPRUXIzr7GZObCjYG7Q4BV3QC9txI+BhOYJDjlLQlA0WSjFf3u16iXflbd+4l0ttiXdk7yeAoLTIhMBgKUiy8lhzkECHCwOMQ8ghhahXN/yEp+rrbMe9vAJ9jMS9LONGrEONIfF6oo03QIst8AQTsqxI84j40u5ePuodU2IdGoL2kYktNhMCw6ygb5ew47AZF50xdPOdn9oUdM2EgM1qE6NW0JTARwY2bJ9fBeXF3ZJ6+l59JgQg0QaYCSHBXAD9TXq3494ArWP/pj1qugNKQU+9U1TzqH8TE7fKK6CoFXRKQKRgMJROebJQXlx9bxl7yscRbRrtuJZClIIeSf92HBoVtXPBoRT02RrZfQICB2i70QRQZ9B70py/kkGhoE75Dl5BglHQOcN5a1sRbaCZyVBEhRUhfdpxQETCBTzAK+gnJQ473i4iwe3oP8+i/pnD7hz1r/AKmL4yhrrQfzBGjnW6mRIRITE+IW9IHQ27vnJEBRkwZ9AdBUbdOhFtgJnJUAqasgsGaP3AM4VAvbt2k3jEtg/gjsCLM8CQR2owZ9B3XwzIObIrNUgGHBp18waLZUOUk+iJNV1v74VoA8wwiVlBpzQcwo63A456V9mM9xmgjbyiEjWKCsUp6OexXlT8jIWoHKDtI/84w6ygbxC/yoVeHRWiVtDveGQ7XuqAUdAHegmiTcOSXygERkGXvDXRJgNeF/130gRC3ZBXlgiG8eK+Js6RbShexkKvrxxhoJf/6PJEwiZz2AfRBgQ8TDAKekv7dex3eOWImBeMgqasC7dWtZQHUEI0TcDY6nO9g+d6B5839HeIMO+uj4qRK5/QCAXtnvAqRLaKo8IsH2rk/BPaZkIgne24asgweQm+SU92vMOSX6zgMWaLe8O6Em36eeWISuCRYLIRbUjxjhL8K0eQbmbLPVHxqoVHhIL+jdveA+rVjjO8gp4uQ7QhDjte5RWgFHTR0gVnR/99NAGGoQkQjBc3JZ5PqIUCe+VIhE3gwTEKeiyPXECpjbsM9OqoELOC/kp6J9p4A7SNsUUUH+elTShlCIKALCgv7hzPU+j0YtH6BB6Y7KYry161Yex3t+P5QQaTQZF7NKgfog1uxlGJQ95IdYVAZ0LoRhM4d4gxK+iO9JAJoeuLjIrHg1HQG4azKrbY9mPH8w6YLL7LHArGjvf9si6xvqlvyBAK+jchgJWzoKgKkUn0+p/oDYGO+usNQqI3CMl5o+DtEFsdEhoi8j8+kQQOpWuA1rk7NBUC48Vd0AsGaP12XHfAKOiM2VD6JNo0nYBshcCsoBsbiv8E1PuZs9IhQSjoY9xLJoRWp/yqQlDEFveFXtqx77bj2cgYBZ3TgYg2DZ4sd05PjBd3yUFQ8L5DdAfZEHMGzZJuNvoOe/bWuhUClbL6xC4ZoPXb8axDjFDQHR2WaFMFXpebGcPFTSksIoGPAZkdvFdFDRMkG2IUdJNnxW145YgnWIyOutVubChiBX1NWE3UTY18ETuuZ30+nd4uFovb6bmeinpRrW+X9JIB2nrgGcNSbErlv+UluFjXVNfqB1TX8AWobrkCAa+ojws4mKJqT0kFyn+Tw/Kw8v9FnAAAAABJRU5ErkJggg==";
   }
@@ -899,7 +904,7 @@ export class CommonService {
 
 
 
-    public currencyFormat(value:any) {
+  public currencyFormat(value: any) {
     if (value == null) { value = "0"; }
     else {
       value = parseFloat(value.toString().replace(/,/g, ""));
@@ -957,15 +962,15 @@ export class CommonService {
     }
 
   }
-   getFormatDateNormal(date: any): string | null {
+  getFormatDateNormal(date: any): string | null {
     if (date != null && date != '' && date != undefined)
       return this.datepipe.transform(date, 'dd/MM/yyyy');
     else
       return null;
   }
-removeCommasInAmount(value: string | number): string {
-  return String(value).replace(/,/g, '');
-}
+  removeCommasInAmount(value: string | number): string {
+    return String(value).replace(/,/g, '');
+  }
   //   public removeCommasInAmount(value:any) {
   //   if (this.isNullOrEmptyString(value))
   //     value = 0;
@@ -975,238 +980,238 @@ removeCommasInAmount(value: string | number): string {
   //   // let c = b
   //   // return c;
   // }
-isNullOrEmpty(value: string | number | null | undefined): boolean {
-  // null or undefined → true
-  if (value == null) return true;
+  isNullOrEmpty(value: string | number | null | undefined): boolean {
+    // null or undefined → true
+    if (value == null) return true;
 
-  // number → not empty
-  if (typeof value === 'number') return false;
+    // number → not empty
+    if (typeof value === 'number') return false;
 
-  // string → check empty or only whitespace
-  return value.trim() === '';
-}
- 
-fileUploadS3(formName: string, data: any) {
-  const urldata = environment.apiURL;
+    // string → check empty or only whitespace
+    return value.trim() === '';
+  }
 
-  return this.http.get(urldata).pipe(
-    mergeMap((json: any) =>
-      this.http.post(`${json[0]['ApiHostUrl']}/uploadFile/${formName}`, data).pipe(
-        map(this.extractData),
-        catchError(this.handleError)
+  fileUploadS3(formName: string, data: any) {
+    const urldata = environment.apiURL;
+
+    return this.http.get(urldata).pipe(
+      mergeMap((json: any) =>
+        this.http.post(`${json[0]['ApiHostUrl']}/uploadFile/${formName}`, data).pipe(
+          map(this.extractData),
+          catchError(this.handleError)
+        )
       )
-    )
-  );
-}
-_MultipleGroupingGridExportData(
-  gridData: any[],
-  groupedCol: string,
-  isGroupedColDate: boolean
-): any[] {
-  const groupedByCol: Record<string, any[]> = {};
-  const groupedByTransaction: Record<string, any[]> = {};
-  const groupKeys: string[] = [];
-  const transactionKeys: string[] = [];
-  const finalList: any[] = [];
-
-  // 1️⃣ Group data by column and transaction
-  for (const row of gridData) {
-    const groupColValue = isGroupedColDate
-      ? this.getFormatDateGlobal(row[groupedCol])
-      : row[groupedCol];
-
-    const transactionNo = row["ptransactionno"];
-
-    // Group by column
-    if (!groupedByCol[groupColValue]) {
-      groupedByCol[groupColValue] = [{ ...row }];
-      groupKeys.push(groupColValue);
-    } else {
-      groupedByCol[groupColValue].push(row);
-    }
-
-    // Group by transaction
-    if (!groupedByTransaction[transactionNo]) {
-      groupedByTransaction[transactionNo] = [{ ...row }];
-      transactionKeys.push(transactionNo);
-    } else {
-      groupedByTransaction[transactionNo].push(row);
-    }
+    );
   }
+  _MultipleGroupingGridExportData(
+    gridData: any[],
+    groupedCol: string,
+    isGroupedColDate: boolean
+  ): any[] {
+    const groupedByCol: Record<string, any[]> = {};
+    const groupedByTransaction: Record<string, any[]> = {};
+    const groupKeys: string[] = [];
+    const transactionKeys: string[] = [];
+    const finalList: any[] = [];
 
-  // 2️⃣ Add transaction-level headers
-  for (const txKey of transactionKeys) {
-    const transactionRows = groupedByTransaction[txKey];
-    transactionRows.forEach((row, idx) => {
-      if (idx === 0) {
-        row["group"] = {
-          content: `               ${row["ptransactionno"]}`,
-          colSpan: 15,
-          styles: { halign: "left", fontStyle: "bold", textColor: "#663300" },
-        };
-      }
-      finalList.push(row);
-    });
-  }
-
-  // 3️⃣ Build final grouped array
-  const newDataArray: any[] = [];
-
-  for (const key of groupKeys) {
-    // Add group header
-    newDataArray.push({
-      group: {
-        content: `${key}`,
-        colSpan: 15,
-        styles: { halign: "left", fontStyle: "bold", textColor: "#009933" },
-      },
-    });
-
-    // Add rows belonging to this group
-    for (const row of finalList) {
-      const rowGroupValue = isGroupedColDate
+    // 1️⃣ Group data by column and transaction
+    for (const row of gridData) {
+      const groupColValue = isGroupedColDate
         ? this.getFormatDateGlobal(row[groupedCol])
         : row[groupedCol];
 
-      if (rowGroupValue === key) {
-        newDataArray.push(row);
+      const transactionNo = row["ptransactionno"];
+
+      // Group by column
+      if (!groupedByCol[groupColValue]) {
+        groupedByCol[groupColValue] = [{ ...row }];
+        groupKeys.push(groupColValue);
+      } else {
+        groupedByCol[groupColValue].push(row);
+      }
+
+      // Group by transaction
+      if (!groupedByTransaction[transactionNo]) {
+        groupedByTransaction[transactionNo] = [{ ...row }];
+        transactionKeys.push(transactionNo);
+      } else {
+        groupedByTransaction[transactionNo].push(row);
       }
     }
+
+    // 2️⃣ Add transaction-level headers
+    for (const txKey of transactionKeys) {
+      const transactionRows = groupedByTransaction[txKey];
+      transactionRows.forEach((row, idx) => {
+        if (idx === 0) {
+          row["group"] = {
+            content: `               ${row["ptransactionno"]}`,
+            colSpan: 15,
+            styles: { halign: "left", fontStyle: "bold", textColor: "#663300" },
+          };
+        }
+        finalList.push(row);
+      });
+    }
+
+    // 3️⃣ Build final grouped array
+    const newDataArray: any[] = [];
+
+    for (const key of groupKeys) {
+      // Add group header
+      newDataArray.push({
+        group: {
+          content: `${key}`,
+          colSpan: 15,
+          styles: { halign: "left", fontStyle: "bold", textColor: "#009933" },
+        },
+      });
+
+      // Add rows belonging to this group
+      for (const row of finalList) {
+        const rowGroupValue = isGroupedColDate
+          ? this.getFormatDateGlobal(row[groupedCol])
+          : row[groupedCol];
+
+        if (rowGroupValue === key) {
+          newDataArray.push(row);
+        }
+      }
+    }
+
+    return newDataArray;
   }
 
-  return newDataArray;
-}
+  _JvListdownloadReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridHeaders: any[],
+    colWidthHeight: any,
+    pageType: 'a4' | 'landscape',
+    betweenOrAsOn: 'Between' | 'As On',
+    fromDate: string,
+    toDate: string,
+    printOrPdf: 'Pdf' | 'Print'
+  ) {
+    const address = this.getcompanyaddress();
+    const Companyreportdetails = this._getCompanyDetails();
+    const currencySymbol = this.currencysymbol;
+    const totalPagesExp = '{total_pages_count_string}';
+    const today = this.pdfProperties('Date');
+    const kapilLogo = this.getKapilGroupLogo();
+    const rupeeImage = this._getRupeeSymbol();
 
- _JvListdownloadReportsPdf(
-  reportName: string,
-  gridData: any[],
-  gridHeaders: any[],
-  colWidthHeight: any,
-  pageType: 'a4' | 'landscape',
-  betweenOrAsOn: 'Between' | 'As On',
-  fromDate: string,
-  toDate: string,
-  printOrPdf: 'Pdf' | 'Print'
-) {
-  const address = this.getcompanyaddress();
-  const Companyreportdetails = this._getCompanyDetails();
-  const currencySymbol = this.currencysymbol;
-  const totalPagesExp = '{total_pages_count_string}';
-  const today = this.pdfProperties('Date');
-  const kapilLogo = this.getKapilGroupLogo();
-  const rupeeImage = this._getRupeeSymbol();
+    const doc = new jsPDF({
+      orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      putOnlyUsedFonts: true,
+      compress: true,
+    });
 
-  const doc = new jsPDF({
-    orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
-    unit: 'mm',
-    format: 'a4',
-    putOnlyUsedFonts: true,
-    compress: true,
-  });
+    const autoTableOptions: any = {
+      columns: gridHeaders,
+      body: gridData,
+      theme: 'grid',
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: this.pdfProperties('Header Alignment'),
+        fontSize: this.pdfProperties('Header Fontsize'),
+      },
+      styles: {
+        cellPadding: 1,
+        fontSize: this.pdfProperties('Cell Fontsize'),
+        cellWidth: 'wrap',
+        overflow: 'linebreak',
+        rowPageBreak: 'avoid',
+      },
+      columnStyles: colWidthHeight,
+      startY: 52,
+      showHead: 'everyPage',
+      showFoot: 'lastPage',
+      didDrawPage: (data: any) => {
+        const pageSize = doc.internal.pageSize;
+        const pageWidth = pageSize.width || pageSize.getWidth();
+        const pageHeight = pageSize.height || pageSize.getHeight();
+        const lMargin = 15;
+        const rMargin = 15;
+        const pdfInMM = pageType === 'landscape' ? 315 : 233;
 
-  const autoTableOptions: any = {
-    columns: gridHeaders,
-    body: gridData,
-    theme: 'grid',
-    headStyles: {
-      fillColor: this.pdfProperties('Header Color'),
-      halign: this.pdfProperties('Header Alignment'),
-      fontSize: this.pdfProperties('Header Fontsize'),
-    },
-    styles: {
-      cellPadding: 1,
-      fontSize: this.pdfProperties('Cell Fontsize'),
-      cellWidth: 'wrap',
-      overflow: 'linebreak',
-      rowPageBreak: 'avoid',
-    },
-    columnStyles: colWidthHeight,
-    startY: 52,
-    showHead: 'everyPage',
-    showFoot: 'lastPage',
-    didDrawPage: (data:any) => {
-      const pageSize = doc.internal.pageSize;
-      const pageWidth = pageSize.width || pageSize.getWidth();
-      const pageHeight = pageSize.height || pageSize.getHeight();
-      const lMargin = 15;
-      const rMargin = 15;
-      const pdfInMM = pageType === 'landscape' ? 315 : 233;
+        // Header
+        doc.setFont('Times', 'normal');
+        if ((doc.internal as any).getNumberOfPages() === 1) {
+          doc.setFontSize(pageType === 'landscape' ? 10 : 15);
+          doc.addImage(kapilLogo, 'JPEG', 10, pageType === 'landscape' ? 5 : 15, 20, 20);
+          doc.setTextColor('black');
+          doc.text(Companyreportdetails.pCompanyName, pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
+          doc.setFontSize(8);
+          doc.text(address.substring(0, 150), pageWidth / 2, pageType === 'landscape' ? 15 : 24, { align: 'center' });
 
-      // Header
-      doc.setFont('Times', 'normal');
-      if ((doc.internal as any).getNumberOfPages() === 1) {
-        doc.setFontSize(pageType === 'landscape' ? 10 : 15);
-        doc.addImage(kapilLogo, 'JPEG', 10, pageType === 'landscape' ? 5 : 15, 20, 20);
-        doc.setTextColor('black');
-        doc.text(Companyreportdetails.pCompanyName, pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
-        doc.setFontSize(8);
-        doc.text(address.substring(0, 150), pageWidth / 2, pageType === 'landscape' ? 15 : 24, { align: 'center' });
+          if (Companyreportdetails.pCinNo) {
+            doc.text('CIN : ' + Companyreportdetails.pCinNo, pageWidth / 2, pageType === 'landscape' ? 20 : 28, { align: 'center' });
+          }
 
-        if (Companyreportdetails.pCinNo) {
-          doc.text('CIN : ' + Companyreportdetails.pCinNo, pageWidth / 2, pageType === 'landscape' ? 20 : 28, { align: 'center' });
+          doc.setFontSize(14);
+          doc.text(reportName, pageWidth / 2, pageType === 'landscape' ? 30 : 38, { align: 'center' });
+
+          doc.setFontSize(10);
+          doc.text('Branch : ' + Companyreportdetails.pBranchname, pageType === 'landscape' ? 235 : 163, pageType === 'landscape' ? 40 : 47);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between  : ${fromDate}  And  ${toDate}`, 15, pageType === 'landscape' ? 40 : 47);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As on  : ${fromDate}`, 15, pageType === 'landscape' ? 40 : 47);
+          }
+
+          doc.setDrawColor(0, 0, 0);
+          doc.line(10, pageType === 'landscape' ? 45 : 50, pdfInMM - lMargin - rMargin, pageType === 'landscape' ? 45 : 50);
         }
 
-        doc.setFontSize(14);
-        doc.text(reportName, pageWidth / 2, pageType === 'landscape' ? 30 : 38, { align: 'center' });
-
+        // Footer
+        const page = `Page ${(doc.internal as any).getNumberOfPages()} of ${totalPagesExp}`;
+        doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
         doc.setFontSize(10);
-        doc.text('Branch : ' + Companyreportdetails.pBranchname, pageType === 'landscape' ? 235 : 163, pageType === 'landscape' ? 40 : 47);
-
-        if (betweenOrAsOn === 'Between') {
-          doc.text(`Between  : ${fromDate}  And  ${toDate}`, 15, pageType === 'landscape' ? 40 : 47);
-        } else if (betweenOrAsOn === 'As On' && fromDate) {
-          doc.text(`As on  : ${fromDate}`, 15, pageType === 'landscape' ? 40 : 47);
+        doc.text(`Printed on : ${today}`, lMargin, pageHeight - 5);
+        doc.text(page, pageWidth - rMargin - 20, pageHeight - 5);
+      },
+      willDrawCell: (data: any) => {
+        if (reportName === 'PAYMENT VOUCHER LIST') {
+          if (data.cell.raw === '0' || data.cell.raw === '0.00') {
+            data.cell.text[0] = '';
+          }
+        } else {
+          if (data.section === 'body' && data.cell.colSpan !== 15 && data.cell.raw !== '0') {
+            data.cell.text[0] = ' ' + data.cell.raw;
+          }
+          if (data.cell.raw === '0' || data.cell.raw === '0.00') {
+            data.cell.text[0] = '';
+          }
         }
-
-        doc.setDrawColor(0, 0, 0);
-        doc.line(10, pageType === 'landscape' ? 45 : 50, pdfInMM - lMargin - rMargin, pageType === 'landscape' ? 45 : 50);
-      }
-
-      // Footer
-      const page = `Page ${(doc.internal as any).getNumberOfPages()} of ${totalPagesExp}`;
-      doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
-      doc.setFontSize(10);
-      doc.text(`Printed on : ${today}`, lMargin, pageHeight - 5);
-      doc.text(page, pageWidth - rMargin - 20, pageHeight - 5);
-    },
-    willDrawCell: (data:any) => {
-      if (reportName === 'PAYMENT VOUCHER LIST') {
-        if (data.cell.raw === '0' || data.cell.raw === '0.00') {
-          data.cell.text[0] = '';
+      },
+      didDrawCell: (data: any) => {
+        if ((data.column.index === 1 || data.column.index === 2) && data.cell.section === 'body') {
+          if (currencySymbol === '₹' && data.cell.raw !== 0) {
+            const textPos = data.cell.textPos;
+            doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+          }
         }
-      } else {
-        if (data.section === 'body' && data.cell.colSpan !== 15 && data.cell.raw !== '0') {
-          data.cell.text[0] = ' ' + data.cell.raw;
-        }
-        if (data.cell.raw === '0' || data.cell.raw === '0.00') {
-          data.cell.text[0] = '';
-        }
-      }
-    },
-    didDrawCell: (data:any) => {
-      if ((data.column.index === 1 || data.column.index === 2) && data.cell.section === 'body') {
-        if (currencySymbol === '₹' && data.cell.raw !== 0) {
-          const textPos = data.cell.textPos;
-          doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
-        }
-      }
-    },
-  };
+      },
+    };
 
-  autoTable(doc, autoTableOptions);
+    autoTable(doc, autoTableOptions);
 
-  // Put total pages
-  if ((doc as any).putTotalPages) {
-    (doc as any).putTotalPages(totalPagesExp);
+    // Put total pages
+    if ((doc as any).putTotalPages) {
+      (doc as any).putTotalPages(totalPagesExp);
+    }
+
+    if (printOrPdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else if (printOrPdf === 'Print') {
+      this.setiFrameForPrint(doc);
+    }
   }
-
-  if (printOrPdf === 'Pdf') {
-    doc.save(`${reportName}.pdf`);
-  } else if (printOrPdf === 'Print') {
-    this.setiFrameForPrint(doc);
-  }
-}
-_downloadTrialBalanceReportsPdf(
+  _downloadTrialBalanceReportsPdf(
     reportName: string,
     gridData: any[],
     gridheaders: any[],
@@ -1249,12 +1254,12 @@ _downloadTrialBalanceReportsPdf(
         halign: 'center',
         fontSize: 11
       },
- rowPageBreak: 'avoid',
+      rowPageBreak: 'avoid',
       styles: {
         cellPadding: 1,
         fontSize: 10,
         cellWidth: 'wrap',
-       
+
         overflow: 'linebreak'
       },
 
@@ -1421,7 +1426,8 @@ _downloadTrialBalanceReportsPdf(
 
 
 
-  removeCommasForEntredNumber(enteredNumber:any) {
+
+  removeCommasForEntredNumber(enteredNumber: any) {
     return this.removeCommasInAmount(enteredNumber);
   }
   getFormatDateYYYMMDD(date: Date | string | null | undefined): string | null {
@@ -1555,6 +1561,284 @@ _downloadBRSReportsPdf(
     this.setiFrameForPrint(doc);
   }
 }
+
+
+
+  transform(items: any[], searchText: string, columnName: string): any[] {
+    debugger
+    if (!items) return [];
+    if (!searchText) return items;
+    searchText = searchText.toString().toLowerCase();
+    return items.filter(it => {
+      return it[columnName].toString().toLowerCase().startsWith(searchText);
+      //return it[columnName].toString().toLowerCase().includes(searchText);
+    });
+  }
+
+ GetGlobalBanks(): Observable<any> {
+    debugger;
+    return this.getAPI('/Common/GetGlobalBanks', '', 'NO');
+  }
+  GetGlobalUPINames(): Observable<any> {
+    debugger;
+    return this.getAPI('/Common/GetGlobalUPINames', '', 'NO');
+  }
+  //  _MultipleGroupingGridExportData(griddata:any, groupdcol:any, isgroupedcolDate:any) {
+  //   debugger;
+
+  //   let a = [];
+  //   let Ajv = [];
+  //   let keys = [];
+  //   let Jvlist = [];
+  //   for (var i = 0; i < griddata.length; i++) {
+  //     let Jsongroupcol;
+  //     let Ajvlistgroupcol;
+  //     if (isgroupedcolDate == true) {
+  //       //Jsongroupcol = formatDate(griddata[i][groupdcol], 'dd-MM-yyyy', 'en-IN');
+  //       Jsongroupcol = this.getFormatDateGlobal(griddata[i][groupdcol]);
+  //       Ajvlistgroupcol = griddata[i]["ptransactionno"];
+  //     }
+  //     else {
+  //       Jsongroupcol = griddata[i][groupdcol];
+  //       Ajvlistgroupcol = griddata[i]["ptransactionno"];
+  //     }
+
+  //     if (!a[Jsongroupcol]) {
+
+
+  //       keys.push(Jsongroupcol);
+  //       let k = { ...griddata[i] }
+  //       a[Jsongroupcol] = [k];
+
+  //     }
+  //     a[Jsongroupcol].push(griddata[i]);
+
+
+  //     if (!Ajv[Ajvlistgroupcol]) {
+
+  //       Jvlist.push(Ajvlistgroupcol);
+  //       let k = { ...griddata[i] }
+  //       Ajv[Ajvlistgroupcol] = [k];
+  //     }
+
+  //     Ajv[Ajvlistgroupcol].push(griddata[i]);
+  //   }
+
+  //   let final = [];
+  //   for (var j = 0; j < Jvlist.length; j++) {
+
+  //     let keypair = Ajv[Jvlist[j]]
+  //     for (var k = 0; k < keypair.length; k++) {
+  //       let groupcolHead
+
+  //       if (k == 0) {
+  //         if (isgroupedcolDate == true) {
+  //           // groupcolHead = formatDate(keypair[k][groupdcol], 'dd-MM-yyyy', 'en-IN');
+  //           groupcolHead = (keypair[k]["ptransactionno"]);
+  //         }
+  //         else {
+  //           groupcolHead = keypair[k]["ptransactionno"];
+  //         }
+  //         keypair[k]["group"] = {
+  //           content: '               ' + groupcolHead + '',
+  //           colSpan: 15,
+  //           styles: { halign: 'left', fontStyle: 'bold', textColor: "#663300" }
+  //         };
+  //       }
+  //       final.push(keypair[k])
+  //     }
+  //   }
+  //   debugger;
+  //   let NewdataArray = [];
+  //   for (var RRR = 0; RRR < keys.length; RRR++) {
+  //     let KeysN = keys[RRR];
+  //     NewdataArray.push({
+  //       group: {
+  //         content: '' + KeysN + '',
+  //         colSpan: 15,
+  //         styles: { halign: 'left', fontStyle: 'bold', textColor: "#009933" }
+  //       }
+  //     });
+  //     for (var AAA = 0; AAA < final.length; AAA++) {
+
+  //       if (KeysN == this.getFormatDateGlobal(final[AAA][groupdcol])) {
+
+  //         NewdataArray.push(final[AAA]);
+  //       }
+
+  //     }
+
+  //   }
+  //   return NewdataArray;
+
+  // }
+
+
+hrmsjvtypes = [
+    { "name": 'ESI', "value": 'ESI' },
+    { "name": 'PROVIDENT FUND', "value": 'PF' },
+    { "name": 'AO ALLOWANCES', "value": 'AO ALLOWANCES' },
+    { "name": 'PROFISSIONAL TAX', "value": 'PT' },
+    { "name": 'VDA', "value": 'VDA' },
+    { "name": 'HRA', "value": 'HRA' },
+    { "name": 'CHIT ACT ALLOWANCE', "value": 'CHIT ACT' },
+    { "name": 'PRO ALLOWANCE', "value": 'PRO' },
+    { "name": 'FOREMAN ALLOWANCE', "value": 'FOREMAN' },
+    { "name": 'DRIVER ALLOWANCE', "value": 'DRIVER ALLOWANCE' },
+    { "name": 'LOYALTY ALLOWANCES', "value": 'LOYALTY ALLOWANCES' },
+    { "name": 'VEHICLE ALLOWANCE', "value": 'VEHICLE' },
+    { "name": 'RISK ALLOWANCE', "value": 'RISK ALLOWANCE' },
+    { "name": 'BIDPAYABLE ALLOWANCE', "value": 'BID PAYABLE' },
+    { "name": 'ASSISTANT - AO ALLOWANCE', "value": 'ASSISTANT-AO' },
+    { "name": 'CHILDREN EDUCATION ALLOWANCE', "value": 'CHILDREN EDUCATION' },
+    { "name": 'CITY ALLOWANCE', "value": 'CITY ALLOWANCE' },
+    { "name": 'WASHING ALLOWANCE', "value": 'WASHING ALLOWANCE' },
+    { "name": 'CONVEYANCE ALLOWANCE', "value": 'CONVEYANCE ALLOWANCE' },
+    { "name": 'SPECIAL ALLOWANCE', "value": 'SPECIAL ALLOWANCE' },
+    { "name": 'STAFF SALARIES', "value": 'STAFF SALARIES' },
+    { "name": 'WELFARE-INSURANCE', "value": 'WELFARE-INSURANCE' },
+    { "name": 'COLLECTION TARGET DEDUCTION', "value": 'COLLECTION TARGET DEDUCTION' },
+    { "name": 'REAL ESTATE DEDUCTION', "value": 'REAL ESTATE DEDUCTION' },
+    { "name": 'TARGET RELEASE', "value": 'TARGET RELEASE' }
+
+  ]
+
+  exceptionHandlingMessages(formName: string, methodName: string, errorMessage: string) {
+    this.toastr.error(errorMessage, "Error!", { timeOut: 2500 });
+  }
+  getFormatDate1(date: Date | string | null): string | null {
+
+  if (!date) return null;
+
+  const dateFormat = sessionStorage.getItem('dateformat');
+
+  if (dateFormat === 'DD-MMM-YYYY') {
+    return this.datepipe.transform(date, 'dd-MM-yyyy');
+  }
+
+  return this.datepipe.transform(date, 'yyyy-MM-dd');
+}
+GetUPIClearedData_SummaryReport(
+  fromDate: string | null,
+  toDate: string | null
+): Observable<any> {
+
+  let params = new HttpParams()
+    .set('BranchSchema', this.getschemaname())
+    .set('fromdate', fromDate ?? '')
+    .set('todate', toDate ?? '');
+
+  return this.http.get<any>(
+    '/ChequesOnHand/GetUPIClearedData_SummaryReport',
+    { params }
+  );
+}
+_OnlineSettlementReportPdf(
+  reportName: string,
+  gridData: any[],
+  gridHeaders: string[],
+  colWidthHeight: any,
+  pageType: 'a4' | 'landscape',
+  betweenOrAsOn: 'Between' | 'As On',
+  fromDate: string,
+  toDate: string,
+  printOrPdf: 'Pdf' | 'Print',
+  amount?: string
+): void {
+
+  const company = this._getCompanyDetails();
+  const address = this.getcompanyaddress();
+  const today = this.pdfProperties('Date');
+  const logo = this.getKapilGroupLogo();
+  const currencySymbol = this.currencysymbol;
+
+  const doc = new jsPDF({
+    orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const totalPagesExp = '{total_pages_count_string}';
+
+  autoTable(doc, {
+    head: [gridHeaders],
+    body: gridData,
+    startY: 40,
+    theme: 'grid',
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: (this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right') ?? 'center',
+  fontSize: Number(this.pdfProperties('Header Fontsize')) || 10
+    },
+    styles: {
+      fontSize: Number(this.pdfProperties('Cell Fontsize')) || 9,
+      cellPadding: 1,
+      overflow: 'linebreak'
+    },
+    columnStyles: colWidthHeight,
+    didDrawPage: (data:any) => {
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(14);
+
+      if (logo) {
+        doc.addImage(logo, 'JPEG', 10, 5, 25, 15);
+      }
+
+      doc.text(company.pCompanyName, pageWidth / 2, 10, { align: 'center' });
+
+      doc.setFontSize(8);
+      doc.text(address, pageWidth / 2, 15, { align: 'center' });
+
+      if (company.pCinNo) {
+        doc.text(`CIN : ${company.pCinNo}`, pageWidth / 2, 20, { align: 'center' });
+      }
+
+      doc.setFontSize(12);
+      doc.text(reportName, pageWidth / 2, 28, { align: 'center' });
+
+      doc.setFontSize(9);
+
+      if (betweenOrAsOn === 'Between') {
+        doc.text(`Between : ${fromDate}  And  ${toDate}`, 14, 34);
+      } else if (betweenOrAsOn === 'As On' && fromDate) {
+        doc.text(`As On : ${fromDate}`, 14, 34);
+      }
+
+      doc.text(`Branch : ${company.pBranchname}`, pageWidth - 14, 34, { align: 'right' });
+
+      doc.line(10, 36, pageWidth - 10, 36);
+
+      const pageNumber = doc.getNumberOfPages();
+      let pageText = `Page ${pageNumber}`;
+
+      if (typeof doc.putTotalPages === 'function') {
+        pageText += ` of ${totalPagesExp}`;
+      }
+
+      doc.line(10, pageHeight - 12, pageWidth - 10, pageHeight - 12);
+
+      doc.setFontSize(9);
+      doc.text(`Printed on : ${today}`, 10, pageHeight - 6);
+      doc.text(pageText, pageWidth - 10, pageHeight - 6, { align: 'right' });
+    }
+  });
+
+  if (typeof doc.putTotalPages === 'function') {
+    doc.putTotalPages(totalPagesExp);
+  }
+
+  if (printOrPdf === 'Pdf') {
+    doc.save(`${reportName}.pdf`);
+  } else {
+    this.setiFrameForPrint(doc);
+  }
+}
+
+
 }
 
 

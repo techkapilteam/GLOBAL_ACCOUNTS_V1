@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit, inject } from '@angular/core';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgxDatatableModule, ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { CommonService } from '../../../services/common.service';
@@ -12,54 +11,51 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 @Component({
   selector: 'app-online-settlement',
   standalone: true,
-  imports: [BsDatepickerModule, FormsModule, NgxDatatableModule, CommonModule,TableModule,ReactiveFormsModule],
+  imports: [BsDatepickerModule, FormsModule, CommonModule, TableModule, ReactiveFormsModule],
   templateUrl: './online-settlement-report.component.html',
   styleUrl: './online-settlement-report.component.css',
 })
-export class OnlineSettlementReportComponent {
-private commonService = inject(CommonService);
-  private accountingService = inject(AccountingTransactionsService);
-  private reportService = inject(AccountingReportsService);
-  private fb = inject(FormBuilder);
-
+export class OnlineSettlementReportComponent implements OnInit {
   @ViewChild('myTable') table: any;
 
-  ColumnMode = ColumnMode;
-  SelectionType = SelectionType;
+  onlinecollectionreportForm!: FormGroup;
 
   GridData: any[] = [];
+  GetUPIClearedData_SummaryReport: any[] = [];
+
   PaytmList: any[] = [];
-  Amttotal = 0;
 
   disablesavebutton = false;
-  savebutton = 'Show';
-
   disableviewbutton = false;
-  viewbutton = 'View';
 
-  pageCriteria = new PageCriteria();
+  savebutton = 'Show';
+  viewbutton = 'View';
 
   dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
 
-  onlinecollectionreportFrom!: FormGroup<{
-    fromdate: any;
-    todate: any;
-    paytmname: any;
-  }>;
+  pageCriteria = new PageCriteria();
+
+  Amttotal = 0;
+  currencysymbol: any;
+
+  constructor(
+    private fb: FormBuilder,
+    private _commonService: CommonService,
+    private _accountingtransaction: AccountingTransactionsService,
+    private _legalServices: AccountingReportsService
+  ) { }
 
   ngOnInit(): void {
-    this.initDatePickers();
-    this.initForm();
-    this.setPageModel();
-    this.loadPaytmBanks();
-  }
 
-  initDatePickers() {
+    this.currencysymbol =
+      this._commonService.datePickerPropertiesSetup('currencysymbol');
+
     this.dpConfig = {
-      dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat'),
+      dateInputFormat:
+        this._commonService.datePickerPropertiesSetup('dateInputFormat'),
       containerClass: 'theme-dark-blue',
-      // this.commonService.datePickerPropertiesSetup('containerClass'),
+      // this._commonService.datePickerPropertiesSetup('containerClass'),
       showWeekNumbers: false,
       maxDate: new Date()
     };
@@ -68,47 +64,70 @@ private commonService = inject(CommonService);
       ...this.dpConfig,
       minDate: new Date()
     };
-  }
 
-  initForm() {
-    this.onlinecollectionreportFrom = this.fb.nonNullable.group({
+    this.setPageModel();
+
+    this.onlinecollectionreportForm = this.fb.group({
       fromdate: [new Date(), Validators.required],
       todate: [new Date(), Validators.required],
       paytmname: ['', Validators.required]
     });
+
+    this.loadPaytmList();
   }
 
-  loadPaytmBanks() {
-    this.accountingService
-      .GetPayTmBanksList(this.commonService.getschemaname())
-      .subscribe(res => this.PaytmList = res || []);
+  loadPaytmList(): void {
+    this._accountingtransaction
+      .GetPayTmBanksList(this._commonService.getschemaname())
+      .subscribe(res => {
+        this.PaytmList = res || [];
+      });
   }
 
-  DateChange(date: Date) {
-    this.dpConfig1 = { ...this.dpConfig1, minDate: date };
-    this.onlinecollectionreportFrom.controls.todate.setValue(new Date());
+  setPageModel(): void {
+    this.pageCriteria.pageSize = this._commonService.pageSize;
+    this.pageCriteria.offset = 0;
+    this.pageCriteria.pageNumber = 1;
+    this.pageCriteria.footerPageHeight = 50;
   }
 
-  Show() {
-    if (this.onlinecollectionreportFrom.invalid) {
-      this.onlinecollectionreportFrom.markAllAsTouched();
+  DateChange(event: Date): void {
+    this.dpConfig1.minDate = event;
+    this.onlinecollectionreportForm.get('todate')?.setValue(new Date());
+  }
+
+  Show(): void {
+
+    if (this.onlinecollectionreportForm.invalid) {
+      this.onlinecollectionreportForm.markAllAsTouched();
       return;
     }
 
     this.disablesavebutton = true;
-    this.savebutton = 'Processing';
+    this.savebutton = 'Processing...';
 
-    const { fromdate, todate, paytmname } = this.onlinecollectionreportFrom.value;
+    const { fromdate, todate, paytmname } =
+      this.onlinecollectionreportForm.value;
 
-    const from = this.commonService.getFormatDateNormal(fromdate);
-    const to = this.commonService.getFormatDateNormal(todate);
+    const formattedFrom =
+      this._commonService.getFormatDateNormal(fromdate);
+    const formattedTo =
+      this._commonService.getFormatDateNormal(todate);
 
-    this.accountingService
-      .GetUPIClearedData_SettlementReport(from, to, paytmname)
+    this._accountingtransaction
+      .GetUPIClearedData_SettlementReport(formattedFrom, formattedTo, paytmname)
       .subscribe({
         next: (res: any) => {
-          this.GridData = res?.pchequesOnHandlist ?? [];
-          this.calculateTotal();
+
+          this.GridData = res?.pchequesOnHandlist || [];
+          this.GetUPIClearedData_SummaryReport = this.GridData;
+
+          this.Amttotal = this.GridData.reduce(
+            (sum, x) => sum + (x.ptotalreceivedamount || 0),
+            0
+          );
+
+          this.pageCriteria.totalrows = this.GridData.length;
           this.disablesavebutton = false;
           this.savebutton = 'Show';
         },
@@ -119,48 +138,192 @@ private commonService = inject(CommonService);
       });
   }
 
-  calculateTotal() {
-    this.Amttotal = this.GridData.reduce((sum, x) => sum + (x.ptotalreceivedamount || 0), 0);
-  }
-
   export(): void {
+
     const rows = this.GridData.map(element => ({
       "Chit Receipt No": element.chitReceiptNo,
       "Transaction No": element.transactionNo,
-      "Transaction Date": this.commonService.getFormatDateGlobal(element.transactiondate),
+      "Transaction Date":
+        this._commonService.getFormatDateGlobal(element.transactiondate),
       "Reference No": element.pChequenumber,
-      "Cheque Date": this.commonService.getFormatDateGlobal(element.pchequedate),
-      "Amount": this.commonService.currencyformat(element.ptotalreceivedamount),
+      "Cheque Date":
+        this._commonService.getFormatDateGlobal(element.pchequedate),
+      "Amount":
+        this._commonService.currencyformat(element.ptotalreceivedamount),
       "Chit No.": `${element.chitgroupcode} - ${element.ticketno}`,
-      "Receipt Date": this.commonService.getFormatDateGlobal(element.preceiptdate),
-      "Deposited Date": this.commonService.getFormatDateGlobal(element.pdepositeddate),
+      "Receipt Date":
+        this._commonService.getFormatDateGlobal(element.preceiptdate),
+      "Deposited Date":
+        this._commonService.getFormatDateGlobal(element.pdepositeddate),
       "Receipt Id": element.preceiptid,
       "Party": element.ppartyname
     }));
 
-    this.commonService.exportAsExcelFile(rows, 'Online Settlement Report');
+    this._commonService.exportAsExcelFile(rows, 'Online Settlement Report');
   }
 
-  setPageModel() {
-    this.pageCriteria.pageSize = this.commonService.pageSize;
-    this.pageCriteria.offset = 0;
-    this.pageCriteria.pageNumber = 1;
-    this.pageCriteria.footerPageHeight = 50;
+  View(): void {
+
+    if (this.onlinecollectionreportForm.invalid) {
+      this.onlinecollectionreportForm.markAllAsTouched();
+      return;
+    }
+
+    this.disableviewbutton = true;
+    this.viewbutton = 'Processing...';
+
+    const fromDate =
+      this._commonService.getFormatDate1(
+        this.onlinecollectionreportForm.value.fromdate
+      );
+
+    const toDate =
+      this._commonService.getFormatDate1(
+        this.onlinecollectionreportForm.value.todate
+      );
+
+    this._commonService
+      .GetUPIClearedData_SummaryReport(fromDate, toDate)
+      .subscribe({
+        next: (res: any[]) => {
+
+          if (!res?.length) {
+            alert('No data found.');
+            this.disableviewbutton = false;
+            this.viewbutton = 'View';
+            return;
+          }
+
+          const excelRows = res.map(element => ({
+            "Date":
+              this._commonService.getFormatDate1(element.ptransactiondate),
+            "Cash Receipt Count": element.pcashreceiptcnt,
+            "Cash Settled Count": element.pcashsettlleedcnt,
+            "Paytm Receipt Count": element.ppaytmreceiptcnt,
+            "Paytm Settled Count": element.ppaytmsettlleedcnt,
+            "Cash Receipt Amount": element.pcashreceiptamt,
+            "Cash Settled Amount": element.pcashsettlleedamt,
+            "Paytm Receipt Amount": element.ppaytmreceiptamt,
+            "Paytm Settled Amount": element.ppaytmsettlleedamt,
+            "Difference Count": element.pdiffcount,
+            "Difference Amount": element.pdiffamount
+          }));
+
+          this._commonService.exportAsExcelFile(
+            excelRows,
+            'Online Settlement Report'
+          );
+
+          this.disableviewbutton = false;
+          this.viewbutton = 'View';
+        },
+        error: () => {
+          this.disableviewbutton = false;
+          this.viewbutton = 'View';
+        }
+      });
+  }
+  pdfOrprint(type: 'Pdf' | 'Print'): void {
+
+  if (this.onlinecollectionreportForm.invalid) {
+    this.onlinecollectionreportForm.markAllAsTouched();
+    return;
   }
 
-  onFooterPageChange(event: any): void {
-    this.pageCriteria.offset = event.page - 1;
-    this.pageCriteria.CurrentPage = event.page;
-  }
+  const fromDate = this._commonService.getFormatDateGlobal(
+    this.onlinecollectionreportForm.value.fromdate
+  );
 
-  toggleExpandGroup(group: any) {
-    this.table?.groupHeader?.toggleExpandGroup(group);
-  }
+  const toDate = this._commonService.getFormatDateGlobal(
+    this.onlinecollectionreportForm.value.todate
+  );
 
-  onDetailToggle(event: any) {
-    console.log('Detail Toggled', event);
-  }
+  const selectedId = this.onlinecollectionreportForm.value.paytmname;
 
+  const selectedBank = this.PaytmList?.find(
+    x => x.paccountid === selectedId
+  );
+
+  const UPI = selectedBank ? `for ${selectedBank.pdepositbankname}` : '';
+
+  const reportName = `Online Settlement Report ${UPI}`;
+
+  const gridHeaders = [
+    'S No.',
+    'Chit Receipt No',
+    'Transaction No',
+    'Transaction Date',
+    'Reference No.',
+    'Cheque Date',
+    'Amount',
+    'Chit No.',
+    'Receipt Date',
+    'Deposited Date',
+    'Receipt Id',
+    'Party'
+  ];
+
+  const colWidthHeight: any = {
+    0: { cellWidth: 'auto', halign: 'center' },
+    1: { cellWidth: 'auto', halign: 'center' },
+    2: { cellWidth: 'auto', halign: 'center' },
+    3: { cellWidth: 'auto', halign: 'center' },
+    4: { cellWidth: 'auto', halign: 'left' },
+    5: { cellWidth: 'auto', halign: 'center' },
+    6: { cellWidth: 'auto', halign: 'right' },
+    7: { cellWidth: 'auto', halign: 'center' },
+    8: { cellWidth: 'auto', halign: 'center' },
+    9: { cellWidth: 'auto', halign: 'center' },
+    10: { cellWidth: 'auto', halign: 'center' },
+    11: { cellWidth: 'auto', halign: 'left' }
+  };
+
+  const rows = this.GridData.map((element, index) => {
+
+    return [
+      index + 1,
+      element.chitReceiptNo,
+      element.transactionNo,
+      this._commonService.getFormatDateGlobal(element.transactiondate),
+      element.pChequenumber,
+      this._commonService.getFormatDateGlobal(element.pchequedate),
+      this._commonService.currencyformat(element.ptotalreceivedamount),
+      `${element.chitgroupcode}-${element.ticketno}`,
+      this._commonService.getFormatDateGlobal(element.preceiptdate),
+      this._commonService.getFormatDateGlobal(element.pdepositeddate),
+      element.preceiptid,
+      element.ppartyname
+    ];
+  });
+
+  rows.push([
+    '',
+    '',
+    '',
+    '',
+    '',
+    'Grand Total:',
+    this._commonService.currencyformat(this.Amttotal),
+    '',
+    '',
+    '',
+    '',
+    ''
+  ]);
+
+  this._commonService._OnlineSettlementReportPdf(
+    reportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
+    'landscape',
+    'Between',
+    fromDate,
+    toDate,
+    type,
+    ''
+  );
+}
 }
 
 
