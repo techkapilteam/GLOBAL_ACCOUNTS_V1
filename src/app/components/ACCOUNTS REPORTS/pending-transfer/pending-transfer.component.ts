@@ -9,6 +9,7 @@ import { ChitTransactionsService } from '../../../services/chit-transactions.ser
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from 'primeng/table';
+import { SubscriberBalanceService } from '../../../services/subscriber-balance.service';
 
 @Component({
   selector: 'app-pending-transfer',
@@ -19,7 +20,7 @@ import { TableModule } from 'primeng/table';
 export class PendingTransferComponent implements OnInit {
   private _commonservice = inject(CommonService);
   private _ChitTransactionsService = inject(ChitTransactionsService);
-  // private _subscriberBalanceService = inject(SubscriberBalanceReportService);
+  private _subscriberBalanceService = inject(SubscriberBalanceService);
   private _AccountingTransactionsService = inject(AccountingTransactionsService);
   private _fb = inject(FormBuilder);
 
@@ -62,6 +63,7 @@ export class PendingTransferComponent implements OnInit {
   disablesavebutton = false;
 
   pageCriteria: PageCriteria = new PageCriteria();
+  reportname!: string;
 
   // public groups: GroupDescriptor[] = [{
   //   field: 'modeofreceipt',
@@ -226,36 +228,141 @@ export() {
 
   this._commonservice.exportAsExcelFile(rows, 'Pending_Transfer_Report');
 }
-pdfOrprint(type: string) {
-  const printContents = document.getElementById('print-section')?.innerHTML;
-  if (!printContents) return;
 
-  const popup = window.open('', '_blank', 'width=1000,height=600');
-  popup?.document.open();
-  popup?.document.write(`
-    <html>
-      <head>
-        <title>Pending Transfer Report</title>
-        <style>
-          body { font-family: Arial; padding: 20px; }
-          table { width: 100%; border-collapse: collapse; }
-          th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
-        </style>
-      </head>
-      <body>
-        <h3>Pending Transfer Report</h3>
-        ${printContents}
-      </body>
-    </html>
-  `);
-  popup?.document.close();
 
-  setTimeout(() => {
-    if (type === 'Print') {
-      popup?.print();
-      popup?.close();
+pdfOrprint(printorpdf: string) {
+  debugger;
+  let rows: any[] = [];
+
+  if (this.gridData.length > 0) {
+    if (this.userBranchType === 'CAO') {
+      this.reportname = "Pending Transfer In";
+    } else {
+      this.reportname = "Pending Transfer Out";
     }
-  }, 500);
+
+    const gridheaders = [
+      "Branch\n Name",
+      "   Chit No        ",
+      "Subscriber \nName",
+      "Chit\nStatus",
+      "Receipt No",
+      "Receipt Date",
+      "Tr Date ",
+      "    Receipt  \n Amount ",
+      "Pending\ndays",
+      "Due\nMonths",
+      "Ref.No",
+      "Cheque Date",
+      "Bank Name"
+    ];
+
+    const colWidthHeight: any = {
+      0: { cellWidth: 'auto', halign: 'left' },
+      1: { cellWidth: 'auto', halign: 'center' },
+      2: { cellWidth: 'auto', halign: 'left' },
+      3: { cellWidth: 'auto', halign: 'center' },
+      4: { cellWidth: 'auto', halign: 'center' },
+      5: { cellWidth: 'auto', halign: 'left' },
+      6: { cellWidth: 'auto', halign: 'left' },
+      7: { cellWidth: 'auto', halign: 'right' },
+      8: { cellWidth: 'auto', halign: 'center' },
+      9: { cellWidth: 'auto', halign: 'center' },
+      10: { cellWidth: 'auto', halign: 'center' },
+      11: { cellWidth: 'auto', halign: 'center' },
+      12: { cellWidth: 'auto', halign: 'left' }
+    };
+
+    const returningdata = this._commonservice._groupwiseSummaryExport_pendingtransfer(
+      this.gridData,
+      "modeofreceipt",
+      "amount",
+      false
+    );
+
+    returningdata.forEach((element: any) => {
+      debugger;
+
+      let datereceipt = '';
+      if (element.date && element.date !== '[object Object]') {
+        datereceipt = this._commonservice.getFormatDateGlobal(element.date);
+      }
+
+      let Amount = this._commonservice.convertAmountToPdfFormat(
+        parseFloat(element.amount || 0).toFixed(2)
+      );
+
+      let referencenumber = element.reference_number || "--NA--";
+      let chequedate = element.cheque_date || "--NA--";
+      let trdate = element.trdate ? this._commonservice.getFormatDateGlobal(element.trdate) : "--NA--";
+      let bankname = element.bankName || "--NA--";
+      let totaldays = element.totaldays && element.totaldays !== '[object Object]' ? element.totaldays : "--NA--";
+
+      let temp: any[] = [];
+
+      if (element.group !== undefined) {
+        temp = [
+          element.group,
+          element.branchName,
+          element.subscriberName,
+          element.chitstatus,
+          element.receiptNo,
+          datereceipt,
+          trdate,
+          element.chitNo,
+          referencenumber,
+          chequedate,
+          bankname,
+          Amount
+        ];
+      } else {
+        temp = [
+          element.branchName,
+          element.chitNo,
+          element.subscriberName,
+          element.chitstatus,
+          element.receiptNo,
+          datereceipt,
+          trdate,
+          Amount,
+          totaldays,
+          element.pduemonths,
+          referencenumber,
+          chequedate,
+          bankname
+        ];
+      }
+
+      rows.push(temp);
+    });
+
+    const totalRow = [
+      {
+        content:
+          '             Grand Total  :' +
+          this._commonservice.convertAmountToPdfFormat(
+            this._commonservice.currencyFormat(this.totalamount)
+          ),
+        colSpan: 13,
+        styles: { halign: 'center', fontSize: 9, fontStyle: 'bold', textColor: "#663300" }
+      }
+    ];
+
+    rows.push(totalRow as any);
+
+    this._subscriberBalanceService._downloadPending_transferinReportsPdf(
+      this.reportname,
+      rows,
+      gridheaders,
+      colWidthHeight,
+      "landscape",
+      printorpdf,
+      this.branchname,
+      this.typeofpaymentforreport
+    );
+  } else {
+    this._commonservice.showInfoMessage("No Data");
+  }
 }
 
 
