@@ -40,7 +40,7 @@
                                         <option value="">Select</option>
                                         <option *ngFor="let bankDataDetails of bankData"
                                             [value]="bankDataDetails.pbankaccountid">
-                                            {{ bankDataDetails.pbankname }}
+                                            {{ bankDataDetails.bankName }}
                                         </option>
                                     </select>
                                     <div *ngIf="submitted && f.pbankname.errors?.['required']" class="invalid-feedback">

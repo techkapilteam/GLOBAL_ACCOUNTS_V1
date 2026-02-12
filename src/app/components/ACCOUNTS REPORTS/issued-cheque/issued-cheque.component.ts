@@ -104,7 +104,10 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   bankBookDetails() {
-    this.bankBookService.GetBankNames().subscribe({
+    this.bankBookService.GetBankNames(this.commonService.getschemaname(),
+  this.commonService.getbranchname(),
+  this.commonService.getCompanyCode(),
+  this.commonService.getBranchCode()).subscribe({
       next: (res: any) => (this.BankData = res),
       error: (err: any) => this.commonService.showErrorMessage(err)
     });

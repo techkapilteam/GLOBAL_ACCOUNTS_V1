@@ -92,7 +92,11 @@
                 <label>To Date</label>
                 <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig"
                   readonly>
+                  <small class="text-danger" *ngIf="accountLedgerForm.errors?.['dateRangeInvalid']">
+                  From Date cannot be greater than To Date
+                </small>
               </div>
+              
 
               <div class="col-xl-3 col-md-3 form-group mt-3">
                 <input type="checkbox" (change)="checkNarration($event)" id="WithNarration">

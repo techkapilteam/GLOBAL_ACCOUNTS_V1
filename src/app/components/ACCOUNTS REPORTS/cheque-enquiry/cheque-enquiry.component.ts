@@ -92,7 +92,7 @@ export class ChequeEnquiryComponent implements OnInit {
     this.brsfromConfig = {
       dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat')?.toString(),
       maxDate: new Date(),
-      showWeekNumbers: true,
+      showWeekNumbers: false,
       // this.commonService.datePickerPropertiesSetup('showWeekNumbers'),
       containerClass: 'theme-dark-blue',
       // this.commonService.datePickerPropertiesSetup('containerClass')

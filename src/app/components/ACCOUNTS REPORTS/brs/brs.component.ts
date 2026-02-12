@@ -277,7 +277,10 @@ setPageModel(): void {
   }
 
   bankBookDetails(): void {
-    this.bankBookService.GetBankNames().subscribe({
+    this.bankBookService.GetBankNames(this.commonService.getschemaname(),
+  this.commonService.getbranchname(),
+  this.commonService.getCompanyCode(),
+  this.commonService.getBranchCode()).subscribe({
       next: (res) => this.bankData = res,
       error: (err) => this.commonService.showErrorMessage(err)
     });
