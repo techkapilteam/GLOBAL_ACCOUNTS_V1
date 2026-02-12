@@ -90,9 +90,9 @@ export class ChequeEnquiryComponent implements OnInit {
 
   private initializeDatePicker() {
     this.brsfromConfig = {
-      dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat')?.toString(),
+      dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat'),
       maxDate: new Date(),
-      showWeekNumbers: false,
+      showWeekNumbers: true,
       // this.commonService.datePickerPropertiesSetup('showWeekNumbers'),
       containerClass: 'theme-dark-blue',
       // this.commonService.datePickerPropertiesSetup('containerClass')
@@ -234,118 +234,8 @@ export class ChequeEnquiryComponent implements OnInit {
       this.dummyReceived.filter((c:any) => c.pChequenumber.includes(value));
   }
 
-  pdfOrprint(printOrPdf: 'Pdf' | 'Print'): void {
-  const reportName = 'Received Cheque Details';
-
-  const gridHeaders: string[] = [
-    'Cheque Status',
-    'Cheque/ Reference No.',
-    'Branch Name',
-    'Amount',
-    'Receipt Id',
-    'Receipt Date',
-    'Deposited Date',
-    'Cleared Date',
-    'Returned Date',
-    'Transaction Mode',
-    'Cheque Bank Name',
-    'Party'
-  ];
-
-  const colWidthHeight = {
-    0: { cellWidth: 'auto', halign: 'center' },
-    1: { cellWidth: 'auto', halign: 'center' },
-    2: { cellWidth: 22, halign: 'left' },
-    3: { cellWidth: 'auto', halign: 'right' },
-    4: { cellWidth: 17, halign: 'center' },
-    5: { cellWidth: 20, halign: 'center' },
-    6: { cellWidth: 'auto', halign: 'center' },
-    7: { cellWidth: 'auto', halign: 'center' },
-    8: { cellWidth: 'auto', halign: 'center' },
-    9: { cellWidth: 'auto', halign: 'center' },
-    10: { cellWidth: 'auto', halign: 'center' },
-    11: { cellWidth: 'auto', halign: 'left' }
-  };
-
-  const formatAmount = (amount: number): string =>
-    amount && amount !== 0
-      ? this.commonService.convertAmountToPdfFormat(
-          this.commonService.currencyformat(amount)
-        )
-      : '';
-
-  const formatDate = (date: any): string =>
-    date ? this.commonService.getFormatDateGlobal(date) : 'N/A';
-
-  const rows: (string | number)[][] =
-    this.displayGridDataBasedOnForm?.map((element: any) => {
-      const {
-        chequeStatus,
-        pChequenumber,
-        pbranchname,
-        ptotalreceivedamount,
-        preceiptid,
-        preceiptdate,
-        pdepositeddate,
-        pCleardate,
-        ptypeofpayment,
-        pchequestatus,
-        cheque_bank,
-        ppartyname
-      } = element;
-
-      const totalReceivedAmt = formatAmount(ptotalreceivedamount);
-      const receiptDate = formatDate(preceiptdate);
-
-      const depositedDate =
-        ptypeofpayment === 'CHEQUE'
-          ? formatDate(pdepositeddate)
-          : 'N/A';
-
-      const clearedDate =
-        ptypeofpayment === 'CHEQUE' && pchequestatus === 'Y'
-          ? formatDate(pCleardate)
-          : 'N/A';
-
-      const returnedDate =
-        ptypeofpayment === 'CHEQUE' && pchequestatus === 'R'
-          ? formatDate(pCleardate)
-          : 'N/A';
-
-      return [
-        chequeStatus,
-        pChequenumber,
-        pbranchname,
-        totalReceivedAmt,
-        preceiptid,
-        receiptDate,
-        depositedDate,
-        clearedDate,
-        returnedDate,
-        ptypeofpayment,
-        cheque_bank,
-        ppartyname
-      ];
-    }) ?? [];
-
-  const amountTotalFormatted =
-    this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyformat(this.amounttotal)
-    );
-
-  this.commonService._downloadchqrecReportsPdf(
-    reportName,
-    rows,
-    gridHeaders,
-    colWidthHeight,
-    'landscape',
-    '',
-    this.commonService.getFormatDateGlobal(new Date()),
-    printOrPdf === 'Pdf' ? null : '',
-    printOrPdf,
-    amountTotalFormatted
-  );
-}
-
+  pdfOrprint(type: string) {
+    alert(type + ' option clicked (dummy)');
+  }
 }
 
