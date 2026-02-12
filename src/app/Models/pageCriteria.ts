@@ -1,6 +1,7 @@
 export class PageCriteria {
   pageSize = 10;
   offset = 0;
+  
   CurrentPage = 1;
   TotalPages = 0;
   totalrows = 0;
