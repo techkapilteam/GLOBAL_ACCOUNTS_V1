@@ -2052,10 +2052,290 @@ export class CommonService {
       this.setiFrameForPrint(doc);
     }
   }
+_groupwiseSummaryExport_pendingtransfer(griddata:any, groupdcol:any, groupdsummarycol: string, isgroupedcolDate: boolean) {
 
+  let a: any = {};
+  let keys: any[] = [];
 
+  for (let i = 0; i < griddata.length; i++) {
+    let Jsongroupcol = isgroupedcolDate
+      ? this.getFormatDateGlobal(griddata[i][groupdcol])
+      : griddata[i][groupdcol];
 
+    if (!a[Jsongroupcol]) {
+      keys.push(Jsongroupcol);
+      a[Jsongroupcol] = [];
+    }
+    a[Jsongroupcol].push(griddata[i]);
+  }
 
+  // Add empty row at end of each group
+  for (let key of keys) {
+    a[key].push({});
+  }
+
+  let final: any[] = [];
+
+  for (let key of keys) {
+    let keypair = a[key];
+    let agesum = 0;
+
+    for (let k = 0; k < keypair.length; k++) {
+
+      // Group Header
+      if (k === 0) {
+        let groupcolHead = isgroupedcolDate
+          ? this.getFormatDateGlobal(keypair[k][groupdcol])
+          : keypair[k][groupdcol];
+
+        final.push([
+          {
+            content: '' + groupcolHead + '',
+            colSpan: 13,
+            styles: { halign: 'left', fillColor: "#e6f7ff" }
+          }
+        ]);
+
+        continue;
+      }
+
+      // Empty row (separator)
+      if (k === keypair.length - 1) {
+        final.push([
+          {
+            content: 'Total: ' + this.convertAmountToPdfFormat(agesum),
+            colSpan: 13,
+            styles: { halign: 'center', fillColor: "#ffffb3" }
+          }
+        ]);
+        continue;
+      }
+
+      // Sum
+      agesum += Number(keypair[k][groupdsummarycol] || 0);
+
+      // Normal data row
+      final.push([
+        keypair[k].branchName,
+        keypair[k].chitNo,
+        keypair[k].subscriberName,
+        keypair[k].chitstatus,
+        keypair[k].receiptNo,
+        keypair[k].date,
+        keypair[k].trdate,
+        keypair[k].amount,
+        keypair[k].totaldays,
+        keypair[k].pduemonths,
+        keypair[k].reference_number,
+        keypair[k].cheque_date,
+        keypair[k].bankName
+      ]);
+    }
+  }
+
+  return final;
+}
+
+_groupwiseSummaryExportDataTrialBalance(
+  gridData: Record<string, any>[],
+  groupedCol: string,
+  debitField: string,
+  creditField: string,
+  isGroupedColDate = false
+): Record<string, any>[] {
+
+  const groupedMap: Record<string, any[]> = {};
+  const keys: string[] = [];
+
+  for (const row of gridData) {
+    const groupValue = isGroupedColDate
+      ? this.getFormatDateGlobal(row[groupedCol])
+      : row[groupedCol];
+
+    if (!groupedMap[groupValue]) {
+      keys.push(groupValue);
+      groupedMap[groupValue] = [];
+    }
+
+    groupedMap[groupValue].push(row);
+  }
+
+  const final: Record<string, any>[] = [];
+
+  for (const key of keys) {
+    const groupRows = groupedMap[key];
+
+    let debitSum = 0;
+    let creditSum = 0;
+
+    final.push({
+      group: {
+        content: key,
+        colSpan: 3,
+        styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold' }
+      }
+    });
+
+    for (const row of groupRows) {
+      debitSum += Number(row[debitField] ?? 0);
+      creditSum += Number(row[creditField] ?? 0);
+      final.push(row);
+    }
+
+    final.push({
+      group: {
+        content: `Total: ${this.currencyformat(debitSum)}   ${this.currencyformat(creditSum)}`,
+        colSpan: 3,
+        styles: { halign: 'right', fillColor: '#ffffb3' }
+      }
+    });
+  }
+
+  return final;
+}
+
+_groupwiseSummaryExportDataTB(
+  gridData: Record<string, any>[],
+  groupedCol: string,
+  basicsalary: string,
+  vda: string,
+  arrears: string,
+  absent: string,
+  total: string,
+  bonus: string,
+  sumString: string,
+  isGroupedColDate = false
+): Record<string, any>[] {
+
+  const groupedMap: Record<string, Record<string, any>[]> = {};
+  const keys: string[] = [];
+
+  for (const row of gridData) {
+    const groupValue = isGroupedColDate
+      ? this.getFormatDateGlobal(row[groupedCol])
+      : row[groupedCol];
+
+    if (!groupedMap[groupValue]) {
+      keys.push(groupValue);
+      groupedMap[groupValue] = [{ ...row }];
+    }
+
+    groupedMap[groupValue].push(row);
+  }
+
+  for (const key of keys) {
+    groupedMap[key].push({});
+  }
+
+  const final: Record<string, any>[] = [];
+
+  for (const key of keys) {
+    const groupRows = groupedMap[key];
+
+    let basicSum = 0;
+    let vdaSum = 0;
+    let arrearsSum = 0;
+    let absentSum = 0;
+    let totalSum = 0;
+    let bonusSum = 0;
+
+    for (let i = 0; i < groupRows.length; i++) {
+      const row = groupRows[i];
+
+      if (i !== 0 && i !== groupRows.length - 1) {
+        basicSum += Number(row[basicsalary] ?? 0);
+        vdaSum += Number(row[vda] ?? 0);
+        arrearsSum += Number(row[arrears] ?? 0);
+        absentSum += Number(row[absent] ?? 0);
+        totalSum += Number(row[total] ?? 0);
+        bonusSum += Number(row[bonus] ?? 0);
+      }
+
+      if (i === 0) {
+        const groupHeader = isGroupedColDate
+          ? this.getFormatDateGlobal(row[groupedCol])
+          : row[groupedCol];
+
+        row['group'] = {
+          content: `${groupHeader}`,
+          colSpan: 8,
+          styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold', fontSize: 9 }
+        };
+      }
+
+      if (i === groupRows.length - 1) {
+        row['group'] = {
+          content:
+            `${this.currencyformat(basicSum)}  ` +
+            `${this.currencyformat(vdaSum)}  ` +
+            `${this.currencyformat(arrearsSum)}  ` +
+            `${this.currencyFormat(absentSum)}  ` +
+            `${this.currencyformat(totalSum)}  ` +
+            `${this.currencyformat(bonusSum)}`,
+          colSpan: 7,
+          styles: { halign: 'right', fillColor: '#ffffb3' }
+        };
+      }
+
+      final.push(row);
+    }
+  }
+
+  return final;
+}
+
+_getGroupingGridExportData<T extends Record<string, any>>(
+    gridData: T[],
+    groupedCol: keyof T,
+    isGroupedColDate: boolean
+  ): T[] {
+    debugger;
+
+    if (!gridData?.length) return [];
+
+    const groupedMap = new Map<string, T[]>();
+
+    // 🔹 Grouping
+    for (const item of gridData) {
+      const rawValue = item[groupedCol];
+
+      const groupKey = isGroupedColDate
+        ? this.getFormatDateGlobal(rawValue)
+        : String(rawValue);
+
+      if (!groupedMap.has(groupKey)) {
+        groupedMap.set(groupKey, []);
+      }
+
+      groupedMap.get(groupKey)!.push({ ...item }); // clone to avoid mutation
+    }
+
+    const finalResult: T[] = [];
+
+    // 🔹 Build final array with group headers
+    groupedMap.forEach((items, key) => {
+      items.forEach((item, index) => {
+        if (index === 0) {
+          const groupHeader = isGroupedColDate
+            ? this.getFormatDateGlobal(item[groupedCol])
+            : String(item[groupedCol]);
+
+          (item as any).group = {
+            content: groupHeader,
+            colSpan: 17,
+            styles: {
+              halign: 'left',
+              fillColor: '#e6f7ff'
+            }
+          };
+        }
+
+        finalResult.push(item);
+      });
+    });
+
+    return finalResult;
+  }
 }
 
 
