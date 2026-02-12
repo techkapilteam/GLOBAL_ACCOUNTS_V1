@@ -53,7 +53,7 @@ export class OnlineSettlementReportComponent implements OnInit {
 
     this.dpConfig = {
       dateInputFormat:
-        this._commonService.datePickerPropertiesSetup('dateInputFormat'),
+        this._commonService.datePickerPropertiesSetup('dateInputFormat').toString(),
       containerClass: 'theme-dark-blue',
       // this._commonService.datePickerPropertiesSetup('containerClass'),
       showWeekNumbers: false,

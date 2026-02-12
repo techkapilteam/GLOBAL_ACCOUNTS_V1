@@ -5,7 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ScreenViewComponent } from './components/screen-view/screen-view.component';
 import { CreateAccountComponent } from './components/create-account/create-account.component';
 import { authGuard } from './guards/auth.guard';
-import { BankConfigComponent } from './components/ACCOUNTS CONFIG/bank-config/bank-config.component';
+ import { BankConfigComponent } from './components/ACCOUNTS CONFIG/bank-config/bank-config.component';
 import { ChequeManagementComponent } from './components/ACCOUNTS CONFIG/cheque-management/cheque-management.component';
 import { BankConfigViewComponent } from './components/ACCOUNTS CONFIG/bank-config-view/bank-config-view.component';
 import { GeneralReceiptCancelComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-cancel/general-receipt-cancel.component';

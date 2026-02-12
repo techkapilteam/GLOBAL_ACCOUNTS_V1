@@ -1,315 +1,555 @@
+<form [formGroup]="bankmasterform" class="section-content" autocomplete="off">
+  <div class="row">
+    <!-- <div class="col-12">
+      <p class="bc-2">Bank Setup</p>
+    </div> -->
+  </div>
+  <div class="my-container">
 
+    <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"></ngx-loading> -->
 
-
-<div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>Bank Configuration</h2>
-    </div>
-    <div class="screen-content">
-
-      <form class="section-content" autocomplete="off" [formGroup]="bankmasterform" (ngSubmit)="save()">
-
-        <div class="row g-3">
-          <div class="col-md-6 col-xl-4">
-            <div class="mb-3">
-              <label class="required-field">Date</label>
-              <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="todate"
-                [bsConfig]="dpConfig" bsDatepicker placement="bottom" readonly>
-              <small class="text-danger"
-                *ngIf="bankmasterform.get('todate')?.touched && bankmasterform.get('todate')?.invalid">
-                Date is required.
-              </small>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6 col-xl-4">
-            <div class="mb-3">
-              <label class="form-label">A/C Type</label>
-              <select class="form-select" formControlName="pAcctountype">
-                <option value="" disabled>Select</option>
-                <option value="Saving">Saving</option>
-                <option value="Current">Current</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="mb-3">
-              <label class="form-label">Account No.</label>
-              <input class="form-control" type="text" maxlength="50" formControlName="pAccountnumber">
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="mb-3">
-              <label class="form-label">Bank</label>
-              <select class="form-select" formControlName="pBankname">
-                <option value="" disabled>Select</option>
-                <option *ngFor="let bank of banksList" [value]="bank.pBankName">{{ bank.pBankName }}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="mb-3">
-              <label class="form-label">Account Name</label>
-              <input class="form-control" type="text" maxlength="150" formControlName="pAccountname">
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="mb-3">
-              <label class="form-label">Branch</label>
-              <input class="form-control" type="text" maxlength="125" formControlName="pBankbranch">
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <div class="row g-2">
-              <div class="col">
-                <label class="form-label">IFSC Code</label>
-                <input class="form-control" placeholder="IFSC Code" maxlength="12" formControlName="pIfsccode">
-              </div>
-              <div class="col">
-                <label class="form-label">Overdraft Limit</label>
-                <input class="form-control text-end" placeholder="Overdraft" formControlName="pOverdraft">
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-xl-4">
-            <label class="form-label">Opening Balance</label>
-            <div class="input-group">
-              <input class="form-control text-end" placeholder="0.00" formControlName="pOpeningBalance">
-              <select class="form-select" formControlName="pOpeningBalanceType">
-                <option value="" disabled>Select</option>
-                <option value="D">Debit</option>
-                <option value="C">Credit</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <hr class="my-4">
-        <div class="row">
-          <div class="col-md-12 mb-2">
-            <label class="form-check-label d-flex align-items-center" style="cursor:pointer; color: #0d6efd;"
-              (click)="toggleBranchAddress()">
-              <span class="me-2">
-                <i [ngClass]="{
-                  'bi-chevron-right': !branchAddressExpanded,
-                  'bi-chevron-down': branchAddressExpanded
-                }"></i>
-              </span>
-              Branch Address
-            </label>
-          </div>
-
-          <div class="col-12" *ngIf="branchAddressExpanded">
-            <div class="row">
-              <div class="col-md-6 col-xl-4">
-                <label>Address Line 1</label>
-                <input class="form-control" formControlName="address1">
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <label>Address Line 2</label>
-                <input class="form-control" formControlName="address2">
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <label>City / Village</label>
-                <input class="form-control" formControlName="city">
-              </div>
-              <div class="col-md-6 col-xl-4 mt-2">
-                <label>Country</label>
-                <select class="form-select" formControlName="country">
-                  <option value="">Select</option>
-                  <option *ngFor="let c of countries" [value]="c.name">{{ c.name }}</option>
-                </select>
-              </div>
-              <div class="col-md-6 col-xl-4 mt-2">
-                <div class="row g-2">
-                  <div class="col-6">
-                    <label>State</label>
-                    <select class="form-select" formControlName="state">
-                      <option value="">Select</option>
-                      <option *ngFor="let s of states" [value]="s.name">{{ s.name }}</option>
-                    </select>
-                  </div>
-                  <div class="col-6">
-                    <label>District</label>
-                    <select class="form-select" formControlName="district">
-                      <option value="">Select</option>
-                      <option *ngFor="let d of districts" [value]="d.name">{{ d.name }}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4 mt-2">
-                <label>Pincode</label>
-                <input class="form-control" formControlName="pincode" readonly>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <hr class="light">
-        <div class="row">        
-          <div class="col-md-4">          
-            <div class="mb-3 d-flex align-items-center justify-content-between" style="cursor:pointer"
-              (click)="debitcardhideandshow = !debitcardhideandshow">
-              <span class="text-primary">Add Debit Card</span>
-              <i class="bi" [ngClass]="{
-        'bi-chevron-right': !debitcardhideandshow,
-        'bi-chevron-down': debitcardhideandshow
-      }"></i>
-            </div>
-            
-            <div *ngIf="debitcardhideandshow" class="border rounded p-2">
-             
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <span>Debit Card Setup</span>
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="checkbox"
-                    [checked]="bankmasterform.get('pIsdebitcardapplicable')?.value"
-                    (change)="bankmasterform.get('pIsdebitcardapplicable')?.setValue($event.target.checked)">
-                </div>
-              </div>             
-              <div *ngIf="bankmasterform.get('pIsdebitcardapplicable')?.value">
-                <div class="mb-3">
-                  <label>Card No</label>
-                  <input class="form-control" formControlName="pCardNo">
-                </div>
-
-                <div class="row g-2 mb-3">
-                  <div class="col">
-                    <label>Valid From</label>
-                    <input class="form-control" bsDatepicker [bsConfig]="dpConfig" formControlName="pValidfrom"
-                      readonly>
-                  </div>
-                  <div class="col">
-                    <label>Valid Thru</label>
-                    <input class="form-control" bsDatepicker [bsConfig]="dpConfig" formControlName="pValidto" readonly>
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label>Name on The Card</label>
-                  <input class="form-control" formControlName="pCardName">
-                </div>
-              </div>
-
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="mb-3 d-flex align-items-center justify-content-between" style="cursor:pointer"
-              (click)="bankupihideandshow = !bankupihideandshow">
-              <span class="text-primary">UPI Setup</span>
-              <i class="bi" [ngClass]="{
-        'bi-chevron-right': !bankupihideandshow,
-        'bi-chevron-down': bankupihideandshow
-      }"></i>
-            </div>
-
-            <div *ngIf="bankupihideandshow" class="border rounded p-2">
-
-
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <span>UPI Setup</span>
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="checkbox"
-                    [checked]="bankmasterform.get('pIsupiapplicable')?.value"
-                    (change)="bankmasterform.get('pIsupiapplicable')?.setValue($event.target.checked)">
-                </div>
-              </div>
-
-              <div *ngIf="bankmasterform.get('pIsupiapplicable')?.value">
-
-                <div class="mb-2">
-                  <label>UPI ID</label>
-                  <input class="form-control" formControlName="pUpiid">
-                </div>
-
-
-                <div class="d-flex align-items-center mb-2">
-                  <div class="flex-grow-1 me-2">
-                    <label>UPI Link With</label>
-                    <select class="form-select" formControlName="pUpiname">
-                      <option value="" disabled>Select</option>
-                      <option *ngFor="let u of upiname" [value]="u.pUpiname">{{ u.pUpiname }}</option>
-                    </select>
-                  </div>
-                  <div class="mt-4">
-                    <button type="button" class="btn btn-primary btn-sm">Add</button>
-                  </div>
-                </div>
-                 <div class="mb-2">
-                  <label>UPI ID Link With</label>
-                  <input class="form-control" formControlName="pUpiid">
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="d-flex justify-content-between mb-2" style="cursor:pointer"
-              (click)="bankSetupExpanded = !bankSetupExpanded">
-              <span class="text-primary">Bank Setup</span>
-              <i class="bi" [ngClass]="{
-         'bi-chevron-right': !bankSetupExpanded,
-         'bi-chevron-down': bankSetupExpanded
-       }"></i>
-            </div>
-
-            <div *ngIf="bankSetupExpanded" class="border rounded p-2">
-
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span>Primary</span>
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="radio" name="bankStatus"
-                    [checked]="selectedBankStatus === 'isprimary'" (change)="selectBankStatus('isprimary', $event)">
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span>Foreman Bank</span>
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="radio" name="bankStatus"
-                    [checked]="selectedBankStatus === 'isformanbank'"
-                    (change)="selectBankStatus('isformanbank', $event)">
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span>Foreman Payment Bank</span>
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="radio" name="bankStatus"
-                    [checked]="selectedBankStatus === 'isforemanpaymentbank'"
-                    (change)="selectBankStatus('isforemanpaymentbank', $event)">
-                </div>
-              </div>
-
-              <div class="d-flex justify-content-between align-items-center">
-                <span>Interest Payment Bank</span>
-                <div class="form-check form-switch mb-0">
-                  <input class="form-check-input" type="radio" name="bankStatus"
-                    [checked]="selectedBankStatus === 'isintrestpaymentbank'"
-                    (change)="selectBankStatus('isintrestpaymentbank', $event)">
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-        <div class="d-flex justify-content-end gap-2 mt-3 mb-4">
-          <button type="button" class="btn btn-secondary" (click)="clear()">Clear</button>
-          <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-
-      </form>
+  </div>
+  <div class="row mt-1">
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group">
+        <label>Date</label>
+        <input class="form-control w-auto" type="text" readonly value="" [bsConfig]="currentdate" bsDatepicker
+          formControlName="pBankdate">
+      </div>
     </div>
   </div>
-</div>
+  <hr class="light">
+  <div class="row mt-1">
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group ">
+        <label class="required-field">A/C Type</label>
+        <select class="form-control" id="pAcctountype" title="A/C Type" formControlName="pAcctountype"
+          [ngClass]="{ 'is-invalid':bankmastervalidations.pAcctountype}">
+          <option value="" disabled>Select</option>
+          <option>Saving</option>
+          <option>Current</option>
+        </select>
+        <div class="invalid-feedback">
+          <span *ngIf="bankmastervalidations.pAcctountype">{{bankmastervalidations?.pAcctountype}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group">
+        <label class="required-field" id="pAccountnumber" title="Account No.">Account No.</label>
+
+        <input class="form-control" [attr.disabled]="accountno ? '' : null" type="text" value=""
+          formControlName="pAccountnumber" maxlength="50" appNumbersonly
+          [ngClass]="{ 'is-invalid':  bankmastervalidations.pAccountnumber }">
+        <div class="invalid-feedback">
+          <span *ngIf="bankmastervalidations.pAccountnumber">{{bankmastervalidations?.pAccountnumber}}</span>
+        </div>
+        <!-- <div *ngIf="accuntnumber" class="text-danger">
+            Account number must be 12 digits
+          </div> -->
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group">
+        <label class="required-field" id="pBankname" title="Bank">Bank</label>
+        <select class="form-control" formControlName="pBankname" (change)="onChange($event)" maxlength="50"
+          [ngClass]="{ 'is-invalid':bankmastervalidations.pBankname}">
+          <option value="" disabled>Select</option>
+          <option *ngFor="let i of banksList" [value]="i.pBankName">
+            {{i.pBankName}}
+          </option>
+        </select>
+        <!-- <input class="form-control" type="text"  [attr.disabled]="disable ? '' : null" title="Bank" value=""formControlName="pBankname" appCharactersonly  appUppercase  [ngClass]="{ 'is-invalid': bankmastervalidations.pBankname }"> -->
+        <div class="invalid-feedback">
+          <span *ngIf="bankmastervalidations.pBankname">{{bankmastervalidations?.pBankname}}</span>
+        </div>
+      </div>
+      <!-- <div class="form-group">
+        <label class="required-field" id="pAccountname" title="Account Name">Account Name</label>
+        <input class="form-control" type="text" value="" formControlName="pAccountname" maxlength="150" appTitlecaseword
+          appCharactersonly [ngClass]="{ 'is-invalid':bankmastervalidations.pAccountname }">
+        <div class="invalid-feedback">
+          <span *ngIf="bankmastervalidations.pAccountname">{{bankmastervalidations?.pAccountname}}</span>
+        </div>
+      </div> -->
+    </div>
+    <hr class="light">
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group">
+        <label class="required-field" id="pAccountname" title="Account Name">Account Name</label>
+        <input class="form-control" type="text" value="" formControlName="pAccountname" maxlength="150" appTitlecaseword
+          appCharactersonly [ngClass]="{ 'is-invalid':bankmastervalidations.pAccountname }">
+        <div class="invalid-feedback">
+          <span *ngIf="bankmastervalidations.pAccountname">{{bankmastervalidations?.pAccountname}}</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group">
+        <label id="pBankbranch" title="Branch">Branch</label>
+        <input class="form-control" type="text" value="" formControlName="pBankbranch" maxlength="125" appCharactersonly
+          appTitlecaseword [ngClass]="{ 'is-invalid':  bankmastervalidations.pBankbranch  }">
+        <div class="invalid-feedback">
+          <span *ngIf="bankmastervalidations.pBankbranch">{{bankmastervalidations?.pBankbranch}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-4">
+      <div class="form-group">
+        <div class="d-flex">
+          <div class="col-md-6 col-xl-6 pl-0">
+            <label id="pIfsccode" title="IFSC Code">IFSC Code</label>
+            <!-- <input  appIfsccodevalidator  pattern="^[A-Za-z]{4}[0]{1}[0-9]{6}$" class="form-control" formControlName="pBankifscCode" type="text" maxlength="11"
+          placeholder="Enter IFSC Code" value="" [ngClass]="{ 'is-invalid': BankValidationErrors.pBankifscCode }"> -->
+            <input class="form-control" type="text" maxlength="12" value="" formControlName="pIfsccode" appAlphanumeric
+              appUppercase [ngClass]="{ 'is-invalid':  bankmastervalidations.pIfsccode}">
+            <div class="invalid-feedback">
+              <span *ngIf="bankmastervalidations.pIfsccode">{{bankmastervalidations?.pIfsccode}}</span>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-6 pr-0">
+            <label>Overdraft Limit</label>
+            <input class="form-control" type="text" style="text-align:right;" id="pOverdraft" title="Overdraft Limit"
+              value="Overdraft Limit" formControlName="pOverdraft" appRoundecimal="12@2" appMycurrencyFormatter
+              appNumbersonly [ngClass]="{ 'is-invalid':  bankmastervalidations.pOverdraft}">
+            <div class="invalid-feedback">
+              <span *ngIf="bankmastervalidations.pOverdraft">{{bankmastervalidations?.pOverdraft}}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-4">
+
+
+      <div class="form-group">
+        <label title="Opening Balance" id="pOpeningBalance"> Opening Balance</label>
+        <div class="input-group">
+          <input class="form-control" type="text" placeholder="0" value="" style="text-align:right;"
+            id="pOpeningBalance" formControlName="pOpeningBalance" appRoundecimal="12@2" appMycurrencyFormatter
+            appNumbersonly>
+          <span class="invalid-feedback"
+            *ngIf="bankmastervalidations.pOpeningBalance">{{bankmastervalidations?.pOpeningBalance}}</span>
+
+          <div class="input-group-append">
+            <select class="btn-lg-icon form-control rounded-right p-1" title="Opening balance" id="pOpeningBalanceType"
+              value="" formControlName="pOpeningBalanceType"
+              [ngClass]="{ 'is-invalid':  bankmastervalidations.pOpeningBalanceType}">
+              <option value="" disabled>Select</option>
+              <option value="D">Debit</option>
+              <option value="C">Credit</option>
+            </select>
+            <span class="invalid-feedback"
+              *ngIf="bankmastervalidations.pOpeningBalanceType">{{bankmastervalidations?.pOpeningBalanceType}}</span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <!-- Bank/Branch  -->
+  <!-- <div class="col-12 mt-1">
+    <div class="row">
+      <a class="lc-title acc1 text-decoration-none" data-toggle="collapse" href="#bankaddress" role="button"
+        aria-expanded="true" aria-controls="family">
+        <img id="close" src="assets/images/icon-toggle-default.svg" class="display-content" width="12px" height="12px">
+        <img id="open" src="assets/images/icon-toogle-bottom.svg" class="display-content" width="12px" height="12px">
+        &nbsp; &nbsp; Branch Address
+      </a>
+    </div>
+
+    <div class="mt-3 collapse" id="bankaddress">
+      <div class="row mt-3">
+ 
+        <app-address></app-address>
+
+      </div>
+    </div>
+  </div> -->
+
+  <div class="col-12 mt-1">
+    <div class="row">
+      <a class="lc-title acc1 text-decoration-none" (click)="toggleBranch()" style="cursor: pointer;">
+
+        <img *ngIf="!isBranchOpen" src="assets/images/icon-toggle-default.svg" width="12px" height="12px">
+
+        <img *ngIf="isBranchOpen" src="assets/images/icon-toogle-bottom.svg" width="12px" height="12px">
+
+        &nbsp;&nbsp; Branch Address
+      </a>
+    </div>
+
+    <div class="mt-3 " *ngIf="isBranchOpen">
+      <div class="row mt-3">
+        <app-address></app-address>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bank/Branch end  -->
+  <hr>
+  <!---------------------Debit card setup-->
+  <div class="row">
+    <div class="col-md-6 col-xl-4">
+      <!-- <a class="lc-title acc2 text-decoration-none" data-toggle="collapse" href="#debitcard" role="button"
+        aria-expanded="true" aria-controls="family"> <img id="close" src="assets/images/icon-toggle-default.svg"
+          class="display-content" width="12px" height="12px"> <img id="open" src="assets/images/icon-toogle-bottom.svg"
+          class="display-content" width="12px" height="12px"> &nbsp; &nbsp; Add Debit Card</a> -->
+      <a class="lc-title acc2 text-decoration-none" (click)="toggleDebitCard()" style="cursor:pointer;">
+
+        <img *ngIf="!isDebitCardOpen" src="assets/images/icon-toggle-default.svg" width="12px" height="12px">
+
+        <img *ngIf="isDebitCardOpen" src="assets/images/icon-toogle-bottom.svg" width="12px" height="12px">
+
+        &nbsp;&nbsp; Add Debit Card
+      </a>
+
+
+      <!-- <div class="mt-3 collapse" id="debitcard">
+        <div class="border rounded p-2 h-100"> -->
+      <div class="mt-3" *ngIf="isDebitCardOpen">
+        <div class="border rounded p-2 h-100">
+
+
+
+          <div class="row">
+            <div class="col-md-6 col-xl-6">
+              <h6 class="lc-title text-left">Debit Card Setup </h6>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <div class="material-switch"> <span class="mr-2"> Status </span>
+                <input id="Employment" name="Employment" type="checkbox" formControlName="pIsdebitcardapplicable"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.pIsdebitcardapplicable}"
+                  (change)="bankdebitcardchecked($event)" data-toggle="collapse" data-target="#tds">
+                <label for="Employment" class="badge-success" data-toggle="collapse" data-target="#tds"></label>
+                <div class="invalid-feedback">
+                  <span
+                    *ngIf="bankmastervalidations.pIsdebitcardapplicable">{{bankmastervalidations?.pIsdebitcardapplicable}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="debitcardhideandshow">
+            <div class="form-group">
+              <label class="required-field" id="pCardNo" title="Card No.">Card No.</label>
+              <input class="form-control" type="text" [attr.disabled]="cardno ? '' : null" value=""
+                placeholder="XXXX XXXX XXXX 3006" appNumbersonly formControlName="pCardNo" minlength="16" maxlength="16"
+                [ngClass]="{ 'is-invalid': bankmastervalidations.pCardNo}" (blur)="cardno_change()">
+              <div class="invalid-feedback">
+                <span *ngIf="bankmastervalidations.pCardNo">{{bankmastervalidations?.pCardNo}}</span>
+              </div>
+            </div>
+            <div class="form-group d-flex">
+              <div class="col-md-6 pl-0">
+                <label id="pValidfrom" title="Valid From">Valid From</label>
+                <input class="form-control" type="text" value="" [bsConfig]="dpConfig" #dp="bsDatepicker" readonly
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.pValidfrom }" bsDatepicker placeholder="MM/YY"
+                  formControlName="pValidfrom">
+                <div class="invalid-feedback">
+                  <span *ngIf="bankmastervalidations.pValidfrom">{{bankmastervalidations?.pValidfrom}}</span>
+                </div>
+              </div>
+              <div class="col-md-6 pr-0 ">
+                <label id="pValidto" title="Valid To">Valid Thru</label>
+                <input class="form-control" type="text" value="" [bsConfig]="ddpConfig" #dp="bsDatepicker" readonly
+                  [ngClass]="{ 'is-invalid':   bankmastervalidations.pValidto }" bsDatepicker placeholder="MM/YY"
+                  formControlName="pValidto">
+                <!-- (onShown)="onOpenCalendar($event)" -->
+                <div class="invalid-feedback">
+                  <span *ngIf="bankmastervalidations.pValidfrom">{{bankmastervalidations?.pValidto}}</span>
+                </div>
+                <div *ngIf="todate" class="text-danger">
+                  please select valid date
+                </div>
+              </div>
+            </div>
+            <!-- <div class="form-group">
+              <label id="pCardName" title="Name on The Card">Name on The Card</label>
+              <input class="form-control" type="text" value="" appTitlecaseword placeholder="XYZ" appCharactersonly
+                formControlName="pCardName" [ngClass]="{ 'is-invalid':   bankmastervalidations.pCardName }"
+                maxlength="50">
+              <div class="invalid-feedback">
+                <span *ngIf="bankmastervalidations.pCardName">{{bankmastervalidations?.pCardName}}</span>
+              </div>
+            </div> -->
+            <div class="form-group">
+              <label class="required-field">Name on The Card</label>
+              <input class="form-control" type="text" value="" id="pCardName" title="Name on The Card"
+                formControlName="pCardName" appTitlecaseword placeholder="XYZ" appCharactersonly maxlength="50"
+                [ngClass]="{'is-invalid':bankmastervalidations.pCardName}" (blur)="name_change()">
+              <app-validation-message [messgae]="bankmastervalidations?.pCardName"> </app-validation-message>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!---------------------upi setup-->
+
+    <div class="col-md-6 col-xl-4">
+      <!-- <a class="lc-title acc3 text-decoration-none" data-toggle="collapse" href="#UPI" role="button"
+        aria-expanded="true" aria-controls="family"> <img id="close" src="assets/images/icon-toggle-default.svg"
+          class="display-content" width="12px" height="12px"> <img id="open" src="assets/images/icon-toogle-bottom.svg"
+          class="display-content" width="12px" height="12px"> &nbsp; &nbsp; UPI Setup</a> -->
+
+      <a class="lc-title acc3 text-decoration-none" (click)="toggleUpi()" style="cursor:pointer;">
+
+        <img *ngIf="!isUpiOpen" src="assets/images/icon-toggle-default.svg" width="12px" height="12px">
+
+        <img *ngIf="isUpiOpen" src="assets/images/icon-toogle-bottom.svg" width="12px" height="12px">
+
+        &nbsp;&nbsp; UPI Setup
+      </a>
+
+
+      <!-- <div class="mt-3 collapse" id="UPI">
+        <div class="border rounded p-2  h-100"> -->
+
+      <div class="mt-3" *ngIf="isUpiOpen">
+        <div class="border rounded p-2 h-100">
+          <div class="row">
+            <div class="col-md-6 col-xl-6">
+              <h6 class="lc-title text-left">UPI Setup </h6>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <!-- <div class="material-switch"> <span class="mr-2"> Status </span>
+                <input id="upi" name="Employment" type="checkbox" formControlName="pIsupiapplicable"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.pIsupiapplicable}" (change)="bankupichecked($event)"
+                  data-toggle="collapse" data-target="#upi-switch"> -->
+
+
+              <div class="material-switch"> <span class="mr-2"> Status </span>
+                <input type="checkbox" formControlName="pIsupiapplicable" (change)="bankupichecked($event)">
+              </div>
+              <label for="upi" class="badge-success" data-toggle="collapse" data-target="#upi-switch"></label>
+              <div class="invalid-feedback">
+                <span *ngIf="bankmastervalidations.pIsupiapplicable">{{bankmastervalidations?.pIsupiapplicable}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="bankupihideandshow">
+          <div class="form-group">
+            <label class="required-field" id="pUpiid" title="UPI ID">UPI ID</label>
+            <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
+              pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$" maxlength="150"
+              [ngClass]="{ 'is-invalid': submitted &&   bankmastervalidations.pUpiid}" placeholder="xyz@okicici"
+              formControlName="pUpiid">
+            <div class="invalid-feedback">
+              <span *ngIf="bankmastervalidations.pUpiid">{{bankmastervalidations?.pUpiid}}</span>
+            </div>
+          </div>
+          <div class="d-flex">
+            <div class="col-md-8 col-xl-8 pl-0">
+              <div class="form-group">
+                <label class="required-field" id="pUpiname" title="UPI Link with">UPI Link with</label>
+                <div class="input-group">
+                  <select class="form-control" formControlName="pUpiname" maxlength="150"
+                    [ngClass]="{ 'is-invalid':   submitted && bankmastervalidations.pUpiname}">
+                    <option value="" disabled>Select</option>
+                    <option *ngFor="let i of upiname" [value]="i.pUpiname">
+                      {{i.pUpiname}}
+                    </option>
+                  </select>
+                  <div class="invalid-feedback">
+                    <span *ngIf="bankmastervalidations.pUpiname">{{bankmastervalidations?.pUpiname}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-xl-4 mt-4 text-right pr-0">
+              <a (click)="addtogrid()" class="btn btn-b-icon ">
+                <img src="assets/images/icon-add-blue-rounded.svg" class="mr-1" width="20px" height="20px">
+                Add
+              </a>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="bankupihideandshow">
+
+
+
+
+
+          <p-table [value]="gridData" [paginator]="false" [resizableColumns]="true" [reorderableColumns]="true"
+            [sortMode]="'single'">
+
+            <!-- Columns -->
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="pUpiid">UPI ID <p-sortIcon field="pUpiid"></p-sortIcon></th>
+                <th pSortableColumn="pUpiname">Link with <p-sortIcon field="pUpiname"></p-sortIcon></th>
+                <th style="width: 50px">Actions</th>
+              </tr>
+            </ng-template>
+
+            <!-- Rows -->
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+              <tr>
+                <td>{{ row.pUpiid }}</td>
+                <td>{{ row.pUpiname }}</td>
+                <td>
+                  <button pButton icon="pi pi-times" class="p-button-text p-button-sm"
+                    (click)="removeHandler(row, rowIndex)">
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+   <!---------------------bank setup-->
+
+
+    <div class="col-md-6 col-xl-4">
+      <!-- <a class="lc-title acc3 text-decoration-none" data-toggle="collapse" href="#bank" role="button" aria-expanded="true"
+      aria-controls="family"> <img id="close" src="assets/images/icon-toggle-default.svg" class="display-content"
+        width="12px" height="12px"> <img id="open" src="assets/images/icon-toogle-bottom.svg" class="display-content"
+        width="12px" height="12px"> &nbsp; &nbsp; Bank Setup</a> -->
+      <a class="lc-title acc3 text-decoration-none" (click)="toggleBank()" style="cursor:pointer;">
+
+        <img *ngIf="!bankOpen" src="assets/images/icon-toggle-default.svg" width="12px" height="12px">
+        <img *ngIf="bankOpen" src="assets/images/icon-toogle-bottom.svg" width="12px" height="12px">
+        &nbsp;&nbsp; Bank Setup
+      </a>
+
+
+
+
+
+
+      <!-- <div class="mt-3 collapse" id="bank"> -->
+      <div class="mt-3" *ngIf="bankOpen">
+
+        <div class="border rounded p-2  h-100">
+
+
+
+
+          <div class="row">
+            <div class="col-md-6 col-xl-6">
+              <h6 class="lc-title text-left">Primary </h6>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <div class="material-switch"> <span class="mr-2"> Status </span>
+                <!-- <input id="upi1" name="Employment1" type="checkbox" formControlName="isprimary"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.isprimary}" data-toggle="collapse"
+                  data-target="#upi-switch1" (change)="bankchange($event,'primary')"> -->
+
+
+                <input type="checkbox" id="upi1" formControlName="isprimary"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.isprimary }" (change)="bankChange($event,'primary')">
+
+                <label for="upi1" class="badge-success" data-toggle="collapse" data-target="#upi-switch1"></label>
+                <div class="invalid-feedback">
+                  <span *ngIf="bankmastervalidations.isprimary">{{bankmastervalidations?.isprimary}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-xl-6">
+              <h6 class="lc-title text-left">Foreman Bank </h6>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <div class="material-switch"> <span class="mr-2"> Status </span>
+                <input id="upi2" name="Employment2" type="checkbox" formControlName="isformanbank"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.isformanbank}" data-toggle="collapse"
+                  data-target="#upi-switch2" (change)="bankchange($event,'foreman')">
+                <label for="upi2" class="badge-success" data-toggle="collapse" data-target="#upi-switch2"></label>
+                <div class="invalid-feedback">
+                  <span *ngIf="bankmastervalidations.isformanbank">{{bankmastervalidations?.isformanbank}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-xl-6">
+              <h6 class="lc-title text-left">Foreman Payment Bank </h6>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <div class="material-switch"> <span class="mr-2"> Status </span>
+                <input id="upi3" name="Employment3" type="checkbox" formControlName="isforemanpaymentbank"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.isforemanpaymentbank}" data-toggle="collapse"
+                  data-target="#upi-switch3" (change)="bankchange($event,'foremanpayment')">
+                <label for="upi3" class="badge-success" data-toggle="collapse" data-target="#upi-switch3"></label>
+                <div class="invalid-feedback">
+                  <span
+                    *ngIf="bankmastervalidations.isforemanpaymentbank">{{bankmastervalidations?.isforemanpaymentbank}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-xl-6">
+              <h6 class="lc-title text-left">Intrest Payment Bank </h6>
+            </div>
+            <div class="col-md-6 col-xl-6">
+              <div class="material-switch"> <span class="mr-2"> Status </span>
+                <input id="upi4" name="Employment4" type="checkbox" formControlName="isintrestpaymentbank"
+                  [ngClass]="{ 'is-invalid': bankmastervalidations.isintrestpaymentbank}" data-toggle="collapse"
+                  data-target="#upi-switch4" (change)="bankchange($event,'intrest')">
+                <label for="upi4" class="badge-success" data-toggle="collapse" data-target="#upi-switch4"></label>
+                <div class="invalid-feedback">
+                  <span
+                    *ngIf="bankmastervalidations.isintrestpaymentbank">{{bankmastervalidations?.isintrestpaymentbank}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+  <!-------------------row end-------------->
+  <hr>
+  <div class="row mt-4 ml-1">
+    <div class="col-md-12 col-xl-12">
+      <div class="d-flex justify-content-end mt-4">
+        <a (click)="clear()" class="btn btn-g-icon mr-4 px-3 border-0">
+          <img src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px" height="20px">Clear
+        </a>
+        <!-- <a  (click)="save()" data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false">
+              <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton, 'fa-check': !disablesavebutton}"></i>
+           {{buttonname}}
+          </a>  -->
+        <button (click)="save()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
+          <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
+            *ngIf="!disablesavebutton">
+          <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <!--row-end-->
+</form>
