@@ -89,16 +89,21 @@ export class ChequeEnquiryComponent implements OnInit {
   }
 
   private initializeDatePicker() {
-    this.brsfromConfig = {
-      dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat'),
-      maxDate: new Date(),
-      showWeekNumbers: true,
-      // this.commonService.datePickerPropertiesSetup('showWeekNumbers'),
-      containerClass: 'theme-dark-blue',
-      // this.commonService.datePickerPropertiesSetup('containerClass')
-    };
+    this.brsfromConfig.maxDate = new Date();
+    this.brsfromConfig.containerClass = 'theme-dark-blue';
+    this.brsfromConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.brsfromConfig.showWeekNumbers = false;
 
-    this.brstoConfig = { ...this.brsfromConfig };
+    // this.brsfromConfig = {
+    //   dateInputFormat: this.commonService.datePickerPropertiesSetup('dateInputFormat'),
+    //   maxDate: new Date(),
+    //   showWeekNumbers: true,
+    //   // this.commonService.datePickerPropertiesSetup('showWeekNumbers'),
+    //   containerClass: 'theme-dark-blue',
+    //   // this.commonService.datePickerPropertiesSetup('containerClass')
+    // };
+
+    // this.brstoConfig = { ...this.brsfromConfig };
   }
 
   private loadBanks() {
