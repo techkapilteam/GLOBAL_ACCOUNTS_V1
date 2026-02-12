@@ -22,9 +22,7 @@ import { environment } from '../envir/environment';
   providedIn: 'root',
 })
 export class CommonService {
-  _downloadReportsPdf(reportname: string, rows: any[][], gridheaders: string[], colWidthHeight: { 0: { cellWidth: string; halign: string; }; 1: { cellWidth: number; halign: string; }; 2: { cellWidth: number; halign: string; }; 3: { cellWidth: number; halign: string; }; 4: { cellWidth: string; halign: string; }; 5: { cellWidth: string; halign: string; }; 6: { cellWidth: string; halign: string; }; 7: { cellWidth: string; halign: string; }; }, arg4: string, arg5: string, startDate: any, endDate: any, printorpdf: any) {
-    throw new Error('Method not implemented.');
-  }
+ 
 
 
 
@@ -2327,15 +2325,176 @@ _groupwiseSummaryExport_pendingtransfer(griddata:any, groupdcol:any, groupdsumma
 }
 
 
+  _downloadReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridheaders: any[],
+    colWidthHeight: Record<string, any>,  // more specific than any
+    pagetype: 'a4' | 'landscape',
+    betweenorason: string,
+    fromdate: string,
+    todate: string,
+    printorpdf: 'Pdf' | 'Print'
+  ) {
+    const Companyreportdetails = this._getCompanyDetails();
+    const address = this.getcompanyaddress() || '';  // defensive default
+    const username = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    const kapil_logo = this.getKapilGroupLogo();
+    const currencyformat = this.currencysymbol || '';
+    const rupeeImage = this._getRupeeSymbol();
+    const today = this.pdfProperties('Date');
 
+    const doc = new jsPDF({
+      format: pagetype,
+      orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+    });
+
+    const lMargin = 15;
+    const rMargin = 15;
+
+    const totalPagesExp = '{total_pages_count_string}';
+
+    autoTable(doc, {
+      columns: gridheaders,
+      body: gridData,
+      theme: 'grid',
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right',
+        fontSize: Number(this.pdfProperties('Header Fontsize')) || 10,
+      },
+      styles: {
+        fontSize: Number(this.pdfProperties('Cell Fontsize')) || 8,
+        cellPadding: 1,
+        overflow: 'linebreak',
+        rowPageBreak: 'avoid',
+      } as any,
+      columnStyles: colWidthHeight,
+      startY: 48,
+      showHead: 'everyPage',
+      showFoot: 'lastPage',
+      didDrawPage: (data) => {
+        const pageSize = doc.internal.pageSize;
+        const pageWidth = pageSize.width;
+        const pageHeight = pageSize.height;
+
+
+
+        // Header (only on first page)
+        if (doc.getNumberOfPages() === 1) {
+          doc.setFontSize(15);
+          if (kapil_logo) {
+            doc.addImage(kapil_logo, 'JPEG', 10, 5, 50, 20); // provide width & height
+          }
+
+          doc.setTextColor('black');
+          doc.text(Companyreportdetails.pCompanyName, 72, 10);
+          doc.setFontSize(8);
+
+          const address1 = address.substr(0, 115);
+          const address2 = address.substring(115);
+          doc.text(address1, 110, 15, { align: 'center' });
+          doc.text(address2, 110, 18);
+
+          if (Companyreportdetails.pCinNo) {
+            doc.text('CIN: ' + Companyreportdetails.pCinNo, 90, 22);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 30);
+
+          doc.setFontSize(10);
+          doc.text('Branch: ' + Companyreportdetails.pBranchname, 163, 40);
+
+          if (betweenorason === 'Between') {
+            doc.text(`Between: ${fromdate} And ${todate}`, 15, 40);
+          } else if (betweenorason === 'As On' && fromdate) {
+            doc.text(`As on: ${fromdate}`, 15, 40);
+          }
+
+          doc.setDrawColor(0, 0, 0);
+          doc.line(10, 45, pageWidth - lMargin - rMargin, 45);
+        }
+
+
+
+
+
+        // Footer
+        const internalDoc: any = doc.internal;
+        let pageStr = 'Page ' + internalDoc.getNumberOfPages();
+
+        if (typeof internalDoc.putTotalPages === 'function') {
+          pageStr += ' of ' + totalPagesExp;
+        }
+
+
+        doc.setFontSize(10);
+        doc.setDrawColor(0, 0, 0);
+        // Use margins consistently for footer line
+        doc.line(lMargin, pageHeight - 10, pageWidth - rMargin, pageHeight - 10);
+
+        doc.text(`Printed on: ${today}, User: ${username.pEmployeeName || ''}`, lMargin, pageHeight - 5);
+
+        // Adjust x coordinate to ensure pageStr fits
+        doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
+      },
+      willDrawCell: (data) => {
+        // Bold last row for PS List
+        if (data.row.index === gridData.length - 1 && reportName === 'PS List') {
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'bold');
+        }
+      },
+      didDrawCell: (data) => {
+        const td = data.cell.raw;
+        const rupeeColumns = [1, 2, 3, 4, 5, 6, 12]; // adjust based on your report
+
+        if (td && currencyformat === '₹' && rupeeColumns.includes(data.column.index)) {
+          if (rupeeImage) {
+            // Compute left padding safely
+            let paddingLeft = 2; // default
+            if (typeof data.cell.padding === 'number') {
+              const x = data.cell.x + paddingLeft;
+            } else if (typeof data.cell.padding === 'function') {
+              paddingLeft = data.cell.padding('left');
+            }
+
+            // Coordinates for the image
+            const x = data.cell.x + paddingLeft;
+            const y = data.cell.y + data.cell.height / 2 - 0.5; // vertically center
+            const size = 2.5; // image size in mm
+
+            // Add rupee image
+            doc.addImage(rupeeImage, 'PNG', x, y, size, size);
+          }
+        }
+      },
+
+
+    });
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printorpdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else if (printorpdf === 'Print') {
+      this.setiFrameForPrint(doc);
+    }
+  }
+
+ isNullOrEmptyString(value: any): boolean {
+    let isvalid = false;
+    if (value == undefined || value == '' || value == null)
+      isvalid = true;
+    return isvalid;
+  }
 
 }
 
 
 
 
-
-function isNullOrEmptyString(pCinNo: any) {
-  throw new Error('Function not implemented.');
-}
 
