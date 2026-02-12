@@ -223,16 +223,16 @@ export class BankConfigComponent implements OnInit {
   debitcardhideandshow: any;
   bankupihideandshow: any;
   isDebitCardOpen = false;
-
+precordid='1';
   isUpiOpen = false;
   bankOpen = false;
 
-isPrimaryBank = false;
-isForemanBank = false;
-isForemanPaymentBank = false;
-isInterestPaymentBank = false;
-// bankupihideandshow = false;
-// debitcardhideandshow= false;
+  isPrimaryBank = false;
+  isForemanBank = false;
+  isForemanPaymentBank = false;
+  isInterestPaymentBank = false;
+  // bankupihideandshow = false;
+  // debitcardhideandshow= false;
   public gridState: State = {
     sort: [],
     take: 10
@@ -376,11 +376,50 @@ isInterestPaymentBank = false;
       this.upiname = data
     })
     debugger;
-    this._accountingmasterserive.GetBanks().subscribe(data => {
-      debugger;
-      this.banksList = data
 
-    })
+    // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
+    //   this._commonService.getschemaname(),
+    //   this._commonService.getbranchname(),
+    //   this._commonService.getCompanyCode(),
+    //   this._commonService.getBranchCode()
+
+    // ).subscribe({
+    //   next: (res: any) => {
+    //     // bankName
+    //     this.banklist = res;
+
+    //     console.log('SUCCESS:', res);
+    //     alert('hello');
+    //   },
+    //   error: (err: any) => {
+    //     console.log('ERROR:', err);
+    //     alert('API Error');
+    //   }
+    // });
+
+
+    this._accountingmasterserive.GetBanks(
+      this._commonService.getschemaname(), 
+      this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+       this._commonService.getBranchCode(),
+       this.precordid,
+      )
+       .subscribe({
+      next: (res: any) => {
+        // bankName
+        console.log('data',res);
+        
+        this.banksList = res;
+
+        console.log('SUCCESS:', res);
+        alert('hello');
+      },
+      error: (err: any) => {
+        console.log('ERROR:', err);
+        alert('API Error');
+      }
+    });
 
     // this._accountingmasterserive.GetBanks().subscribe(json => {
     //   debugger;
@@ -1233,44 +1272,44 @@ isInterestPaymentBank = false;
     this.isBranchOpen = !this.isBranchOpen;
   }
 
-  
-toggleDebitCard() {
-  this.isDebitCardOpen = !this.isDebitCardOpen;
-}
 
-// bankdebitcardchecked(event: any) {
-//   this.debitcardhideandshow = event.target.checked;
-// }
-
-toggleUpi() {
-  this.isUpiOpen = !this.isUpiOpen;
-}
-
-// bankupichecked(event: any) {
-//   this.bankupihideandshow = event.target.checked;
-// }
-
-toggleBank() {
-  this.bankOpen = !this.bankOpen;
-}
-
-bankChange(event: any, type: string) {
-  const checked = event.target.checked;
-
-  switch (type) {
-    case 'primary':
-      this.isPrimaryBank = checked;
-      break;
-    case 'foreman':
-      this.isForemanBank = checked;
-      break;
-    case 'foremanpayment':
-      this.isForemanPaymentBank = checked;
-      break;
-    case 'interest':
-      this.isInterestPaymentBank = checked;
-      break;
+  toggleDebitCard() {
+    this.isDebitCardOpen = !this.isDebitCardOpen;
   }
-}
+
+  // bankdebitcardchecked(event: any) {
+  //   this.debitcardhideandshow = event.target.checked;
+  // }
+
+  toggleUpi() {
+    this.isUpiOpen = !this.isUpiOpen;
+  }
+
+  // bankupichecked(event: any) {
+  //   this.bankupihideandshow = event.target.checked;
+  // }
+
+  toggleBank() {
+    this.bankOpen = !this.bankOpen;
+  }
+
+  bankChange(event: any, type: string) {
+    const checked = event.target.checked;
+
+    switch (type) {
+      case 'primary':
+        this.isPrimaryBank = checked;
+        break;
+      case 'foreman':
+        this.isForemanBank = checked;
+        break;
+      case 'foremanpayment':
+        this.isForemanPaymentBank = checked;
+        break;
+      case 'interest':
+        this.isInterestPaymentBank = checked;
+        break;
+    }
+  }
 
 }
