@@ -255,25 +255,102 @@ export class IssuedChequeComponent implements OnInit {
     this.table?.groupHeader?.toggleExpandGroup(group);
   }
 
-  pdfOrprint(type: 'Pdf' | 'Print') {
-    const content = document.getElementById('print-section');
-    if (!content) return;
+  pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
+  const rows: any[] = [];
+  const reportname = 'Issued Cheque';
+  const gridheaders = [
+    'Cheque No.',
+    'Payment ID',
+    'Particulars',
+    'Payment Date',
+    'Cheque\nCleared Date',
+    'Paid Amt.',
+    'Bank Name',
+    'Cheque Book ID',
+    'Cheque Status'
+  ];
 
-    if (type === 'Print') {
-      window.print();
-      return;
+  const fromDate = '';
+  const toDate = '';
+
+  const colWidthHeight = {
+    0: { cellWidth: 'auto' },
+    1: { cellWidth: 'auto' },
+    2: { cellWidth: 'auto' },
+    3: { cellWidth: 'auto' },
+    4: { cellWidth: 'auto' },
+    5: { cellWidth: 'auto' },
+    6: { cellWidth: 'auto' },
+    7: { cellWidth: 'auto' },
+    8: { cellWidth: 'auto' }
+  };
+
+  const retungridData = this.commonService._getGroupingGridExportData(
+    this.gridDataDetails,
+    'pchequestatus',
+    false
+  );
+
+  retungridData.forEach((element: any) => {
+    let paymentdate = '';
+    let cleardate = '';
+    let paidamount = '';
+
+    if (element.ppaymentdate) {
+      paymentdate = this.commonService.getFormatDateGlobal(element.ppaymentdate);
     }
 
-    const win = window.open('', '', 'width=900,height=700');
-    win?.document.write(`
-      <html>
-        <head><title>Issued Cheques</title></head>
-        <body>${content.innerHTML}</body>
-      </html>
-    `);
-    win?.document.close();
-    win?.print();
-  }
+    if (element.pcleardate) {
+      cleardate = this.commonService.getFormatDateGlobal(element.pcleardate);
+    }
+
+    if (element.ppaidamount && element.ppaidamount !== 0) {
+      paidamount = this.commonService.convertAmountToPdfFormat(
+        this.commonService.currencyFormat(parseFloat(String(element.ppaidamount)))
+      );
+    }
+
+    const temp = element.group
+      ? [
+          element.group,
+          element.pchequenumber,
+          element.ppaymentid,
+          element.pparticulars,
+          paymentdate,
+          cleardate,
+          paidamount,
+          element.pbankname,
+          element.pchkBookId,
+          element.pstatus
+        ]
+      : [
+          element.pchequenumber,
+          element.ppaymentid,
+          element.pparticulars,
+          paymentdate,
+          cleardate,
+          paidamount,
+          element.pbankname,
+          element.pchkBookId,
+          element.pstatus
+        ];
+
+    rows.push(temp);
+  });
+
+  this.reportService._IssuedChequesReportsPdf(
+    reportname,
+    rows,
+    gridheaders,
+    colWidthHeight,
+    'landscape',
+    '',
+    fromDate,
+    toDate,
+    printorpdf
+  );
+}
+
   TotalPages: number = 0;
 
   checkedCancel(event: any, row: any) {

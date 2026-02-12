@@ -202,29 +202,149 @@ export class TrialBalanceComponent {
 
     this.commonService.exportAsExcelFile(rows, 'TrialBalance');
   }
+ pdfOrprint(printOrpdf: 'Print' | 'Pdf'): void {
+  if (this.withgrouping) {
+    this.generateGroupedReport(printOrpdf);
+  } else {
+    this.generateNormalReport(printOrpdf);
+  }
+}
 
-  pdfOrprint(type: string) {
+private generateGroupedReport(printOrpdf: 'Print' | 'Pdf'): void {
+  const rows: any[] = [];
+  const reportName = 'Trial Balance';
+  const gridHeaders = ['Particulars', 'Debit', 'Credit'];
 
-  const fromDate: Date =
-    this.TrialBalanceForm.get('fromdate')?.value ?? new Date();
+  const fromDate = this.commonService.getFormatDateGlobal(
+    this.TrialBalanceForm.controls['fromdate'].value
+  );
 
-  const toDate: Date =
-    this.TrialBalanceForm.get('todate')?.value ?? new Date();
+  const toDate = this.commonService.getFormatDateGlobal(
+    this.TrialBalanceForm.controls['todate'].value
+  );
+
+  const colWidthHeight = {
+    paccountname: { cellWidth: 'auto' },
+    pdebitamount: { cellWidth: 'auto' },
+    pcreditamount: { cellWidth: 'auto' }
+  };
+
+  const returnGridData =
+    this.commonService._groupwiseSummaryExportDataTrialBalance(
+      this.Trialbalancelst,
+      'pparentname',
+      'pdebitamount',
+      'pcreditamount'
+    );
+
+  returnGridData?.forEach((element: any) => {
+    const debitAmount = this.formatAmount(element?.pdebitamount);
+    const creditAmount = this.formatAmount(element?.pcreditamount);
+
+    const row =
+      element?.group !== undefined
+        ? [element.group, element.paccountname, debitAmount, creditAmount]
+        : [element.paccountname, debitAmount, creditAmount];
+
+    rows.push(row);
+  });
+
+  this.pushTotals(rows);
 
   this.commonService._downloadTrialBalanceReportsPdf(
-    'Trial Balance',
-    this.Trialbalancelst,
-    ['Particulars', 'Debit', 'Credit'],
-    {},
+    reportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
     'a4',
-    this.groupType,
-    this.commonService.getFormatDateGlobal(fromDate)??'',
-    this.commonService.getFormatDateGlobal(toDate)??'',
-    type,
-    {
-      debittotal: this.totaldebitamount,
-      credittotal: this.totalcreditamount
-    }
+    this.getGroupType(),
+    fromDate,
+    toDate,
+    printOrpdf,
+    this.getGridTotals()
   );
 }
+
+private generateNormalReport(printOrpdf: 'Print' | 'Pdf'): void {
+  const rows: any[] = [];
+  const reportName = 'Trial Balance';
+  const gridHeaders = ['Particulars', 'Debit', 'Credit'];
+
+  const fromDate = this.commonService.getFormatDateGlobal(
+    this.TrialBalanceForm.controls['fromdate'].value
+  );
+
+  const toDate = this.commonService.getFormatDateGlobal(
+    this.TrialBalanceForm.controls['todate'].value
+  );
+
+  const colWidthHeight = {
+    paccountname: { cellWidth: 'auto' },
+    pdebitamount: { cellWidth: 'auto' },
+    pcreditamount: { cellWidth: 'auto' }
+  };
+
+  this.Trialbalancelst?.forEach((element: any) => {
+    rows.push([
+      element?.paccountname,
+      this.formatAmount(element?.pdebitamount),
+      this.formatAmount(element?.pcreditamount)
+    ]);
+  });
+
+  this.pushTotals(rows);
+
+  this.commonService._downloadTrialBalanceReportsPdf(
+    reportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
+    'a4',
+    this.getGroupType(),
+    fromDate,
+    toDate,
+    printOrpdf,
+    this.getGridTotals()
+  );
+}
+
+
+private formatAmount(value: number | null | undefined): string {
+  if (!value) return '';
+
+  let amount = this.commonService.currencyformat(parseFloat(value.toString()));
+  amount = this.commonService.convertAmountToPdfFormat(amount);
+
+  const decimal = amount.split('.')[1];
+
+  if (!decimal) return amount + '.00';
+  if (decimal.length === 1) return amount + '0';
+
+  return amount;
+}
+
+private getGroupType(): string {
+  return this.groupType === 'BETWEEN' ? 'Between' : 'As On';
+}
+
+private getGridTotals(): any {
+  const debitTotal = this.formatAmount(this.totaldebitamount);
+  const creditTotal = this.formatAmount(this.totalcreditamount);
+
+  return {
+    debittotal: debitTotal,
+    credittotal: creditTotal
+  };
+}
+
+private pushTotals(rows: any[]): void {
+  const totals = this.getGridTotals();
+
+  rows.push([
+    'Total',
+    totals.debittotal,
+    totals.credittotal
+  ]);
+}
+
 }

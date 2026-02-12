@@ -210,13 +210,105 @@ today = new Date();
   }
 
 
-  pdfOrPrint(type: 'Pdf' | 'Print') {
-    if (type === 'Print') {
-      window.print();
-    } else {
-      alert('PDF export not implemented in demo mode');
-    }
-  }
+  // pdfOrPrint(type: 'Pdf' | 'Print') {
+  //   if (type === 'Print') {
+  //     window.print();
+  //   } else {
+  //     alert('PDF export not implemented in demo mode');
+  //   }
+  // }
+  pdfOrPrint(printOrPdf: 'Print' | 'Pdf'): void {
+  debugger;
+
+  const { SubLedgerName, LedgerName, gridView, isNarrationChecked } = this;
+
+  const reportName = 'Account Ledger';
+  const subReportName = SubLedgerName
+    ? `${LedgerName} (${SubLedgerName})`
+    : `${LedgerName}`;
+
+  const gridHeaders: string[] = [
+    'Transaction No.',
+    'Particulars',
+    'Debit',
+    'Credit',
+    'Balance'
+  ];
+
+  const fromDateControl = this.accountLedgerForm?.controls?.['fromDate']?.value;
+  const toDateControl = this.accountLedgerForm?.controls?.['toDate']?.value;
+
+  const fromDate = this.commonService.getFormatDateGlobal(fromDateControl);
+  const toDate = this.commonService.getFormatDateGlobal(toDateControl);
+
+  const colWidthHeight = {
+    ptransactiondate: { cellWidth: 'auto' },
+    ptransactionno: { cellWidth: 'auto' },
+    pparticulars: { cellWidth: 25 },
+    pdebitamount: { cellWidth: 'auto' },
+    pcreditamount: { cellWidth: 'auto' },
+    popeningbal: { cellWidth: 'auto' }
+  };
+
+  const groupedData = this.commonService._getGroupingGridExportData(
+    gridView,
+    'ptransactiondate',
+    true
+  );
+
+  const rows: (string | number)[][] = groupedData.map((element: any) => {
+    const {
+      ptransactiondate,
+      ptransactionno,
+      pparticulars,
+      pdebitamount,
+      pcreditamount,
+      popeningbal,
+      pBalanceType,
+      group
+    } = element;
+
+    const formattedOpeningBal =
+      this.commonService.convertAmountToPdfFormat(
+        this.commonService.currencyformat(popeningbal)
+      ) + ` ${pBalanceType}`;
+
+    const debitAmt =
+      pdebitamount && pdebitamount !== 0
+        ? this.commonService.convertAmountToPdfFormat(
+            this.commonService.currencyformat(pdebitamount)
+          )
+        : '';
+
+    const creditAmt =
+      pcreditamount && pcreditamount !== 0
+        ? this.commonService.convertAmountToPdfFormat(
+            this.commonService.currencyformat(
+              parseFloat(pcreditamount).toFixed(2)
+            )
+          )
+        : '';
+
+    return group !== undefined
+      ? [group, ptransactionno, pparticulars, debitAmt, creditAmt, formattedOpeningBal]
+      : [ptransactionno, pparticulars, debitAmt, creditAmt, formattedOpeningBal];
+  });
+
+  this.reportService._AccountLedgerReportsPdfforpettycash(
+    reportName,
+    subReportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
+    'a4',
+    'Between',
+    fromDate,
+    toDate,
+    printOrPdf,
+    isNarrationChecked
+  );
+}
+
 
   // exportExcel() {
   //   alert('Excel export not implemented in demo mode');
