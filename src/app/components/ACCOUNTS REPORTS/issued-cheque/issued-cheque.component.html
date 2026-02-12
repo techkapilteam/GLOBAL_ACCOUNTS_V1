@@ -12,7 +12,7 @@
           <div class="col-md-6">
             <label class="form-label required-field">Bank Name</label>
 
-            <ng-select [items]="BankData" formControlName="pbankname" bindLabel="pbankname" bindValue="pbankaccountid"
+            <ng-select [items]="BankData" formControlName="pbankname" bindLabel="bankName" bindValue="pbankaccountid"
               placeholder="Select" [searchable]="true" [clearable]="true" dropdownPosition="bottom"
               [clearOnBackspace]="true" appendTo="body" (change)="BankName_Cahange($event)"
               [ngClass]="{ 'is-invalid': f['pbankname'].touched && f['pbankname'].invalid }">

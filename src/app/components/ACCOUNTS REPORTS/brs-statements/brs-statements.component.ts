@@ -209,7 +209,10 @@ get f() { return this.BrsStatementsReport.controls; }
   }
 
   bankBookDetails(): void {
-    this._bankBookService.GetBankNames().subscribe({
+    this._bankBookService.GetBankNames(this._CommonService.getschemaname(),
+  this._CommonService.getbranchname(),
+  this._CommonService.getCompanyCode(),
+  this._CommonService.getBranchCode()).subscribe({
       next: (res: any) => {
         this.bankData = res;
       },
