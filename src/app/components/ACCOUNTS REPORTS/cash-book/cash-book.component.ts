@@ -112,6 +112,7 @@ export class CashBookComponent implements OnInit {
 
   dpConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD-MMM-YYYY',
+    containerClass:'theme-dark-blue',
     showWeekNumbers: false,
     maxDate: new Date()
   };

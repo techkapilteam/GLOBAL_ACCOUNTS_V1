@@ -63,6 +63,49 @@
 
   </div>
 </form>
+<div *ngIf="showhidetable" class="d-flex justify-content-end mt-4 me-3">
+
+  <ul *ngIf="!TrialBalanceDifference" class="temp-ul">
+
+    <li class="temp-ico ms-2">
+      <img
+        src="assets/images/pdf-icon-blue.svg"
+        width="18"
+        class="pt-2"
+        alt="PDF"
+        style="cursor: pointer;"
+        (click)="pdfOrprint('Pdf')"
+      />
+    </li>
+
+    <li class="temp-ico ms-2">
+      <img
+        src="assets/images/print-icon-blue.svg"
+        width="18"
+        class="pt-2"
+        alt="Print"
+        style="cursor: pointer;"
+        (click)="pdfOrprint('Print')"
+      />
+    </li>
+
+    <li class="temp-ico ms-2">
+      <img
+        src="assets/images/icon-excel.svg"
+        width="18"
+        class="pt-2"
+        alt="Excel"
+        style="cursor: pointer;"
+        (click)="export()"
+      />
+    </li>
+
+  </ul>
+
+</div>
+
+<div *ngIf="dataisempty">No Records to Display</div>
+
 
 <div *ngIf="showhidetable" class="mt-4">
 

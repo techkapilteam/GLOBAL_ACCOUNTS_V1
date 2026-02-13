@@ -8,48 +8,48 @@
       <form [formGroup]="ChequesIssuedForm" class="container py-3">
 
         <div class="row mb-3">
-          <div class="col-12">
+        <div class="col-12">
             <label class="bc-2">Select Cheques Type</label>
-          </div>
-
-          <div class="col-12 d-flex gap-4">
-            <div class="form-check radio-btn-secondary">
-              <input class="form-check-input" type="radio" name="pchequestype" formControlName="pchequestype"
-                value="Issued" (change)="selectChequesType('Issued')" />
-              <label class="mt-1">Issued</label>
-            </div>
-
-            <div class="form-check radio-btn-secondary">
-              <input class="form-check-input" type="radio" name="pchequestype" formControlName="pchequestype"
-                value="Received" (change)="selectChequesType('Received')" />
-              <label class="mt-1">Received</label>
-            </div>
-          </div>
         </div>
+
+        <div class="col-12 d-flex gap-4">
+            <div class="form-check radio-btn-secondary">
+                <input class="form-check-input" type="radio" formControlName="pchequestype" value="Issued"
+                    (change)="selectChequesType('Issued')" />
+                <label class="mt-1">Issued</label>
+            </div>
+
+            <div class="form-check radio-btn-secondary">
+                <input class="form-check-input" type="radio" formControlName="pchequestype" value="Received"
+                    (change)="selectChequesType('Received')" />
+                <label class="mt-1">Received</label>
+            </div>
+        </div>
+    </div>
 
         <div *ngIf="showOrHideIssuedCheques" class="mt-3">
 
           <div class="row mb-3">
             <div class="col-md-6">
-              <input type="search" class="form-control" placeholder="Search by Cheque / Reference No (min 3 chars)"
-                (input)="onSearchForCheque($event.target.value)" />
+                <input type="search" class="form-control" placeholder="Search by Cheque / Reference No (min 3 chars)"
+                    (input)="onSearchForCheque($event.target.value)" />
             </div>
 
             <div class="col-md-6">
-              <div *ngIf="spinner" class="spinner-border text-muted"></div>
+                <div *ngIf="spinner" class="spinner-border text-muted"></div>
             </div>
-          </div>
+        </div>
 
-          <ul class="nav nav-tabs mt-3">
+        <ul class="nav nav-tabs mt-3">
             <li class="nav-item">
-              <a class="nav-link active">
-                Cheques
-                <span class="badge bg-danger ms-2">
-                  {{ displayAllChequesDataBasedOnForm.length }}
-                </span>
-              </a>
+                <a class="nav-link active">
+                    Cheques
+                    <span class="badge bg-danger ms-2">
+                        {{ displayAllChequesDataBasedOnForm.length }}
+                    </span>
+                </a>
             </li>
-          </ul>
+        </ul>
 
           <p-table [value]="displayAllChequesDataBasedOnForm" [paginator]="true" [rows]="pageCriteria.pageSize"
             [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"

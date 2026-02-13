@@ -1,121 +1,158 @@
-import { CommonModule } from '@angular/common';
-import { Component,OnInit } from '@angular/core';
-import { FormsModule,FormBuilder, FormGroup,Validators } from '@angular/forms';
+import { CommonModule, formatDate } from '@angular/common';
+import { Component,inject,OnInit } from '@angular/core';
+import { FormsModule,FormBuilder, FormGroup,Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
+import { CommonService } from '../../../services/common.service';
+import { TdsService } from '../../../services/tds.service';
 
 
 @Component({
  selector: 'app-tdsreport',
   standalone: true,
-  imports: [BsDatepickerModule, NgxDatatableModule, CommonModule, FormsModule,TableModule],
+  imports: [BsDatepickerModule, NgxDatatableModule, CommonModule, ReactiveFormsModule,TableModule],
   templateUrl: './tds-report.component.html',
   styleUrl: './tds-report.component.css',
   host: {
     ngSkipHydration: ''
   }
 })
-export class TdsReportComponent {
-  asOnChecked = false;
-  onAsOnChange(event: Event) {
-    this.asOnChecked = (event.target as HTMLInputElement).checked;
-  }
-  sections = [
-    { code: '194C', name: 'Contract / Sub Contract / Courier / Transport / Printing' },
-    { code: '194J', name: 'Professional Fees / Technical Fees / Royalty' },
-    { code: '194H', name: 'Commission or Brokerage' },
-    { code: '194I', name: 'Rent (Land / Building / Machinery)' },
-    { code: '194A', name: 'Interest Other Than Securities' },
-    { code: '194Q', name: 'Purchase of Goods' },
-    { code: '194O', name: 'E-commerce Participant Payments' },
-    { code: '192', name: 'Salary' },
-    { code: '193', name: 'Interest on Securities' },
-    { code: '194D', name: 'Insurance Commission' },
-    { code: '194EE', name: 'Payment in respect of NSS' },
-    { code: '194K', name: 'Income from Units (Mutual Funds / UTI)' },
-    { code: '194LA', name: 'Compensation on Acquisition of Immovable Property' },
-    { code: '195', name: 'Non-Resident Payments' }
-  ];
+export class TdsReportComponent implements OnInit{
+  private fb = inject(FormBuilder);
+  private tdsService = inject(TdsService);
+  private commonService = inject(CommonService);
 
-  selectedSection = '';
-  sectionName = '';
-  fromDate: Date| null = null;
-  toDate: Date| null = null;
-  ngOnInit() {
-    const today = new Date();
-    this.fromDate = today;
-    this.toDate = today;
-  }
-  onSectionChange() {
-    this.showResult=false
-    const selected = this.sections.find(
-      s => s.code === this.selectedSection
-      
-    );
+  TDSReport!: FormGroup;
+  Tdsreporterrors: Record<string, string> = {};
+  sectionName: string = '';
+asOnChecked = false;
+isSummary = false;
+showResult = false;
 
-    this.sectionName = selected ? selected.name : '';
+summaryData: any[] = [];
+
+  pageSize = 10;
+  skip = 0;
+  gridData: any[] = [];
+  tdssectionlist: any[] = [];
+
+  today = new Date();
+  isLoading = false;
+  savebutton = 'Generate Report';
+
+  dpFromConfig: Partial<BsDatepickerConfig> = {
+    dateInputFormat: 'DD-MMM-YYYY',
+    containerClass:'theme-dark-blue',
+    maxDate: new Date(),
+    showWeekNumbers: false
+  };
+
+  dpToConfig: Partial<BsDatepickerConfig> = {
+    dateInputFormat: 'DD-MMM-YYYY',
+    containerClass:'theme-dark-blue',
+    maxDate: new Date(),
+    showWeekNumbers: false
+  };
+
+  fromdate!: string;
+  todate!: string;
+  validation = false;
+  section!: string;
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.setDefaultDates();
+    this.getTDSsectiondetails();
   }
 
-  isSummary = false;
-  showResult = false;
-  onShowClick() {
-    this.showResult=true;
-    // if(this.showResult){
-    //   
-    // }
-    // else{
-    //   this.showResult=false;
-    // }
+  trackByFn(index: number): number {
+    return index;
   }
-  onSummaryChange(event: Event) {
-    this.isSummary = (event.target as HTMLInputElement).checked;
+
+  private buildForm(): void {
+    this.TDSReport = this.fb.group({
+      pTdsSection: ['', Validators.required],
+      fromDate: [this.today, Validators.required],
+      toDate: [this.today, Validators.required],
+    });
+
+    this.TDSReport.valueChanges.subscribe(() => {
+      this.validateDates();
+    });
   }
-  rows = [
-    {
-      particulars: 'ABC Services',
-      panNumber: 'ABCDE1234F',
-      panStatus: 'Valid',
-      name: 'Ramesh',
-      code: 'AG001',
-      transactionDate: '10-01-2026',
-      paidAmount: '10,000.00',
-      tdsAmount: '1,000.00',
-      amount: '9,000.00',
-      effectiveJV: 'JV123',
-      subscriberBranch: 'Hyderabad'
+
+  private setDefaultDates(): void {
+    this.fromdate = formatDate(this.today, 'yyyy-MM-dd', 'en-IN');
+    this.todate = formatDate(this.today, 'yyyy-MM-dd', 'en-IN');
+  }
+
+  getTDSsectiondetails(): void {
+    this.tdsService.getTdsSectionDetails().subscribe({
+      next: (data: never[]) => this.tdssectionlist = data ?? [],
+      error: (err: any) => this.commonService.showErrorMessage(err)
+    });
+  }
+
+  FromDateChange(date: Date): void {
+    this.fromdate = formatDate(date, 'yyyy-MM-dd', 'en-IN');
+    this.validateDates();
+  }
+
+  ToDateChange(date: Date): void {
+    this.todate = formatDate(date, 'yyyy-MM-dd', 'en-IN');
+    this.validateDates();
+  }
+
+  private validateDates(): void {
+    if (this.fromdate && this.todate) {
+      this.validation = this.fromdate > this.todate;
     }
-  ];
-  agentRows = [
-    {
-      agentName: 'Kapil Group Marketing Services Private Limited',
-      agentCode: 'KAP2141/23',
-      panNumber: 'AAICK0350Q',
-      paidAmount: 13453836,
-      tdsAmount: 269077,
-      amount: 13184759
-    },
-    {
-      agentName: 'Kapil IT Solutions Pvt Ltd',
-      agentCode: 'KAP143/24',
-      panNumber: 'NA',
-      paidAmount: 247360,
-      tdsAmount: 4948,
-      amount: 242412
-    }
-  ];
-  validateDates() {
-  if (this.fromDate && this.toDate) {
+  }
 
-    const from = new Date(this.fromDate);
-    const to = new Date(this.toDate);
+  sectionchange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+  this.section = select.value;
 
-    if (from > to) {
-      alert('From Date should not be greater than To Date');
-      this.fromDate = null; 
-    }
+  const selected = this.tdssectionlist.find(
+    x => x.pTdsSection === this.section
+  );
+
+  this.sectionName = selected?.sectionName || '';
+  }
+  onAsOnChange(event: any): void {
+  this.asOnChecked = event.target.checked;
+
+  if (this.asOnChecked) {
+    this.TDSReport.get('toDate')?.setValue(this.TDSReport.get('fromDate')?.value);
   }
 }
+onSummaryChange(event: any): void {
+  this.isSummary = event.target.checked;
+}
+
+  generatetdsreport(): void {
+    if (this.TDSReport.invalid || this.validation) {
+      this.TDSReport.markAllAsTouched();
+      return;
+    }
+
+    const fromdate = formatDate(this.TDSReport.value.fromDate, 'dd-MMM-yyyy', 'en-IN');
+    const todate = formatDate(this.TDSReport.value.toDate, 'dd-MMM-yyyy', 'en-IN');
+
+    this.isLoading = true;
+
+    this.tdsService.getTdsReport(fromdate, todate, this.section).subscribe({
+      next: (result: never[]) => {
+        this.gridData = result ?? [];
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        this.commonService.showErrorMessage(err);
+        this.isLoading = false;
+      }
+    });
+  }
 
 }
 

@@ -26,24 +26,57 @@ export class BankBookService {
   //     }
   //   }
 
-  GetBankNames(): Observable<any> {
-    let params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
+  // GetBankNames(): Observable<any> {
+  //   let params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
 
-    return this._CommonService
-      .getAPI('/Accounting/AccountingReports/GetBankNames', params, 'YES')
-      .pipe(
-        catchError((e:any) => {
-          this._CommonService.showErrorMessage(e);
-          return throwError(() => e);
-        })
-      );
+  //   return this._CommonService
+  //     .getAPI('/Accounting/AccountingReports/GetBankNames', params, 'YES')
+  //     .pipe(
+  //       catchError((e:any) => {
+  //         this._CommonService.showErrorMessage(e);
+  //         return throwError(() => e);
+  //       })
+  //     );
+  // }
+
+  // GetBankNames(branchSchema: any,
+  //   branchName: any,
+  //   companyCode: any,
+  //   branchCode: any): Observable<any> {
+  //     debugger;
+  //   let params = new HttpParams()
+  //     .set('BranchSchema', branchSchema)
+  //     .set('BranchName', branchName)
+  //     .set('CompanyCode', companyCode)
+  //     .set('BranchCode', branchCode);
+
+  //   return this._CommonService
+  //     .getAPI('/Accounts/BankNames', params, 'YES')
+  //     .pipe(
+  //       catchError((e: any) => {
+  //         this._CommonService.showErrorMessage(e);
+  //         return throwError(() => e);
+  //       })
+  //     );
+  // }
+
+
+
+  GetBankNames(GlobalSchema:any, AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+      debugger;
+    const params = new HttpParams()
+      .set('GlobalSchema', GlobalSchema)
+      .set('AccountsSchema', AccountsSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
   }
   GetBankBookReportbyDates(FromDate: string | number | boolean, ToDate: string | number | boolean, _pBankAccountId: string | number | boolean): Observable<any> {
-   
-      let params = new HttpParams().set('FromDate', FromDate).set('ToDate', ToDate).set('_pBankAccountId', _pBankAccountId).set('BranchSchema', this._CommonService.getschemaname());
-      return this._CommonService.getAPI('/Accounting/AccountingReports/GetBankBookDetails', params, 'YES')
+
+    let params = new HttpParams().set('FromDate', FromDate).set('ToDate', ToDate).set('_pBankAccountId', _pBankAccountId).set('BranchSchema', this._CommonService.getschemaname());
+    return this._CommonService.getAPI('/Accounting/AccountingReports/GetBankBookDetails', params, 'YES')
       .pipe(
-        catchError((e:any) => {
+        catchError((e: any) => {
           this._CommonService.showErrorMessage(e);
           return throwError(() => e);
         })
@@ -51,11 +84,11 @@ export class BankBookService {
   }
   GetBrsReportBankDebitsBankCredits(fromdate: string | number | boolean, todate: string | number | boolean, bankid: string | number | boolean, transtype: string | number | boolean, branchschema: any): Observable<any> {
 
-      let params = new HttpParams().set('fromdate', fromdate).set('todate', todate).set('bankid', bankid).set('transtype', transtype).set('branchschema', this._CommonService.getschemaname());
-      return this._CommonService.getAPI('/ChitTransactions/ChitReports/GetBrsReportBankDebitsBankCredits', params, 'YES')
-      
-       .pipe(
-        catchError((e:any) => {
+    let params = new HttpParams().set('fromdate', fromdate).set('todate', todate).set('bankid', bankid).set('transtype', transtype).set('branchschema', this._CommonService.getschemaname());
+    return this._CommonService.getAPI('/ChitTransactions/ChitReports/GetBrsReportBankDebitsBankCredits', params, 'YES')
+
+      .pipe(
+        catchError((e: any) => {
           this._CommonService.showErrorMessage(e);
           return throwError(() => e);
         })
@@ -63,22 +96,22 @@ export class BankBookService {
   }
   GetBankEntriesDetails2(fromDate: string, toDate: string, branchName: string, ReportType: string): Observable<any> {
 
-      let params = new HttpParams()
-        .set('FromDate', fromDate || '')
-        .set('ToDate', toDate || '')
-        .set('BranchSchema', this._CommonService.getschemaname()).set('ReportType', ReportType || '');
+    let params = new HttpParams()
+      .set('FromDate', fromDate || '')
+      .set('ToDate', toDate || '')
+      .set('BranchSchema', this._CommonService.getschemaname()).set('ReportType', ReportType || '');
 
-      if (branchName) {
-        params = params.set('BranchName', branchName);
-      }
+    if (branchName) {
+      params = params.set('BranchName', branchName);
+    }
 
-      return this._CommonService.getAPI(
-        '/Accounting/AccountingReports/GetBankEntriesDetails',
-        params,
-        'YES'
-      )
-     .pipe(
-        catchError((e:any) => {
+    return this._CommonService.getAPI(
+      '/Accounting/AccountingReports/GetBankEntriesDetails',
+      params,
+      'YES'
+    )
+      .pipe(
+        catchError((e: any) => {
           this._CommonService.showErrorMessage(e);
           return throwError(() => e);
         })

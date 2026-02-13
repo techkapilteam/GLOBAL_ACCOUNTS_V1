@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
@@ -11,6 +11,7 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { NumberToWordsPipe } from './number-to-words.pipe';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from 'primeng/table';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-re-print',
@@ -24,6 +25,7 @@ export class RePrintComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private commonService = inject(CommonService);
+  private destroyRef = inject(DestroyRef);
   private accountingReportsService = inject(AccountingReportsService);
   private chitService = inject(ChitTransactionsService);
   // private subscriberJVService = inject(SubscriberJV);
@@ -35,12 +37,15 @@ export class RePrintComponent implements OnInit {
   ReprintRepotForm!: FormGroup;
 currencysymbol = '₹';
   lstreporttype: any[] = [];
-  userBranchType: any;
+  // userBranchType: any;
   userbranchtxtboxshowhide = true;
   userbranchngselectshowhide = false;
   form15UID = false;
   showForm15HGrid = false;
   Showhide = false;
+  userBranchType = sessionStorage.getItem("userBranchType");
+  loginBranchschema = sessionStorage.getItem('loginBranchSchemaname');
+  branchName = sessionStorage.getItem("branchname");
 
   pageCriteria: PageCriteria = new PageCriteria();
   // commencementgridPage = new Page();
@@ -52,9 +57,9 @@ currencysymbol = '₹';
   gstvoucherprintdata: any[] = [];
 
   branchcode: any;
-  branchName: any;
+  // branchName: any;
   legalChitReceipt: any;
-  loginBranchschema: any;
+  // loginBranchschema: any;
   reporttype: any;
 
   ReceiptColunmForLegal = false;
@@ -84,7 +89,7 @@ currencysymbol = '₹';
       schemaname: ['schemaname', [Validators.required, Validators.minLength(3)]],
       samebranchcode: [this.commonService.getschemaname(), Validators.required],
       TransType: [null, Validators.required],
-      Transno: [null],
+      Transno: [null,Validators.required],
       branch_name: [null],
       panno: [null]
     });
@@ -134,73 +139,142 @@ currencysymbol = '₹';
     this.getduplicateReport();
   }
 
+  // getduplicateReport() {
+  //   this.ReprintRepotForm.markAllAsTouched();
+  //   this.ReprintRepotForm.updateValueAndValidity();
+
+  //   if (this.ReprintRepotForm.invalid) return;
+
+  //   const transNo = this.ReprintRepotForm.value.Transno;
+  //   const type = this.ReprintRepotForm.value.TransType;
+  //   this.Showhide = false;
+  //   this.griddata = [];
+
+  //   if (type === 'General Receipt') {
+  //     window.open('/#/GeneralReceiptReport?id=' +
+  //       btoa(`${transNo},General Receipt,Reprint,${this.commonService.getschemaname()}`),
+  //       "_blank");
+  //     return;
+  //   }
+
+  //   if (type === 'GST BILL') {
+  //     this.accountingTxnService
+  //       .Getgstvocuherprint(this.commonService.getschemaname(), transNo)
+  //       .subscribe((res: any) => {
+  //         if (res?.length) this.print();
+  //         else alert("Transaction No. Does Not Exist!");
+  //       });
+  //     return;
+  //   }
+  // }
   getduplicateReport() {
-    this.ReprintRepotForm.markAllAsTouched();
-    this.ReprintRepotForm.updateValueAndValidity();
 
-    if (this.ReprintRepotForm.invalid) return;
-
-    const transNo = this.ReprintRepotForm.value.Transno;
-    const type = this.ReprintRepotForm.value.TransType;
-    this.Showhide = false;
-    this.griddata = [];
-
-    if (type === 'General Receipt') {
-      window.open('/#/GeneralReceiptReport?id=' +
-        btoa(`${transNo},General Receipt,Reprint,${this.commonService.getschemaname()}`),
-        "_blank");
+    if (this.ReprintRepotForm.invalid) {
+      this.ReprintRepotForm.markAllAsTouched();
       return;
     }
 
-    if (type === 'GST BILL') {
+    const transType = this.ReprintRepotForm.value.TransType;
+    const transNo = this.ReprintRepotForm.value.Transno;
+
+    if (transType === 'General Receipt') {
+
+      this.accountingReportsService
+        .GetGeneralReceiptbyId(transNo, this.commonService.getschemaname())
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(res => {
+
+          if (res) {
+            const receipt = btoa(`${transNo},General Receipt,Reprint,${this.commonService.getschemaname()}`);
+            window.open('/#/GeneralReceiptReport?id=' + receipt, "_blank");
+          } else {
+            alert("Transaction No. Does Not Exist!");
+          }
+        });
+    }
+
+    if (transType === 'Journal Voucher') {
+      const receipt = btoa(`${transNo},Journal Voucher,Reprint`);
+      window.open('/#/JournalVoucherReport?id=' + receipt, "_blank");
+    }
+
+    if (transType === 'GST BILL') {
+
       this.accountingTxnService
         .Getgstvocuherprint(this.commonService.getschemaname(), transNo)
-        .subscribe((res: any) => {
-          if (res?.length) this.print();
-          else alert("Transaction No. Does Not Exist!");
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(res => {
+
+          if (res?.length > 0) {
+            this.gstvoucherprintdata = res;
+            this.print();
+          } else {
+            alert("Transaction No. Does Not Exist!");
+          }
         });
-      return;
     }
   }
+  
 
-  reportchange_Change(selectedType: any): void {
+  // reportchange_Change(selectedType: any): void {
 
-    this.selectedReport = selectedType;
+  //   this.selectedReport = selectedType;
 
-    const transNoCtrl = this.ReprintRepotForm.get('Transno');
-    const panCtrl = this.ReprintRepotForm.get('panno');
-    const branchCtrl = this.ReprintRepotForm.get('branch_name');
+  //   const transNoCtrl = this.ReprintRepotForm.get('Transno');
+  //   const panCtrl = this.ReprintRepotForm.get('panno');
+  //   const branchCtrl = this.ReprintRepotForm.get('branch_name');
 
-    this.userbranchtxtboxshowhide = true;
-    this.userbranchngselectshowhide = false;
+  //   this.userbranchtxtboxshowhide = true;
+  //   this.userbranchngselectshowhide = false;
+  //   this.form15UID = false;
+  //   this.Showhide = false;
+
+  //   transNoCtrl?.clearValidators();
+  //   panCtrl?.clearValidators();
+  //   branchCtrl?.clearValidators();
+
+  //   if (selectedType === 'Verification Charges') {
+  //     this.userbranchtxtboxshowhide = false;
+  //     this.userbranchngselectshowhide = true;
+  //     this.Showhide = true;
+
+  //     transNoCtrl?.setValue(null);
+  //     branchCtrl?.setValidators([Validators.required]);
+  //   }
+  //   else if (selectedType === 'Form 15H') {
+  //     this.userbranchtxtboxshowhide = false;
+  //     this.form15UID = true;
+  //     panCtrl?.setValidators([Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]);
+  //   }
+  //   else {
+  //     this.userbranchtxtboxshowhide = true;
+  //     transNoCtrl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+  //   }
+
+  //   transNoCtrl?.updateValueAndValidity();
+  //   panCtrl?.updateValueAndValidity();
+  //   branchCtrl?.updateValueAndValidity();
+  // }
+  reportchange_Change(event: any) {
+
+    this.ReprintRepotForm.patchValue({
+      TransType: event.reporttype,
+      panno: null
+    });
+
+    this.reporttype = event.reporttype;
     this.form15UID = false;
-    this.Showhide = false;
+    this.showForm15HGrid = false;
 
-    transNoCtrl?.clearValidators();
-    panCtrl?.clearValidators();
-    branchCtrl?.clearValidators();
-
-    if (selectedType === 'Verification Charges') {
-      this.userbranchtxtboxshowhide = false;
-      this.userbranchngselectshowhide = true;
-      this.Showhide = true;
-
-      transNoCtrl?.setValue(null);
-      branchCtrl?.setValidators([Validators.required]);
-    }
-    else if (selectedType === 'Form 15H') {
-      this.userbranchtxtboxshowhide = false;
+    if (event.reporttype === 'Form 15H') {
       this.form15UID = true;
-      panCtrl?.setValidators([Validators.pattern('^[A-Z]{5}[0-9]{4}[A-Z]{1}$')]);
-    }
-    else {
-      this.userbranchtxtboxshowhide = true;
-      transNoCtrl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+      this.ReprintRepotForm.get('panno')?.setValidators(Validators.required);
+      this.ReprintRepotForm.get('panno')?.updateValueAndValidity();
+      return;
     }
 
-    transNoCtrl?.updateValueAndValidity();
-    panCtrl?.updateValueAndValidity();
-    branchCtrl?.updateValueAndValidity();
+    this.ReprintRepotForm.get('panno')?.clearValidators();
+    this.ReprintRepotForm.get('panno')?.updateValueAndValidity();
   }
 
   print(): void {

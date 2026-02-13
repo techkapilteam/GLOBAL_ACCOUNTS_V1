@@ -60,8 +60,9 @@ export class GstReportComponent implements OnInit {
     this.initDatePickers();
     this.setPageModel();
     this.buildForm();
-    this.setDummyLedgers();
-    this.loginbranchschema = 'DUMMY_SCHEMA';
+    // this.setDummyLedgers();
+    this.getLedger();
+    this.loginbranchschema = sessionStorage.getItem('loginBranchSchemaname');
   }
 
   initDatePickers() {
@@ -80,11 +81,10 @@ export class GstReportComponent implements OnInit {
       pledgerid: [null, Validators.required],
       pledgername: [''],
       receiptsPayments: ['receipts'],
-      fromdate: [today],
-      todate: [today]
+      fromdate: [today,Validators.required],
+      todate: [today,Validators.required]
     },{ validators: this.dateRangeValidator() });
     this.gstReportType('receipts');
-    this.blurEventAllControls(this.GstReportForm);
   }
   dateRangeValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
@@ -113,114 +113,210 @@ export class GstReportComponent implements OnInit {
     this.pageCriteria.footerPageHeight = 50;
   }
 
-  setDummyLedgers() {
-    this.ledgeraccountslist = [
-      { pledgername: 'GST Sales Ledger' },
-      { pledgername: 'GST Purchase Ledger' },
-      { pledgername: 'GST Output Ledger' }
-    ];
+  // setDummyLedgers() {
+  //   this.ledgeraccountslist = [
+  //     { pledgername: 'GST Sales Ledger' },
+  //     { pledgername: 'GST Purchase Ledger' },
+  //     { pledgername: 'GST Output Ledger' }
+  //   ];
+  // }
+  getLedger() {
+    this.reportService.GetGstLedgerAccountList('GST REPORT')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: res => this.ledgeraccountslist = res ?? [],
+        error: err => this.commonService.showErrorMessage(err)
+      });
   }
 
-  gstReportType(value: string) {
-    this.showreceipts = value === 'receipts';
-    this.showpayments = value === 'payments';
-    this.showhidegstreport = false;
-    this.showhidegstsummary = false;
-    this.showicons = false;
-  }
+  // gstReportType(value: string) {
+  //   this.showreceipts = value === 'receipts';
+  //   this.showpayments = value === 'payments';
+  //   this.showhidegstreport = false;
+  //   this.showhidegstsummary = false;
+  //   this.showicons = false;
+  // }
 
   ledgerName_Change(event: any) {
     this.GstReportForm.patchValue({ pledgername: event?.pledgername || '' });
   }
 
-  click_GstReport() {
-    this.GstReportForm.markAllAsTouched();
+  click_GstReport(): void {
 
-  if (this.GstReportForm.errors?.['dateRangeInvalid']) {
-    alert('From Date should not be greater than To Date');
-    this.GstReportForm.get('todate')?.setValue(null);  
+  this.GstReportDetails = [];
+  this.GstSummaryDetails = [];
+  this.GstReportDetailsforAll = [];
+
+  if (this.showreceipts) {
+
+    if (this.GstReportForm.invalid) {
+      this.GstReportForm.markAllAsTouched();
+      return;
+    }
+
+    this.disablesavebutton = true;
+    this.savebutton = 'Processing';
+
+    const fromdate: Date = this.GstReportForm.value.month;
+    const ledgername = this.GstReportForm.value.pledgerid;
+
+    const todate = new Date(fromdate.getFullYear(), fromdate.getMonth() + 1, 0);
+    const from = this.commonService.getFormatDateNormal(fromdate);
+    const to = this.commonService.getFormatDateNormal(todate);
+
+    this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
+
+    this.tdsReportService
+      .getGstReportDetails(from, to, 'GST REPORT', ledgername)
+      .subscribe({
+        next: (res: any[]) => {
+
+          if (ledgername === 'ALL') {
+            this.handleSingleLedgerReport(res);
+          } else {
+            this.handleSingleLedgerReport(res);
+          }
+
+          this.disablesavebutton = false;
+          this.savebutton = 'GST Print';
+        },
+        error: () => {
+          this.disablesavebutton = false;
+          this.savebutton = 'GST Print';
+        }
+      });
+
+  } else {
+    this.loadGstPayments();
+  }
+}
+private handleSingleLedgerReport(res: any[]): void {
+
+  this.GstReportDetails = res ?? [];
+  this.GSTExcel = res ?? [];
+
+  this.showicons = this.GstReportDetails.length > 0;
+  this.showhidegstreport = true;
+  this.showhidegstsummary = false;
+
+  this.cleanObjectValues(this.GstReportDetails);
+  this.updatePagination(this.GstReportDetails.length);
+}
+private cleanObjectValues(data: any[]): void {
+  data.forEach(item => {
+    Object.keys(item).forEach(key => {
+      if (JSON.stringify(item[key]) === '{}') {
+        item[key] = '';
+      }
+    });
+  });
+}
+private loadGstPayments(): void {
+
+  this.disablesavebutton = true;
+  this.savebutton = 'Processing';
+  this.gstpaymentsdata = [];
+
+  const fromdate = this.commonService.getFormatDateNormal(this.GstReportForm.value.fromdate);
+  const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
+  const branchschema = this.loginbranchschema;
+
+  this.tdsReportService.Getgstreport(branchschema, fromdate, todate)
+    .subscribe({
+      next: (result: any[]) => {
+        this.gstpaymentsdata = result ?? [];
+        this.updatePagination(this.gstpaymentsdata.length);
+        this.disablesavebutton = false;
+        this.savebutton = 'GST Print';
+      },
+      error: () => {
+        this.disablesavebutton = false;
+        this.savebutton = 'GST Print';
+      }
+    });
+}
+click_GstSummary(): void {
+
+  this.GstReportDetails = [];
+  this.GstSummaryDetails = [];
+
+  if (!this.showreceipts) {
+    this.commonService.showWarningMessage('No data');
     return;
   }
 
-  if (this.GstReportForm.invalid) return;
-    this.GstReportDetails = [];
-    this.GstSummaryDetails = [];
-    this.gstpaymentsdata = [];
-    this.showhidegstsummary = false;
-    this.showicons = false;
-
-    if (this.showreceipts) {
-      this.month = this.datePipe.transform(this.GstReportForm.value.month, "MMM-yyyy");
-
-      this.GstReportDetails = [
-        { groupcode: 'CH001', gstnumber: '29ABCDE1234F1Z5', accountname: 'ABC Traders', city: 'Bangalore', state: 'Karnataka', receiptamount: 15000 },
-        { groupcode: 'CH002', gstnumber: '27PQRSX5678L1Z2', accountname: 'XYZ Enterprises', city: 'Mumbai', state: 'Maharashtra', receiptamount: 22000 }
-      ];
-
-      this.GSTExcel = this.GstReportDetails;
-      this.showicons = true;
-      this.showhidegstreport = true;
-
-    } else {
-      this.gstpaymentsdata = [
-        {
-          pgstvoucherno: 'GST001',
-          vendorname: 'ABC Traders',
-          state: 'Telangana',
-          gstVoucherDate: new Date(),
-          taxableAmount: 10000,
-          cgstAmount: 900,
-          sgstAmount: 900,
-          igstAmount: 0,
-          invoice_total_amount: 11800
-        }
-      ];
-    }
+  if (this.GstReportForm.invalid) {
+    this.GstReportForm.markAllAsTouched();
+    return;
   }
 
-  click_GstSummary() {
-    this.showhidegstreport = false;
-    this.showicons = false;
+  const fromdate: Date = this.GstReportForm.value.month;
+  const todate = new Date(fromdate.getFullYear(), fromdate.getMonth() + 1, 0);
 
-    // this.GstSummaryDetails = [
-    //   { companyname: 'ABC Traders', state: 'Karnataka', count: 5 },
-    //   { companyname: 'XYZ Enterprises', state: 'Maharashtra', count: 3 }
-    // ];
+  const from = this.commonService.getFormatDateNormal(fromdate);
+  const to = this.commonService.getFormatDateNormal(todate);
+  const ledgername = this.GstReportForm.value.pledgerid;
 
-    this.GSTSummaryExcel = this.GstSummaryDetails;
-    this.showhidegstsummary = true;
-  }
+  this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
 
-  checkValidations(group: FormGroup, isValid: boolean): boolean {
-    Object.keys(group.controls).forEach(key => {
-      isValid = this.getValidationByControl(group, key, isValid);
+  this.tdsReportService
+    .getGstReportDetails(from, to, 'GST SUMMARY', ledgername)
+    .subscribe((res: any[]) => {
+
+      this.GstSummaryDetails = res ?? [];
+      this.GSTSummaryExcel = res ?? [];
+
+      this.showicons = this.GstSummaryDetails.length > 0;
+      this.showhidegstreport = false;
+      this.showhidegstsummary = true;
+
+      this.updatePagination(this.GstSummaryDetails.length);
     });
-    return isValid;
-  }
+}
+private updatePagination(totalRows: number): void {
 
-  getValidationByControl(formGroup: FormGroup, key: string, isValid: boolean): boolean {
-    const control = formGroup.get(key);
-    if (!control) return isValid;
+  this.pageCriteria.totalrows = totalRows;
+  this.pageCriteria.TotalPages = Math.ceil(totalRows / this.pageCriteria.pageSize);
 
-    if (control instanceof FormGroup) {
-      return this.checkValidations(control, isValid);
-    }
+  this.pageCriteria.currentPageRows =
+    totalRows < this.pageCriteria.pageSize
+      ? totalRows
+      : this.pageCriteria.pageSize;
+}
+gstReportType(type: string): void {
 
-    this.GstReportValidationErrors[key] = '';
+  this.GstReportDetails = [];
+  this.GstSummaryDetails = [];
+  this.gstpaymentsdata = [];
+  this.showhidegstreport = false;
 
-    if (control.invalid && (control.dirty || control.touched)) {
-      isValid = false;
-    }
-    return isValid;
-  }
+  if (type === 'receipts') {
 
-  blurEventAllControls(group: FormGroup) {
-    Object.keys(group.controls).forEach(key => {
-      group.get(key)?.valueChanges
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.getValidationByControl(group, key, true));
+    this.showreceipts = true;
+    this.showpayments = false;
+
+    this.GstReportForm.get('pledgerid')?.setValidators([Validators.required]);
+    this.GstReportForm.get('fromdate')?.clearValidators();
+    this.GstReportForm.get('todate')?.clearValidators();
+
+  } else {
+
+    this.showpayments = true;
+    this.showreceipts = false;
+
+    this.GstReportForm.patchValue({
+      fromdate: new Date(),
+      todate: new Date(),
+      pledgerid: null
     });
+
+    this.GstReportForm.get('fromdate')?.setValidators([Validators.required]);
+    this.GstReportForm.get('todate')?.setValidators([Validators.required]);
+    this.GstReportForm.get('pledgerid')?.clearValidators();
   }
+
+  this.GstReportForm.updateValueAndValidity();
+}
 }
 
 

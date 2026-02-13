@@ -20,11 +20,11 @@
     </div>
 
     <div class="col-xl-2 col-md-2 form-group">
-      <label>From Date</label>
+      <label>{{ accountSummaryForm.get('asOn')?.value ? 'Date' : 'From Date' }}</label>
       <input type="text"
              class="form-control"
              bsDatepicker
-             [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
+             [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
              formControlName="fromDate"
              readonly />
     </div>
@@ -34,7 +34,7 @@
       <input type="text"
              class="form-control"
              bsDatepicker
-             [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
+             [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
              formControlName="toDate"
              readonly />
     </div>
@@ -44,6 +44,7 @@
       <label class="required-field">Ledger</label>
 
       <p-multiSelect
+      class="form-control"
         [options]="ledgerAccountsList"
         optionLabel="pledgername"
         optionValue="pledgerid"
