@@ -145,10 +145,12 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('_recordid', bankid).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/ChequesOnHand/GetBankBalance', params, 'YES');
   }
+
   GetCashonhandBalance() {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/ChequesOnHand/GetCashonhandBalance', params, 'YES');
   }
+  
   GetChequesIssuedData(bankid:any, startindex:any, endindex:any,modeofreceipt:any,_searchText:any,printorview:any): Observable<any> {
     const params = new HttpParams().set('_BankId', bankid).set('BranchSchema', this._CommonService.getschemaname()).set('startindex',startindex).set('endindex',endindex).set('modeofreceipt',modeofreceipt).set('searchtext',_searchText).set('printorview',printorview);
     return this._CommonService.getAPI('/ChequesOnHand/GetChequesIssued', params, 'YES')

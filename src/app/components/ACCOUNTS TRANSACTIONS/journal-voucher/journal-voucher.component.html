@@ -133,13 +133,13 @@
 
                                 <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentDetails()"><img
                                         src="assets/images/icon-cancel-white.svg" width="20px" height="20px"
-                                        class="mr-3" appButtonDoubleClick >Clear</a>
-                                        <!-- [debounceTime]="500" -->
+                                        class="mr-3" appButtonDoubleClick>Clear</a>
+                                <!-- [debounceTime]="500" -->
                                 <a data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot"
-                                    aria-selected="false" appButtonDoubleClick 
+                                    aria-selected="false" appButtonDoubleClick
                                     (debounceClick)="addPaymentDetails()"><img src="assets/images/icon-add-blue.svg"
                                         width="20px" height="20px" class="mr-3">Add</a>
-                                        <!-- [debounceTime]="500" -->
+                                <!-- [debounceTime]="500" -->
                             </div>
                         </div>
 
@@ -239,10 +239,9 @@
                                                         <div class="d-flex">
                                                             <div class="form-group mr-1 col-md-4" *ngIf="showgstamount">
                                                                 <label>Amount</label>
-                                                                <label
-                                                                    class="form-control col-md-12">
+                                                                <label class="form-control col-md-12">
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pgstamount.value}} -->
-                                                                     {{paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pgstamount')?.value
+                                                                    {{paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pgstamount')?.value
                                                                     ?? 0}}
                                                                 </label>
                                                             </div>
@@ -250,15 +249,16 @@
                                                                 <label>
                                                                     <!-- IGST({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pigstpercentage.value}}) -->
                                                                     IGST({{
-    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstpercentage')?.value ?? 0
-  }}%)
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstpercentage')?.value
+                                                                    ?? 0
+                                                                    }}%)
 
                                                                 </label>
-                                                                <label
-                                                                    class="col-md-12">
+                                                                <label class="col-md-12">
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pigstamount.value}} -->
 
-                                                                   {{  paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstamount')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstamount')?.value
                                                                     ?? 0}}
                                                                 </label>
                                                             </div>
@@ -266,16 +266,17 @@
                                                                 <label>
                                                                     <!-- CGST
                                                                     ({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pcgstpercentage.value}}) -->
-                                                                
-                                                                CGST({{
-    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstpercentage')?.value ?? 0
-  }}%)
-                                                                
+
+                                                                    CGST({{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstpercentage')?.value
+                                                                    ?? 0
+                                                                    }}%)
+
                                                                 </label>
-                                                                <label
-                                                                    class="col-md-12">
+                                                                <label class="col-md-12">
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pcgstamount.value}} -->
-                                                                    {{ paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstamount')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstamount')?.value
                                                                     ?? 0}}
                                                                 </label>
                                                                 <!--<input type="text" formControlName="pcgstpercentage" class="form-control col-md-12" />-->
@@ -283,12 +284,14 @@
                                                             <div class="form-group  mr-1 col-md-4" *ngIf="showsgst">
                                                                 <label>SGST
                                                                     <!-- ({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].psgstpercentage.value}}) -->
-                                                                    {{ paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstpercentage')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstpercentage')?.value
                                                                     ?? 0}}
 
                                                                 </label>
                                                                 <label class="col-md-12">
-                                                                   {{ paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstamount')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstamount')?.value
                                                                     ?? 0}}
 
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].psgstamount.value}} -->
@@ -303,12 +306,13 @@
                                                                 }}) -->
 
 
-                                                                UTGST({{
-    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('putgstpercentage')?.value ?? 0
-  }}%)
+                                                                    UTGST({{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('putgstpercentage')?.value
+                                                                    ?? 0
+                                                                    }}%)
 
                                                                     <!-- paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].putgstpercentage.value -->
-                                                                  
+
                                                                 </label>
                                                                 <label class="col-md-12">
                                                                     {{
@@ -519,7 +523,7 @@
 
 
 
-                              <p-table [value]="paymentslist" dataKey="ppartyname" [paginator]="false" [rows]="10"
+                            <p-table [value]="paymentslist" dataKey="ppartyname" [paginator]="false" [rows]="10"
                                 [showCurrentPageReport]="false" [resizableColumns]="true" columnResizeMode="fit"
                                 scrollable="true" scrollHeight="400px"
                                 styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
@@ -628,7 +632,7 @@
 
 
 
-                                  <p-table [value]="paymentslist" dataKey="pledgername" [rows]="10" [paginator]="false"
+                                <p-table [value]="paymentslist" dataKey="pledgername" [rows]="10" [paginator]="false"
                                     [resizableColumns]="true" columnResizeMode="fit" scrollable="true"
                                     scrollHeight="400px"
                                     styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">

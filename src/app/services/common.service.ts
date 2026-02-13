@@ -21,6 +21,15 @@ import { DatePipe } from '@angular/common';
   providedIn: 'root',
 })
 export class CommonService {
+  isNullOrEmptyString(chitgroupstatus: any) {
+    throw new Error('Method not implemented.');
+  }
+  getipaddress(): any {
+    throw new Error('Method not implemented.');
+  }
+  getcreatedby(): any {
+    throw new Error('Method not implemented.');
+  }
 
 
 

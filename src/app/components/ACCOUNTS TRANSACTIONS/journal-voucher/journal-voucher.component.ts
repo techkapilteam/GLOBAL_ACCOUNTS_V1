@@ -55,7 +55,7 @@ currencyCode = 'INR';
   showtds = true;
   showgstandtds = false;
   imageResponse: any;
-    currencySymbol: any;
+  currencySymbol: any;
   readonlydebit = false;
   readonlycredit = false;
   showgstamount = false;
