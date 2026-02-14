@@ -1,100 +1,102 @@
 <div class="section-content">
-  <div class="row">
-    <div class="col-8 d-flex flex-wrap align-items-center">
-        <!-- [routerLink]="['/Transactions', 'GeneralReceipt']"  -->
-      <a 
-       routerLink="/dashboard/accounts/accounts-transactions/general-receipt-new"
-      class="btn btn-primary border-0">New</a>
+
+  <!-- New Receipt Button -->
+  <div class="row mb-3">
+    <div class="col-8 d-flex align-items-center">
+      <a routerLink="/dashboard/accounts/accounts-transactions/general-receipt-new" class="btn btn-primary border-0">
+        New
+      </a>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col-md-12 col-xl-12">
-      <div class="row mb-4">
-        <div class="col-md-6 col-xl-6">
-          <div class="form-group mr-0 custom-search">
-            <div class="input-group">
-              <input type="text" class="form-control" (keyup)="filterDatatable($event)">
-            </div>
-          </div>
+  <!-- Search Filter -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="form-group custom-search">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search..." (keyup)="filterDatatable($event)">
         </div>
       </div>
+    </div>
+  </div>
 
-      <ngx-datatable
-        class="material expandable table"
-        [rows]="gridView"
-        [columnMode]="'force'"
-        [headerHeight]="50"
-        [scrollbarH]="false"
-        [footerHeight]="pageCriteria.footerPageHeight"
-        [rowHeight]="'auto'"
-        [limit]="pageCriteria.pageSize"
-  
+  <!-- PrimeNG Table -->
+  <div class="row">
+    <div class="col-12">
 
-        >
+      <p-table [value]="gridView" [paginator]="true" [rows]="pageCriteria.pageSize" [responsiveLayout]="'scroll'"
+        [loading]="loading" [rowsPerPageOptions]="[5,10,20]" (onPage)="onFooterPageChange($event)"
+        styleClass="material expandable table p-datatable-gridlines"
+        [currentPageReportTemplate]="'Page {currentPage} of {totalPages} ({totalRecords} items)'">
 
-        <ngx-datatable-column name="Actions" sortable="false" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-          <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-            <button class="btn btn-sm btn-primary" (click)="viewRow()">View</button>
-          </ng-template>
-        </ngx-datatable-column>
+        <!-- Table Header -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="header-center">Actions</th>
+            <th class="header-left">Receipt Date</th>
+            <th class="header-center">Receipt No.</th>
+            <th class="header-left">Payment Details</th>
+            <th class="header-right">Received Amount</th>
+            <th class="header-left" style="width:400px">Narration</th>
+          </tr>
+        </ng-template>
 
-        <ngx-datatable-column name="Receipt Date" sortable="false" prop="preceiptdate" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-          <ng-template ngx-datatable-cell-template let-row="row">
-            <span title="{{row.preceiptdate}}">{{row.preceiptdate}}</span>
-          </ng-template>
-        </ngx-datatable-column>
+        <!-- Table Body -->
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <!-- Actions -->
+            <td class="cell-center">
+              <button class="btn btn-sm btn-primary" (click)="viewRow(row)">
+                View
+              </button>
+            </td>
 
-        <ngx-datatable-column name="Receipt No." sortable="false" prop="preceiptid" [cellClass]="'cell-center'" [headerClass]="'header-center'">
-        </ngx-datatable-column>
+            <!-- Receipt Date -->
+            <td class="cell-left" [title]="row.preceiptdate">{{ row.preceiptdate }}</td>
 
-        <ngx-datatable-column name="Payment Details" sortable="false" prop="pmodofreceipt" [cellClass]="'cell-left'" [headerClass]="'header-left'">
-          <ng-template ngx-datatable-cell-template let-row="row">
-            <div *ngIf="row.pmodofreceipt === 'CASH'">
-              {{row.pmodofreceipt}}
-            </div>
-            <div *ngIf="row.pmodofreceipt !== 'CASH'">
-              {{row.pmodofreceipt}} ({{row.ptypeofpayment}} - {{row.pChequenumber}})
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
+            <!-- Receipt No -->
+            <td class="cell-center">{{ row.preceiptid }}</td>
 
-        <ngx-datatable-column name="Received Amount" sortable="false" prop="ptotalreceivedamount" [cellClass]="'cell-right'" [headerClass]="'header-right'">
-          <ng-template ngx-datatable-cell-template let-row="row">
-            {{currencySymbol}} {{row.ptotalreceivedamount |currency }}
-          </ng-template>
-        </ngx-datatable-column>
+            <!-- Payment Details -->
+            <td class="cell-left">
+              <ng-container *ngIf="row.pmodofreceipt === 'CASH'; else nonCash">
+                {{ row.pmodofreceipt }}
+              </ng-container>
+              <ng-template #nonCash>
+                {{ row.pmodofreceipt }} ({{ row.ptypeofpayment }} - {{ row.pChequenumber }})
+              </ng-template>
+            </td>
 
-        <ngx-datatable-column name="Narration" sortable="false" prop="pnarration" [cellClass]="'cell-left'" [headerClass]="'header-left'" [width]="400">
-          <ng-template ngx-datatable-cell-template let-row="row">
-            <div *ngIf="row.pnarration === ''">-- NA --</div>
-            <div *ngIf="row.pnarration !== ''" title="{{row.pnarration}}">
-              {{row.pnarration}}
-            </div>
-          </ng-template>
-        </ngx-datatable-column>
+            <!-- Received Amount -->
+            <td class="cell-right">
+              {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
+            </td>
 
-        <ngx-datatable-footer *ngIf="gridView">
-          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-curPage="curPage">
-            <div style="padding: 5px 10px" *ngIf="gridView.length > 0">
-              <!-- <div>Page {{pageCriteria.CurrentPage}} of {{pageCriteria.TotalPages}} ({{ pageCriteria.totalrows }} items)</div> -->
-            </div>
-            <!-- <datatable-pager
-              [pagerLeftArrowIcon]="'datatable-icon-left'"
-              [pagerRightArrowIcon]="'datatable-icon-right'"
-              [pagerPreviousIcon]="'datatable-icon-prev'"
-              [pagerNextIcon]="'datatable-icon-skip'"
-          
-             
-              
-              (change)="onFooterPageChange($event)"
-              [hidden]="!((rowCount / pageSize) > 0)"
-            >
-            </datatable-pager> -->
-          </ng-template>
-        </ngx-datatable-footer>
+            <!-- Narration -->
+            <td class="cell-left" style="width:400px">
+              <span *ngIf="!row.pnarration">-- NA --</span>
+              <span *ngIf="row.pnarration" [title]="row.pnarration">{{ row.pnarration }}</span>
+            </td>
+          </tr>
+        </ng-template>
 
-      </ngx-datatable>
+        <!-- Table Footer -->
+        <ng-template pTemplate="footer">
+          <tr *ngIf="gridView?.length">
+            <td colspan="6">
+              Page {{ pageCriteria.pageNumber }} of {{ pageCriteria.TotalPages }}
+              ({{ pageCriteria.totalrows }} items)
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6" class="text-center">No records found</td>
+          </tr>
+        </ng-template>
+
+      </p-table>
     </div>
   </div>
 </div>
+
