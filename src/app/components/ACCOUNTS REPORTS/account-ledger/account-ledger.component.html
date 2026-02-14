@@ -63,7 +63,7 @@
                 <label class="required-field">Ledger</label>
 
                 <ng-select [items]="ledgeraccountslist" formControlName="pledgerid" bindLabel="pledgername"
-                  bindValue="pledgerid" groupBy="pAccounttype" placeholder="Select" (change)="onLedgerChange($event)"
+                  bindValue="pledgerid" groupBy="pAccounttype" appendTo="Body" placeholder="Select" (change)="onLedgerChange($event)"
                   [searchable]="true" [clearable]="false">
                 </ng-select>
 
