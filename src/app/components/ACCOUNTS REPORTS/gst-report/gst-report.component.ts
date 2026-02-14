@@ -120,8 +120,16 @@ export class GstReportComponent implements OnInit {
   //     { pledgername: 'GST Output Ledger' }
   //   ];
   // }
+  // getLedger() {
+  //   this.reportService.GetGstLedgerAccountList('GST REPORT')
+  //     .pipe(takeUntilDestroyed(this.destroyRef))
+  //     .subscribe({
+  //       next: res => this.ledgeraccountslist = res ?? [],
+  //       error: err => this.commonService.showErrorMessage(err)
+  //     });
+  // }
   getLedger() {
-    this.reportService.GetGstLedgerAccountList('GST REPORT')
+    this.reportService.GetGstLedgerAccountList('GST REPORT','accounts','KAPILCHITS','KLC01')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: res => this.ledgeraccountslist = res ?? [],

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { mergeMap, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, catchError, switchMap } from 'rxjs/operators';
@@ -51,6 +51,152 @@ export class CommonService {
       reportname, rows, headers, orientation, total
     });
   }
+  _downloadchqrecReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridHeaders: string[],
+    columnStyles: any,
+    pageType: 'a4' | 'landscape',
+    betweenOrAsOn: string,
+    fromDate: string,
+    toDate: string | null,
+    printOrPdf: 'Pdf' | 'Print',
+    amount: string
+  ): void {
+    const company = this._getCompanyDetails();
+    const address = this.getcompanyaddress();
+    const logo = this.getKapilGroupLogo();
+    const rupeeImage = this._getRupeeSymbol();
+    const currencySymbol = this.currencysymbol;
+    const today = this.pdfProperties('Date');
+
+    const doc = new jsPDF({
+      orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    const totalPagesExp = '{total_pages_count_string}';
+    const leftMargin = 15;
+    const rightMargin = 15;
+
+    const currencyColumnMap: Record<string, number[]> = {
+      'Recived Cheque Details': [3],
+      'Cheques On Hand': [2],
+      'Cheques In Bank': [2],
+      'Cheques Issued': [1],
+      'Bid Payable Adjustment': [2, 4, 5],
+      'Initial Payment Voucher': [4],
+      'PS List': [3, 4, 5, 6, 7, 8],
+      'TDS Report': [4, 5, 6],
+      'TDS': [5, 6],
+      'Subscriber Jv': [3, 4, 5]
+    };
+
+    const shouldDrawCurrency = (columnIndex: number): boolean =>
+      currencySymbol === '₹' &&
+      currencyColumnMap[reportName]?.includes(columnIndex);
+
+    autoTable(doc, {
+      head: [gridHeaders],
+      body: gridData,
+      theme: 'grid',
+      startY: 48,
+      columnStyles,
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right' | 'justify',
+        fontSize: Number(this.pdfProperties('Header Fontsize'))
+      },
+      styles: {
+        fontSize: Number(this.pdfProperties('Cell Fontsize')),
+        cellPadding: 1,
+        overflow: 'linebreak'
+      },
+      didDrawPage: (data: any) => {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        if (doc.getNumberOfPages() === 1) {
+          doc.addImage(logo, 'JPEG', 10, 5, 30, 15);
+          doc.setFontSize(14);
+          // doc.text(company.pCompanyName, pageWidth / 2, 12, undefined, undefined, 'center');
+          const companyName = company.pCompanyName;
+          const textWidth = doc.getTextWidth(companyName);
+          doc.text(companyName, (pageWidth - textWidth) / 2, 12);
+          doc.setFontSize(9);
+          doc.text(address, pageWidth / 2, 18, { align: 'center' });
+          doc.setFontSize(12);
+          doc.text(reportName, pageWidth / 2, 30, { align: 'center' });
+          doc.setFontSize(9);
+          doc.text(`Branch : ${company.pBranchname}`, pageWidth - 60, 40);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between : ${fromDate} And ${toDate}`, 15, 40);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As on : ${fromDate}`, 15, 40);
+          }
+
+          doc.line(10, 45, pageWidth - leftMargin - rightMargin, 45);
+        }
+
+        const pageNumber =
+          'Page ' +
+          doc.getNumberOfPages() +
+          (typeof doc.putTotalPages === 'function'
+            ? ` of ${totalPagesExp}`
+            : '');
+
+        doc.line(
+          10,
+          pageHeight - 10,
+          pageWidth - leftMargin - rightMargin,
+          pageHeight - 10
+        );
+
+        doc.setFontSize(9);
+        doc.text(`Printed on : ${today}`, 10, pageHeight - 5);
+        doc.text(pageNumber, pageWidth - 30, pageHeight - 5);
+      },
+      didDrawCell: (data: any) => {
+        if (
+          data.cell.section === 'body' &&
+          shouldDrawCurrency(data.column.index) &&
+          data.cell.raw
+        ) {
+          const textPos = data.cell.textPos;
+          doc.addImage(
+            rupeeImage,
+            'JPEG',
+            textPos.x - data.cell.contentWidth,
+            textPos.y + 0.5,
+            1.5,
+            1.5
+          );
+        }
+      }
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY || 60;
+
+    doc.setFontSize(10);
+    doc.text('Total : ', 45, finalY + 10);
+    doc.text(amount, 90, finalY + 10);
+
+    if (currencySymbol === '₹') {
+      doc.addImage(rupeeImage, 'JPEG', 85, finalY + 8, 1.8, 1.8);
+    }
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printOrPdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else {
+      this.setiFrameForPrint(doc);
+    }
+  }
+
 
   exportAsExcelFile(json: any[], excelFileName: string): void {
     import("xlsx").then(xlsx => {
@@ -189,7 +335,7 @@ export class CommonService {
   private apiHostUrl: string | null = null;
 
   currencysymbol = sessionStorage.getItem("currencyformat");
-  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe) {
+  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe, @Inject(LOCALE_ID) private locale: string) {
     this.pCreatedby = 'admin'; // or from auth/user session
     this.ipaddress = '127.0.0.1';
     console.log('DatePipe injected:', this.datepipe);
@@ -394,38 +540,64 @@ export class CommonService {
   //   this.toastr.error(errormsg, "Error!", { timeOut: this.messageShowTimeOut });
   // }
 
+  // pdfProperties(propertyType: string): string | number {
+  //   switch (propertyType) {
+  //     case 'Date': {
+  //       const time = formatDate(
+  //         new Date(),
+  //         'dd-MMM-yyyy/h:mm:ss a',
+  //         'en-IN'
+  //       ).split('/')[1];
+
+  //       return `${this.getFormatDateGlobal(new Date())} ${time}`;
+  //     }
+
+  //     case 'Header Color':
+  //       return '#0b4093';
+
+  //     case 'Header Color1':
+  //       return 'white';
+
+  //     case 'Header Alignment':
+  //       return 'center';
+
+  //     case 'Header Fontsize':
+  //     case 'Cell Fontsize':
+  //       return 7;
+
+  //     case 'Address Fontsize':
+  //       return 8;
+
+  //     default:
+  //       return '';
+  //   }
+  // }
   pdfProperties(propertyType: string): string | number {
-    switch (propertyType) {
-      case 'Date': {
-        const time = formatDate(
-          new Date(),
-          'dd-MMM-yyyy/h:mm:ss a',
-          'en-IN'
-        ).split('/')[1];
+  const now = new Date();
 
-        return `${this.getFormatDateGlobal(new Date())} ${time}`;
-      }
+  const datePart = this.getFormatDateGlobal(now);
 
-      case 'Header Color':
-        return '#0b4093';
+  const hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const hour12 = hours % 12 || 12;
 
-      case 'Header Color1':
-        return 'white';
-
-      case 'Header Alignment':
-        return 'center';
-
-      case 'Header Fontsize':
-      case 'Cell Fontsize':
-        return 7;
-
-      case 'Address Fontsize':
-        return 8;
-
-      default:
-        return '';
-    }
+  const config: Record<string, string | number> = {
+    'Date': `${datePart} ${hour12}:${minutes}:${seconds} ${ampm}`,
+    'Header Color': '#0b4093',
+    'Header Color1': 'white',
+    'Header Alignment': 'center',
+    'Header Fontsize': 7,
+    'Cell Fontsize': 7,
+    'Address Fontsize': 8
+  };
+  if (!config[propertyType]) {
+    console.warn('Unknown pdf property:', propertyType);
   }
+
+  return config[propertyType] ?? '';
+}
   // getFormatDateGlobal(date: any)  {
 
   //   this.dateFormat = sessionStorage.getItem("dateformat");
@@ -1010,9 +1182,15 @@ export class CommonService {
     }
 
   }
+  // getFormatDateNormal(date: any): string | null {
+  //   if (date != null && date != '' && date != undefined)
+  //     return this.datepipe.transform(date, 'dd/MM/yyyy');
+  //   else
+  //     return null;
+  // }
   getFormatDateNormal(date: any): string | null {
     if (date != null && date != '' && date != undefined)
-      return this.datepipe.transform(date, 'dd/MM/yyyy');
+      return this.datepipe.transform(date, 'yyyy-MM-dd');
     else
       return null;
   }

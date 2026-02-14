@@ -178,9 +178,17 @@ export class AccountSummaryComponent {
     this.loadLedgerAccounts();
   }
 
+  // loadLedgerAccounts(): void {
+  //   this.reportService
+  //     .GetLedgerSummaryAccountList('ACCOUNT LEDGER')
+  //     .subscribe({
+  //       next: (res) => this.ledgerAccountsList = res ?? [],
+  //       error: (err) => this.commonService.showErrorMessage(err)
+  //     });
+  // }
   loadLedgerAccounts(): void {
     this.reportService
-      .GetLedgerSummaryAccountList('ACCOUNT LEDGER')
+      .GetLedgerSummaryAccountList('ACCOUNT LEDGER','accounts','KAPILCHITS','KLC01','global')
       .subscribe({
         next: (res) => this.ledgerAccountsList = res ?? [],
         error: (err) => this.commonService.showErrorMessage(err)
