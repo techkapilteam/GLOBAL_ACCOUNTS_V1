@@ -49,6 +49,32 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
   }
+
+
+
+   GetLedgerData1(formname:any, BranchSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
+    return this._CommonService.getAPI('/Accounts/GetLedgerAccountList', params, 'YES');
+  }
+  GetViewBankInformation(precordid:any,GlobalSchema:any, BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('precordid',precordid).set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetViewBankInformation', params, 'YES');
+  }
+   GetBankNames(GlobalSchema:any, AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
+  }
+
+
+    GetBankDetailsbyId(pbankid:any): Observable<any> {
+    const params = new HttpParams().set('pbankid', pbankid).set('BranchSchema', this._CommonService.getschemaname());
+    return this._CommonService.getAPI('/accountingtransactions/GetBankDetailsbyId', params, 'YES');
+  }
   GetProductnamesandHSNcodes(): Observable<any> {
     //const params = new HttpParams().set('GlobalSchema',GlobalSchema);
     return this._CommonService.getAPI('/Configuration/GlobalConfiguration/GetProductnamesandHSNcodes', "params", 'NO');
@@ -64,14 +90,11 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set("LocalSchema", this._CommonService.getschemaname());
     return this._CommonService.getAPI("/AccountingTransactions/getReceiptNumber", params, 'YES');
   }
-  GetBankDetailsbyId(pbankid:any): Observable<any> {
-    const params = new HttpParams().set('pbankid', pbankid).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/accountingtransactions/GetBankDetailsbyId', params, 'YES');
-  }
-  GetSubLedgerData(pledgerid:any): Observable<any> {
+
+  GetSubLedgerDataACCOUNTS(pledgerid:any,BranchSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     debugger;
-    const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
+    const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
+    return this._CommonService.getAPI('/Accounts/GetSubLedgerData', params, 'YES');
   }
   GetSubLedgerDataFORinterbranch(pledgerid:any,BranchSchema:any): Observable<any> {
     debugger;
@@ -469,6 +492,11 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/AccountingTransactions/GetPartywiseStates', params, 'YES')
   }
   GetSubLedgerData1(pledgerid:any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
+    return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
+  }
+    GetSubLedgerData(pledgerid:any): Observable<any> {
     debugger;
     const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
