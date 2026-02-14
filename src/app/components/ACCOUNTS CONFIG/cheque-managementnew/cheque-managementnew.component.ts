@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-cheque-managementnew',
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule,TableModule,ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, TableModule, ButtonModule],
   templateUrl: './cheque-managementnew.component.html',
   styleUrl: './cheque-managementnew.component.css',
 })
@@ -23,11 +23,11 @@ export class ChequeManagementnewComponent implements OnInit {
   recordid: any;
   selectedbank: any;
 
-  totalcheques :any;
-  noofcheque :any;
-  fromcheqno :any;
-  tocheqno :any;
-  cheq :any;
+  totalcheques: any;
+  noofcheque: any;
+  fromcheqno: any;
+  tocheqno: any;
+  cheq: any;
 
   buttonname = 'Save';
   buttonnameactive = 'Save & Generate';
@@ -43,14 +43,15 @@ export class ChequeManagementnewComponent implements OnInit {
     private accountingMasterService: AccountingMasterService
   ) { }
 
- 
+
 
 
 
   ngOnInit() {
     this.chequemanagementform = this.fb.group({
       pBankId: [""],
-      pBankname: [null, Validators.required],
+      // pBankname: [null, Validators.required],
+      bankName: [null, Validators.required],
       pNoofcheques: ["", Validators.required],
       pChequeto: ["", Validators.required],
       pChequefrom: ["", Validators.required],
@@ -63,80 +64,108 @@ export class ChequeManagementnewComponent implements OnInit {
     });
 
     this.BlurEventAllControll(this.chequemanagementform);
-    this.accountingMasterService.GetBankDetails().subscribe((data:any) => {
-      this.bankdetails = data;
-      //console.log(this.bankdetails)
-    });
+    // this.accountingMasterService.GetBankDetails().subscribe((data:any) => {
+    //   this.bankdetails = data;
+    //   //console.log(this.bankdetails)
+    // });
+
+    this.accountingMasterService.GetBankNames(
+      this.commonService.getschemaname(),
+      this.commonService.getbranchname(),
+      this.commonService.getCompanyCode(),
+      this.commonService.getBranchCode(),
+
+    )
+      .subscribe({
+        next: (res: any) => {
+          // bankName
+          console.log('data', res);
+
+          this.bankdetails = res;
+
+          console.log('SUCCESS:', res);
+          alert('hello');
+        },
+        error: (err: any) => {
+          console.log('ERROR:', err);
+          alert('API Error');
+        }
+      });
+
+
+
+
+
   }
-validategridData(): boolean {
-  let isValid = true;
+  validategridData(): boolean {
+    let isValid = true;
 
-  // Clear previous validation messages
-  this.chequemanagementvalidations = {};
+    // Clear previous validation messages
+    this.chequemanagementvalidations = {};
 
-  const noOfCheques = Number(this.chequemanagementform.controls['pNoofcheques'].value);
-  const fromValue = this.chequemanagementform.controls['pChequefrom'].value;
-  const toValue = this.chequemanagementform.controls['pChequeto'].value;
+    const noOfCheques = Number(this.chequemanagementform.controls['pNoofcheques'].value);
+    const fromValue = this.chequemanagementform.controls['pChequefrom'].value;
+    const toValue = this.chequemanagementform.controls['pChequeto'].value;
 
-  // Required field validations
-  if (!noOfCheques || noOfCheques <= 0) {
-    this.chequemanagementvalidations['pNoofcheques'] = 'No of Cheques Required';
-    isValid = false;
-  }
-
-  if (!fromValue) {
-    this.chequemanagementvalidations['pChequefrom'] = 'Cheque From Required';
-    isValid = false;
-  }
-
-  if (!toValue) {
-    this.chequemanagementvalidations['pChequeto'] = 'Cheque To Required';
-    isValid = false;
-  }
-
-  if (!isValid) {
-    return false;
-  }
-
-  // Convert to numbers (remove commas if any)
-  const fromcheq = Number(fromValue.toString().replace(/,/g, ''));
-  const tocheq = Number(toValue.toString().replace(/,/g, ''));
-
-  if (isNaN(fromcheq) || isNaN(tocheq)) {
-    return false;
-  }
-
-  // Grid range validation
-  const data = this.gridData ?? [];
-
-  for (let i = 0; i < data.length; i++) {
-    if (this.selectedbank !== data[i].pBankname) {
-      continue;
-    }
-
-    const existingFrom = Number(
-      data[i].pChequefrom?.toString().replace(/,/g, '')
-    );
-    const existingTo = Number(
-      data[i].pChequeto?.toString().replace(/,/g, '')
-    );
-
-    if (isNaN(existingFrom) || isNaN(existingTo)) {
-      continue;
-    }
-
-    // Overlapping range check
-    const isOverlap =
-      fromcheq <= existingTo && tocheq >= existingFrom;
-
-    if (isOverlap) {
+    // Required field validations
+    if (!noOfCheques || noOfCheques <= 0) {
+      this.chequemanagementvalidations['pNoofcheques'] = 'No of Cheques Required';
       isValid = false;
-      break;
     }
-  }
 
-  return isValid;
-}
+    if (!fromValue) {
+      this.chequemanagementvalidations['pChequefrom'] = 'Cheque From Required';
+      isValid = false;
+    }
+
+    if (!toValue) {
+      this.chequemanagementvalidations['pChequeto'] = 'Cheque To Required';
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return false;
+    }
+
+    // Convert to numbers (remove commas if any)
+    const fromcheq = Number(fromValue.toString().replace(/,/g, ''));
+    const tocheq = Number(toValue.toString().replace(/,/g, ''));
+
+    if (isNaN(fromcheq) || isNaN(tocheq)) {
+      return false;
+    }
+
+    // Grid range validation
+    const data = this.gridData ?? [];
+
+    for (let i = 0; i < data.length; i++) {
+      if (this.selectedbank !== data[i].pBankname) {
+        continue;
+      }
+
+      const existingFrom = Number(
+        data[i].pChequefrom?.toString().replace(/,/g, '')
+      );
+      const existingTo = Number(
+        data[i].pChequeto?.toString().replace(/,/g, '')
+      );
+
+      if (isNaN(existingFrom) || isNaN(existingTo)) {
+        continue;
+      }
+
+      // Overlapping range check
+      const isOverlap =
+        fromcheq <= existingTo && tocheq >= existingFrom;
+
+      if (isOverlap) {
+        isValid = false;
+        break;
+      }
+    }
+
+    return isValid;
+  }
 
 
   addtoGrid() {
@@ -183,7 +212,7 @@ validategridData(): boolean {
       }
     }
   }
-  getrecordid(event:any) {
+  getrecordid(event: any) {
     for (let i = 0; i < this.bankdetails.length; i++) {
       if (event.target.value == this.bankdetails[i].pBankname) {
         //console.log(this.bankdetails[i].pRecordid)
@@ -195,37 +224,37 @@ validategridData(): boolean {
     this.chequemanagementform.controls["pBankId"].setValue(this.recordid);
     this.gridData = [];
   }
-noofcheques(event: any) {
-  this.totalcheques = 0;
-  this.noofcheque = 0;
-  this.cheq = 0;
+  noofcheques(event: any) {
+    this.totalcheques = 0;
+    this.noofcheque = 0;
+    this.cheq = 0;
 
-  // Convert input to number safely
-  const value = event?.target?.value;
-  this.noofcheque = Number(value);
+    // Convert input to number safely
+    const value = event?.target?.value;
+    this.noofcheque = Number(value);
 
-  if (isNaN(this.noofcheque) || this.noofcheque <= 0) {
-    this.chequemanagementform.controls['pChequeto'].setValue('');
-    return;
+    if (isNaN(this.noofcheque) || this.noofcheque <= 0) {
+      this.chequemanagementform.controls['pChequeto'].setValue('');
+      return;
+    }
+
+    // If only 1 cheque
+    if (this.noofcheque === 1) {
+      this.chequemanagementform.controls['pChequeto'].setValue(this.fromcheqno);
+      return;
+    }
+
+    // Calculate total cheques
+    this.totalcheques = this.noofcheque - 1;
+    this.cheq = this.totalcheques;
+
+    const fromCheque = Number(this.chequemanagementform.controls['pChequefrom'].value);
+
+    if (!isNaN(fromCheque)) {
+      this.tocheqno = fromCheque + this.cheq;
+      this.chequemanagementform.controls['pChequeto'].setValue(this.tocheqno);
+    }
   }
-
-  // If only 1 cheque
-  if (this.noofcheque === 1) {
-    this.chequemanagementform.controls['pChequeto'].setValue(this.fromcheqno);
-    return;
-  }
-
-  // Calculate total cheques
-  this.totalcheques = this.noofcheque - 1;
-  this.cheq = this.totalcheques;
-
-  const fromCheque = Number(this.chequemanagementform.controls['pChequefrom'].value);
-
-  if (!isNaN(fromCheque)) {
-    this.tocheqno = fromCheque + this.cheq;
-    this.chequemanagementform.controls['pChequeto'].setValue(this.tocheqno);
-  }
-}
 
   fromchequeno(event: any) {
     this.fromcheqno = event.target.value;
@@ -415,8 +444,8 @@ noofcheques(event: any) {
     }
   }
 
- 
-   clear() {
+
+  clear() {
     this.chequemanagementform.reset();
     this.gridData = [];
     this.chequemanagementform["controls"]["pNoofcheques"].setValue("");

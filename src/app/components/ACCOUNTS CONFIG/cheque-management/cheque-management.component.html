@@ -55,7 +55,7 @@
 
   <div class="row mt-2">
     <div class="col-md-12 col-xl-12">
-      <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force" [headerHeight]="50"
+      <!-- <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force" [headerHeight]="50"
         [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [limit]="pageCriteria.pageSize"
         [offset]="pageCriteria.offset">
 
@@ -99,15 +99,11 @@
               ({{ pageCriteria.totalrows }} items)
             </div>
 
-            <!-- <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
-                    [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
-                    [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
-                    [hidden]="!((rowCount / pageSize) > 0)" (change)="onFooterPageChange($event)">
-                  </datatable-pager> -->
+          
           </ng-template>
         </ngx-datatable-footer>
 
-      </ngx-datatable>
+      </ngx-datatable> -->
 
       <p-table [value]="gridData" [paginator]="true" [rows]="pageCriteria.pageSize"
         [first]="pageCriteria.offset * pageCriteria.pageSize" 

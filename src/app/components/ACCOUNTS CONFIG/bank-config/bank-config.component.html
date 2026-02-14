@@ -56,7 +56,7 @@
           [ngClass]="{ 'is-invalid':bankmastervalidations.pBankname}">
           <option value="" disabled>Select</option>
           <option *ngFor="let i of banksList" [value]="i.pBankName">
-            {{i.bankName}}
+            {{i.bank_name}}
           </option>
         </select>
         <!-- <input class="form-control" type="text"  [attr.disabled]="disable ? '' : null" title="Bank" value=""formControlName="pBankname" appCharactersonly  appUppercase  [ngClass]="{ 'is-invalid': bankmastervalidations.pBankname }"> -->
@@ -73,14 +73,15 @@
         </div>
       </div> -->
     </div>
-    <hr class="light">
+    <!-- <hr class="light"> -->
     <div class="col-md-6 col-xl-4">
       <div class="form-group">
-        <label class="required-field" id="pAccountname" title="Account Name">Account Name</label>
-        <input class="form-control" type="text" value="" formControlName="pAccountname" maxlength="150" appTitlecaseword
-          appCharactersonly [ngClass]="{ 'is-invalid':bankmastervalidations.pAccountname }">
+        <!-- pAccountname -->
+        <label class="required-field" id="account_name" title="Account Name">Account Name</label>
+        <input class="form-control" type="text" formControlName="account_name" maxlength="150" appTitlecaseword
+          appCharactersonly [ngClass]="{ 'is-invalid':bankmastervalidations.account_name }">
         <div class="invalid-feedback">
-          <span *ngIf="bankmastervalidations.pAccountname">{{bankmastervalidations?.pAccountname}}</span>
+          <span *ngIf="bankmastervalidations.account_name">{{bankmastervalidations?.account_name}}</span>
         </div>
       </div>
 
@@ -347,17 +348,18 @@
           <div class="d-flex">
             <div class="col-md-8 col-xl-8 pl-0">
               <div class="form-group">
-                <label class="required-field" id="pUpiname" title="UPI Link with">UPI Link with</label>
+                <label class="required-field" id="upiname" title="UPI Link with">UPI Link with</label>
                 <div class="input-group">
-                  <select class="form-control" formControlName="pUpiname" maxlength="150"
-                    [ngClass]="{ 'is-invalid':   submitted && bankmastervalidations.pUpiname}">
+                  <!-- pUpiname -->
+                  <select class="form-control" formControlName="upiname" maxlength="150"
+                    [ngClass]="{ 'is-invalid':   submitted && bankmastervalidations.upiname}">
                     <option value="" disabled>Select</option>
-                    <option *ngFor="let i of upiname" [value]="i.pUpiname">
-                      {{i.pUpiname}}
+                    <option *ngFor="let i of upiname" [value]="i.upiname">
+                      {{i.upiname}}
                     </option>
                   </select>
                   <div class="invalid-feedback">
-                    <span *ngIf="bankmastervalidations.pUpiname">{{bankmastervalidations?.pUpiname}}</span>
+                    <span *ngIf="bankmastervalidations.upiname">{{bankmastervalidations?.upiname}}</span>
                   </div>
                 </div>
               </div>
@@ -412,7 +414,7 @@
 
 
 
-   <!---------------------bank setup-->
+    <!---------------------bank setup-->
 
 
     <div class="col-md-6 col-xl-4">
@@ -536,15 +538,16 @@
   <div class="row mt-4 ml-1">
     <div class="col-md-12 col-xl-12">
       <div class="d-flex justify-content-end mt-4">
-        <a (click)="clear()" class="btn btn-g-icon mr-4 px-3 border-0">
+        <a (click)="clear()" class="btn btn-primary mr-4 px-3 border-0">
           <img src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px" height="20px">Clear
         </a>
         <!-- <a  (click)="save()" data-toggle="tab" class="btn btn-b-icon px-3 border-0" role="tab" aria-controls="hot" aria-selected="false">
               <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton, 'fa-check': !disablesavebutton}"></i>
            {{buttonname}}
           </a>  -->
-        <button (click)="save()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
-          <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
+        <!-- /assets/images/icon-check-white.svg -->
+        <button (click)="save()" class="btn btn-secondary px-3 border-0" [disabled]="disablesavebutton">
+          <img src="assets/images/icon-check-white.svg " class="mr-3" width="20px" height="20px"
             *ngIf="!disablesavebutton">
           <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}
         </button>

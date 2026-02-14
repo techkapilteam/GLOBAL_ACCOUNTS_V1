@@ -239,8 +239,104 @@ export class ChequeEnquiryComponent implements OnInit {
       this.dummyReceived.filter((c:any) => c.pChequenumber.includes(value));
   }
 
-  pdfOrprint(type: string) {
-    alert(type + ' option clicked (dummy)');
-  }
+  pdfOrprint(printOrPdf: 'Pdf' | 'Print'): void {
+
+  const rows: (string | number)[][] = [];
+  const reportName = 'Received Cheque Details';
+
+  const gridHeaders: string[] = [
+    'Cheque Status',
+    'Cheque/ Reference No.',
+    'Branch Name',
+    'Amount',
+    'Receipt Id',
+    'Receipt Date',
+    'Deposited Date',
+    'Cleared Date',
+    'Returned Date',
+    'Transaction Mode',
+    'Cheque Bank Name',
+    'Party'
+  ];
+
+  const colWidthHeight = {
+    0: { cellWidth: 'auto', halign: 'center' },
+    1: { cellWidth: 'auto', halign: 'center' },
+    2: { cellWidth: 22, halign: 'left' },
+    3: { cellWidth: 'auto', halign: 'right' },
+    4: { cellWidth: 17, halign: 'center' },
+    5: { cellWidth: 20, halign: 'center' },
+    6: { cellWidth: 'auto', halign: 'center' },
+    7: { cellWidth: 'auto', halign: 'center' },
+    8: { cellWidth: 'auto', halign: 'center' },
+    9: { cellWidth: 'auto', halign: 'center' },
+    10: { cellWidth: 'auto', halign: 'center' },
+    11: { cellWidth: 'auto', halign: 'left' }
+  };
+
+  this.displayGridDataBasedOnForm?.forEach(element => {
+
+    const totalReceivedAmt =
+      element?.ptotalreceivedamount && element.ptotalreceivedamount !== 0
+        ? this.commonService.convertAmountToPdfFormat(
+            this.commonService.currencyformat(element.ptotalreceivedamount)
+          )
+        : '';
+
+    const dateReceipt = this.commonService.getFormatDateGlobal(
+      element?.preceiptdate
+    );
+
+    const depositedDate =
+      element?.ptypeofpayment === 'CHEQUE'
+        ? this.commonService.getFormatDateGlobal(element?.pdepositeddate)
+        : 'N/A';
+
+    const clearedDate =
+      element?.ptypeofpayment === 'CHEQUE' &&
+      element?.pchequestatus === 'Y'
+        ? this.commonService.getFormatDateGlobal(element?.pCleardate)
+        : 'N/A';
+
+    const returnedDate =
+      element?.ptypeofpayment === 'CHEQUE' &&
+      element?.pchequestatus === 'R'
+        ? this.commonService.getFormatDateGlobal(element?.pCleardate)
+        : 'N/A';
+
+    rows.push([
+      element?.chequeStatus ?? '',
+      element?.pChequenumber ?? '',
+      element?.pbranchname ?? '',
+      totalReceivedAmt,
+      element?.preceiptid ?? '',
+      dateReceipt ?? '',
+      depositedDate,
+      clearedDate,
+      returnedDate,
+      element?.ptypeofpayment ?? '',
+      element?.cheque_bank ?? '',
+      element?.ppartyname ?? ''
+    ]);
+  });
+
+  const amountTotal = this.commonService.convertAmountToPdfFormat(
+    this.commonService.currencyformat(this.amounttotal)
+  );
+
+  this.commonService._downloadchqrecReportsPdf(
+    reportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
+    'landscape',
+    '',
+    this.commonService.getFormatDateGlobal(new Date()),
+    printOrPdf === 'Pdf' ? null : '',
+    printOrPdf,
+    amountTotal
+  );
+}
+
 }
 

@@ -75,13 +75,23 @@
                   <div class="col-md-3">
                     <div class="form-group" *ngIf="showbankcard">
                       <label>Bank Name</label>
-                      <select class="form-control" id="pbankname" title="Bank Name" formControlName="bankName"
+                      <!-- <select class="form-control" id="bankName" title="Bank Name" formControlName="bankName"
                         (change)="bankName_Change($event)">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let bank of banklist;trackBy: trackByFn" [value]="bank.bankName">
+                        <option *ngFor="let bank of banklist;" [value]="bank.bankAccountId">
                           {{bank.bankName}}</option>
-                      </select>
-                      <!-- <app-validation-message [messgae]="formValidationMessages?.pbankname">
+                      </select> -->
+
+                      <ng-select id="bankName" title="Bank Name" [items]="banklist" formControlName="pbankname"
+                        bindLabel="bankName" bindValue="bankAccountId" [multiple]=false placeholder="Select"
+                        [searchable]=true [clearable]=false dropdownPosition="bottom" [clearOnBackspace]=true
+                        (change)="bankName_Change($event)" >
+
+                      </ng-select>
+                      <!-- 
+                      
+                      trackBy: trackByFn
+                      <app-validation-message [messgae]="formValidationMessages?.pbankname">
                       </app-validation-message> 
                       
                        [ngClass]="{ 'is-invalid': formValidationMessages.pbankname }"-->
@@ -92,10 +102,11 @@
                       <select class="form-control" id="pCardNumber" title="{{displayCardName}}"
                         formControlName="pCardNumber" (change)="debitCard_Change()">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let debitcard of debitcardlist;trackBy: trackByFn"
-                          [value]="debitcard.pCardNumber">{{debitcard.pCardNumber}}</option>
+                        <option *ngFor="let debitcard of debitcardlist;" [value]="debitcard.pCardNumber">
+                          {{debitcard.pCardNumber}}</option>
                       </select>
-                      <!-- <app-validation-message [messgae]="formValidationMessages?.pCardNumber">
+                      <!-- trackBy: trackByFn
+                      <app-validation-message [messgae]="formValidationMessages?.pCardNumber">
                       </app-validation-message>
                       [ngClass]="{ 'is-invalid': formValidationMessages.pCardNumber }" -->
                     </div>
@@ -107,12 +118,12 @@
                       <select class="form-control " id="ptypeofpayment" title="Type of Payment"
                         formControlName="ptypeofpayment" (change)="typeofPaymentChange()">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let typeofpayment of typeofpaymentlist;trackBy: trackByFn"
-                          [value]="typeofpayment.ptypeofpayment">
+                        <option *ngFor="let typeofpayment of typeofpaymentlist;" [value]="typeofpayment.ptypeofpayment">
                           {{typeofpayment.ptypeofpayment}}</option>
 
                       </select>
-                      <!-- <app-validation-message [messgae]="formValidationMessages?.ptypeofpayment">
+                      <!--trackBy: trackByFn
+                       <app-validation-message [messgae]="formValidationMessages?.ptypeofpayment">
                                             </app-validation-message>
                                              [ngClass]="{ 'is-invalid': formValidationMessages.ptypeofpayment }" -->
                     </div>
@@ -144,10 +155,11 @@
                       <select class="form-control" id="pUpiname" title="UPI" formControlName="pUpiname"
                         (change)="upiName_Change($event)">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let upinames of upinameslist;trackBy: trackByFn" [value]="upinames.pUpiname">
+                        <option *ngFor="let upinames of upinameslist;" [value]="upinames.pUpiname">
                           {{upinames.pUpiname}}</option>
                       </select>
-                      <!-- <app-validation-message [messgae]="formValidationMessages?.pUpiname">
+                      <!--trackBy: trackByFn 
+                      <app-validation-message [messgae]="formValidationMessages?.pUpiname">
                                             </app-validation-message> 
                                             [ngClass]="{ 'is-invalid': formValidationMessages.pUpiname }-->
                     </div>
@@ -160,10 +172,11 @@
                       <select class="form-control" id="pUpiid" title="UPI ID" formControlName="pUpiid"
                         (change)="upid_change()">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let upinames of upiidlist;trackBy: trackByFn" [value]="upinames.pUpiid">
+                        <option *ngFor="let upinames of upiidlist;" [value]="upinames.pUpiid">
                           {{upinames.pUpiid}}</option>
                       </select>
-                      <!-- <app-validation-message [messgae]="formValidationMessages?.pUpiid">
+                      <!-- trackBy: trackByFn
+                      <app-validation-message [messgae]="formValidationMessages?.pUpiid">
                                             </app-validation-message>
                                             [ngClass]="{ 'is-invalid': formValidationMessages.pUpiid } -->
                     </div>
@@ -178,14 +191,14 @@
                         [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }" *ngIf="showchequno"
                         (change)="chequenumber_Change()">
                         <option value="" ng-selected="selected">Select</option>
-                        <option *ngFor="let chequenumbers of chequenumberslist;trackBy: trackByFn"
-                          [value]="chequenumbers.pChequenumber">
+                        <option *ngFor="let chequenumbers of chequenumberslist;" [value]="chequenumbers.pChequenumber">
                           {{chequenumbers.pChequenumber}}</option>
                       </select>
                       <input class="form-control" type="text" placeholder="{{displaychequeno}}"
                         formControlName="pChequenumber" appAlphanumeric maxlength="20" *ngIf="!showchequno"
                         (blur)="chequenumber_Change()">
-                      <!-- <app-validation-message [messgae]="formValidationMessages?.pChequenumber">
+                      <!-- trackBy: trackByFn
+                        <app-validation-message [messgae]="formValidationMessages?.pChequenumber">
                                             </app-validation-message>
                                              [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber } -->
                     </div>
@@ -344,10 +357,11 @@
                         <select class="form-control" id="pState" title="State" formControlName="pStateId"
                           (change)="state_change($event)">
                           <option value="" ng-selected="selected">Select</option>
-                          <option *ngFor="let state of statelist;trackBy: trackByFn" [value]="state.pStateId">
+                          <option *ngFor="let state of statelist;" [value]="state.pStateId">
                             {{state.pState}}</option>
                         </select>
-                        <!-- <app-validation-message [messgae]="formValidationMessages?.pState">
+                        <!-- trackBy: trackByFn
+                        <app-validation-message [messgae]="formValidationMessages?.pState">
                                                 </app-validation-message>
                                                  [ngClass]="{ 'is-invalid': formValidationMessages.pState } -->
                       </div>
@@ -367,11 +381,12 @@
                         <select class="form-control" id="pgstpercentage" title="GST(%)" formControlName="pgstpercentage"
                           (change)="gst_Change($event)">
                           <option value="" ng-selected="selected">Select</option>
-                          <option *ngFor="let gst of gstlist;trackBy: trackByFn" [value]="gst.pgstpercentage">
+                          <option *ngFor="let gst of gstlist;" [value]="gst.pgstpercentage">
                             {{gst.pgstpercentage}}</option>
 
                         </select>
-                        <!-- <app-validation-message
+                        <!-- 
+                        trackBy: trackByFn<app-validation-message
                                                     [messgae]="formValidationMessages?.pgstpercentage">
                                                 </app-validation-message>
                                                  [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage } -->
@@ -528,11 +543,12 @@
                     <select class="form-control" id="pTdsSection" title="Section" formControlName="pTdsSection"
                       (change)="tdsSection_Change($event)">
                       <option value="" ng-selected="selected">Select</option>
-                      <option *ngFor="let tds of tdssectionlist;trackBy: trackByFn" [value]="tds.pTdsSection">
+                      <option *ngFor="let tds of tdssectionlist;" [value]="tds.pTdsSection">
                         {{tds.pTdsSection}}</option>
 
                     </select>
-                    <!-- <app-validation-message [messgae]="formValidationMessages?.pTdsSection">
+                    <!--trackBy: trackByFn
+                     <app-validation-message [messgae]="formValidationMessages?.pTdsSection">
                                         </app-validation-message> 
                                         [ngClass]="{ 'is-invalid': formValidationMessages.pTdsSection }-->
                   </div>
@@ -541,11 +557,12 @@
                     <select class="form-control" id="pTdsPercentage" title="Section" formControlName="pTdsPercentage"
                       (change)="tds_Change($event)">
                       <option value="" ng-selected="selected">Select</option>
-                      <option *ngFor="let tds of tdspercentagelist;trackBy: trackByFn" [value]="tds.pTdsPercentage">
+                      <option *ngFor="let tds of tdspercentagelist;" [value]="tds.pTdsPercentage">
                         {{tds.pTdsPercentage}}</option>
 
                     </select>
-                    <!-- <app-validation-message [messgae]="formValidationMessages?.pTdsPercentage">
+                    <!-- 
+                    trackBy: trackByFn<app-validation-message [messgae]="formValidationMessages?.pTdsPercentage">
                                         </app-validation-message>
                                         [ngClass]="{ 'is-invalid': formValidationMessages.pTdsPercentage }" -->
                   </div>
@@ -606,14 +623,12 @@
   <div class="row">
     <div class="col-md-12 col-xl-12" style="height: 400;">
       <div class="section-content mt-2">
-        <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
+        <!-- <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
           [footerHeight]="50" [rowHeight]="50" [limit]="5" [scrollbarH]="true">
           <ngx-datatable-column name="Actions" prop="" frozenLeft="True">
             <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row"
               let-group="group">
-              <!-- <label for="edit{{ rowIndex }}">
-            <div id="icon-edit" (click)="editHandler($event, row, rowIndex, group)"></div>
-          </label> -->
+            
               <label for="delete{{ rowIndex }}">
                 <div id="icon-delete" (click)="removeHandler(rowIndex)"></div>
               </label>
@@ -678,59 +693,57 @@
 
 
           </ngx-datatable-column>
-        </ngx-datatable>
+        </ngx-datatable> -->
 
 
-        
 
-  <p-table
-  [value]="paymentslist1"
-  [scrollable]="true"
-  scrollHeight="300px"
-  scrollWidth="max-content"
-  [paginator]="true"
-  [rows]="5">
 
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="min-width:80px;">Actions</th>
-      <th style="min-width:120px;">Party Name</th>
-      <th style="min-width:180px;">Ledger Name</th>
-      <th style="min-width:120px;">Sub Ledger Name</th>
-      <th style="min-width:100px;">Total Paid Amount</th>
-      <th style="min-width:100px;">Paid Amount</th>
-      <th style="min-width:100px;">GST Type</th>
-      <th style="min-width:120px;">TDS Section</th>
-      <th style="min-width:100px;">GST Percentage</th>
-      <th style="min-width:120px;">TDS Amount</th>
-    </tr>
-  </ng-template>
+        <p-table [value]="paymentslist1" [scrollable]="true" scrollHeight="300px" scrollWidth="max-content"
+          [paginator]="true" [rows]="5">
 
-  <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-    <tr>
-      <td>
-        <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-danger"
-          (click)="removeHandler(rowIndex)"></button>
-      </td>
-      <td>{{rowData.ppartyname || '-- NA --'}}</td>
-      <td>{{rowData.pledgername || '-- NA --'}}</td>
-      <td>{{rowData.psubledgername || '-- NA --'}}</td>
-      <td class="text-right">{{currencySymbol}}{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2' }}</td>
-      <td class="text-right">{{currencySymbol}}{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}</td>
-      <td class="text-center">{{ rowData.pgstcalculationtype || '-- NA --' }}</td>
-      <td>{{ rowData.pTdsSection || '-- NA --' }}</td>
-      <td class="text-center">{{ rowData.pgstpercentage !== 0 ? rowData.pgstpercentage : '-- NA --' }}</td>
-      <td class="text-right">{{ rowData.ptdsamount !== 0 ? (currencySymbol + (rowData.ptdsamount | currency:currencyCode:'symbol':'1.2-2')) : '-- NA --' }}</td>
-    </tr>
-  </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width:80px;">Actions</th>
+              <th style="min-width:120px;">Party Name</th>
+              <th style="min-width:180px;">Ledger Name</th>
+              <th style="min-width:120px;">Sub Ledger Name</th>
+              <th style="min-width:100px;">Total Paid Amount</th>
+              <th style="min-width:100px;">Paid Amount</th>
+              <th style="min-width:100px;">GST Type</th>
+              <th style="min-width:120px;">TDS Section</th>
+              <th style="min-width:100px;">GST Percentage</th>
+              <th style="min-width:120px;">TDS Amount</th>
+            </tr>
+          </ng-template>
 
-  <ng-template pTemplate="emptymessage">
-    <tr>
-      <td colspan="10" class="text-center">No data to display</td>
-    </tr>
-  </ng-template>
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+            <tr>
+              <td>
+                <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-danger"
+                  (click)="removeHandler(rowIndex)"></button>
+              </td>
+              <td>{{rowData.ppartyname || '-- NA --'}}</td>
+              <td>{{rowData.pledgername || '-- NA --'}}</td>
+              <td>{{rowData.psubledgername || '-- NA --'}}</td>
+              <td class="text-right">{{currencySymbol}}{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2'
+                }}</td>
+              <td class="text-right">{{currencySymbol}}{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}
+              </td>
+              <td class="text-center">{{ rowData.pgstcalculationtype || '-- NA --' }}</td>
+              <td>{{ rowData.pTdsSection || '-- NA --' }}</td>
+              <td class="text-center">{{ rowData.pgstpercentage !== 0 ? rowData.pgstpercentage : '-- NA --' }}</td>
+              <td class="text-right">{{ rowData.ptdsamount !== 0 ? (currencySymbol + (rowData.ptdsamount |
+                currency:currencyCode:'symbol':'1.2-2')) : '-- NA --' }}</td>
+            </tr>
+          </ng-template>
 
-</p-table>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="10" class="text-center">No data to display</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
 
 
 
@@ -743,7 +756,7 @@
   <div class="section-content mt-2">
     <div class="row">
       <div class="col-md-6 col-xl-6 mt-4" style="height: 400;">
-        <ngx-datatable class="material expandable table" [rows]="partyjournalentrylist" columnMode="force"
+        <!-- <ngx-datatable class="material expandable table" [rows]="partyjournalentrylist" columnMode="force"
           [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="5">
           <ngx-datatable-column name="Particulars" prop="accountname" [cellClass]="'cell-left'"
             [headerClass]="'header-left'">
@@ -754,7 +767,6 @@
               <div *ngIf="row.debitamount!=0"
                 title="{{currencySymbol}} {{row.debitamount.toFixed(2) | currency:currencyCode:'symbol':'1.2-2'}}">
                 {{currencySymbol}}
-                <!-- {{row.debitamount.toFixed(2) | currencypipe}} -->
                 {{ row.debitamount | currency:currencyCode:'symbol':'1.2-2' }}
               </div>
 
@@ -770,54 +782,53 @@
               <div *ngIf="row.creditamount==0"></div>
               <div *ngIf="row.creditamount!=0"
                 title="{{currencySymbol}} {{row.creditamount | currency:currencyCode:'symbol':'1.2-2'}}">
-                <!-- {{currencySymbol}}
-                                {{row.creditamount | currencypipe}} -->
+               
 
                 {{ row.creditamount | currency:currencyCode:'symbol':'1.2-2' }}
               </div>
             </ng-template>
           </ngx-datatable-column>
-        </ngx-datatable>
+        </ngx-datatable> -->
 
         <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="300px">
 
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Particulars</th>
-      <th style="text-align: right;">Dr</th>
-      <th style="text-align: right;">Cr</th>
-    </tr>
-  </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Particulars</th>
+              <th style="text-align: right;">Dr</th>
+              <th style="text-align: right;">Cr</th>
+            </tr>
+          </ng-template>
 
-  <ng-template pTemplate="body" let-rowData>
-    <tr>
-      <td>{{ rowData.accountname }}</td>
-      <td style="text-align: right;">
-        <ng-container *ngIf="rowData.debitamount != 0; else emptyDebit">
-          <span title="{{currencySymbol}} {{rowData.debitamount | number:'1.2-2'}}">
-            {{currencySymbol}} {{ rowData.debitamount | currency:currencyCode:'symbol':'1.2-2' }}
-          </span>
-        </ng-container>
-        <ng-template #emptyDebit></ng-template>
-      </td>
-      <td style="text-align: right;">
-        <ng-container *ngIf="rowData.creditamount != 0; else emptyCredit">
-          <span title="{{currencySymbol}} {{rowData.creditamount | number:'1.2-2'}}">
-            {{currencySymbol}} {{ rowData.creditamount | currency:currencyCode:'symbol':'1.2-2' }}
-          </span>
-        </ng-container>
-        <ng-template #emptyCredit></ng-template>
-      </td>
-    </tr>
-  </ng-template>
+          <ng-template pTemplate="body" let-rowData>
+            <tr>
+              <td>{{ rowData.accountname }}</td>
+              <td style="text-align: right;">
+                <ng-container *ngIf="rowData.debitamount != 0; else emptyDebit">
+                  <span title="{{currencySymbol}} {{rowData.debitamount | number:'1.2-2'}}">
+                    {{currencySymbol}} {{ rowData.debitamount | currency:currencyCode:'symbol':'1.2-2' }}
+                  </span>
+                </ng-container>
+                <ng-template #emptyDebit></ng-template>
+              </td>
+              <td style="text-align: right;">
+                <ng-container *ngIf="rowData.creditamount != 0; else emptyCredit">
+                  <span title="{{currencySymbol}} {{rowData.creditamount | number:'1.2-2'}}">
+                    {{currencySymbol}} {{ rowData.creditamount | currency:currencyCode:'symbol':'1.2-2' }}
+                  </span>
+                </ng-container>
+                <ng-template #emptyCredit></ng-template>
+              </td>
+            </tr>
+          </ng-template>
 
-  <ng-template pTemplate="emptymessage">
-    <tr>
-      <td colspan="3" style="text-align:center">No data to display</td>
-    </tr>
-  </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="3" style="text-align:center">No data to display</td>
+            </tr>
+          </ng-template>
 
-</p-table>
+        </p-table>
 
 
       </div>
@@ -899,7 +910,7 @@
         {{savebutton}}
       </button> -->
 
-      <button (click)="savePaymentVoucher()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
+      <button (click)="savePaymentVoucher()" class="btn btn-secondary px-3 border-0" [disabled]="disablesavebutton">
         <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
           *ngIf="!disablesavebutton">
         <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}

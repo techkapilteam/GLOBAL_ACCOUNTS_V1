@@ -267,7 +267,7 @@ export class PaymentVoucherViewComponent implements OnInit {
   displaychequeno = 'Cheque No';
 
   banklist: any;
-  modeoftransactionslist: any;
+  modeoftransactionslist: any[]=[];
   typeofpaymentlist: any;
   ledgeraccountslist: any;
   subledgeraccountslist: any;
@@ -289,8 +289,11 @@ export class PaymentVoucherViewComponent implements OnInit {
   bankBalance: any; cashRestrictAmount: any;
   bankexists!: boolean;
   groups: any[] = [];
+  // accountid: any;
+
+  bankbookBalance: any;
+  bankbarnchdummy: any;
   ;
-  bankbookBalance: any;;
   bankpassbookBalance: any;;
   ledgerBalance: any;;
   subledgerBalance: any;;
@@ -384,7 +387,9 @@ export class PaymentVoucherViewComponent implements OnInit {
     this.istdsapplicableChange();
     let date = new Date();
     this.paymentVoucherForm['controls']['ppaymentdate'].setValue(date);
+
     this.getLoadData();
+    // this.getledgerdata();
     this.BlurEventAllControll(this.paymentVoucherForm);
 
   }
@@ -979,113 +984,114 @@ export class PaymentVoucherViewComponent implements OnInit {
   }
 
 
+  // getledgerdata(){
+  //   this.getLoadData()
+  // }
+
   getLoadData() {
 
+
+
+    debugger;
+    // GetReceiptsandPaymentsLoadingData1
+    this._AccountingTransactionsService.GetBankNames(
+
+      this._commonService.getschemaname(),
+      this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode()
+
+    ).subscribe({
+      next: (res: any) => {
+        // bankName
+        // this.accountid = res[0].bankAccountId
+        this.banklist = res;
+        // bank_branch
+        // this.paymentVoucherForm.controls['pbranchname'].setValue('res.bank_branch')
+
+        this.typeofpaymentlist = this.gettypeofpaymentdata();
+        console.log('SUCCESS:', res);
+        alert('hello');
+      },
+      error: (err: any) => {
+        console.log('ERROR:', err);
+        alert('API Error');
+      }
+    });
+
+
     // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('PAYMENT VOUCHER', this._commonService.getschemaname()).subscribe(json => {
-    //   this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
-    //     this._commonService.getschemaname(),
-    //      this._commonService.getbranchname(),
-    //      this._commonService.getBranchCode(),
-    //      this._commonService.getCompanyCode()
-    //     ).
-    //   subscribe({
-    //    next: (json:any) => {
-    //     debugger;
-    //      if (json != null) {
+    //             debugger;
+    //             //console.log(json)
+    //             if (json != null) {
 
-    //       this.banklist = json.banklist;
-    //       console.log('bank list:',this.banklist);
+    //                 this.banklist = json.banklist;
+    //                 this.modeoftransactionslist = json.modeofTransactionslist;
+    //                 this.typeofpaymentlist = this.gettypeofpaymentdata();
+    //                 this.ledgeraccountslist = json.accountslist;
+    //                 this.partylist = json.partylist;
+    //                 this.gstlist = json.gstlist;
 
-    //       this.modeoftransactionslist = json.modeofTransactionslist;
-    //       this.typeofpaymentlist = this.gettypeofpaymentdata();
-    //       this.ledgeraccountslist = json.accountslist;
-    //       this.partylist = json.partylist;
-    //       this.gstlist = json.gstlist;
+    //                 this.debitcardlist = json.bankdebitcardslist;
+    //                 // console.log(this.debitcardlist);
+    //                 this.setBalances('CASH', json.cashbalance);
+    //                 this.setBalances('BANK', json.bankbalance);
+    //                 console.log(json);
+    //                 this.cashRestrictAmount = json.cashRestrictAmount;
+    //                 //this.lstLoanTypes = json
+    //                 //this.titleDetails = json as string
+    //                 //this.titleDetails = eval("(" + this.titleDetails + ')');
+    //                 //this.titleDetails = this.titleDetails.FT;
+    //             }
+    //         },
+    //             (error) => {
 
-    //       this.debitcardlist = json.bankdebitcardslist;
-    //       // console.log(this.debitcardlist);
-    //       this.setBalances('CASH', json.cashbalance);
-    //       this.setBalances('BANK', json.bankbalance);
-    //       console.log(json);
-    //       this.cashRestrictAmount = json.cashRestrictAmount;
-    //       //this.lstLoanTypes = json
-    //       //this.titleDetails = json as string
-    //       //this.titleDetails = eval("(" + this.titleDetails + ')');
-    //       //this.titleDetails = this.titleDetails.FT;
-    //     }
-    //   },
-    // // },
-    //    error: (error:any) => {
+    //                 this._commonService.showErrorMessage(error);
+    //             });
 
-    //       this._commonService.showErrorMessage(error);
-    //     }
-    //     })
 
-debugger;
+    this._AccountingTransactionsService
+      .GetLedgerData1(
+        'PAYMENT VOUCHER',
+        this._commonService.getbranchname(),
+        this._commonService.getCompanyCode(),
+        this._commonService.getBranchCode(),
+        this._commonService.getschemaname()
 
- this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
-  this._commonService.getschemaname(),
-  this._commonService.getbranchname(),
-   this._commonService.getCompanyCode(),
-  this._commonService.getBranchCode()
- 
-).subscribe({
-  next: (res: any) => {
-    // bankName
-     this.banklist = res;
-    
-    console.log('SUCCESS:', res);
-    alert('hello');
-  },
-  error: (err: any) => {
-    console.log('ERROR:', err);
-    alert('API Error');
-  }
-});
 
-  
-    // this._AccountingTransactionsService
-    //   .GetReceiptsandPaymentsLoadingData1(
-    //     this._commonService.getschemaname(),
-    //     this._commonService.getbranchname(),
-    //     this._commonService.getBranchCode(),
-    //     this._commonService.getCompanyCode()
-    //   )
-    //   .subscribe({
-    //     next: (json: any) => {
-    //       debugger;
 
-    //       if (json) {
-    //         console.log('Full Response:', json);
+      )
+      .subscribe({
+        next: (json: any) => {
+          debugger;
 
-    //         this.banklist = json.banklist;
-    //         this.modeoftransactionslist = json.modeofTransactionslist;
-    //         this.typeofpaymentlist = this.gettypeofpaymentdata();
-    //         this.ledgeraccountslist = json.accountslist;
-    //         this.partylist = json.partylist;
-    //         this.gstlist = json.gstlist;
-    //         this.debitcardlist = json.bankdebitcardslist;
+          if (json) {
+            console.log('Full Response:', json);
 
-    //         this.setBalances('CASH', json.cashbalance);
-    //         this.setBalances('BANK', json.bankbalance);
+            this.ledgeraccountslist = json.map((item: any) => item.pledgername)
+            console.log('ledgeraccountslist :', this.ledgeraccountslist);
 
-    //         this.cashRestrictAmount = json.cashRestrictAmount;
-    //       }
-    //     },
-    //     error: (error: any) => {
-    //       this._commonService.showErrorMessage(error);
-    //     }
-    //   });
+            // this.banklist = json.banklist;
+            // this.modeoftransactionslist = json.modeofTransactionslist;
+            this.typeofpaymentlist = this.gettypeofpaymentdata();
+            // this.ledgeraccountslist = json.accountslist;
+            this.partylist = json.partylist;
+            this.gstlist = json.gstlist;
+            this.debitcardlist = json.bankdebitcardslist;
+
+            this.setBalances('CASH', json.cashbalance);
+            this.setBalances('BANK', json.bankbalance);
+
+            this.cashRestrictAmount = json.cashRestrictAmount;
+          }
+        },
+        error: (error: any) => {
+          this._commonService.showErrorMessage(error);
+        }
+      });
 
   }
 
-  // gettypeofpaymentdata(): any {
-
-  //   let data = this.modeoftransactionslist.filter(function (payment) {
-  //     return payment.ptranstype != payment.ptypeofpayment;
-  //   });
-  //   return data;
-  // }
 
 
   gettypeofpaymentdata(): any[] {
@@ -1095,22 +1101,26 @@ debugger;
     );
   }
 
-  trackByFn(index: any, item: any) {
-    return index; // or item.id
-  }
+  // trackByFn(index: any, item: any) {
+  //   return index; // or item.id
+  // }
   bankName_Change($event: any): void {
     debugger;
-    const pbankid = $event.target.value;
+    // const pbankid = $event.target.value;
+    const pbankid = $event.bankAccountId;
+
+
+
     this.upinameslist = [];
     this.chequenumberslist = [];
     this.paymentVoucherForm['controls']['pChequenumber'].setValue('');
     this.paymentVoucherForm['controls']['pUpiname'].setValue('');
     this.paymentVoucherForm['controls']['pUpiid'].setValue('');
     if (pbankid && pbankid != '') {
-      const bankname = $event.target.options[$event.target.selectedIndex].text;
+      // const bankname = $event.target.options[$event.target.selectedIndex].text;
       this.GetBankDetailsbyId(pbankid);
-      this.getBankBranchName(pbankid);
-      this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
+      //  this.getBankBranchName(pbankid);
+      // this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
 
     }
     else {
@@ -1118,8 +1128,8 @@ debugger;
       this.paymentVoucherForm['controls']['pbankname'].setValue('');
     }
 
-    this.GetValidationByControl(this.paymentVoucherForm, 'pbankname', true);
-    this.formValidationMessages['pChequenumber'] = '';
+    // this.GetValidationByControl(this.paymentVoucherForm, 'pbankname', true);
+    // this.formValidationMessages['pChequenumber'] = '';
   }
   chequenumber_Change() {
 
@@ -1160,37 +1170,6 @@ debugger;
     return null;
   }
 
-  // ledgerName_Change($event: any): void {
-
-  //   let pledgerid;
-  //   if ($event != undefined) {
-  //     pledgerid = $event.pledgerid;
-  //   }
-  //   this.subledgeraccountslist = [];
-  //   this.paymentslist1 = [];
-  //   this.partyjournalentrylist = [];
-  //   this.paymentslist = [];
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].setValue(null);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue('');
-  //   this.ledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
-  //   this.subledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
-  //   if (pledgerid && pledgerid != '') {
-
-  //     const ledgername = $event.pledgername;
-
-  //     let data = this.ledgeraccountslist.filter(function (ledger) {
-  //       return ledger.pledgerid == pledgerid;
-  //     })[0];
-  //     this.setBalances('LEDGER', data.accountbalance);
-  //     this.GetSubLedgerData(pledgerid);
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pledgername'].setValue(ledgername);
-  //   }
-  //   else {
-
-  //     this.setBalances('LEDGER', 0);
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pledgername'].setValue('');
-  //   }
-  // }
 
   ledgerName_Change($event: any): void {
 
@@ -1268,44 +1247,54 @@ debugger;
   //     });
   // }
   GetSubLedgerData(pledgerid: any): void {
+    debugger
 
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     this._AccountingTransactionsService
-      .GetSubLedgerData(pledgerid)
+      .GetSubLedgerDataACCOUNTS(pledgerid,
+        this._commonService.getbranchname(),
+        this._commonService.getCompanyCode(),
+        this._commonService.getBranchCode(),
+        this._commonService.getschemaname()
+
+      )
       .subscribe(
-        (json: any[]) => {
+        {
+          next: (json: any) => {
 
-          if (!json) {
-            return;
+            if (!json) {
+              return;
+            }
+
+            // this.subledgeraccountslist = json;
+
+          this.subledgeraccountslist = json.map((item: any) => item.psubledgername)
+            console.log('subledgeraccountslist :', this.subledgeraccountslist);
+            const subLedgerControl = group?.get('psubledgername');
+
+            if (this.subledgeraccountslist.length > 0) {
+              this.showsubledger = true;
+              subLedgerControl?.setValidators(Validators.required);
+            } else {
+              this.showsubledger = false;
+
+              subLedgerControl?.clearValidators();
+
+              group?.get('psubledgerid')?.setValue(pledgerid);
+              subLedgerControl?.setValue(
+                group?.get('pledgername')?.value
+              );
+
+              this.formValidationMessages['psubledgername'] = '';
+            }
+
+            subLedgerControl?.updateValueAndValidity();
+          },
+          error: (error: any) => {
+            this._commonService.showErrorMessage(error);
           }
-
-          this.subledgeraccountslist = json;
-
-          const subLedgerControl = group?.get('psubledgername');
-
-          if (this.subledgeraccountslist.length > 0) {
-            this.showsubledger = true;
-            subLedgerControl?.setValidators(Validators.required);
-          } else {
-            this.showsubledger = false;
-
-            subLedgerControl?.clearValidators();
-
-            group?.get('psubledgerid')?.setValue(pledgerid);
-            subLedgerControl?.setValue(
-              group?.get('pledgername')?.value
-            );
-
-            this.formValidationMessages['psubledgername'] = '';
-          }
-
-          subLedgerControl?.updateValueAndValidity();
-        },
-        error => {
-          this._commonService.showErrorMessage(error);
-        }
-      );
+        });
   }
 
   // subledger_Change($event) {
@@ -1398,33 +1387,42 @@ debugger;
 
   }
   GetBankDetailsbyId(pbankid: any) {
+    debugger;
+    // this._AccountingTransactionsService.GetBankDetailsbyId(pbankid).subscribe(json => {
+    this._AccountingTransactionsService.GetViewBankInformation(pbankid,
+      this._commonService.getschemaname(),
+      this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode()
+    ).
+      subscribe({
+        next: (json: any) => {
+          //console.log(json)
+          if (json != null) {
+            this.bankbarnchdummy = json[0].bank_branch
+            this.paymentVoucherForm['controls']['pbranchname'].setValue(this.bankbarnchdummy);
+            this.upinameslist = json.bankupilist;
+            this.chequenumberslist = json.chequeslist;
 
-    this._AccountingTransactionsService.GetBankDetailsbyId(pbankid).subscribe(json => {
-
-      //console.log(json)
-      if (json != null) {
-
-        this.upinameslist = json.bankupilist;
-        this.chequenumberslist = json.chequeslist;
-
-
-        //this.lstLoanTypes = json
-        //this.titleDetails = json as string
-        //this.titleDetails = eval("(" + this.titleDetails + ')');
-        //this.titleDetails = this.titleDetails.FT;
-      }
-    },
-      (error) => {
-
-        this._commonService.showErrorMessage(error);
+          }
+        },
+        error: (err: any) => {
+          console.log('ERROR:', err);
+          alert('API Error');
+        }
       });
   }
-  getBankBranchName(pbankid: any) {
 
+
+
+  getBankBranchName(pbankid: any) {
+    debugger
     let data = this.banklist.filter(
       (res: { pbankid: any }) =>
         res.pbankid == pbankid
     );
+
+
     this.paymentVoucherForm['controls']['pbranchname'].setValue(data[0].pbranchname);
     this.setBalances('BANKBOOK', data[0].pbankbalance);
     this.setBalances('PASSBOOK', data[0].pbankpassbookbalance);

@@ -69,12 +69,26 @@ export class BankBookService {
       .set('AccountsSchema', AccountsSchema)
       .set('CompanyCode', CompanyCode)
       .set('BranchCode', BranchCode);
-    return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
   }
-  GetBankBookReportbyDates(FromDate: string | number | boolean, ToDate: string | number | boolean, _pBankAccountId: string | number | boolean): Observable<any> {
+  // GetBankBookReportbyDates(FromDate: string | number | boolean, ToDate: string | number | boolean, _pBankAccountId: string | number | boolean): Observable<any> {
 
-    let params = new HttpParams().set('FromDate', FromDate).set('ToDate', ToDate).set('_pBankAccountId', _pBankAccountId).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetBankBookDetails', params, 'YES')
+  //   let params = new HttpParams().set('FromDate', FromDate).set('ToDate', ToDate).set('_pBankAccountId', _pBankAccountId).set('BranchSchema', this._CommonService.getschemaname());
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetBankBookDetails', params, 'YES')
+  //     .pipe(
+  //       catchError((e: any) => {
+  //         this._CommonService.showErrorMessage(e);
+  //         return throwError(() => e);
+  //       })
+  //     );
+  // }
+  GetBankBookReportbyDates(FromDate: string | number | boolean, ToDate: string | number | boolean, _pBankAccountId: string | number | boolean,GlobalSchema:any, AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+
+    let params = new HttpParams().set('FromDate', FromDate).set('ToDate', ToDate).set('_pBankAccountId', _pBankAccountId).set('BranchSchema', this._CommonService.getschemaname()).set('GlobalSchema', GlobalSchema)
+      .set('AccountsSchema', AccountsSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);;
+    return this._CommonService.getAPI('/Accounts/GetBankBookDetails', params, 'YES')
       .pipe(
         catchError((e: any) => {
           this._CommonService.showErrorMessage(e);

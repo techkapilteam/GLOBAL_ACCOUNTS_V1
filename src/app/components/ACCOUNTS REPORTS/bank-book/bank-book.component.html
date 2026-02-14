@@ -124,59 +124,76 @@
     </div> -->
     <div class="section-content">
       <div class="container-fluid my-3">
-      <form [formGroup]="bankBookForm" autocomplete="off">
+        <form [formGroup]="bankBookForm" autocomplete="off">
 
-        <div class="row">
+          <div class="row">
 
-          <div class="col-md-3">
-            <label>From Date</label>
-            <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
-              readonly>
-          </div>
+            <div class="col-md-3">
+              <label>From Date</label>
+              <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
+                readonly>
+            </div>
 
-          <div class="col-md-3">
-            <label>To Date</label>
-            <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig"
-              readonly>
+            <div class="col-md-3">
+              <label>To Date</label>
+              <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig"
+                readonly>
               <small class="text-danger" *ngIf="bankBookForm.errors?.['dateRangeInvalid']">
-                  From Date cannot be greater than To Date
+                From Date cannot be greater than To Date
               </small>
-          </div>
+            </div>
 
-          <div class="col-md-3">
-            <label>Bank Name</label>
-            <select class="form-control" formControlName="pbankname" (change)="onBankChange($event)">
-              <option value="">Select</option>
-              <option *ngFor="let bank of bankData" [value]="bank.pbankaccountid">
-                {{ bank.bankName }}
-              </option>
-            </select>
-          </div>
+            <div class="col-md-3">
+              <label>Bank Name</label>
+              <select class="form-control" formControlName="pbankname" (change)="onBankChange($event)">
+                <option value="">Select</option>
+                <option *ngFor="let bank of bankData" [value]="bank.bankAccountId">
+                  {{ bank.bankName }}
+                </option>
+              </select>
+            </div>
 
-          <div class="col-md-3 d-flex align-items-end">
-            <button type="button" class="btn btn-primary w-100" (click)="getBankBookReports()" [disabled]="loading">
-              {{ loading ? 'Processing...' : 'Generate Report' }}
-            </button>
-          </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button type="button" class="btn btn-primary w-100" (click)="getBankBookReports()" [disabled]="loading">
+                {{ loading ? 'Processing...' : 'Generate Report' }}
+              </button>
+            </div>
 
-        </div>
-      </form>
+          </div>
+        </form>
       </div>
     </div>
 
 
     <div *ngIf="showReport" class="mt-4">
 
-      <div class="d-flex justify-content-end mb-2 gap-2">
-        <button pButton icon="pi pi-file-pdf" class="p-button-text" (click)="pdfOrPrint('pdf')"></button>
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button class="btn btn-outline-danger btn-sm" (click)="pdfOrPrint('Pdf')">
+          <i class="fa fa-file-pdf me-1"></i> PDF
+        </button>
 
-        <button pButton icon="pi pi-print" class="p-button-text" (click)="pdfOrPrint('print')"></button>
-
-        <button pButton icon="pi pi-file-excel" class="p-button-text" (click)="export()"></button>
+        <button class="btn btn-outline-success btn-sm" (click)="export()">
+          <i class="fa fa-file-excel me-1"></i> Excel
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrPrint('Print')">
+          <i class="fa fa-print me-1"></i> Print
+        </button>
+      </div>
+      <div class="text-center mb-1 fw-bold fs-5">
+        KAPIL CHITS (HYDERABAD) PVT. LTD.
       </div>
 
+      <div class="text-center mb-1">
+        Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old N.K-07, Kamarreddy
+      </div>
+
+      <div class="text-center mb-2 fw-semibold">
+        CIN: U65992TG2008PTC060803
+      </div>
+
+
       <p-table [value]="gridView" dataKey="ptransactionno" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'"
-        sortField="ptransactiondate" [sortOrder]="1" [expandedRowKeys]="expandedRows">
+        sortField="ptransactiondate" [sortOrder]="1" [expandedRowKeys]="expandedRows" [showFirstLastIcon]="false">
 
         <ng-template pTemplate="header">
           <tr>

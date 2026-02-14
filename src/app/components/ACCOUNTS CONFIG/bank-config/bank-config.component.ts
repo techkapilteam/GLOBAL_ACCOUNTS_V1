@@ -24,7 +24,6 @@ import { routes } from '../../../app.routes';
   templateUrl: './bank-config.component.html',
   styleUrls: ['./bank-config.component.css']
 })
-
 // export class BankConfigComponent implements OnInit {
 
 //   bankmasterform!: FormGroup;
@@ -223,7 +222,7 @@ export class BankConfigComponent implements OnInit {
   debitcardhideandshow: any;
   bankupihideandshow: any;
   isDebitCardOpen = false;
-precordid='1';
+precordid1=1;
   isUpiOpen = false;
   bankOpen = false;
 
@@ -305,7 +304,8 @@ precordid='1';
         pBankbranch: [''],
         pAccountnumber: ['', Validators.required],
         pIfsccode: [''],
-        pAccountname: ['', Validators.required],
+        account_name: ['', Validators.required],
+        // pAccountname: ['', Validators.required],
         pOverdraft: [''],
         pOpeningBalance: [''],
         pOpeningBalanceType: [''],
@@ -371,10 +371,40 @@ precordid='1';
     this.bankmasterform['controls']['pBankdate'].setValue(this.date);
     this.bankmasterform['controls']['pOpeningBalanceType'].setValue('D')
     this.BlurEventAllControll(this.bankmasterform)
-    this._accountingmasterserive.GetBankUPIDetails().subscribe(data => {
-      debugger;
-      this.upiname = data
-    })
+    // this._accountingmasterserive.GetBankUPIDetails().subscribe(data => {
+    //   debugger;
+    //   this.upiname = data
+    // })
+
+ this._accountingmasterserive.GetBankUPIDetails(
+      
+      this._commonService.getschemaname(), 
+      this._commonService.getBranchCode(),
+      this._commonService.getCompanyCode(),
+      
+      
+      )
+       .subscribe({
+      next: (res: any) => {
+        // bankName
+        console.log('data',res);
+        
+        this.upiname = res;
+
+        console.log('SUCCESS:', res);
+        alert('hello');
+      },
+      error: (err: any) => {
+        console.log('ERROR:', err);
+        alert('API Error');
+      }
+    });
+
+
+
+
+
+
     debugger;
 
     // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
@@ -399,11 +429,12 @@ precordid='1';
 
 
     this._accountingmasterserive.GetBanks(
+       this.precordid1,
       this._commonService.getschemaname(), 
       this._commonService.getbranchname(),
       this._commonService.getCompanyCode(),
        this._commonService.getBranchCode(),
-       this.precordid,
+      
       )
        .subscribe({
       next: (res: any) => {
@@ -588,10 +619,12 @@ precordid='1';
     }
   }
   onChange(event: any) {
+    debugger
     this.bankname = event.target.options[event.target.options.selectedIndex].text;
     console.log(this.bankname);
-    this.bankmasterform.controls['pAccountname'].setValue(this.bankname);
-    //bankmastervalidations.pAccountname
+    this.bankmasterform.get('account_name')?.setValue(this.bankname);
+    // this.bankmasterform.controls.['account_name'].setValue(this.bankname);
+    // bankmastervalidations.pAccountname
     //console.log((this.banksList.filter((ele)=>{return ele.pBankName==this.bankmasterform.controls['pBankname'].value}))[0]['pBankId']);
   }
 

@@ -14,11 +14,12 @@
                   <div class="form-group">
                     <label class="required-field">Select Bank</label>
                     <div class="input-group">
-                      <select class="form-control" id="pBankname" formControlName="pBankname"
+                      <!-- pBankname -->
+                      <select class="form-control" id="bankName" formControlName="bankName"
                         (change)="getrecordid($event)">
                         <option value="" selected>--Select--</option>
-                        <option *ngFor="let i of bankdetails" [value]="i.pBankname">
-                          {{ i.pBankname }}
+                        <option *ngFor="let i of bankdetails" [value]="i.bankName">
+                          {{ i.bankName }}
                         </option>
                       </select>
                     </div>
@@ -72,7 +73,7 @@
               <div class="row">
                 <div class="col-md-12 col-xl-12">
 
-                  <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force"
+                  <!-- <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force"
                     [headerHeight]="50" [rowHeight]="50" [footerHeight]="0" [limit]="5">
 
                     <ngx-datatable-column name="No. of Cheques" prop="pNoofcheques" [cellClass]="'cell-center'"
@@ -94,7 +95,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                  </ngx-datatable>
+                  </ngx-datatable> -->
                   <p-table
   [value]="gridData"
   [rows]="5"

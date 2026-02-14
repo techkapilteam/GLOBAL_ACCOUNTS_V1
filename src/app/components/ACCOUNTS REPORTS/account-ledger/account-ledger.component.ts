@@ -107,13 +107,21 @@ today = new Date();
     }
     return null;
   }
+  // private loadLedgers(): void {
+  //   this.reportService.GetLedgerAccountList('ACCOUNT LEDGER')
+  //     .subscribe({
+  //       next: (res) => this.ledgeraccountslist = res ?? [],
+  //       error: (err) => this.commonService.showErrorMessage(err)
+  //     });
+  // }
   private loadLedgers(): void {
-    this.reportService.GetLedgerAccountList('ACCOUNT LEDGER')
+    this.reportService.GetLedgerAccountList('ACCOUNT LEDGER','accounts','KAPILCHITS','KLC01','global')
       .subscribe({
         next: (res) => this.ledgeraccountslist = res ?? [],
         error: (err) => this.commonService.showErrorMessage(err)
       });
   }
+
 
   // ledgerName_Change(id: number) {
   //   const ledger = this.ledgeraccountslist.find(x => x.pledgerid === id);
@@ -133,7 +141,9 @@ today = new Date();
 
     if (!ledgerId) return;
 
-    this.transactionService.GetSubLedgerData(ledgerId)
+    this.transactionService.GetSubLedgerData(ledgerId
+      
+    )
       .subscribe({
         next: (res) => this.subledgeraccountslist = res ?? [],
         error: (err) => this.commonService.showErrorMessage(err)
