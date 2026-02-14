@@ -22,9 +22,7 @@ import { environment } from '../envir/environment';
   providedIn: 'root',
 })
 export class CommonService {
-  isNullOrEmptyString(chitgroupstatus: any) {
-    throw new Error('Method not implemented.');
-  }
+ 
   getipaddress(): any {
     throw new Error('Method not implemented.');
   }
@@ -877,6 +875,7 @@ export class CommonService {
       return null;
     }
   }
+  
   getCreatedBy(): string {
     const userId = sessionStorage.getItem('LoginUserid');
     return userId ? JSON.parse(userId).toString() : '';
