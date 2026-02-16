@@ -29,7 +29,8 @@
                                     <option value="">Select</option>
                                     @for (bank of PaytmList; track bank.paccountid) {
                                     <option [value]="bank.paccountid">
-                                        {{ bank.pdepositbankname }}
+                                        <!-- {{ bank.pdepositbankname }} -->
+                                        {{ bank.accountName }}
                                     </option>
                                     }
                                 </select>

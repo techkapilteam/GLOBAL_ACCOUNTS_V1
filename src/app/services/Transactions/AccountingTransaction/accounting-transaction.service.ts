@@ -142,8 +142,8 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', BranchSchema);
     return this._CommonService.getAPI('/AccountingTransactions/GetBankntList', params, 'YES')
   }
-
-  GetPayTmBanksList(BranchSchema: any): Observable<any> {
+  
+  GetPayTmBanksList(BranchSchema:any): Observable<any> {
     const params = new HttpParams().set('BranchSchema', BranchSchema);
     return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
   }
@@ -310,7 +310,7 @@ export class AccountingTransactionsService {
     return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
   }
 
-  GetChequeReturnDetails(strFromDate: any, strToDate: any) {
+  GetChequeReturnDetails(strFromDate:any, strToDate:any) {
     const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequeReturnDetails', params, 'YES');
   }
