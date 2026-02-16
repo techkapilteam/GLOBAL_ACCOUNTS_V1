@@ -141,6 +141,7 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetIssuedBankDetails(event: any) {
+    debugger;
     this.isSubmited = true;
 
     if (this.FrmIssuedCheque.invalid) {
@@ -157,19 +158,19 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetData() {
+    
     this.Showhide = false;
     const [from, to] = this.strChqNo.split('-');
     this._ChqFromNo = from;
     this._ChqToNo = to;
     this.ShowReport = false;
-
-    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to)
+    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILAGRO','KIT')
       .subscribe((res: any) => {
         this.gridData = res ?? [];
         this.pageCriteria.totalrows = this.gridData.length;
       });
 
-    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to)
+    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILAGRO','KIT')
       .subscribe((res: any) => {
         this.datagrid = res ?? [];
         this.gridDataDetails = [...this.datagrid];
@@ -211,7 +212,7 @@ export class IssuedChequeComponent implements OnInit {
       'Cleared Date': this.commonService.getFormatDateGlobal(element.pcleardate),
       'Paid Amt.': element.ppaidamount
         ? this.commonService.convertAmountToPdfFormat(
-          this.commonService.currencyformat(element.ppaidamount)
+          this.commonService.currencyFormat(element.ppaidamount)
         )
         : '',
       'Bank Name': element.pbankname,

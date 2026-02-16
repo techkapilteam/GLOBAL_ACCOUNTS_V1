@@ -133,9 +133,13 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/AccountingTransactions/GetBankntList', params, 'YES')
   }
   
-  GetPayTmBanksList(BranchSchema:any): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', BranchSchema);
-    return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
+  // GetPayTmBanksList(BranchSchema:any): Observable<any> {
+  //   const params = new HttpParams().set('BranchSchema', BranchSchema);
+  //   return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
+  // }
+  GetPayTmBanksList(BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+    const params = new HttpParams().set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/BankUPIList', params, 'YES')
   }
   GetCAOBranchList(BranchSchema:any): Observable<any> {
     const params = new HttpParams().set('BranchSchema', BranchSchema);
@@ -297,9 +301,13 @@ export class AccountingTransactionsService {
     return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
   }
 
-  GetChequeReturnDetails(strFromDate:any, strToDate:any) {
-    const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequeReturnDetails', params, 'YES');
+  // GetChequeReturnDetails(strFromDate:any, strToDate:any) {
+  //   const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequeReturnDetails', params, 'YES');
+  // }
+  GetChequeReturnDetails(strFromDate:any, strToDate:any,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any) {
+    const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetChequeReturnDetails', params, 'YES');
   }
   GetChequeCancelDetails(strFromDate:any ,strToDate:any) {
     const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());

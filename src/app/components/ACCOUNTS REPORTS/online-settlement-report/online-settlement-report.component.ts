@@ -77,8 +77,13 @@ export class OnlineSettlementReportComponent implements OnInit {
   }
 
   loadPaytmList(): void {
+    // this._accountingtransaction
+    //   .GetPayTmBanksList(this._commonService.getschemaname())
+    //   .subscribe(res => {
+    //     this.PaytmList = res || [];
+    //   });
     this._accountingtransaction
-      .GetPayTmBanksList(this._commonService.getschemaname())
+      .GetPayTmBanksList('accounts','KAPILCHITS','KP')
       .subscribe(res => {
         this.PaytmList = res || [];
       });
@@ -303,7 +308,7 @@ export class OnlineSettlementReportComponent implements OnInit {
     '',
     '',
     'Grand Total:',
-    this._commonService.currencyformat(this.Amttotal),
+    this._commonService.currencyFormat(this.Amttotal),
     '',
     '',
     '',

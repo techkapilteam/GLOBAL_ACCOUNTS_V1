@@ -104,15 +104,31 @@ GetLedgerReport(fromDate: string, toDate: string, pAccountId: string | number, p
   );
 }
 
-GetCashBookReportbyDates(startDate: string, endDate: string, transType: string): Observable<any> {
+// GetCashBookReportbyDates(startDate: string, endDate: string, transType: string): Observable<any> {
+//   const params = new HttpParams()
+//     .set('fromdate', startDate)
+//     .set('todate', endDate)
+//     .set('transType', transType)
+//     .set('BranchSchema', this._CommonService.getschemaname());
+
+//   return this._CommonService.getAPI(
+//     '/Accounting/AccountingReports/getCashbookData',
+//     params,
+//     'YES'
+//   );
+// }
+GetCashBookReportbyDates(fromdate: string, todate: string,BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+  debugger;
   const params = new HttpParams()
-    .set('fromdate', startDate)
-    .set('todate', endDate)
-    .set('transType', transType)
-    .set('BranchSchema', this._CommonService.getschemaname());
+    .set('fromdate', fromdate)
+    .set('todate', todate)
+
+    .set('BranchSchema', BranchSchema)
+    .set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode);
 
   return this._CommonService.getAPI(
-    '/Accounting/AccountingReports/getCashbookData',
+    '/Accounts/getCashbookData',
     params,
     'YES'
   );
@@ -306,26 +322,52 @@ GetBankChequeDetails(_BankId: string | number,BranchSchema:any,CompanyCode:any,B
   return this._CommonService.getAPI('/Accounts/GetIssuedChequeNumbers', params, 'YES');
 }
 
-GetIssuedBankDetails(BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number): Observable<any> {
+// GetIssuedBankDetails(BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number): Observable<any> {
+//   const params = new HttpParams()
+//     .set('_BankId', BankId.toString())
+//     .set('_ChqBookId', _ChqBookId.toString())
+//     .set('_ChqFromNo', _ChqFromNo.toString())
+//     .set('_ChqToNo', _ChqToNo.toString())
+//     .set('BranchSchema', this._CommonService.getschemaname());
+
+//   return this._CommonService.getAPI('/Accounting/AccountingReports/GetIssuedChequeDetails', params, 'YES');
+// }
+GetIssuedBankDetails(_BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
   const params = new HttpParams()
-    .set('_BankId', BankId.toString())
+    .set('_BankId', _BankId.toString())
     .set('_ChqBookId', _ChqBookId.toString())
     .set('_ChqFromNo', _ChqFromNo.toString())
     .set('_ChqToNo', _ChqToNo.toString())
-    .set('BranchSchema', this._CommonService.getschemaname());
+    .set('BranchSchema', BranchSchema)
+    .set('GlobalSchema', GlobalSchema)
+    .set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode);
 
-  return this._CommonService.getAPI('/Accounting/AccountingReports/GetIssuedChequeDetails', params, 'YES');
+  return this._CommonService.getAPI('/Accounts/GetIssuedChequeDetails', params, 'YES');
 }
 
-GetUnusedChequeDetails(BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number): Observable<any> {
+// GetUnusedChequeDetails(_BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number): Observable<any> {
+//   const params = new HttpParams()
+//     .set('_BankId', _BankId.toString())
+//     .set('_ChqBookId', _ChqBookId.toString())
+//     .set('_ChqFromNo', _ChqFromNo.toString())
+//     .set('_ChqToNo', _ChqToNo.toString())
+//     .set('BranchSchema', this._CommonService.getschemaname());
+
+//   return this._CommonService.getAPI('/Accounting/AccountingReports/GetUnUsedCheques', params, 'YES');
+// }
+GetUnusedChequeDetails(_BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
   const params = new HttpParams()
-    .set('_BankId', BankId.toString())
+    .set('_BankId', _BankId.toString())
     .set('_ChqBookId', _ChqBookId.toString())
     .set('_ChqFromNo', _ChqFromNo.toString())
     .set('_ChqToNo', _ChqToNo.toString())
-    .set('BranchSchema', this._CommonService.getschemaname());
+    .set('BranchSchema', BranchSchema)
+    .set('GlobalSchema', GlobalSchema)
+    .set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode);
 
-  return this._CommonService.getAPI('/Accounting/AccountingReports/GetUnUsedCheques', params, 'YES');
+  return this._CommonService.getAPI('/Accounts/GetUnUsedCheques', params, 'YES');
 }
 
 GetJvListReport(fromdate: string, todate: string, pmodeoftransaction: string): Observable<any> {
