@@ -416,6 +416,7 @@
 
 
           <!-- Payments List Table -->
+
           <p-table [value]="paymentslist1" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="400px"
             [resizableColumns]="true" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -526,25 +527,18 @@
               </div>
             </div>
           </div>
-
-          <div class="row mt-3">
-            <div class="col-md-12 col-xl-12">
-              <div class="d-flex justify-content-end">
-                <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
-                <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()" appButtonDoubleClick>
-                  Clear</a>
-                <button (click)="saveJournalVoucher()" class="btn btn-primary px-3 border-0">
-
-                  save
-                </button>
-
-              </div>
-            </div>
-          </div>
         </div>
+    </form>
+    <div class="row mt-3">
+      <div class="col-md-12 col-xl-12">
+        <div class="d-flex justify-content-end">
+          <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
+          <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()" appButtonDoubleClick>
+            Clear</a>
+          <button (click)="saveJournalVoucher()" class="btn btn-primary px-3 border-0">
 
-      </form>
+            save
+          </button>
+        </div>
+      </div>
     </div>
-
-  </div>
-</div>
