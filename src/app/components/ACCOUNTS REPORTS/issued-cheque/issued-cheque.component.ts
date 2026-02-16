@@ -126,17 +126,18 @@ export class IssuedChequeComponent implements OnInit {
 
     if (!event) return;
 
-    const bankId = event.pbankaccountid;
-    this.BankName = event.pbankname;
+    const bankId = event.bankAccountId;
+    this.BankName = event.bankName;
 
-    this.reportService.GetBankChequeDetails(bankId).subscribe({
+    // this.reportService.GetBankChequeDetails(bankId).subscribe({
+    //   next: res => (this.lstBankChequeDetails = res ?? []),
+    //   error: err => this.commonService.showErrorMessage(err)
+    // });
+    this.reportService.GetBankChequeDetails(bankId,'accounts','KAPILCHITS','KLC01').subscribe({
       next: res => (this.lstBankChequeDetails = res ?? []),
       error: err => this.commonService.showErrorMessage(err)
     });
-    // this.lstBankChequeDetails = [
-    //   { pchkBookId: 101, pchqfromto: '1001-1010' },
-    //   { pchkBookId: 102, pchqfromto: '2001-2010' }
-    // ];
+    
   }
 
   GetIssuedBankDetails(event: any) {
