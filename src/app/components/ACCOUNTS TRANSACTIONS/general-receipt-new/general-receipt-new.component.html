@@ -264,7 +264,8 @@
                     <div class="form-group">
                       <label>Bank Name</label>
                       <select class="form-control" id="pbankid" title="Bank Name" formControlName="pbankid"
-                        [ngClass]="{ 'is-invalid': formValidationMessages.pbankid }" (change)="BankIdChange($event)">
+                        [ngClass]="{ 'is-invalid': formValidationMessages.pbankid }" (change)="
+                        ($event)">
                         <option value="" ng-selected="selected">Select</option>
                         <option *ngFor="let bank of banksList;trackBy: trackByFn" [value]="bank.pBankId">
                           {{bank.pBankName}}</option>
@@ -489,9 +490,10 @@
           <div class="input-group d-block">
             <label id="pledgerid" class="required-field" title="Ledger">Ledger</label>
             <ng-select id="pledgerid" title="Ledger" [items]="ledgeraccountslist" formControlName="pledgerid"
-              groupBy="pAccounttype" bindLabel="pledgername" bindValue="pledgerid" [multiple]=false placeholder="Select"
-              [searchable]=true [clearable]=false dropdownPosition="bottom" [clearOnBackspace]=true
-              (change)="ledgerName_Change($event)" [ngClass]="{ 'is-invalid': formValidationMessages.pledgerid }">
+              groupBy="pAccounttype" bindLabel="pledgername" bindValue="pledgerid" [multiple]="false"
+              placeholder="Select" [searchable]="true" [clearable]="false" dropdownPosition="bottom"
+              [clearOnBackspace]="true" (change)="ledgerName_Change($event)"
+              [ngClass]="{ 'is-invalid': formValidationMessages.pledgerid }">
               <ng-template ng-optgroup-tmp let-item="item">
                 {{item.pAccounttype}}
               </ng-template>

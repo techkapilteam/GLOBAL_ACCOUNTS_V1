@@ -35,13 +35,8 @@ import { TableModule } from 'primeng/table'
         GeneralReceiptNewComponent,
         ValidationMessageComponent,
         BsDatepickerModule,
-        CurrencyPipe,
-
-        
-      
-      ],
-    templateUrl: './general-receipt-new.component.html',
-    
+        CurrencyPipe],
+    templateUrl: './general-receipt-new.component.html'   
 })
 export class GeneralReceiptNewComponent implements OnInit {
     showModeofPayment = false;
@@ -1783,39 +1778,49 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
 
     ledgerName_Change($event: any): void {
 
-
-        let pledgerid
-        if ($event != undefined) {
-            pledgerid = $event.pledgerid;
-            //$('#psubledgerid').addClass("required-field")
-        }
-        this.subledgeraccountslist = [];
-        this.GeneralReceiptForm.get('preceiptslist.psubledgerid')?.setValue(null);
-        this.GeneralReceiptForm.get('preceiptslist.psubledgername')?.setValue('');
-        this.ledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
-        this.subledgerBalance = this.currencySymbol + ' 0.00' + ' Dr';
-
-        if (pledgerid && pledgerid != '') {
-
-            const ledgername = $event.pledgername;
-
-            let data = this.ledgeraccountslist.filter(function (ledger: { pledgerid: any; }) {
-                return ledger.pledgerid == pledgerid;
-            })[0];
-            this.setBalances('LEDGER', data.accountbalance);
-            let subLedgerControl = <FormGroup>this.GeneralReceiptForm.get('preceiptslist.psubledgerid');
-            subLedgerControl.clearValidators();
-            subLedgerControl.updateValueAndValidity();
-            this.GetSubLedgerData(pledgerid);
-            this.GeneralReceiptForm.get('preceiptslist.pledgername')?.setValue(ledgername);
-        }
-        else {
-
-            this.setBalances('LEDGER', 0);
-            this.GeneralReceiptForm.get('preceiptslist.pledgername')?.setValue('');
-        }
-
+    let pledgerid;
+    if ($event != undefined) {
+        pledgerid = $event.pledgerid;
     }
+
+    // Reset subledger and balances
+    this.subledgeraccountslist = [];
+    this.GeneralReceiptForm.get('preceiptslist.psubledgerid')?.setValue(null);
+    this.GeneralReceiptForm.get('preceiptslist.psubledgername')?.setValue('');
+    this.ledgerBalance = `${this.currencySymbol} 0.00 Dr`;
+    this.subledgerBalance = `${this.currencySymbol} 0.00 Dr`;
+
+    if (pledgerid && pledgerid != '') {
+
+        const ledgername = $event.pledgername;
+
+        // Find ledger data
+        const data = this.ledgeraccountslist.find(
+            (ledger: { pledgerid: any; accountbalance: number }) => ledger.pledgerid === pledgerid
+        );
+
+        if (data) {
+            this.setBalances('LEDGER', data.accountbalance);
+        }
+
+        // Clear validators for subledger if needed
+        const subLedgerControl = <FormGroup>this.GeneralReceiptForm.get('preceiptslist.psubledgerid');
+        subLedgerControl.clearValidators();
+        subLedgerControl.updateValueAndValidity();
+
+        // Load subledger data
+        this.GetSubLedgerData(pledgerid);
+
+        // Set selected ledger name
+        this.GeneralReceiptForm.get('preceiptslist.pledgername')?.setValue(ledgername);
+
+    } else {
+        // Reset if nothing selected
+        this.setBalances('LEDGER', 0);
+        this.GeneralReceiptForm.get('preceiptslist.pledgername')?.setValue('');
+    }
+}
+
 
     subledger_Change($event: { psubledgerid: any; psubledgername: any; }) {
         let psubledgerid
@@ -2104,11 +2109,7 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
             this.showErrorMessage('An error occurred in setBlurEvent.');
         }
     }
-
-
-
-    uploadAndProgress(event: any
-        
+    uploadAndProgress(event: any      
     ) {
         debugger;
         var extention = event.target.value.substring(event.target.value.lastIndexOf('.') + 1);
@@ -2164,6 +2165,7 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
         }
     }
 
+    
 
     BankNameChange() {
         this.GetValidationByControl(this.GeneralReceiptForm, 'pbankname', true);
