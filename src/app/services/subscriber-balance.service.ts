@@ -66,7 +66,7 @@ export class SubscriberBalanceService {
           if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5,20,20);
 
           doc.setTextColor('black');
-          doc.text(Companyreportdetails.pCompanyName, 60, 10);
+          doc.text(Companyreportdetails?.pCompanyName??'', 60, 10);
           doc.setFontSize(8);
 
           if (reportName === 'Pending Transfer In') {
@@ -75,7 +75,7 @@ export class SubscriberBalanceService {
             doc.text(address, 70, 17, { align: 'left' });
           }
 
-          if (Companyreportdetails.pCinNo) {
+          if (Companyreportdetails?.pCinNo??'') {
             doc.text('CIN : ' + Companyreportdetails.pCinNo, 75, 22);
           }
 
@@ -95,11 +95,11 @@ export class SubscriberBalanceService {
           if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5,20,20);
 
           doc.setTextColor('black');
-          doc.text(Companyreportdetails.pCompanyName, 110, 10);
+          doc.text(Companyreportdetails?.pCompanyName??'', 110, 10);
           doc.setFontSize(10);
           doc.text(address, 80, 15, { align: 'left' });
 
-          if (Companyreportdetails.pCinNo) {
+          if (Companyreportdetails?.pCinNo??'') {
             doc.text('CIN : ' + Companyreportdetails.pCinNo, 125, 20);
           }
 

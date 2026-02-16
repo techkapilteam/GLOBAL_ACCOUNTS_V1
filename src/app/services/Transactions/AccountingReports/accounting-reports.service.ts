@@ -267,22 +267,43 @@ GetComparisionTB(fromdate: string, todate: string): Observable<any> {
   return this._CommonService.getAPI('/Accounting/AccountingReports/GetComparisionTB', params, 'YES');
 }
 
-GetTrialBalanceData(fromdate: string, todate: string, grouptype: string): Observable<any> {
+// GetTrialBalanceData(fromdate: string, todate: string, grouptype: string): Observable<any> {
+//   const params = new HttpParams()
+//     .set('fromDate', fromdate)
+//     .set('todate', todate)
+//     .set('GroupType', grouptype)
+//     .set('LocalSchema', this._CommonService.getschemaname());
+
+//   return this._CommonService.getAPI('/Accounting/AccountingReports/GetTrialBalance', params, 'YES');
+// }
+GetTrialBalanceData(fromdate: string, todate: string, GroupType: string,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
   const params = new HttpParams()
     .set('fromDate', fromdate)
     .set('todate', todate)
-    .set('GroupType', grouptype)
-    .set('LocalSchema', this._CommonService.getschemaname());
+    .set('GroupType', GroupType)
+    .set('LocalSchema', LocalSchema)
+    .set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode)
+    .set('GlobalSchema', GlobalSchema);
 
-  return this._CommonService.getAPI('/Accounting/AccountingReports/GetTrialBalance', params, 'YES');
+  return this._CommonService.getAPI('/Accounts/GetTrialBalance', params, 'YES');
 }
 
-GetBankChequeDetails(BankId: string | number): Observable<any> {
-  const params = new HttpParams()
-    .set('_BankId', BankId.toString())
-    .set('BranchSchema', this._CommonService.getschemaname());
+// GetBankChequeDetails(BankId: string | number): Observable<any> {
+//   const params = new HttpParams()
+//     .set('_BankId', BankId.toString())
+//     .set('BranchSchema', this._CommonService.getschemaname());
 
-  return this._CommonService.getAPI('/Accounting/AccountingReports/GetIssuedChequeNumbers', params, 'YES');
+//   return this._CommonService.getAPI('/Accounting/AccountingReports/GetIssuedChequeNumbers', params, 'YES');
+// }
+GetBankChequeDetails(_BankId: string | number,BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+  const params = new HttpParams()
+    .set('_BankId', _BankId)
+    .set('BranchSchema', BranchSchema)
+    .set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode);
+
+  return this._CommonService.getAPI('/Accounts/GetIssuedChequeNumbers', params, 'YES');
 }
 
 GetIssuedBankDetails(BankId: string | number, _ChqBookId: string | number, _ChqFromNo: string | number, _ChqToNo: string | number): Observable<any> {
@@ -344,90 +365,91 @@ _CashBookReportsPdf(
   const Companyreportdetails = this._CommonService._getCompanyDetails();
   const doc = new jsPDF(pagetype);
   const totalPagesExp = '{total_pages_count_string}';
-//   const today = this._CommonService.pdfProperties('Date');
-//   const currencyformat = this._CommonService.currencysymbol();
-//   const rupeeImage = this._CommonService._getRupeeSymbol();
-//   const kapil_logo = this._CommonService.getKapilGroupLogo();
+  const today = this._CommonService.pdfProperties('Date');
+  const currencyformat = this._CommonService.currencysymbol;
+  const rupeeImage = this._CommonService._getRupeeSymbol();
+  const kapil_logo = this._CommonService.getKapilGroupLogo();
 
   let pdfInMM: number;
 
-//   doc.autoTable({
-//     columns: gridheaders,
-//     body: gridData,
-//     theme: 'grid',
-//     headStyles: {
-//       fillColor: this._CommonService.pdfProperties('Header Color'),
-//       halign: this._CommonService.pdfProperties('Header Alignment'),
-//       fontSize: this._CommonService.pdfProperties('Header Fontsize')
-//     },
-//     styles: {
-//       cellPadding: 1,
-//       fontSize: this._CommonService.pdfProperties('Cell Fontsize'),
-//       cellWidth: 'wrap',
-//       rowPageBreak: 'avoid',
-//       overflow: 'linebreak'
-//     },
-//     columnStyles: colWidthHeight,
-//     startY: 48,
-//     showHead: 'everyPage',
-//     didDrawPage: (data:any) => {
-//       const pageSize = doc.internal.pageSize;
-//       const pageWidth = pageSize.getWidth();
-//       const pageHeight = pageSize.getHeight();
+  autoTable(doc, {
+    columns: gridheaders,
+    body: gridData,
+    theme: 'grid',
+    headStyles: {
+      fillColor: this._CommonService.pdfProperties('Header Color'),
+      halign: 'center',
+      // this._CommonService.pdfProperties('Header Alignment'),
+      fontSize: Number(this._CommonService.pdfProperties('Header Fontsize'))
+    },
+    styles: {
+      cellPadding: 1,
+      fontSize: Number(this._CommonService.pdfProperties('Cell Fontsize')),
+      cellWidth: 'wrap',
+      rowPageBreak: 'avoid',
+      overflow: 'linebreak'
+    }as any,
+    columnStyles: colWidthHeight,
+    startY: 48,
+    showHead: 'everyPage',
+    didDrawPage: (data:any) => {
+      const pageSize = doc.internal.pageSize;
+      const pageWidth = pageSize.getWidth();
+      const pageHeight = pageSize.getHeight();
 
-//       doc.setFont(undefined, 'normal');
+      doc.setFont('helvetica', 'normal');
 
-//       if (doc.internal.getNumberOfPages() === 1) {
-//         doc.setFontSize(15);
+      if (doc.getNumberOfPages() === 1) {
+        doc.setFontSize(15);
 
-//         if (pagetype === 'a4') {
-//          // doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
-//           doc.text(Companyreportdetails.pCompanyName, 60, 20);
-//           doc.setFontSize(10);
-//           doc.text(address, 40, 27);
+        if (pagetype === 'a4') {
+         // doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
+          doc.text(Companyreportdetails?.pCompanyName??'', 60, 20);
+          doc.setFontSize(10);
+          doc.text(address, 40, 27);
 
-//           if (Companyreportdetails.pCinNo) {
-//             doc.text('CIN : ' + Companyreportdetails.pCinNo, 85, 32);
-//           }
+          if (Companyreportdetails?.pCinNo ?? '') {
+            doc.text('CIN : ' + Companyreportdetails.pCinNo, 85, 32);
+          }
 
-//           doc.setFontSize(14);
-//           doc.text(reportName, 90, 42);
-//           doc.setFontSize(10);
-//           doc.text('Branch : ' + Companyreportdetails.pBranchname, 163, 47);
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 42);
+          doc.setFontSize(10);
+          doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 47);
 
-//           if (betweenorason === 'Between') {
-//             doc.text(`Between : ${fromdate} And ${todate}`, 15, 47);
-//           } else if (betweenorason === 'As On' && fromdate) {
-//             doc.text(`As on : ${fromdate}`, 15, 47);
-//           }
+          if (betweenorason === 'Between') {
+            doc.text(`Between : ${fromdate} And ${todate}`, 15, 47);
+          } else if (betweenorason === 'As On' && fromdate) {
+            doc.text(`As on : ${fromdate}`, 15, 47);
+          }
 
-//           pdfInMM = 233;
-//           doc.line(10, 50, pdfInMM - 30, 50);
-//         }
-//       }
+          pdfInMM = 233;
+          doc.line(10, 50, pdfInMM - 30, 50);
+        }
+      }
 
-//       let page = 'Page ' + doc.internal.getNumberOfPages();
-//       if (typeof doc.putTotalPages === 'function') {
-//         page += ' of ' + totalPagesExp;
-//       }
+      let page = 'Page ' + doc.getNumberOfPages();
+      if (typeof doc.putTotalPages === 'function') {
+        page += ' of ' + totalPagesExp;
+      }
 
-//       doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
-//       doc.setFontSize(10);
-//       //doc.text('Printed on : ' + today, 15, pageHeight - 5);
-//       doc.text(page, pageWidth - 30, pageHeight - 5);
-//     },
-//     didDrawCell: (data:any) => {
-//       if (
-//         [3, 4, 5].includes(data.column.index) &&
-//         data.cell.section === 'body' &&
-//         data.cell.raw !== 0 &&
-//         currencyformat === '₹'
-//       ) {
-//         const textPos = data.cell.textPos;
-//       //  doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
-//       }
-//     }
-//   });
+      doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+      doc.setFontSize(10);
+      //doc.text('Printed on : ' + today, 15, pageHeight - 5);
+      doc.text(page, pageWidth - 30, pageHeight - 5);
+    },
+    didDrawCell: (data:any) => {
+      if (
+        [3, 4, 5].includes(data.column.index) &&
+        data.cell.section === 'body' &&
+        data.cell.raw !== 0 &&
+        currencyformat === '₹'
+      ) {
+        const textPos = data.cell.textPos;
+      //  doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+      }
+    }
+  });
 
   if (typeof doc.putTotalPages === 'function') {
     doc.putTotalPages(totalPagesExp);
@@ -680,27 +702,27 @@ _AccountLedgerReportsPdf(
   const today = this._CommonService.pdfProperties('Date');
   const kapil_logo = this._CommonService.getKapilGroupLogo();
 
-//   doc.autoTable({
-//     columns: gridheaders,
-//     body: gridData,
-//     startY: 64,
-//     theme: 'grid',
-//     headStyles: { fontSize: 6 },
-//     margin: { left: 3, right: 3 },
-//     didDrawPage: () => {
-//       doc.setFont(undefined, 'normal');
-//       doc.addImage(kapil_logo, 'JPEG', 10, 15);
-//       doc.setFontSize(15);
-//       doc.text(Companyreportdetails.pCompanyName, 60, 15);
-//       doc.setFontSize(9);
-//       doc.text(address, 32, 20);
-//       doc.setFontSize(14);
-//       doc.text(reportName, 90, 38);
-//       doc.text(subreportname, 30, 45);
-//       doc.setFontSize(10);
-//       doc.text('Printed on : ' + today, 15, doc.internal.pageSize.getHeight() - 5);
-//     }
-//   });
+  autoTable(doc, {
+    columns: gridheaders,
+    body: gridData,
+    startY: 64,
+    theme: 'grid',
+    headStyles: { fontSize: 6 },
+    margin: { left: 3, right: 3 },
+    didDrawPage: () => {
+      doc.setFont('helvetica', 'normal');
+      doc.addImage(kapil_logo, 'JPEG', 10, 15, 30, 20);
+      doc.setFontSize(15);
+      doc.text(Companyreportdetails?.pCompanyName ??'', 60, 15);
+      doc.setFontSize(9);
+      doc.text(address, 32, 20);
+      doc.setFontSize(14);
+      doc.text(reportName, 90, 38);
+      doc.text(subreportname, 30, 45);
+      doc.setFontSize(10);
+      doc.text('Printed on : ' + today, 15, doc.internal.pageSize.getHeight() - 5);
+    }
+  });
 
   if (printorpdf === 'Pdf') doc.save(`${reportName}.pdf`);
   if (printorpdf === 'Print') this.setiFrameForPrint(doc);
@@ -830,7 +852,7 @@ _IssuedChequesReportsPdf(
       }
 
       doc.setFontSize(15);
-      doc.text(Companyreportdetails.pCompanyName ?? '', 60, 20);
+      doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
 
       doc.setFontSize(14);
       doc.text(reportName ?? '', 85, 42);
@@ -882,7 +904,7 @@ _ChequeReturnCancelReportsPdf(
       doc.setFont('helvetica', 'normal');
       doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
       doc.setFontSize(15);
-      doc.text(Companyreportdetails.pCompanyName, 60, 20);
+      doc.text(Companyreportdetails?.pCompanyName??'', 60, 20);
       doc.setFontSize(14);
       doc.text(reportName, 85, 42);
     },
@@ -1147,7 +1169,7 @@ _CompletedGroupDetailsPdf(
       if (doc.internal.getNumberOfPages() === startpage) {
         doc.addImage(logo, 'JPEG', 10, 15, 20, 20);
         doc.setFontSize(15);
-        doc.text(company.pCompanyName, 60, 20);
+        doc.text(company?.pCompanyName??'', 60, 20);
         doc.setFontSize(10);
         doc.text(address, 40, 27);
         doc.setFontSize(14);
