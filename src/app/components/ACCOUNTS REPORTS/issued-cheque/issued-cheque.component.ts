@@ -158,6 +158,7 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetData() {
+    debugger;
     
     this.Showhide = false;
     const [from, to] = this.strChqNo.split('-');
