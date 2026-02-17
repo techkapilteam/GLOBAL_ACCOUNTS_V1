@@ -63,6 +63,14 @@ export class AccountingTransactionsService {
     // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
     return this._CommonService.getAPI('/Accounts/GetViewBankInformation', params, 'YES');
   }
+  GetIssuedChequeNumbers(_BankId:any, BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('_BankId',_BankId).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetIssuedChequeNumbers', params, 'YES');
+  }
+
+
    GetBankNames(GlobalSchema:any, AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
       debugger;
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);

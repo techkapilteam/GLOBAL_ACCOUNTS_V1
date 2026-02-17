@@ -267,7 +267,7 @@ export class PaymentVoucherViewComponent implements OnInit {
   displaychequeno = 'Cheque No';
 
   banklist: any;
-  modeoftransactionslist: any[]=[];
+  modeoftransactionslist: any[] = [];
   typeofpaymentlist: any;
   ledgeraccountslist: any;
   subledgeraccountslist: any;
@@ -278,7 +278,7 @@ export class PaymentVoucherViewComponent implements OnInit {
   tdspercentagelist: any;
   debitcardlist: any;
   statelist: any;
-  chequenumberslist: any;
+  chequenumberslist: any[] = [];
   upinameslist: any;
   upiidlist: any;
   paymentslist: any;
@@ -1119,6 +1119,7 @@ export class PaymentVoucherViewComponent implements OnInit {
     if (pbankid && pbankid != '') {
       // const bankname = $event.target.options[$event.target.selectedIndex].text;
       this.GetBankDetailsbyId(pbankid);
+      // this.getchaquenumber(pbankid);
       //  this.getBankBranchName(pbankid);
       // this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
 
@@ -1269,7 +1270,7 @@ export class PaymentVoucherViewComponent implements OnInit {
 
             // this.subledgeraccountslist = json;
 
-          this.subledgeraccountslist = json.map((item: any) => item.psubledgername)
+            this.subledgeraccountslist = json.map((item: any) => item.psubledgername)
             console.log('subledgeraccountslist :', this.subledgeraccountslist);
             const subLedgerControl = group?.get('psubledgername');
 
@@ -1402,7 +1403,42 @@ export class PaymentVoucherViewComponent implements OnInit {
             this.bankbarnchdummy = json[0].bank_branch
             this.paymentVoucherForm['controls']['pbranchname'].setValue(this.bankbarnchdummy);
             this.upinameslist = json.bankupilist;
-            this.chequenumberslist = json.chequeslist;
+            // this.chequenumberslist = json.chequeslist;
+
+          }
+        },
+        error: (err: any) => {
+          console.log('ERROR:', err);
+          alert('API Error');
+        }
+      });
+
+
+
+
+
+
+    this._AccountingTransactionsService.GetIssuedChequeNumbers(pbankid,
+
+      this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode()
+    ).
+      subscribe({
+        next: (json: any) => {
+          //console.log(json)
+          if (json != null) {
+
+
+            console.log('Full Response:', json);
+
+            this.chequenumberslist = json.map((item: any) => item.pchqfromto)
+            console.log('chequenumberslist :', this.chequenumberslist);
+
+            // this.bankbarnchdummy = json[0].bank_branch
+            // this.paymentVoucherForm['controls']['pbranchname'].setValue(this.bankbarnchdummy);
+            // this.upinameslist = json.bankupilist;
+            // this.chequenumberslist = json.chequeslist;
 
           }
         },
