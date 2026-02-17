@@ -119,8 +119,8 @@ export class CommonService {
         if (doc.getNumberOfPages() === 1) {
           doc.addImage(logo, 'JPEG', 10, 5, 30, 15);
           doc.setFontSize(14);
-          // doc.text(company.pCompanyName, pageWidth / 2, 12, undefined, undefined, 'center');
-          const companyName = company.pCompanyName;
+          doc.text(company?.pCompanyName ?? '', pageWidth / 2, 12, {align: 'center'});
+          const companyName = company?.pCompanyName??'';
           const textWidth = doc.getTextWidth(companyName);
           doc.text(companyName, (pageWidth - textWidth) / 2, 12);
           doc.setFontSize(9);
@@ -128,7 +128,7 @@ export class CommonService {
           doc.setFontSize(12);
           doc.text(reportName, pageWidth / 2, 30, { align: 'center' });
           doc.setFontSize(9);
-          doc.text(`Branch : ${company.pBranchname}`, pageWidth - 60, 40);
+          doc.text(`Branch : ${company?.pBranchname??''}`, pageWidth - 60, 40);
 
           if (betweenOrAsOn === 'Between') {
             doc.text(`Between : ${fromDate} And ${toDate}`, 15, 40);
@@ -217,9 +217,31 @@ export class CommonService {
   showWarningMessage(message: string) {
     this.toastr.warning(message);
   }
-  convertAmountToPdfFormat(arg0: any): any {
-    throw new Error('Method not implemented.');
+  convertAmountToPdfFormat(value: number | string | null | undefined): string {
+
+  if (value == null || value === '') {
+    return this.currencysymbol === "₹" ? "0" : this.currencysymbol + " 0";
   }
+
+  const newAmount: number = Number(
+    this.removeCommasForEntredNumber(value)
+  );
+
+  const absoluteValue = Math.abs(newAmount);
+
+  let formattedAmount = this.currencyFormat(absoluteValue);
+
+  if (newAmount < 0) {
+    formattedAmount = `(${formattedAmount})`;
+  }
+
+  if (this.currencysymbol !== "₹") {
+    return `${this.currencysymbol} ${formattedAmount}`;
+  }
+
+  return formattedAmount;
+}
+
   pageSize: number = 10;
 
   datePickerPropertiesSetup(property: string): string | boolean {
@@ -265,9 +287,61 @@ export class CommonService {
     return 'MM-YYYY';
   }
 
-  currencyformat(ptotalreceivedamount: any): any {
-    throw new Error('Method not implemented.');
+  public currencyformat(
+  value: number | string | null | undefined,
+  format: 'India' | 'International' = 'India'
+): string {
+
+  if (value === null || value === undefined) {
+    value = 0;
   }
+
+  let cleanValue = value;
+
+  if (typeof cleanValue === 'string') {
+    cleanValue = cleanValue.trim();
+
+    if (cleanValue.toLowerCase().startsWith('null')) {
+      cleanValue = cleanValue.substring(4).trim();
+    }
+  }
+
+  const numericValue: number = typeof cleanValue === 'string'
+    ? parseFloat(cleanValue.replace(/,/g, ''))
+    : cleanValue ?? 0;
+
+  const rupeeSymbol = '₹ ';
+
+  if (isNaN(numericValue) || numericValue === 0) {
+    return rupeeSymbol + '0.00';
+  }
+
+  const isNegative = numericValue < 0;
+  const absoluteValue = Math.abs(numericValue);
+
+  const fixedValue = absoluteValue.toFixed(2);
+  const [integerPart, decimalPart] = fixedValue.split('.');
+
+  let formattedInteger = '';
+
+  if (format === 'India') {
+    const lastThree = integerPart.slice(-3);
+    const otherNumbers = integerPart.slice(0, -3);
+
+    formattedInteger = otherNumbers
+      ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
+      : lastThree;
+
+  } else {
+    formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  const result = `${formattedInteger}.${decimalPart}`;
+
+  return isNegative ? `-${rupeeSymbol}${result}` : rupeeSymbol + result;
+}
+
+
   searchfilterlength = 3;
   searchplaceholder = 'Please enter 3 or more characters'
   ipaddress = sessionStorage.getItem("ipaddress");
@@ -335,6 +409,8 @@ export class CommonService {
   private apiHostUrl: string | null = null;
 
   currencysymbol = sessionStorage.getItem("currencyformat");
+// currencysymbol='₹'
+
   constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe, @Inject(LOCALE_ID) private locale: string) {
     this.pCreatedby = 'admin'; // or from auth/user session
     this.ipaddress = '127.0.0.1';
@@ -847,7 +923,7 @@ export class CommonService {
           doc.setFontSize(15);
 
           doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
-          doc.text(Companyreportdetails.pCompanyName, 60, 10);
+          doc.text(Companyreportdetails?.pCompanyName??'', 60, 10);
 
           doc.setFontSize(14);
           doc.text(reportName, 87, 30);
@@ -928,14 +1004,14 @@ export class CommonService {
 
     doc.setFont('times', 'normal');
     doc.setFontSize(15);
-    doc.text(company.pCompanyName, pageWidth / 2, 10, { align: 'center' });
+    doc.text(company?.pCompanyName??'', pageWidth / 2, 10, { align: 'center' });
 
     doc.setFontSize(8);
     doc.text(address.substring(0, 115), pageWidth / 2, 15, { align: 'center' });
     doc.text(address.substring(115), pageWidth / 2, 18, { align: 'center' });
 
     if (company?.pCinNo) {
-      doc.text(`CIN : ${company.pCinNo}`, pageWidth / 2, 22, { align: 'center' });
+      doc.text(`CIN : ${company?.pCinNo??''}`, pageWidth / 2, 22, { align: 'center' });
     }
 
     doc.setFontSize(14);
@@ -1182,18 +1258,18 @@ export class CommonService {
     }
 
   }
-  // getFormatDateNormal(date: any): string | null {
-  //   if (date != null && date != '' && date != undefined)
-  //     return this.datepipe.transform(date, 'dd/MM/yyyy');
-  //   else
-  //     return null;
-  // }
   getFormatDateNormal(date: any): string | null {
     if (date != null && date != '' && date != undefined)
-      return this.datepipe.transform(date, 'yyyy-MM-dd');
+      return this.datepipe.transform(date, 'dd/MM/yyyy');
     else
       return null;
   }
+  // getFormatDateNormal(date: any): string | null {
+  //   if (date != null && date != '' && date != undefined)
+  //     return this.datepipe.transform(date, 'yyyy-MM-dd');
+  //   else
+  //     return null;
+  // }
   removeCommasInAmount(value: string | number): string {
     return String(value).replace(/,/g, '');
   }
@@ -1369,11 +1445,11 @@ export class CommonService {
           doc.setFontSize(pageType === 'landscape' ? 10 : 15);
           doc.addImage(kapilLogo, 'JPEG', 10, pageType === 'landscape' ? 5 : 15, 20, 20);
           doc.setTextColor('black');
-          doc.text(Companyreportdetails.pCompanyName, pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
+          doc.text(Companyreportdetails?.pCompanyName??'', pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
           doc.setFontSize(8);
           doc.text(address.substring(0, 150), pageWidth / 2, pageType === 'landscape' ? 15 : 24, { align: 'center' });
 
-          if (Companyreportdetails.pCinNo) {
+          if (Companyreportdetails?.pCinNo??'') {
             doc.text('CIN : ' + Companyreportdetails.pCinNo, pageWidth / 2, pageType === 'landscape' ? 20 : 28, { align: 'center' });
           }
 
@@ -1515,7 +1591,7 @@ export class CommonService {
 
           doc.addImage(kapil_logo, 'JPEG', 10, 5, 20, 20);
           doc.setFontSize(15);
-          doc.text(Companyreportdetails.pCompanyName, 72, 10);
+          doc.text(Companyreportdetails?.pCompanyName??'', 72, 10);
 
           doc.setFontSize(8);
           const address1 = address.substr(0, 115);
@@ -1523,15 +1599,15 @@ export class CommonService {
           doc.text(address1, 110, 15, { align: 'center' });
           doc.text(address2, 110, 18);
 
-          if (Companyreportdetails.pCinNo) {
-            doc.text(`CIN : ${Companyreportdetails.pCinNo}`, 90, 22);
+          if (Companyreportdetails?.pCinNo??'') {
+            doc.text(`CIN : ${Companyreportdetails?.pCinNo??''}`, 90, 22);
           }
 
           doc.setFontSize(14);
           doc.text(reportName, 90, 30);
 
           doc.setFontSize(10);
-          doc.text(`Branch : ${Companyreportdetails.pBranchname}`, 160, 40);
+          doc.text(`Branch : ${Companyreportdetails?.pBranchname??''}`, 160, 40);
 
           if (betweenorason === 'Between') {
             doc.text(`Between : ${fromdate} And ${todate}`, 15, 40);
@@ -1542,25 +1618,24 @@ export class CommonService {
           doc.line(10, 45, pdfInMM - lMargin - rMargin, 45);
         }
 
-        // ================= LANDSCAPE =================
         if (pagetype === 'landscape') {
 
           doc.addImage(kapil_logo, 'JPEG', 20, 15, 20, 20);
           doc.setFontSize(15);
-          doc.text(Companyreportdetails.pCompanyName, 110, 20);
+          doc.text(Companyreportdetails?.pCompanyName??'', 110, 20);
 
           doc.setFontSize(10);
           doc.text(address, 80, 27);
 
           if (Companyreportdetails.pCinNo) {
-            doc.text(`CIN : ${Companyreportdetails.pCinNo}`, 125, 32);
+            doc.text(`CIN : ${Companyreportdetails?.pCinNo??''}`, 125, 32);
           }
 
           doc.setFontSize(14);
           doc.text(reportName, 130, 42);
 
           doc.setFontSize(10);
-          doc.text(`Branch : ${Companyreportdetails.pBranchname}`, 235, 50);
+          doc.text(`Branch : ${Companyreportdetails?.pBranchname??''}`, 235, 50);
 
           if (betweenorason === 'Between') {
             doc.text(`Between : ${fromdate} And ${todate}`, 15, 50);
@@ -1574,7 +1649,6 @@ export class CommonService {
         data.settings.margin.top = 48;
         data.settings.margin.bottom = 15;
 
-        // ================= FOOTER =================
         let pageText = `Page ${doc.getNumberOfPages()}`;
         if ((doc as any).putTotalPages) {
           pageText += ` of ${totalPagesExp}`;
@@ -1586,9 +1660,6 @@ export class CommonService {
         doc.text(pageText, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
       },
 
-      // =====================================================
-      // LAST ROW BOLD
-      // =====================================================
       willDrawCell: (data: any) => {
         if (data.row.index === gridData.length - 1) {
           doc.setFont('helvetica', 'bold');
@@ -1596,9 +1667,6 @@ export class CommonService {
         }
       },
 
-      // =====================================================
-      // RUPEE SYMBOL
-      // =====================================================
       didDrawCell: (data: any) => {
         if (
           (data.column.index === 1 || data.column.index === 2) &&
@@ -1971,6 +2039,7 @@ export class CommonService {
     printOrPdf: 'Pdf' | 'Print',
     amount?: string
   ): void {
+    debugger;
 
     const company = this._getCompanyDetails();
     const address = this.getcompanyaddress();
@@ -2014,13 +2083,13 @@ export class CommonService {
           doc.addImage(logo, 'JPEG', 10, 5, 25, 15);
         }
 
-        doc.text(company.pCompanyName, pageWidth / 2, 10, { align: 'center' });
+        doc.text(company?.pCompanyName??'', pageWidth / 2, 10, { align: 'center' });
 
         doc.setFontSize(8);
         doc.text(address, pageWidth / 2, 15, { align: 'center' });
 
-        if (company.pCinNo) {
-          doc.text(`CIN : ${company.pCinNo}`, pageWidth / 2, 20, { align: 'center' });
+        if (company?.pCinNo??'') {
+          doc.text(`CIN : ${company?.pCinNo??''}`, pageWidth / 2, 20, { align: 'center' });
         }
 
         doc.setFontSize(12);
@@ -2034,7 +2103,7 @@ export class CommonService {
           doc.text(`As On : ${fromDate}`, 14, 34);
         }
 
-        doc.text(`Branch : ${company.pBranchname}`, pageWidth - 14, 34, { align: 'right' });
+        doc.text(`Branch : ${company?.pBranchname??''}`, pageWidth - 14, 34, { align: 'right' });
 
         doc.line(10, 36, pageWidth - 10, 36);
 
@@ -2134,7 +2203,7 @@ export class CommonService {
           }
 
           doc.setTextColor('black');
-          doc.text(Companyreportdetails.pCompanyName, 72, 10);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 72, 10);
           doc.setFontSize(8);
 
           const address1 = address.substr(0, 115);
@@ -2142,31 +2211,30 @@ export class CommonService {
           doc.text(address1, 110, 15, { align: 'center' });
           doc.text(address2, 110, 18);
 
-          if (Companyreportdetails.pCinNo) {
-            doc.text('CIN: ' + Companyreportdetails.pCinNo, 90, 22);
-          }
+          const cinNo = Companyreportdetails?.pCinNo ?? '';
+    if (cinNo) {
+      doc.text('CIN: ' + cinNo, 90, 22);
+    }
 
           doc.setFontSize(14);
           doc.text(reportName, 90, 30);
 
           doc.setFontSize(10);
-          doc.text('Branch: ' + Companyreportdetails.pBranchname, 163, 40);
+          const branchName = Companyreportdetails?.pBranchname ?? '';
+          if (branchName) {
+      doc.text('Branch: ' + branchName, 163, 40);
+    }
 
           if (betweenorason === 'Between') {
-            doc.text(`Between: ${fromdate} And ${todate}`, 15, 40);
+            doc.text(`Between: ${fromdate??''} And ${todate??''}`, 15, 40);
           } else if (betweenorason === 'As On' && fromdate) {
-            doc.text(`As on: ${fromdate}`, 15, 40);
+            doc.text(`As on: ${fromdate??''}`, 15, 40);
           }
 
           doc.setDrawColor(0, 0, 0);
           doc.line(10, 45, pageWidth - lMargin - rMargin, 45);
         }
 
-
-
-
-
-        // Footer
         const internalDoc: any = doc.internal;
         let pageStr = 'Page ' + internalDoc.getNumberOfPages();
 
@@ -2177,12 +2245,11 @@ export class CommonService {
 
         doc.setFontSize(10);
         doc.setDrawColor(0, 0, 0);
-        // Use margins consistently for footer line
+
         doc.line(lMargin, pageHeight - 10, pageWidth - rMargin, pageHeight - 10);
 
         doc.text(`Printed on: ${today}, User: ${username.pEmployeeName || ''}`, lMargin, pageHeight - 5);
 
-        // Adjust x coordinate to ensure pageStr fits
         doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
       },
       willDrawCell: (data) => {

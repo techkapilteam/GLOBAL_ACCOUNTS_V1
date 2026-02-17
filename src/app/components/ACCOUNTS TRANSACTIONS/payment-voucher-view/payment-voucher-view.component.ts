@@ -1,216 +1,8 @@
-// import { CommonModule, DecimalPipe } from '@angular/common';
-// import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-// import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-
-// @Component({
-//   selector: 'app-payment-voucher-view',
-//   templateUrl: './payment-voucher-view.component.html',
-//   styleUrls: ['./payment-voucher-view.component.css'],
-//   imports: [CommonModule,
-//     ReactiveFormsModule,
-//     NgxDatatableModule,
-//     BsDatepickerModule
-//   ],
-//   providers: [DecimalPipe]
-// })
-// export class PaymentVoucherViewComponent implements OnInit {
-
-//   disabletransactiondate = false;
-//   public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
-//    public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
-//   today: Date = new Date();
-
-//   // Payment Mode
-//   paymentMode: 'CASH' | 'BANK' = 'CASH';
-
-//   // Bank Instrument Type
-//   bankType: 'CHEQUE' | 'ONLINE' | 'DEBIT' | 'CREDIT' = 'CHEQUE';
-
-//   // GST / TDS toggles
-//   gstEnabled: boolean = false;
-//   tdsEnabled: boolean = false;
-
-//   // Dummy Data
-//   payment = {
-//     amountPaid: 5000,
-//     party: 'Party A',
-//     ledger: 'Ledger A',
-//     subLedger: 'Sub Ledger A',
-//   };
-
-//   // Dummy grid data
-//   paymentslist1: any[] = [];
-//   partyjournalentrylist: any[] = [];
-
-//   // Reactive Form
-//   paymentVoucherForm!: FormGroup;
-//   journalform!: FormGroup;
-
-//   constructor(private fb: FormBuilder) {
-//     this.dpConfig.maxDate = new Date();
-//     this.dpConfig.containerClass = 'theme-dark-blue';
-//     this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
-//     this.dpConfig.showWeekNumbers = false;
-
-
-
-//      this.ppaymentdateConfig.maxDate = new Date();
-//     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
-//     this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
-//     this.ppaymentdateConfig.showWeekNumbers = false;
-//   }
-
-//   ngOnInit(): void {
-//     // this.today = new Date().toISOString().substring(0, 10);
-
-//     this.paymentVoucherForm = this.fb.group({
-//       todate: [this.today],
-//       ppaymentdate:[new Date,Validators.required],
-//       pisgstapplicable: [false],
-//       pgstcalculationtype: ['INCLUDE'],
-//       pStateId: [''],
-//       pgstno: [''],
-//       pgstpercentage: [0],
-//       pgstamount: [0],
-//       pigstpercentage: [0],
-//       pigstamount: [0],
-//       pcgstpercentage: [0],
-//       pcgstamount: [0],
-//       psgstpercentage: [0],
-//       psgstamount: [0],
-//       putgstpercentage: [0],
-//       putgstamount: [0],
-
-//       pistdsapplicable: [false],
-//       ptdscalculationtype: ['INCLUDE'],
-//       pTdsSection: [''],
-//       pTdsPercentage: [0],
-//       ptdsamount: [0],
-//       pnarration: [''],
-//       pDocStorePath: [''],
-//       ppaymentsslistcontrols: this.fb.group({
-//         pgstamount: [0],
-//         pigstpercentage: [0],
-//         pigstamount: [0],
-//         pcgstpercentage: [0],
-//         pcgstamount: [0],
-//         psgstpercentage: [0],
-//         psgstamount: [0],
-//         putgstpercentage: [0],
-//         putgstamount: [0],
-//         ptdsamount: [0]
-//       }),
-
-
-//     });
-
-//     this.paymentslist1 = [
-//       { ppartyname: 'Party A', pledgername: 'Ledger A', psubledgername: 'Sub Ledger A', ptotalamount: 5000, pamount: 5000, pgstcalculationtype: '', pTdsSection: '', pgstpercentage: 0, ptdsamount: 0 }
-//     ];
-
-//     this.partyjournalentrylist = [
-//       { accountname: 'Party A', debitamount: 5000, creditamount: 0 },
-//       { accountname: 'Bank', debitamount: 0, creditamount: 5000 }
-//     ];
-//   }
-
-//   setPaymentMode(mode: 'CASH' | 'BANK') {
-//     this.paymentMode = mode;
-//     if (mode === 'BANK') {
-//       this.bankType = 'CHEQUE';
-//     }
-//   }
-
-//   setBankType(type: 'CHEQUE' | 'ONLINE' | 'DEBIT' | 'CREDIT') {
-//     this.bankType = type;
-//   }
-
-//   isgstapplicable_Checked() {
-//     this.gstEnabled = !this.gstEnabled;
-//   }
-
-//   istdsapplicable_Checked() {
-//     this.tdsEnabled = !this.tdsEnabled;
-//   }
-
-//   claculategsttdsamounts() {
-//     // Dummy calculation for GST/TDS
-//     const baseAmount = this.payment.amountPaid;
-
-//     if (this.gstEnabled) {
-//       const gstPercent = this.paymentVoucherForm.get('pgstpercentage')?.value || 0;
-//       const gstAmount = (baseAmount * gstPercent) / 100;
-//       this.paymentVoucherForm.patchValue({
-//         pgstamount: gstAmount,
-//         pigstpercentage: gstPercent,
-//         pigstamount: gstAmount
-//       });
-//     }
-
-//     if (this.tdsEnabled) {
-//       const tdsPercent = this.paymentVoucherForm.get('pTdsPercentage')?.value || 0;
-//       const tdsAmount = (baseAmount * tdsPercent) / 100;
-//       this.paymentVoucherForm.patchValue({
-//         ptdsamount: tdsAmount
-//       });
-//     }
-//   }
-
-//   clearPaymentDetails() {
-//     this.paymentVoucherForm.reset({
-//       pisgstapplicable: false,
-//       pgstcalculationtype: 'INCLUDE',
-//       pStateId: '',
-//       pgstno: '',
-//       pgstpercentage: 0,
-//       pgstamount: 0,
-//       pistdsapplicable: false,
-//       ptdscalculationtype: 'INCLUDE',
-//       pTdsSection: '',
-//       pTdsPercentage: 0,
-//       ptdsamount: 0,
-//       pnarration: '',
-//       pDocStorePath: ''
-//     });
-
-//     this.gstEnabled = false;
-//     this.tdsEnabled = false;
-//   }
-
-//   addPaymentDetails() {
-//     alert('Payment Added (Dummy)');
-//   }
-
-//   savePaymentVoucher() {
-//     alert('Saved (Dummy)');
-//   }
-
-//   removeHandler(rowIndex: number) {
-//     this.paymentslist1.splice(rowIndex, 1);
-//   }
-//   saveJournalVoucher() {
-
-//   }
-//   clearPaymentVoucher() { }
-//   uploadAndProgress($event: any) { }
-// }
-
-
-
-
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-// import { GroupDescriptor, DataResult, State } from '@progress/kendo-data-query';
-// import { SelectableSettings } from '@progress/kendo-angular-grid';
-// import { isNullOrEmptyString } from '@progress/kendo-angular-grid/dist/es2015/utils';
 import { Router } from '@angular/router';
-// import { SubscriberJVService } from 'src/app/Services/Transactions/subscriber/subscriberjv.service';
-// import { parse } from 'path';
-// import { DataResult, GroupDescriptor, State } from '@progress/kendo-data-query';
 import { SelectableSettings } from '@progress/kendo-angular-grid';
 import { CommonService } from '../../../services/common.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
@@ -219,13 +11,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from 'primeng/table';
 
-
-
 @Component({
-  // selector: 'app-payment-voucher',
-  // templateUrl: './payment-voucher.component.html'
-
-
   selector: 'app-payment-voucher-view',
   templateUrl: './payment-voucher-view.component.html',
   imports: [CommonModule,
@@ -289,8 +75,6 @@ export class PaymentVoucherViewComponent implements OnInit {
   bankBalance: any; cashRestrictAmount: any;
   bankexists!: boolean;
   groups: any[] = [];
-  // accountid: any;
-
   bankbookBalance: any;
   bankbarnchdummy: any;
   ;
@@ -311,13 +95,7 @@ export class PaymentVoucherViewComponent implements OnInit {
 
   JSONdataItem: any = [];
   availableAmount: any
-
-  // public gridState: State = {
-  //   sort: [],
-  //   skip: 0,
-  //   take: 10
-  // };
-  gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}([a-zA-Z0-9]){1}([a-zA-Z]){1}([a-zA-Z0-9]){1}?";
+gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}([a-zA-Z0-9]){1}([a-zA-Z]){1}([a-zA-Z0-9]){1}?";
   public selectableSettings!: SelectableSettings;
   public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
   disabletransactiondate = false;
@@ -331,20 +109,11 @@ export class PaymentVoucherViewComponent implements OnInit {
 
     this.ppaymentdateConfig.maxDate = new Date();
     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
-    this.ppaymentdateConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.ppaymentdateConfig.showWeekNumbers = false;
-
-    // this.ppaymentdateConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
-    // this.ppaymentdateConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
-    // this.ppaymentdateConfig.maxDate = new Date();
-    // this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
-  }
+}
   paymentVoucherForm!: FormGroup;
-  // public groups: GroupDescriptor[] = [{ field: 'type' }];
-
-
-  // public gridView!: DataResult;
-  ngOnInit(): void {
+   ngOnInit(): void {
 
     this.currencySymbol = this._commonService.currencysymbol;
     if (this._commonService.comapnydetails != null)
@@ -436,8 +205,7 @@ export class PaymentVoucherViewComponent implements OnInit {
     })
   }
   public groupChange(groups: any[]
-    // GroupDescriptor[]
-  ): void {
+    ): void {
     this.groups = groups;
     this.loadgrid();
   }
@@ -497,8 +265,7 @@ export class PaymentVoucherViewComponent implements OnInit {
 
     }
     catch (e) {
-      //this.showErrorMessage(e);
-      return false;
+       return false;
     }
     return isValid;
   }
@@ -537,7 +304,6 @@ export class PaymentVoucherViewComponent implements OnInit {
       }
     }
     catch (e) {
-      //this._commonService.showErrorMessage(key);
       return false;
     }
     return isValid;
@@ -729,26 +495,7 @@ export class PaymentVoucherViewComponent implements OnInit {
     UpiidControl.updateValueAndValidity();
     this.GetValidationByControl(this.paymentVoucherForm, 'ptypeofpayment', true);
   }
-  // isgstapplicable_Checked() {
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pStateId'].setValue('');
-  //   this.gst_clear();
-  //   let ppartyname = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('ppartyname').value;
-  //   let checkexistingcount = 0;
-
-  //   let griddata = this.paymentslist.filter(x => x.ppartyname == ppartyname);
-  //   if (griddata != null) {
-  //     if (griddata.length > 0) {
-  //       checkexistingcount = 1;
-  //     }
-  //   }
-  //   if (checkexistingcount == 1) {
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pisgstapplicable'].setValue(griddata[0].pisgstapplicable);
-  //   }
-  //   this.isgstapplicableChange();
-
-  //   //console.log(this.showgst);
-
-  // }
+  
   isgstapplicable_Checked(): void {
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
@@ -3347,3 +3094,243 @@ export class PaymentVoucherViewComponent implements OnInit {
   }
 
 }
+
+// import { CommonModule, DecimalPipe } from '@angular/common';
+// import { Component, OnInit } from '@angular/core';
+// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+// import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+// import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
+// @Component({
+//   selector: 'app-payment-voucher-view',
+//   templateUrl: './payment-voucher-view.component.html',
+//   styleUrls: ['./payment-voucher-view.component.css'],
+//   imports: [CommonModule,
+//     ReactiveFormsModule,
+//     NgxDatatableModule,
+//     BsDatepickerModule
+//   ],
+//   providers: [DecimalPipe]
+// })
+// export class PaymentVoucherViewComponent implements OnInit {
+
+//   disabletransactiondate = false;
+//   public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+//    public ppaymentdateConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+//   today: Date = new Date();
+
+//   // Payment Mode
+//   paymentMode: 'CASH' | 'BANK' = 'CASH';
+
+//   // Bank Instrument Type
+//   bankType: 'CHEQUE' | 'ONLINE' | 'DEBIT' | 'CREDIT' = 'CHEQUE';
+
+//   // GST / TDS toggles
+//   gstEnabled: boolean = false;
+//   tdsEnabled: boolean = false;
+
+//   // Dummy Data
+//   payment = {
+//     amountPaid: 5000,
+//     party: 'Party A',
+//     ledger: 'Ledger A',
+//     subLedger: 'Sub Ledger A',
+//   };
+
+//   // Dummy grid data
+//   paymentslist1: any[] = [];
+//   partyjournalentrylist: any[] = [];
+
+//   // Reactive Form
+//   paymentVoucherForm!: FormGroup;
+//   journalform!: FormGroup;
+
+//   constructor(private fb: FormBuilder) {
+//     this.dpConfig.maxDate = new Date();
+//     this.dpConfig.containerClass = 'theme-dark-blue';
+//     this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
+//     this.dpConfig.showWeekNumbers = false;
+
+
+
+//      this.ppaymentdateConfig.maxDate = new Date();
+//     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
+//     this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
+//     this.ppaymentdateConfig.showWeekNumbers = false;
+//   }
+
+//   ngOnInit(): void {
+//     // this.today = new Date().toISOString().substring(0, 10);
+
+//     this.paymentVoucherForm = this.fb.group({
+//       todate: [this.today],
+//       ppaymentdate:[new Date,Validators.required],
+//       pisgstapplicable: [false],
+//       pgstcalculationtype: ['INCLUDE'],
+//       pStateId: [''],
+//       pgstno: [''],
+//       pgstpercentage: [0],
+//       pgstamount: [0],
+//       pigstpercentage: [0],
+//       pigstamount: [0],
+//       pcgstpercentage: [0],
+//       pcgstamount: [0],
+//       psgstpercentage: [0],
+//       psgstamount: [0],
+//       putgstpercentage: [0],
+//       putgstamount: [0],
+
+//       pistdsapplicable: [false],
+//       ptdscalculationtype: ['INCLUDE'],
+//       pTdsSection: [''],
+//       pTdsPercentage: [0],
+//       ptdsamount: [0],
+//       pnarration: [''],
+//       pDocStorePath: [''],
+//       ppaymentsslistcontrols: this.fb.group({
+//         pgstamount: [0],
+//         pigstpercentage: [0],
+//         pigstamount: [0],
+//         pcgstpercentage: [0],
+//         pcgstamount: [0],
+//         psgstpercentage: [0],
+//         psgstamount: [0],
+//         putgstpercentage: [0],
+//         putgstamount: [0],
+//         ptdsamount: [0]
+//       }),
+
+
+//     });
+
+//     this.paymentslist1 = [
+//       { ppartyname: 'Party A', pledgername: 'Ledger A', psubledgername: 'Sub Ledger A', ptotalamount: 5000, pamount: 5000, pgstcalculationtype: '', pTdsSection: '', pgstpercentage: 0, ptdsamount: 0 }
+//     ];
+
+//     this.partyjournalentrylist = [
+//       { accountname: 'Party A', debitamount: 5000, creditamount: 0 },
+//       { accountname: 'Bank', debitamount: 0, creditamount: 5000 }
+//     ];
+//   }
+
+//   setPaymentMode(mode: 'CASH' | 'BANK') {
+//     this.paymentMode = mode;
+//     if (mode === 'BANK') {
+//       this.bankType = 'CHEQUE';
+//     }
+//   }
+
+//   setBankType(type: 'CHEQUE' | 'ONLINE' | 'DEBIT' | 'CREDIT') {
+//     this.bankType = type;
+//   }
+
+//   isgstapplicable_Checked() {
+//     this.gstEnabled = !this.gstEnabled;
+//   }
+
+//   istdsapplicable_Checked() {
+//     this.tdsEnabled = !this.tdsEnabled;
+//   }
+
+//   claculategsttdsamounts() {
+//     // Dummy calculation for GST/TDS
+//     const baseAmount = this.payment.amountPaid;
+
+//     if (this.gstEnabled) {
+//       const gstPercent = this.paymentVoucherForm.get('pgstpercentage')?.value || 0;
+//       const gstAmount = (baseAmount * gstPercent) / 100;
+//       this.paymentVoucherForm.patchValue({
+//         pgstamount: gstAmount,
+//         pigstpercentage: gstPercent,
+//         pigstamount: gstAmount
+//       });
+//     }
+
+//     if (this.tdsEnabled) {
+//       const tdsPercent = this.paymentVoucherForm.get('pTdsPercentage')?.value || 0;
+//       const tdsAmount = (baseAmount * tdsPercent) / 100;
+//       this.paymentVoucherForm.patchValue({
+//         ptdsamount: tdsAmount
+//       });
+//     }
+//   }
+
+//   clearPaymentDetails() {
+//     this.paymentVoucherForm.reset({
+//       pisgstapplicable: false,
+//       pgstcalculationtype: 'INCLUDE',
+//       pStateId: '',
+//       pgstno: '',
+//       pgstpercentage: 0,
+//       pgstamount: 0,
+//       pistdsapplicable: false,
+//       ptdscalculationtype: 'INCLUDE',
+//       pTdsSection: '',
+//       pTdsPercentage: 0,
+//       ptdsamount: 0,
+//       pnarration: '',
+//       pDocStorePath: ''
+//     });
+
+//     this.gstEnabled = false;
+//     this.tdsEnabled = false;
+//   }
+
+//   addPaymentDetails() {
+//     alert('Payment Added (Dummy)');
+//   }
+
+//   savePaymentVoucher() {
+//     alert('Saved (Dummy)');
+//   }
+
+//   removeHandler(rowIndex: number) {
+//     this.paymentslist1.splice(rowIndex, 1);
+//   }
+//   saveJournalVoucher() {
+
+//   }
+//   clearPaymentVoucher() { }
+//   uploadAndProgress($event: any) { }
+// }
+
+
+
+
+// import { GroupDescriptor, DataResult, State } from '@progress/kendo-data-query';
+// import { SelectableSettings } from '@progress/kendo-angular-grid';
+// import { isNullOrEmptyString } from '@progress/kendo-angular-grid/dist/es2015/utils';
+// import { SubscriberJVService } from 'src/app/Services/Transactions/subscriber/subscriberjv.service';
+// import { parse } from 'path';
+// import { DataResult, GroupDescriptor, State } from '@progress/kendo-data-query';
+
+  // selector: 'app-payment-voucher',
+  // templateUrl: './payment-voucher.component.html'
+
+
+  
+  // accountid: any;
+
+  
+  // public gridState: State = {
+  //   sort: [],
+  //   skip: 0,
+  //   take: 10
+  // };
+  
+    // this.ppaymentdateConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
+    // this.ppaymentdateConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
+    // this.ppaymentdateConfig.maxDate = new Date();
+    // this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
+  
+  // public groups: GroupDescriptor[] = [{ field: 'type' }];
+
+
+  // public gridView!: DataResult;
+ 
+    // GroupDescriptor[]
+  
+      //this.showErrorMessage(e);
+     
+      //this._commonService.showErrorMessage(key);
+      
