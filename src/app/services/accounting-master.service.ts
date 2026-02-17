@@ -15,7 +15,7 @@ export class AccountingMasterService {
   constructor(
     private http: HttpClient,
     private _CommonService: CommonService
-  ) {}
+  ) { }
 
   ViewChequeManagementDetails(): Observable<any> {
     const params = new HttpParams()
@@ -33,26 +33,42 @@ export class AccountingMasterService {
     this.bankdetails = data;
   }
 
-  GetBankDetails(): Observable<any> {
-    const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname());
+  // GetBankDetails(): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('BranchSchema', this._CommonService.getschemaname());
 
-    return this._CommonService.getAPI(
-      '/Accounting/Configuration/GetBankDetails',
-      params,
-      'YES'
-    );
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/Configuration/GetBankDetails',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+
+
+  GetBankDetails(GlobalSchema: any, BranchCode: any, CompanyCode: any,): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode);
+    return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
   }
 
-  GetBankUPIDetails(): Observable<any> {
-    const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname());
 
-    return this._CommonService.getAPI(
-      '/BankInformation/GetBankUPIDetails',
-      params,
-      'YES'
-    );
+  // GetBankUPIDetails(): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI(
+  //     '/BankInformation/GetBankUPIDetails',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+
+
+
+  GetBankUPIDetails(GlobalSchema: any, BranchCode: any, CompanyCode: any,): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode);
+    return this._CommonService.getAPI('/Accounts/GetBankUPIDetails', params, 'YES');
   }
 
   GetExistingChequeCount(
@@ -151,24 +167,31 @@ export class AccountingMasterService {
     );
   }
 
-  
-
-    // GetBanks(GlobalSchema:any,AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
-    //   debugger
-    // const params = new HttpParams().set('GlobalSchema',GlobalSchema).set('AccountsSchema',AccountsSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode);
-      
-    // return this._CommonService.getAPI(
-    //   '/Accounts/BankName',
-    //   params,
-    //   'YES'
-    // );
-    // }
 
 
-    
-    GetBanks(GlobalSchema:any, AccountsSchema:any,CompanyCode:any,BranchCode:any,precordid:any): Observable<any> {
-      debugger;
-    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('precordid',precordid.toString());
+  // GetBanks(GlobalSchema:any,AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+  //   debugger
+  // const params = new HttpParams().set('GlobalSchema',GlobalSchema).set('AccountsSchema',AccountsSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode);
+
+  // return this._CommonService.getAPI(
+  //   '/Accounts/BankName',
+  //   params,
+  //   'YES'
+  // );
+  // }
+
+
+
+  GetBankNames(GlobalSchema: any, AccountsSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
+  }
+
+  GetBanks(precordid: any, GlobalSchema: any, BranchSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('precordid', precordid).set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
     return this._CommonService.getAPI('/Accounts/GetViewBankInformation', params, 'YES');
   }
@@ -244,5 +267,5 @@ export class AccountingMasterService {
       accountsdata
     );
   }
-  
+
 }

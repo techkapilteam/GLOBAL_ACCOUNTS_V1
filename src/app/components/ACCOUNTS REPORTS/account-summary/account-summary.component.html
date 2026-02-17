@@ -51,7 +51,10 @@
         formControlName="ledgerId"
         placeholder="Select Ledger"
         display="chip"
-        [filter]="true">
+        [filter]="true"
+        [appendTo]="'body'"
+        [maxSelectedLabels]="3"
+  selectedItemsLabel="{0} items selected">
       </p-multiSelect>
 
     </div>

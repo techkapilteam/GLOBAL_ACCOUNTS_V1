@@ -715,7 +715,7 @@
                 <div class="col-md-12 col-xl-12">
                     <div class="d-flex justify-content-end">
                         <!--<a class="btn btn-g-icon mr-4 px-3 border-0"><img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" appButtonDoubleClick [debounceTime]="500" (debounceClick)="clearPaymentVoucher()">Clear</a>-->
-                        <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearPaymentVoucher()"><img
+                        <a class="btn btn-primary mr-4 px-3 border-0" (click)="clearPaymentVoucher()"><img
                                 src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3"
                                 appButtonDoubleClick>Clear</a>
                         <!-- [debounceTime]="500" -->
@@ -726,7 +726,7 @@
                     {{savebutton}}
                 </button> -->
 
-                        <button (click)="saveJournalVoucher()" class="btn btn-s-icon px-3 border-0"
+                        <button (click)="saveJournalVoucher()" class="btn btn-secondary px-3 border-0"
                             [disabled]="disablesavebutton">
                             <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
                                 *ngIf="!disablesavebutton">

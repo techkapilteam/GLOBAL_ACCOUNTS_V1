@@ -1,77 +1,106 @@
-import { Component } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { CommonService } from '../../../services/common.service';
+import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 
 @Component({
   selector: 'app-general-receipt',
   standalone: true,
-  imports: [CommonModule, NgxDatatableModule, RouterModule,CurrencyPipe],
+  imports: [CommonModule, RouterModule, TableModule],
   templateUrl: './general-receipt.component.html'
 })
-export class GeneralReceiptComponent {
+export class GeneralReceiptComponent implements OnInit {
 
   gridView: any[] = [];
+  allGridView: any[] = []; // original data for filtering
   pageCriteria = {
     footerPageHeight: 50,
     pageSize: 10,
-    CurrentPage: 1,
+    pageNumber: 1,
     TotalPages: 1,
     totalrows: 0,
     offset: 0
   };
-  currencySymbol = '₹';
+  currencySymbol: string = '₹';
+  loading: boolean = false; // show loader if needed
 
-  constructor() {
+  constructor(
+    private commonService: CommonService,
+    private accountingTransactionsService: AccountingTransactionsService
+  ) {}
+
+  ngOnInit(): void {
+    this.currencySymbol = this.commonService.currencysymbol || '₹';
     this.loadData();
   }
 
-  loadData() {
-    this.gridView = [
-      {
-        preceiptdate: '10/Oct/2024',
-        preceiptid: 'GR001',
-        pmodofreceipt: 'CASH',
-        ptypeofpayment: '',
-        pChequenumber: '',
-        ptotalreceivedamount: 1000,
-        pnarration: 'Test narration'
+  // Fetch data from service
+  loadData(): void {
+    this.loading = true;
+    this.accountingTransactionsService.GetGeneralReceiptExistingData().subscribe({
+      next: (data: any[]) => {
+        this.loading = false;
+        if (!data) {
+          this.gridView = [];
+          this.allGridView = [];
+          return;
+        }
+
+        // Format date and sanitize data
+        this.gridView = data.map(item => ({
+          ...item,
+          preceiptdate: this.commonService.getFormatDateGlobal(item.preceiptdate) || '--',
+          pmodofreceipt: item.pmodofreceipt || '--',
+          ptypeofpayment: item.ptypeofpayment || '',
+          pChequenumber: item.pChequenumber || '',
+          ptotalreceivedamount: item.ptotalreceivedamount ?? 0,
+          pnarration: item.pnarration || ''
+        }));
+
+        this.allGridView = [...this.gridView];
+
+        // update pagination info
+        this.pageCriteria.totalrows = this.gridView.length;
+        this.pageCriteria.TotalPages = Math.ceil(this.gridView.length / this.pageCriteria.pageSize);
       },
-      {
-        preceiptdate: '11/Oct/2024',
-        preceiptid: 'GR002',
-        pmodofreceipt: 'BANK',
-        ptypeofpayment: 'Cheque',
-        pChequenumber: '123456',
-        ptotalreceivedamount: 2500,
-        pnarration: ''
+      error: (error) => {
+        this.loading = false;
+        this.gridView = [];
+        this.allGridView = [];
+        this.pageCriteria.totalrows = 0;
+        this.pageCriteria.TotalPages = 1;
+        this.commonService.showErrorMessage(error);
       }
-    ];
-
-    this.pageCriteria.totalrows = this.gridView.length;
-    this.pageCriteria.TotalPages = Math.ceil(this.gridView.length / this.pageCriteria.pageSize);
-  }
-
-  filterDatatable(event: any) {
-    let value = event.target.value.toLowerCase();
-    this.gridView = this.gridView.filter((d: any) => {
-      return (
-        d.preceiptdate.toLowerCase().includes(value) ||
-        d.preceiptid.toLowerCase().includes(value) ||
-        d.pmodofreceipt.toLowerCase().includes(value) ||
-        d.pnarration.toLowerCase().includes(value)
-      );
     });
   }
 
-  removeHandler(event: any, row: any) {
-    alert('View clicked for Receipt No: ' + row.preceiptid);
+  
+  filterDatatable(event: any): void {
+    const value = (event.target.value || '').toLowerCase();
+    this.gridView = this.allGridView.filter(d =>
+      (d.preceiptdate?.toLowerCase() || '').includes(value) ||
+      (d.preceiptid?.toLowerCase() || '').includes(value) ||
+      (d.pmodofreceipt?.toLowerCase() || '').includes(value) ||
+      (d.pnarration?.toLowerCase() || '').includes(value)
+    );
+
+    this.pageCriteria.totalrows = this.gridView.length;
+    this.pageCriteria.TotalPages = Math.ceil(this.gridView.length / this.pageCriteria.pageSize);
+    this.pageCriteria.pageNumber = 1; // reset to first page after filter
   }
 
-  onFooterPageChange(event: any) {
-    this.pageCriteria.CurrentPage = event.page + 1;
+  // Handle paginator
+  onFooterPageChange(event: any): void {
+    this.pageCriteria.pageNumber = event.page + 1;
   }
-  viewRow(){
-    
+
+  // View row
+  viewRow(row: any): void {
+    const receipt = btoa(
+      `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
+    );
+    window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
   }
 }

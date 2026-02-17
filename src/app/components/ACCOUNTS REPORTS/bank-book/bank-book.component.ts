@@ -134,6 +134,7 @@ export class BankBookComponent implements OnInit {
   pageCriteria = new PageCriteria();
   dpConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD-MMM-YYYY',
+    // dateInputFormat: 'YYYY-MM-DD',
     containerClass: 'theme-dark-blue',
     showWeekNumbers: false,
     maxDate: new Date()
@@ -144,8 +145,7 @@ export class BankBookComponent implements OnInit {
     // this.getLoadData();
   }
 
-   loadBankNames() {
-    debugger;
+  loadBankNames() {
     this.bankBookService.GetBankNames(
       this.commonService.getschemaname(),
       this.commonService.getbranchname(),
@@ -155,8 +155,6 @@ export class BankBookComponent implements OnInit {
         next: (res: any) => {
           console.log(res)
           this.bankData = res;
-          alert('hello');
-
           console.log('SUCCESS:', res);
         },
         error: (err: any) => {
@@ -186,6 +184,7 @@ export class BankBookComponent implements OnInit {
   // }
 
   onBankChange(event: Event): void {
+
     const select = event.target as HTMLSelectElement;
     this.selectedBankName = select.options[select.selectedIndex].text;
   }
@@ -206,11 +205,30 @@ export class BankBookComponent implements OnInit {
     this.loading = true;
     this.saveButton = 'Processing';
 
-    const from = this.commonService.getFormatDateGlobal(fromDate) ?? "";
-    const to = this.commonService.getFormatDateGlobal(toDate) ?? '';
+    const from = this.commonService.getFormatDateNormal(fromDate) ?? "";
+    const to = this.commonService.getFormatDateNormal(toDate) ?? '';
 
+    // this.bankBookService
+    //   .GetBankBookReportbyDates(from, to, pbankname)
+    //   .pipe(takeUntilDestroyed(this.destroyRef))
+    //   .subscribe({
+    //     next: res => {
+    //       this.gridView = res;
+    //       this.showReport = true;
+    //       this.loading = false;
+    //       this.saveButton = 'Generate Report';
+    //     },
+    //     error: err => {
+    //       this.commonService.showErrorMessage(err);
+    //       this.loading = false;
+    //       this.saveButton = 'Generate Report';
+    //     }
+    //   });
     this.bankBookService
-      .GetBankBookReportbyDates(from, to, pbankname)
+      .GetBankBookReportbyDates(from, to, pbankname, this.commonService.getschemaname(),
+        this.commonService.getbranchname(),
+        this.commonService.getCompanyCode(),
+        this.commonService.getBranchCode())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: res => {
@@ -227,24 +245,32 @@ export class BankBookComponent implements OnInit {
       });
   }
 
-  pdfOrPrint(type: 'pdf' | 'print'): void {
+  pdfOrPrint(type: 'Pdf' | 'Print'): void {
 
     const { fromDate, toDate } = this.bankBookForm.value;
 
     const rows = this.gridView.map(item => ({
-      "Transaction Date": this.commonService.getFormatDateGlobal(item.ptransactiondate),
-      "Transaction No.": item.ptransactionno || '--NA--',
-      "Particulars": item.pparticulars,
-      "Narration": item.pdescription,
-      "Receipts": item.pdebitamount,
-      "Payments": item.pcreditamount,
-      "Balance": item.popeningbal
+      transactionDate: this.commonService.getFormatDateGlobal(item.ptransactiondate),
+      transactionNo: item.ptransactionno || '--NA--',
+      particulars: item.pparticulars,
+      narration: item.pdescription,
+      receipts: item.pdebitamount,
+      payments: item.pcreditamount,
+      balance: item.popeningbal
     }));
+    const gridheaders = [
+      { header: 'Transaction No.', field: 'transactionNo' },
+      { header: 'Particulars', field: 'particulars' },
+      { header: 'Narration', field: 'narration' },
+      { header: 'Receipts', field: 'receipts' },
+      { header: 'Payments', field: 'payments' },
+      { header: 'Balance', field: 'balance' }
+    ];
 
     this.reportService._BankBookReportsPdf(
       'Bank Book',
       rows,
-      [],
+      gridheaders,
       {},
       'landscape',
       'Between',
