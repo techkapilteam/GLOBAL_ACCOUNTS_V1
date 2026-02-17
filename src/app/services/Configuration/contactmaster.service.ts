@@ -367,6 +367,25 @@ export class ContactmasterService {
           })
         )
   }
+
+getcountrys(GlobalSchema:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema);
+    return this._CommonService.getAPI('/Accounts/getCountry', params, 'YES');
+  }
+
+getstates(GlobalSchema:any,id:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('id', id);
+    return this._CommonService.getAPI('/Accounts/getstate', params, 'YES');
+  }
+
+getDistrict(GlobalSchema:any,id:any): Observable<any> {
+      debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('id', id);
+    return this._CommonService.getAPI('/Accounts/getDistrict', params, 'YES');
+  }
+
   getSateDetails(countryid: number): Observable<any> {
 
    
