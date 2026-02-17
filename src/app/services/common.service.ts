@@ -287,9 +287,61 @@ export class CommonService {
     return 'MM-YYYY';
   }
 
-  currencyformat(ptotalreceivedamount: any): any {
-    throw new Error('Method not implemented.');
+  public currencyformat(
+  value: number | string | null | undefined,
+  format: 'India' | 'International' = 'India'
+): string {
+
+  if (value === null || value === undefined) {
+    value = 0;
   }
+
+  let cleanValue = value;
+
+  if (typeof cleanValue === 'string') {
+    cleanValue = cleanValue.trim();
+
+    if (cleanValue.toLowerCase().startsWith('null')) {
+      cleanValue = cleanValue.substring(4).trim();
+    }
+  }
+
+  const numericValue: number = typeof cleanValue === 'string'
+    ? parseFloat(cleanValue.replace(/,/g, ''))
+    : cleanValue ?? 0;
+
+  const rupeeSymbol = '₹ ';
+
+  if (isNaN(numericValue) || numericValue === 0) {
+    return rupeeSymbol + '0.00';
+  }
+
+  const isNegative = numericValue < 0;
+  const absoluteValue = Math.abs(numericValue);
+
+  const fixedValue = absoluteValue.toFixed(2);
+  const [integerPart, decimalPart] = fixedValue.split('.');
+
+  let formattedInteger = '';
+
+  if (format === 'India') {
+    const lastThree = integerPart.slice(-3);
+    const otherNumbers = integerPart.slice(0, -3);
+
+    formattedInteger = otherNumbers
+      ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
+      : lastThree;
+
+  } else {
+    formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  const result = `${formattedInteger}.${decimalPart}`;
+
+  return isNegative ? `-${rupeeSymbol}${result}` : rupeeSymbol + result;
+}
+
+
   searchfilterlength = 3;
   searchplaceholder = 'Please enter 3 or more characters'
   ipaddress = sessionStorage.getItem("ipaddress");
@@ -357,6 +409,8 @@ export class CommonService {
   private apiHostUrl: string | null = null;
 
   currencysymbol = sessionStorage.getItem("currencyformat");
+// currencysymbol='₹'
+
   constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe, @Inject(LOCALE_ID) private locale: string) {
     this.pCreatedby = 'admin'; // or from auth/user session
     this.ipaddress = '127.0.0.1';
@@ -1985,6 +2039,7 @@ export class CommonService {
     printOrPdf: 'Pdf' | 'Print',
     amount?: string
   ): void {
+    debugger;
 
     const company = this._getCompanyDetails();
     const address = this.getcompanyaddress();
@@ -2033,7 +2088,7 @@ export class CommonService {
         doc.setFontSize(8);
         doc.text(address, pageWidth / 2, 15, { align: 'center' });
 
-        if (company.pCinNo) {
+        if (company?.pCinNo??'') {
           doc.text(`CIN : ${company?.pCinNo??''}`, pageWidth / 2, 20, { align: 'center' });
         }
 

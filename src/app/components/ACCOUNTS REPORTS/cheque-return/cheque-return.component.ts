@@ -228,7 +228,7 @@ export class ChequeReturnComponent implements OnInit {
     const rows = this.gridData.map(e => ({
       "Return Date": this.commonService.getFormatDateGlobal(e.pcleardate),
       "Cheque No.": e.preferencenumber,
-      "Cheque Amt.": this.commonService.currencyFormat(e.ptotalreceivedamount),
+      "Cheque Amt.": this.commonService.currencyformat(e.ptotalreceivedamount),
       "Bank Name": e.pbankname,
       "Receipt No.": e.preceiptid,
       "Receipt Date": this.commonService.getFormatDateGlobal(e.pchequedate),

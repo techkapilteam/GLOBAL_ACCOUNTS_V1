@@ -249,7 +249,7 @@ export class OnlineSettlementReportComponent implements OnInit {
     x => x.paccountid === selectedId
   );
 
-  const UPI = selectedBank ? `for ${selectedBank.pdepositbankname}` : '';
+  const UPI = selectedBank ? `for ${selectedBank.accountName}` : '';
 
   const reportName = `Online Settlement Report ${UPI}`;
 
@@ -329,6 +329,10 @@ export class OnlineSettlementReportComponent implements OnInit {
     ''
   );
 }
+trackByPaccountId(index: number, bank: any): number {
+  return bank.paccountid;
+}
+
 }
 
 

@@ -6,133 +6,132 @@
         <div class="section-content">
             <form [formGroup]="onlinecollectionreportForm" autocomplete="off">
 
-                
-                    <div class="row">
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group">
-                                <label>From Date</label>
-                                <input class="form-control" type="text" readonly formControlName="fromdate" bsDatepicker
-                                    [bsConfig]="dpConfig" (bsValueChange)="DateChange($event)">
-                            </div>
+
+                <div class="row">
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <input class="form-control" type="text" readonly formControlName="fromdate" bsDatepicker
+                                [bsConfig]="dpConfig" (bsValueChange)="DateChange($event)">
                         </div>
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group">
-                                <label>To Date</label>
-                                <input class="form-control" type="text" readonly formControlName="todate" bsDatepicker
-                                    [bsConfig]="dpConfig1">
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-xl-3">
-                            <div class="form-group">
-                                <label>Online Account</label>
-                                <select class="form-control" formControlName="paytmname">
-                                    <option value="">Select</option>
-                                    @for (bank of PaytmList; track bank.paccountid) {
-                                    <option [value]="bank.paccountid">
-                                        <!-- {{ bank.pdepositbankname }} -->
-                                        {{ bank.accountName }}
-                                    </option>
-                                    }
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-xl-3">
-                            <div class="d-flex justify-content-start mt-4 gap-2">
-
-                                <button type="button" class="btn btn-primary px-3" (click)="Show()"
-                                    [disabled]="disablesavebutton">
-
-                                    <i class="fa" [class.fa-spin]="disablesavebutton"
-                                        [class.fa-spinner]="disablesavebutton">
-                                    </i>
-                                    {{ savebutton }}
-                                </button>
-
-                                <button type="button" class="btn btn-outline-primary px-3" (click)="View()"
-                                    [disabled]="disableviewbutton">
-
-                                    @if (disableviewbutton) {
-                                    <i class="fa fa-spinner fa-spin me-1"></i>
-                                    Processing...
-                                    } @else {
-                                    View
-                                    }
-                                </button>
-
-                            </div>
-                        </div>
-
                     </div>
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <input class="form-control" type="text" readonly formControlName="todate" bsDatepicker
+                                [bsConfig]="dpConfig1">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group">
+                            <label>Online Account</label>
+                            <select class="form-control" formControlName="paytmname">
+                                <option value="">Select</option>
+                                <option *ngFor="let bank of PaytmList; trackBy: trackByPaccountId"
+                                    [value]="bank.paccountid">
+                                    {{ bank.accountName }}
+                                </option>
 
-                    <br>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xl-3">
+                        <div class="d-flex justify-content-start mt-4 gap-2">
 
-                    <div class="row">
-                        <div class="col-md-12 col-xl-12">
-                            <div class="d-flex justify-content-end me-3">
-                                <ul class="d-flex align-items-center mb-0 list-unstyled gap-3">
-                                    <li>
-                                        <img src="images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')">
-                                    </li>
-                                    <li>
-                                        <img src="images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')">
-                                    </li>
-                                    <li>
-                                        <img src="images/icon-excel.svg" width="18" (click)="export()">
-                                    </li>
-                                </ul>
-                            </div>
+                            <button type="button" class="btn btn-primary px-3" (click)="Show()"
+                                [disabled]="disablesavebutton">
 
-                            <p-table #dt [value]="GridData" [paginator]="true" [rows]="pageCriteria.pageSize"
-                                [rowsPerPageOptions]="[10,20,50]" [scrollable]="true" scrollHeight="400px"
-                                responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-sm">
+                                <i class="fa" [class.fa-spin]="disablesavebutton"
+                                    [class.fa-spinner]="disablesavebutton">
+                                </i>
+                                {{ savebutton }}
+                            </button>
 
-                                <ng-template pTemplate="header">
-                                    <tr>
-                                        <th>Transaction No</th>
-                                        <th>Transaction Date</th>
-                                        <th>Chit Receipt No</th>
-                                        <th>Reference No</th>
-                                        <th>Cheque Date</th>
-                                        <th class="text-right">Amount</th>
-                                        <th>Chit No.</th>
-                                    </tr>
-                                </ng-template>
+                            <button type="button" class="btn btn-outline-primary px-3" (click)="View()"
+                                [disabled]="disableviewbutton">
 
-                                <ng-template pTemplate="body" let-row>
-                                    <tr>
-                                        <td>{{ row.transactionNo }}</td>
-                                        <td>{{ row.transactiondate | date:'dd-MM-yyyy' }}</td>
-                                        <td>{{ row.chitReceiptNo }}</td>
-                                        <td>{{ row.pChequenumber }}</td>
-                                        <td>{{ row.pchequedate | date:'dd-MM-yyyy' }}</td>
-                                        <td class="text-right">
-                                            {{ currencysymbol }}
-                                            {{ row.ptotalreceivedamount | number:'1.2-2' }}
-                                        </td>
-                                        <td>
-                                            {{ row.chitgroupcode }} - {{ row.ticketno }}
-                                        </td>
-                                    </tr>
-                                </ng-template>
+                                @if (disableviewbutton) {
+                                <i class="fa fa-spinner fa-spin me-1"></i>
+                                Processing...
+                                } @else {
+                                View
+                                }
+                            </button>
 
-                                <ng-template pTemplate="footer">
-                                    <tr>
-                                        <td colspan="5" class="text-right font-bold">
-                                            Grand Total:
-                                        </td>
-                                        <td class="text-right font-bold">
-                                            {{ currencysymbol }}
-                                            {{ Amttotal | number:'1.2-2' }}
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                </ng-template>
-
-                            </p-table>
                         </div>
                     </div>
 
-                
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12 col-xl-12">
+                        <div class="d-flex justify-content-end me-3">
+                            <ul class="d-flex align-items-center mb-0 list-unstyled gap-3">
+                                <li>
+                                    <img src="images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')">
+                                </li>
+                                <li>
+                                    <img src="images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')">
+                                </li>
+                                <li>
+                                    <img src="images/icon-excel.svg" width="18" (click)="export()">
+                                </li>
+                            </ul>
+                        </div>
+
+                        <p-table #dt [value]="GridData" [paginator]="true" [rows]="pageCriteria.pageSize"
+                            [rowsPerPageOptions]="[10,20,50]" [scrollable]="true" scrollHeight="400px"
+                            responsiveLayout="scroll" styleClass="p-datatable-gridlines p-datatable-sm">
+
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Transaction No</th>
+                                    <th>Transaction Date</th>
+                                    <th>Chit Receipt No</th>
+                                    <th>Reference No</th>
+                                    <th>Cheque Date</th>
+                                    <th class="text-right">Amount</th>
+                                    <th>Chit No.</th>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="body" let-row>
+                                <tr>
+                                    <td>{{ row.transactionNo }}</td>
+                                    <td>{{ row.transactiondate | date:'dd-MM-yyyy' }}</td>
+                                    <td>{{ row.chitReceiptNo }}</td>
+                                    <td>{{ row.pChequenumber }}</td>
+                                    <td>{{ row.pchequedate | date:'dd-MM-yyyy' }}</td>
+                                    <td class="text-right">
+                                        {{ currencysymbol }}
+                                        {{ row.ptotalreceivedamount | number:'1.2-2' }}
+                                    </td>
+                                    <td>
+                                        {{ row.chitgroupcode }} - {{ row.ticketno }}
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                                <tr>
+                                    <td colspan="5" class="text-right font-bold">
+                                        Grand Total:
+                                    </td>
+                                    <td class="text-right font-bold">
+                                        {{ currencysymbol }}
+                                        {{ Amttotal | number:'1.2-2' }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </ng-template>
+
+                        </p-table>
+                    </div>
+                </div>
+
+
             </form>
         </div>
 

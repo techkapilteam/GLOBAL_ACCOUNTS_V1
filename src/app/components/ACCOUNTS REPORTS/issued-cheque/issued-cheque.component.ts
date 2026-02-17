@@ -158,13 +158,14 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetData() {
+    debugger;
     
     this.Showhide = false;
     const [from, to] = this.strChqNo.split('-');
     this._ChqFromNo = from;
     this._ChqToNo = to;
     this.ShowReport = false;
-    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILAGRO','KIT')
+    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILCHITS','KLC01')
       .subscribe((res: any) => {
         this.gridData = res ?? [];
         this.pageCriteria.totalrows = this.gridData.length;
