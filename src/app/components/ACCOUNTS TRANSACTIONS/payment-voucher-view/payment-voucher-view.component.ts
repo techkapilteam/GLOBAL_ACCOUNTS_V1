@@ -104,13 +104,11 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     private _AccountingTransactionsService: AccountingTransactionsService,
     private _SubscriberJVService: SubscriberjvService) {
 
-
-
-
     this.ppaymentdateConfig.maxDate = new Date();
     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
     this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.ppaymentdateConfig.showWeekNumbers = false;
+    
 }
   paymentVoucherForm!: FormGroup;
    ngOnInit(): void {
@@ -149,6 +147,7 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
 
       ppaymentsslistcontrols: this.addppaymentsslistcontrols(),
       pDocStorePath: ['']
+      
     })
     this.modeofPaymentChange();
 

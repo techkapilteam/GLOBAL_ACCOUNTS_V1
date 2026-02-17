@@ -76,7 +76,7 @@ export class GeneralReceiptComponent implements OnInit {
     });
   }
 
-  // Filter table
+  
   filterDatatable(event: any): void {
     const value = (event.target.value || '').toLowerCase();
     this.gridView = this.allGridView.filter(d =>

@@ -5,123 +5,124 @@
     </div>
 
 
-<div class="section-content">
+    <div class="section-content">
 
-  <!-- New Button -->
-  <div class="row">
-    <div class="col-8 d-flex flex-wrap align-items-center">
-      <a routerLink="/dashboard/accounts/accounts-transactions/petty-cash" class="btn btn-primary border-0">
-        New
-      </a>
-    </div>
-  </div>
-
-  <!-- Search -->
-  <div class="row mt-3">
-    <div class="col-md-12 col-xl-12">
-
-      <div class="row mb-4">
-        <div class="col-md-6 col-xl-6">
-          <div class="form-group mr-0 custom-search">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search..." (keyup)="filterDatatable($event)">
-            </div>
-          </div>
+      <!-- New Button -->
+      <div class="row">
+        <div class="col-8 d-flex flex-wrap align-items-center">
+          <a routerLink="/dashboard/accounts/accounts-transactions/petty-cash" 
+          class="btn btn-primary border-0 ms-2">
+            New
+          </a>
         </div>
       </div>
 
-      <!-- PrimeNG Table -->
-      <p-table [value]="gridView" [rows]="pageCriteria.pageSize" [paginator]="false" responsiveLayout="scroll"
-        styleClass="material expandable table p-datatable-gridlines p-datatable-striped">
+      <!-- Search -->
+      <div class="row mt-3">
+        <div class="col-md-12 col-xl-12">
 
-        <!-- Header -->
-        <ng-template pTemplate="header">
-          <tr>
-            <th class="header-center">Actions</th>
-            <th class="header-left">Receipt Date</th>
-            <th class="header-center">Receipt No.</th>
-            <th class="header-left">Payment Details</th>
-            <th class="header-right">Received Amount</th>
-            <th class="header-left" style="width:400px">Narration</th>
-          </tr>
-        </ng-template>
-
-        <!-- Body -->
-        <ng-template pTemplate="body" let-row>
-          <tr>
-
-            <!-- Actions -->
-            <td class="cell-center">
-              <button class="btn btn-sm btn-primary" (click)="viewRow(row)">
-                View
-              </button>
-            </td>
-
-            <!-- Receipt Date -->
-            <td class="cell-left" [title]="row.preceiptdate">
-              {{ row.preceiptdate }}
-            </td>
-
-            <!-- Receipt No -->
-            <td class="cell-center">
-              {{ row.preceiptid }}
-            </td>
-
-            <!-- Payment Details -->
-            <td class="cell-left">
-              <div *ngIf="row.pmodofreceipt === 'CASH'">
-                {{ row.pmodofreceipt }}
+          <div class="row mb-4">
+            <div class="col-md-6 col-xl-6">
+              <div class="form-group mr-0 custom-search">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Search..." (keyup)="filterDatatable($event)">
+                </div>
               </div>
-              <div *ngIf="row.pmodofreceipt !== 'CASH'">
-                {{ row.pmodofreceipt }}
-                ({{ row.ptypeofpayment }} - {{ row.pChequenumber }})
-              </div>
-            </td>
+            </div>
+          </div>
 
-            <!-- Received Amount -->
-            <td class="cell-right">
-              {{ currencySymbol }}
-              {{ row.ptotalreceivedamount | currency }}
-            </td>
+          <!-- PrimeNG Table -->
+          <p-table [value]="gridView" [rows]="pageCriteria.pageSize" [paginator]="false" responsiveLayout="scroll"
+            styleClass="material expandable table p-datatable-gridlines p-datatable-striped">
 
-            <!-- Narration -->
-            <td class="cell-left" style="width:400px">
-              <div *ngIf="row.pnarration === ''">
-                -- NA --
-              </div>
-              <div *ngIf="row.pnarration !== ''" [title]="row.pnarration">
-                {{ row.pnarration }}
-              </div>
-            </td>
+            <!-- Header -->
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="header-center">Actions</th>
+                <th class="header-left">Receipt Date</th>
+                <th class="header-center">Receipt No.</th>
+                <th class="header-left">Payment Details</th>
+                <th class="header-right">Received Amount</th>
+                <th class="header-left" style="width:400px">Narration</th>
+              </tr>
+            </ng-template>
 
-          </tr>
-        </ng-template>
+            <!-- Body -->
+            <ng-template pTemplate="body" let-row>
+              <tr>
 
-        <!-- Footer -->
-        <ng-template pTemplate="footer">
-      <tr *ngIf="gridView && gridView.length > 0">
-            <td colspan="6" style="padding:5px 10px;">
-              Page {{pageCriteria.CurrentPage}}
-              of {{pageCriteria.TotalPages}}
-              ({{pageCriteria.totalrows}} items)
-            </td>
-          </tr>
-        </ng-template>
+                <!-- Actions -->
+                <td class="cell-center">
+                  <button class="btn btn-sm btn-primary" (click)="viewRow(row)">
+                    View
+                  </button>
+                </td>
+
+                <!-- Receipt Date -->
+                <td class="cell-left" [title]="row.preceiptdate">
+                  {{ row.preceiptdate }}
+                </td>
+
+                <!-- Receipt No -->
+                <td class="cell-center">
+                  {{ row.preceiptid }}
+                </td>
+
+                <!-- Payment Details -->
+                <td class="cell-left">
+                  <div *ngIf="row.pmodofreceipt === 'CASH'">
+                    {{ row.pmodofreceipt }}
+                  </div>
+                  <div *ngIf="row.pmodofreceipt !== 'CASH'">
+                    {{ row.pmodofreceipt }}
+                    ({{ row.ptypeofpayment }} - {{ row.pChequenumber }})
+                  </div>
+                </td>
+
+                <!-- Received Amount -->
+                <td class="cell-right">
+                  {{ currencySymbol }}
+                  {{ row.ptotalreceivedamount | currency }}
+                </td>
+
+                <!-- Narration -->
+                <td class="cell-left" style="width:400px">
+                  <div *ngIf="row.pnarration === ''">
+                    -- NA --
+                  </div>
+                  <div *ngIf="row.pnarration !== ''" [title]="row.pnarration">
+                    {{ row.pnarration }}
+                  </div>
+                </td>
+
+              </tr>
+            </ng-template>
+
+            <!-- Footer -->
+            <ng-template pTemplate="footer">
+              <tr *ngIf="gridView && gridView.length > 0">
+                <td colspan="6" style="padding:5px 10px;">
+                  Page {{pageCriteria.CurrentPage}}
+                  of {{pageCriteria.TotalPages}}
+                  ({{pageCriteria.totalrows}} items)
+                </td>
+              </tr>
+            </ng-template>
 
 
-        <!-- Empty -->
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center">
-              No records found
-            </td>
-          </tr>
-        </ng-template>
+            <!-- Empty -->
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6" class="text-center">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
 
-      </p-table>
+          </p-table>
 
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 </div>

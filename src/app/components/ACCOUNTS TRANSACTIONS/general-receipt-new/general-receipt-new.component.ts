@@ -32,7 +32,6 @@ import { TableModule } from 'primeng/table'
         SharedModule,
         NgSelectModule,
         TableModule,
-        GeneralReceiptNewComponent,
         ValidationMessageComponent,
         BsDatepickerModule,
         CurrencyPipe],
@@ -2170,13 +2169,11 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
     BankNameChange() {
         this.GetValidationByControl(this.GeneralReceiptForm, 'pbankname', true);
     }
-    BankIdChange(args: any) {
-        debugger;
-        this.GetValidationByControl(this.GeneralReceiptForm, 'pbankid', true);
+    BankIdChange(selectedBank: any) {
+  this.GetValidationByControl(this.GeneralReceiptForm, 'pbankid', true);
 
-
-        this.GeneralReceiptForm.controls['pbankname'].setValue = args.target.options[args.target.selectedIndex].text;
-    }
+  this.GeneralReceiptForm.controls['pbankname'].setValue(selectedBank.pBankName);
+}
     ChequeNoChange() {
         this.GetValidationByControl(this.GeneralReceiptForm, 'pChequenumber', true);
     }
@@ -2192,8 +2189,6 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
     emptySumm() {
         return null;
     }
-
-
     caclulateSum() {
         this.paymentslist1.forEach((item: any) => {
             this.pAmountSum += item.pamount;
@@ -2202,9 +2197,6 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
         });
     }
 
-    /*
-    *Assiging the file name to the textbox of filename
-    */
     documentUpload(event: any) {
         debugger;
         try {
@@ -2220,9 +2212,7 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
         catch (e) {
             this.showErrorMessage('e');
         }
-    }/*
- * Validating the type of file uploaded
- */
+    }
     validateFile(fileName: string | null | undefined): boolean {
         try {
             if (!fileName) {
