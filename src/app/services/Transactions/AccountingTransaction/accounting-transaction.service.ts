@@ -53,6 +53,12 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema);
     return this._CommonService.getAPI('/accountingtransactions/GetReceiptsandPaymentsLoadingData', params, 'YES');
   }
+    GetReceiptsandPaymentsLoadingData2(formname: any, BranchSchema: any,GlobalSchema:any,CompanyCode:any,BranchCode:any,TaxesSchema:any): Observable<any> {
+    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema)
+    .set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode).set('TaxesSchema', TaxesSchema);
+    return this._CommonService.getAPI('/Accounts/GetReceiptsandPaymentsLoadingData', params, 'YES');
+  }
 
   GetReceiptsandPaymentsLoadingData1(GlobalSchema: any, AccountsSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     debugger;
@@ -67,11 +73,11 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
     return this._CommonService.getAPI('/Accounts/GetLedgerAccountList', params, 'YES');
   }
-  GetViewBankInformation(precordid: any, GlobalSchema: any, BranchSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
+  GetBankDetailsbyId1(pbankid: any, BranchSchema: any, GlobalSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     debugger;
-    const params = new HttpParams().set('precordid', precordid).set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    const params = new HttpParams().set('pbankid', pbankid).set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
-    return this._CommonService.getAPI('/Accounts/GetViewBankInformation', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetBankDetailsbyId', params, 'YES');
   }
   GetIssuedChequeNumbers(_BankId:any, BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
       debugger;
@@ -395,6 +401,12 @@ export class AccountingTransactionsService {
     debugger;
     const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/AccountingTransactions/GetLedgerAccountList', params, 'YES');
+  }
+
+    GettdsLedgerAccountsList1(formname: any,BranchSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('formname', formname).set('BranchSchema',BranchSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode).set('GlobalSchema',GlobalSchema);
+    return this._CommonService.getAPI('/Accounts/GetLedgerAccountList', params, 'YES');
   }
 
   GettdsJVDetails(creditledger: any, monthYear: any, debitledger: any): Observable<any> {
