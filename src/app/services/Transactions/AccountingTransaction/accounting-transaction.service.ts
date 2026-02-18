@@ -150,7 +150,7 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname()).set('caoBranch', caobranch);
     return this._CommonService.getAPI('/ChequesOnHand/GetCashOnHandData', params, 'YES')
   }
-  GetCashOnHandData_(caobranch:any,fromdate:any,todate:any,AsOnDate:any): Observable<any> {//added by uday on 04-09-2024
+  GetCashOnHandData_(caobranch:any,fromdate:any,todate:any,AsOnDate:any): Observable<any> {   //added by uday on 04-09-2024
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname()).set('caoBranch', caobranch).set('fromdate', fromdate).set('todate', todate).set('AsOnDate',AsOnDate);
     return this._CommonService.getAPI('/ChequesOnHand/GetCashOnHandData', params, 'YES');
   }

@@ -144,7 +144,7 @@
             </a>
         </li>
 
-          <li><a href="javascript:void(0)" (click)="ChequesReceived()">Cheques Received
+        <li><a href="javascript:void(0)" (click)="ChequesReceived()">Cheques Received
                 <span class="badge badge-secondary ml-2">{{chequesreceived}}</span></a>
         </li>
         <li>
@@ -214,7 +214,6 @@
                         [rows]="pageCriteria.pageSize" [first]="pageCriteria.offset * pageCriteria.pageSize"
                         [scrollable]="true" scrollHeight="500px" [resizableColumns]="true" columnResizeMode="fit"
                         sortField="preceiptdate" [sortOrder]="1">
-
 
                         <ng-template pTemplate="header">
                             <tr>
@@ -373,12 +372,12 @@
             </div>
 
             <div class=" d-flex justify-content-end mt-3">
-                <a (click)="Clear()" data-toggle="tab" class="btn btn-g-icon mr-4 px-3 border-0" role="tab"
+                <a (click)="Clear()" data-toggle="tab" class="btn btn-primary mr-4 px-3 border-0" role="tab"
                     aria-controls="hot" aria-selected="false"><img src="assets/images/icon-cancel-white.svg"
                         class="mr-3" width="20px" height="20px">Clear</a>
 
                 <div *ngIf="saveshowhide">
-                    <button (click)="Save()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
+                    <button (click)="Save()" class="btn btn-secondary px-3 border-0" [disabled]="disablesavebutton">
                         <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
                             *ngIf="!disablesavebutton">
                         <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}

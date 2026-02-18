@@ -20,7 +20,7 @@ declare var $: any;
   selector: 'app-cheques-onhand',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, NgxDatatableModule, CommonModule,
-    BsDatepickerModule, CurrencyPipe, TableModule, CheckboxModule, PaginatorModule, FormsModule,ValidationMessageComponent],
+    BsDatepickerModule, CurrencyPipe, TableModule, CheckboxModule, PaginatorModule, FormsModule, ValidationMessageComponent],
   providers: [CurrencyPipe],
   templateUrl: './cheques-onhand.component.html'
 })
@@ -107,29 +107,29 @@ export class ChequesOnhandComponent implements OnInit {
   chequeboxshoworhide: boolean = false
   pdatepickerenablestatus!: boolean;
   companydetails: any;
-  page: any ={};
-  today2:Date=new Date()
+  page: any = {};
+  today2: Date = new Date()
 
-  
+
   // ShowBankErrorMsg: Boolean = false;
   constructor(private fb: FormBuilder, private _accountingtransaction: AccountingTransactionsService,
     private _commonService: CommonService, private datepipe: DatePipe) {
     this.setSelectableSettings();
 
-         this.dpConfig.containerClass='theme-dark-blue';
-         this.dpConfig.showWeekNumbers=false;
-         this.dpConfig.maxDate = new Date();
-         this.dpConfig.dateInputFormat='DD-MMM-YYYY'
+    this.dpConfig.containerClass = 'theme-dark-blue';
+    this.dpConfig.showWeekNumbers = false;
+    this.dpConfig.maxDate = new Date();
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY'
 
-         this.brsfromConfig.containerClass='theme-dark-blue';
-         this.brsfromConfig.showWeekNumbers=false;
-         this.brsfromConfig.maxDate = new Date();
-         this.brsfromConfig.dateInputFormat='DD-MMM-YYYY'
+    this.brsfromConfig.containerClass = 'theme-dark-blue';
+    this.brsfromConfig.showWeekNumbers = false;
+    this.brsfromConfig.maxDate = new Date();
+    this.brsfromConfig.dateInputFormat = 'DD-MMM-YYYY'
 
-         this.brstoConfig.containerClass='theme-dark-blue';
-         this.brstoConfig.showWeekNumbers=false;
-         this.brstoConfig.maxDate = new Date();
-         this.brstoConfig.dateInputFormat='DD-MMM-YYYY'
+    this.brstoConfig.containerClass = 'theme-dark-blue';
+    this.brstoConfig.showWeekNumbers = false;
+    this.brstoConfig.maxDate = new Date();
+    this.brstoConfig.dateInputFormat = 'DD-MMM-YYYY'
 
 
     //  this.dpConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
@@ -145,7 +145,7 @@ export class ChequesOnhandComponent implements OnInit {
     //  this.brsfromConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
     //  this.brstoConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
     //  this.brstoConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
-     this.pageCriteria = new PageCriteria();
+    this.pageCriteria = new PageCriteria();
 
 
   }
@@ -155,10 +155,10 @@ export class ChequesOnhandComponent implements OnInit {
     this.companydetails = this._commonService._getCompanyDetails();
     this.pdatepickerenablestatus = this.companydetails?.pdatepickerenablestatus;
     //this.getChequeReturnCharges();
-    
+
     this.currencySymbol = this._commonService.currencysymbol;
     this.ChequesOnHandForm = this.fb.group({
-      
+
       ptransactiondate: [new Date(), Validators.required],
       bankname: [''],
       pfrombrsdate: [''],
@@ -223,16 +223,16 @@ export class ChequesOnhandComponent implements OnInit {
       this.gridData[i].pchequestatus = "N";
     }
   }
-   pageSetUp() {
-     debugger;
-     this.page.offset = 0;
-     this.page.pageNumber = 1;
-     this.page.size = this._commonService.pageSize;
-     this.startindex = 0;
+  pageSetUp() {
+    debugger;
+    this.page.offset = 0;
+    this.page.pageNumber = 1;
+    this.page.size = this._commonService.pageSize;
+    this.startindex = 0;
     this.endindex = this.page.size;
     this.page.totalElements = 5;
-     this.page.totalPages = 1;
-   }
+    this.page.totalPages = 1;
+  }
 
 
 
@@ -491,13 +491,13 @@ export class ChequesOnhandComponent implements OnInit {
       } else {
         columnName = "";
       }
-       this.pageSetUp();
+      this.pageSetUp();
       this.GetChequesOnHand_Load(this.bankid);
       this.gridData = this._commonService.transform(this.gridDatatemp, searchText, columnName);
     }
     else {
       if (searchText == "") {
-         this.pageSetUp();
+        this.pageSetUp();
         this.GetChequesOnHand_Load(this.bankid);
       }
       this.gridData = this.gridDatatemp;
@@ -564,23 +564,23 @@ export class ChequesOnhandComponent implements OnInit {
       //   }
       // }
 
-    if (chequedate?.getTime() != null && receiptdate?.getTime() != null) {
-  if (today.getTime() >= chequedate.getTime()) {
-    if (transactiondate.getTime() >= receiptdate.getTime()) {
-      data.pdepositstatus = true;
-      data.pcancelstatus = false;
-      data.pchequestatus = "P";
-    } else {
-      data.pdepositstatus = false;
-      data.pcancelstatus = false;
-      data.pchequestatus = "N";
-      event.target.checked = false;
-      this._commonService.showWarningMessage(
-        "Transaction Date Should be Greater than Receipt Date"
-      );
-    }
-  }
-}
+      if (chequedate?.getTime() != null && receiptdate?.getTime() != null) {
+        if (today.getTime() >= chequedate.getTime()) {
+          if (transactiondate.getTime() >= receiptdate.getTime()) {
+            data.pdepositstatus = true;
+            data.pcancelstatus = false;
+            data.pchequestatus = "P";
+          } else {
+            data.pdepositstatus = false;
+            data.pcancelstatus = false;
+            data.pchequestatus = "N";
+            event.target.checked = false;
+            this._commonService.showWarningMessage(
+              "Transaction Date Should be Greater than Receipt Date"
+            );
+          }
+        }
+      }
 
       else {
         data.pdepositstatus = false;
@@ -634,17 +634,17 @@ export class ChequesOnhandComponent implements OnInit {
       // }
 
       if (receiptdate?.getTime() != null) {
-  if (transactiondate.getTime() >= receiptdate.getTime()) {
-    data.pcancelstatus = true;
-    data.pdepositstatus = false;
-    data.pchequestatus = "C";
+        if (transactiondate.getTime() >= receiptdate.getTime()) {
+          data.pcancelstatus = true;
+          data.pdepositstatus = false;
+          data.pchequestatus = "C";
 
-    $("#cancelcharges").val(this.chequereturncharges);
-    this.chequenumber = data.pChequenumber;
+          $("#cancelcharges").val(this.chequereturncharges);
+          this.chequenumber = data.pChequenumber;
 
-    this.CancelChargesOk(0);
-  }
-}
+          this.CancelChargesOk(0);
+        }
+      }
 
       else {
         data.pdepositstatus = false;
@@ -738,7 +738,7 @@ export class ChequesOnhandComponent implements OnInit {
     this.status = "all";
     this.pdfstatus = "All"
     this.modeofreceipt = "ALL";
-     this.pageSetUp();
+    this.pageSetUp();
     this.GetChequesOnHand(this.bankid, this.startindex, this.endindex, this._searchText);
 
     this.gridData = JSON.parse(JSON.stringify(this.ChequesOnHandData));
@@ -766,6 +766,7 @@ export class ChequesOnhandComponent implements OnInit {
     if (this.page.totalElements > 10)
       this.page.totalPages = parseInt((this.page.totalElements / 10).toString()) + 1;
   }
+
   All1() {
     // $('#search').val("");
     this.gridData = [];
@@ -920,7 +921,7 @@ export class ChequesOnhandComponent implements OnInit {
     this.status = "onlinereceipts";
     this.pdfstatus = "Online Receipts";
     this.fromdate = ""; this.todate = "";
-   
+
     this.modeofreceipt = "ONLINE";
     this.GetChequesOnHand(this.bankid, this.startindex, this.endindex, this._searchText);
     let datatemp = [];
@@ -1124,7 +1125,7 @@ export class ChequesOnhandComponent implements OnInit {
   Cancelled() {
     this.chequeboxshoworhide = false
     this.fromdate = ""; this.todate = "";
-     this.pageSetUp();
+    this.pageSetUp();
     this.modeofreceipt = "CANCEL";
     this.GetChequesOnHand(this.bankid, this.startindex, this.endindex, this._searchText);
     // $('#search').val("");
@@ -1489,7 +1490,7 @@ export class ChequesOnhandComponent implements OnInit {
         this.todate = todate;
         this.validatebrsdatedeposit = false;
 
-         this.pageSetUp();
+        this.pageSetUp();
         this.GetDataOnBrsDates(fromdate, todate, this.bankid);
 
       }
@@ -1520,7 +1521,7 @@ export class ChequesOnhandComponent implements OnInit {
         this.todate = todate;
         this.validatebrsdatedeposit = false;
 
-         this.pageSetUp();
+        this.pageSetUp();
         this.GetDataOnBrsDates(fromdate, todate, this.bankid);
         // if (this.bankid == 0) {
         //     this.BrsDateForm.controls.frombrsdate.setValue(this._commonService.getDateObjectFromDataBase(this.bankbalancedetails.pfrombrsdate));
