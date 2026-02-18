@@ -11,7 +11,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-cheque-managementnew',
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, TableModule, ButtonModule,NgSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, TableModule, ButtonModule, NgSelectModule],
   templateUrl: './cheque-managementnew.component.html',
   styleUrl: './cheque-managementnew.component.css',
 })
@@ -52,7 +52,7 @@ export class ChequeManagementnewComponent implements OnInit {
     this.chequemanagementform = this.fb.group({
       pBankId: [""],
       // pBankname: [null, Validators.required],
-      bankName: [null, Validators.required],
+      bankName: ['', Validators.required],
       pNoofcheques: ["", Validators.required],
       pChequeto: ["", Validators.required],
       pChequefrom: ["", Validators.required],
@@ -99,6 +99,7 @@ export class ChequeManagementnewComponent implements OnInit {
 
   }
   validategridData(): boolean {
+    debugger
     let isValid = true;
 
     // Clear previous validation messages
@@ -140,7 +141,8 @@ export class ChequeManagementnewComponent implements OnInit {
     const data = this.gridData ?? [];
 
     for (let i = 0; i < data.length; i++) {
-      if (this.selectedbank !== data[i].pBankname) {
+      // if (this.selectedbank !== data[i].pBankname) {
+      if (this.selectedbank !== data[i].bankName) {
         continue;
       }
 
@@ -172,13 +174,18 @@ export class ChequeManagementnewComponent implements OnInit {
   addtoGrid() {
     debugger;
     let validate = true;
+    console.log("Form valid:", this.chequemanagementform.valid);
 
+    const customValidation = this.checkValidations(this.chequemanagementform, validate);
+    console.log("Custom validation result:", customValidation);
     if (this.checkValidations(this.chequemanagementform, validate)) {
       if (this.validategridData()) {
         this.accountingMasterService
-          .GetExistingChequeCount(this.recordid, this.fromcheqno, this.tocheqno)
+          .GetExistingChequeCount(this.recordid, this.fromcheqno, this.tocheqno,
+            this.commonService.getbranchname(), this.commonService.getCompanyCode(), this.commonService.getBranchCode(),
+          )
           .subscribe((res) => {
-            if (res == 0) {
+            if (res) {
               debugger;
               //this.chequemanagementform['controls']['pCreatedby'].setValue(this._commonservice.pCreatedby)
               this.chequemanagementform["controls"]["pStatusname"].setValue(
@@ -221,10 +228,10 @@ export class ChequeManagementnewComponent implements OnInit {
     //     this.selectedbank = this.bankdetails[i].pBankname;
     //   }
     // }
-    this.recordid=event.bankAccountId
-   this.selectedbank= event.bankName
+    this.recordid = event.bankAccountId
+    this.selectedbank = event.bankName
 
-    this.chequemanagementform.controls["pBankId"].setValue(this.recordid);
+    // this.chequemanagementform.controls["pBankId"].setValue(this.recordid);
     this.gridData = [];
   }
   noofcheques(event: any) {
@@ -320,6 +327,12 @@ export class ChequeManagementnewComponent implements OnInit {
         if (formcontrol instanceof FormGroup) {
           this.checkValidations(formcontrol, validate);
         } else if (formcontrol.validator) {
+
+
+
+          if (!this.chequemanagementvalidations) {
+            this.chequemanagementvalidations = {};
+          }
           this.chequemanagementvalidations[key] = "";
           if (
             formcontrol.errors ||
@@ -327,9 +340,14 @@ export class ChequeManagementnewComponent implements OnInit {
             formcontrol.touched ||
             formcontrol.dirty
           ) {
-            let lablename;
-            lablename = (document.getElementById(key) as HTMLInputElement)
-              .title;
+            // let lablename;
+            // lablename = (document.getElementById(key) as HTMLInputElement)
+            //   .title;
+
+
+
+            const element = document.getElementById(key) as HTMLInputElement | null;
+            const lablename = element?.title || key;
             let errormessage;
             for (const errorkey in formcontrol.errors) {
               if (errorkey) {

@@ -71,19 +71,47 @@ export class AccountingMasterService {
     return this._CommonService.getAPI('/Accounts/GetBankUPIDetails', params, 'YES');
   }
 
+  // GetExistingChequeCount(
+  //   BankId: any,
+  //   ChqFromNo: any,
+  //   ChqToNo: any
+  // ): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('BranchSchema', this._CommonService.getschemaname())
+  //     .set('BankId', BankId)
+  //     .set('ChqFromNo', ChqFromNo)
+  //     .set('ChqToNo', ChqToNo);
+
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/Configuration/GetExistingChequeCount',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+
+
+
+
   GetExistingChequeCount(
-    BankId: any,
-    ChqFromNo: any,
-    ChqToNo: any
+    bankId: any,
+    chqFromNo: any,
+    chqToNo: any,
+    BranchSchema: any,
+    CompanyCode: any,
+    BranchCode: any,
   ): Observable<any> {
     const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname())
-      .set('BankId', BankId)
-      .set('ChqFromNo', ChqFromNo)
-      .set('ChqToNo', ChqToNo);
+
+      .set('bankId', bankId)
+      .set('chqFromNo', chqFromNo)
+      .set('chqToNo', chqToNo)
+      .set('BranchSchema', BranchSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      ;
 
     return this._CommonService.getAPI(
-      '/Accounting/Configuration/GetExistingChequeCount',
+      '/Accounts/GetExistingChequeCount',
       params,
       'YES'
     );
