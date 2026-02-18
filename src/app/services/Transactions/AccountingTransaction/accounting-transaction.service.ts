@@ -157,7 +157,7 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/AccountingTransactions/GetBankntList', params, 'YES')
   }
   
-  // GetPayTmBanksList(BranchSchema:any): Observable<any> {
+  // GetPayTmBanksList(BranchSchema: any, p0: string, p1: string): Observable<any> {
   //   const params = new HttpParams().set('BranchSchema', BranchSchema);
   //   return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
   // }
@@ -332,11 +332,11 @@ export class AccountingTransactionsService {
     return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
   }
 
-  // GetChequeReturnDetails(strFromDate:any, strToDate:any) {
+  // GetChequeReturnDetails(strFromDate: any, strToDate: any, p0: string, p1: string, p2: string, p3: string) {
   //   const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
   //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequeReturnDetails', params, 'YES');
   // }
-  GetChequeReturnDetails(strFromDate:any, strToDate:any,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any) {
+  GetChequeReturnDetails(strFromDate: any, strToDate: any, BranchSchema: string, GlobalSchema: string, CompanyCode: string, BranchCode: string) {
     const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/GetChequeReturnDetails', params, 'YES');
   }
@@ -386,9 +386,14 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/Transactions/ChitTransations/AuctionController/gstvoucherdocuments', params, 'YES')
   }
 
-  getpartywisestates(Contactid: any, BranchSchema: any): Observable<any> {
-    const params = new HttpParams().set('partyid', Contactid).set('BranchSchema', BranchSchema);
-    return this._CommonService.getAPI('/AccountingTransactions/GetPartywiseStates', params, 'YES')
+  // getpartywisestates(Contactid: any, BranchSchema: any): Observable<any> {
+  //   const params = new HttpParams().set('partyid', Contactid).set('BranchSchema', BranchSchema);
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetPartywiseStates', params, 'YES')
+  // }
+  getPartywiseStates(): Observable<any[]> {
+    return this.http.get<any[]>(
+      'https://localhost:5001/api/Accounts/GetPartywiseStates?BranchSchema=accounts&partyid=1&GlobalSchema=global&CompanyCode=KAPILCHITS&BranchCode=KLC01'
+    );
   }
 
 
@@ -549,6 +554,11 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
   }
+  // GetSubLedgerData(pledgerid: any,BranchSchema:any,): Observable<any> {
+  //   debugger;
+  //   const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', BranchSchema);
+  //   return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
+  // }
   //end.
   GetChitReceiptUPIDetails(upireferencenumber: any): any {//added by uday on 09-09-2024 for chit receipt upi details
     debugger

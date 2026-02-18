@@ -119,8 +119,8 @@ export class CommonService {
         if (doc.getNumberOfPages() === 1) {
           doc.addImage(logo, 'JPEG', 10, 5, 30, 15);
           doc.setFontSize(14);
-          doc.text(company?.pCompanyName ?? '', pageWidth / 2, 12, {align: 'center'});
-          const companyName = company?.pCompanyName??'';
+          doc.text(company?.pCompanyName ?? '', pageWidth / 2, 12, { align: 'center' });
+          const companyName = company?.pCompanyName ?? '';
           const textWidth = doc.getTextWidth(companyName);
           doc.text(companyName, (pageWidth - textWidth) / 2, 12);
           doc.setFontSize(9);
@@ -128,7 +128,7 @@ export class CommonService {
           doc.setFontSize(12);
           doc.text(reportName, pageWidth / 2, 30, { align: 'center' });
           doc.setFontSize(9);
-          doc.text(`Branch : ${company?.pBranchname??''}`, pageWidth - 60, 40);
+          doc.text(`Branch : ${company?.pBranchname ?? ''}`, pageWidth - 60, 40);
 
           if (betweenOrAsOn === 'Between') {
             doc.text(`Between : ${fromDate} And ${toDate}`, 15, 40);
@@ -219,28 +219,28 @@ export class CommonService {
   }
   convertAmountToPdfFormat(value: number | string | null | undefined): string {
 
-  if (value == null || value === '') {
-    return this.currencysymbol === "₹" ? "0" : this.currencysymbol + " 0";
+    if (value == null || value === '') {
+      return this.currencysymbol === "₹" ? "0" : this.currencysymbol + " 0";
+    }
+
+    const newAmount: number = Number(
+      this.removeCommasForEntredNumber(value)
+    );
+
+    const absoluteValue = Math.abs(newAmount);
+
+    let formattedAmount = this.currencyFormat(absoluteValue);
+
+    if (newAmount < 0) {
+      formattedAmount = `(${formattedAmount})`;
+    }
+
+    if (this.currencysymbol !== "₹") {
+      return `${this.currencysymbol} ${formattedAmount}`;
+    }
+
+    return formattedAmount;
   }
-
-  const newAmount: number = Number(
-    this.removeCommasForEntredNumber(value)
-  );
-
-  const absoluteValue = Math.abs(newAmount);
-
-  let formattedAmount = this.currencyFormat(absoluteValue);
-
-  if (newAmount < 0) {
-    formattedAmount = `(${formattedAmount})`;
-  }
-
-  if (this.currencysymbol !== "₹") {
-    return `${this.currencysymbol} ${formattedAmount}`;
-  }
-
-  return formattedAmount;
-}
 
   pageSize: number = 10;
 
@@ -288,58 +288,58 @@ export class CommonService {
   }
 
   public currencyformat(
-  value: number | string | null | undefined,
-  format: 'India' | 'International' = 'India'
-): string {
+    value: number | string | null | undefined,
+    format: 'India' | 'International' = 'India'
+  ): string {
 
-  if (value === null || value === undefined) {
-    value = 0;
-  }
-
-  let cleanValue = value;
-
-  if (typeof cleanValue === 'string') {
-    cleanValue = cleanValue.trim();
-
-    if (cleanValue.toLowerCase().startsWith('null')) {
-      cleanValue = cleanValue.substring(4).trim();
+    if (value === null || value === undefined) {
+      value = 0;
     }
+
+    let cleanValue = value;
+
+    if (typeof cleanValue === 'string') {
+      cleanValue = cleanValue.trim();
+
+      if (cleanValue.toLowerCase().startsWith('null')) {
+        cleanValue = cleanValue.substring(4).trim();
+      }
+    }
+
+    const numericValue: number = typeof cleanValue === 'string'
+      ? parseFloat(cleanValue.replace(/,/g, ''))
+      : cleanValue ?? 0;
+
+    const rupeeSymbol = '₹ ';
+
+    if (isNaN(numericValue) || numericValue === 0) {
+      return rupeeSymbol + '0.00';
+    }
+
+    const isNegative = numericValue < 0;
+    const absoluteValue = Math.abs(numericValue);
+
+    const fixedValue = absoluteValue.toFixed(2);
+    const [integerPart, decimalPart] = fixedValue.split('.');
+
+    let formattedInteger = '';
+
+    if (format === 'India') {
+      const lastThree = integerPart.slice(-3);
+      const otherNumbers = integerPart.slice(0, -3);
+
+      formattedInteger = otherNumbers
+        ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
+        : lastThree;
+
+    } else {
+      formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    const result = `${formattedInteger}.${decimalPart}`;
+
+    return isNegative ? `-${rupeeSymbol}${result}` : rupeeSymbol + result;
   }
-
-  const numericValue: number = typeof cleanValue === 'string'
-    ? parseFloat(cleanValue.replace(/,/g, ''))
-    : cleanValue ?? 0;
-
-  const rupeeSymbol = '₹ ';
-
-  if (isNaN(numericValue) || numericValue === 0) {
-    return rupeeSymbol + '0.00';
-  }
-
-  const isNegative = numericValue < 0;
-  const absoluteValue = Math.abs(numericValue);
-
-  const fixedValue = absoluteValue.toFixed(2);
-  const [integerPart, decimalPart] = fixedValue.split('.');
-
-  let formattedInteger = '';
-
-  if (format === 'India') {
-    const lastThree = integerPart.slice(-3);
-    const otherNumbers = integerPart.slice(0, -3);
-
-    formattedInteger = otherNumbers
-      ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
-      : lastThree;
-
-  } else {
-    formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  const result = `${formattedInteger}.${decimalPart}`;
-
-  return isNegative ? `-${rupeeSymbol}${result}` : rupeeSymbol + result;
-}
 
 
   searchfilterlength = 3;
@@ -409,7 +409,7 @@ export class CommonService {
   private apiHostUrl: string | null = null;
 
   currencysymbol = sessionStorage.getItem("currencyformat");
-// currencysymbol='₹'
+  // currencysymbol='₹'
 
   constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe, @Inject(LOCALE_ID) private locale: string) {
     this.pCreatedby = 'admin'; // or from auth/user session
@@ -649,31 +649,31 @@ export class CommonService {
   //   }
   // }
   pdfProperties(propertyType: string): string | number {
-  const now = new Date();
+    const now = new Date();
 
-  const datePart = this.getFormatDateGlobal(now);
+    const datePart = this.getFormatDateGlobal(now);
 
-  const hours = now.getHours();
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  const seconds = now.getSeconds().toString().padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const hour12 = hours % 12 || 12;
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 || 12;
 
-  const config: Record<string, string | number> = {
-    'Date': `${datePart} ${hour12}:${minutes}:${seconds} ${ampm}`,
-    'Header Color': '#0b4093',
-    'Header Color1': 'white',
-    'Header Alignment': 'center',
-    'Header Fontsize': 7,
-    'Cell Fontsize': 7,
-    'Address Fontsize': 8
-  };
-  if (!config[propertyType]) {
-    console.warn('Unknown pdf property:', propertyType);
+    const config: Record<string, string | number> = {
+      'Date': `${datePart} ${hour12}:${minutes}:${seconds} ${ampm}`,
+      'Header Color': '#0b4093',
+      'Header Color1': 'white',
+      'Header Alignment': 'center',
+      'Header Fontsize': 7,
+      'Cell Fontsize': 7,
+      'Address Fontsize': 8
+    };
+    if (!config[propertyType]) {
+      console.warn('Unknown pdf property:', propertyType);
+    }
+
+    return config[propertyType] ?? '';
   }
-
-  return config[propertyType] ?? '';
-}
   // getFormatDateGlobal(date: any)  {
 
   //   this.dateFormat = sessionStorage.getItem("dateformat");
@@ -923,7 +923,7 @@ export class CommonService {
           doc.setFontSize(15);
 
           doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
-          doc.text(Companyreportdetails?.pCompanyName??'', 60, 10);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 10);
 
           doc.setFontSize(14);
           doc.text(reportName, 87, 30);
@@ -1004,14 +1004,14 @@ export class CommonService {
 
     doc.setFont('times', 'normal');
     doc.setFontSize(15);
-    doc.text(company?.pCompanyName??'', pageWidth / 2, 10, { align: 'center' });
+    doc.text(company?.pCompanyName ?? '', pageWidth / 2, 10, { align: 'center' });
 
     doc.setFontSize(8);
     doc.text(address.substring(0, 115), pageWidth / 2, 15, { align: 'center' });
     doc.text(address.substring(115), pageWidth / 2, 18, { align: 'center' });
 
     if (company?.pCinNo) {
-      doc.text(`CIN : ${company?.pCinNo??''}`, pageWidth / 2, 22, { align: 'center' });
+      doc.text(`CIN : ${company?.pCinNo ?? ''}`, pageWidth / 2, 22, { align: 'center' });
     }
 
     doc.setFontSize(14);
@@ -1415,14 +1415,21 @@ export class CommonService {
       columns: gridHeaders,
       body: gridData,
       theme: 'grid',
+      // headStyles: {
+      //   fillColor: this.pdfProperties('Header Color'),
+      //   halign: this.pdfProperties('Header Alignment'),
+      //   fontSize: this.pdfProperties('Header Fontsize'),
+      // }
       headStyles: {
         fillColor: this.pdfProperties('Header Color'),
-        halign: this.pdfProperties('Header Alignment'),
-        fontSize: this.pdfProperties('Header Fontsize'),
+        halign: 'center',
+        fontSize: 15,
+        fontStyle: 'bold'
       },
       styles: {
-        cellPadding: 1,
-        fontSize: this.pdfProperties('Cell Fontsize'),
+        cellPadding: 2,
+        // fontSize: this.pdfProperties('Cell Fontsize'),
+        fontSize: 11,
         cellWidth: 'wrap',
         overflow: 'linebreak',
         rowPageBreak: 'avoid',
@@ -1442,22 +1449,22 @@ export class CommonService {
         // Header
         doc.setFont('Times', 'normal');
         if ((doc.internal as any).getNumberOfPages() === 1) {
-          doc.setFontSize(pageType === 'landscape' ? 10 : 15);
+          doc.setFontSize(pageType === 'landscape' ? 16 : 20);
           doc.addImage(kapilLogo, 'JPEG', 10, pageType === 'landscape' ? 5 : 15, 20, 20);
           doc.setTextColor('black');
-          doc.text(Companyreportdetails?.pCompanyName??'', pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
-          doc.setFontSize(8);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
+          doc.setFontSize(14);
           doc.text(address.substring(0, 150), pageWidth / 2, pageType === 'landscape' ? 15 : 24, { align: 'center' });
 
-          if (Companyreportdetails?.pCinNo??'') {
+          if (Companyreportdetails?.pCinNo ?? '') {
             doc.text('CIN : ' + Companyreportdetails.pCinNo, pageWidth / 2, pageType === 'landscape' ? 20 : 28, { align: 'center' });
           }
 
-          doc.setFontSize(14);
+          doc.setFontSize(22);
           doc.text(reportName, pageWidth / 2, pageType === 'landscape' ? 30 : 38, { align: 'center' });
 
-          doc.setFontSize(10);
-          doc.text('Branch : ' + Companyreportdetails.pBranchname, pageType === 'landscape' ? 235 : 163, pageType === 'landscape' ? 40 : 47);
+          doc.setFontSize(14);
+          doc.text('Branch : ' + Companyreportdetails?.pBranchname, pageType === 'landscape' ? 235 : 163, pageType === 'landscape' ? 40 : 47);
 
           if (betweenOrAsOn === 'Between') {
             doc.text(`Between  : ${fromDate}  And  ${toDate}`, 15, pageType === 'landscape' ? 40 : 47);
@@ -1472,7 +1479,7 @@ export class CommonService {
         // Footer
         const page = `Page ${(doc.internal as any).getNumberOfPages()} of ${totalPagesExp}`;
         doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
-        doc.setFontSize(10);
+        doc.setFontSize(14);
         doc.text(`Printed on : ${today}`, lMargin, pageHeight - 5);
         doc.text(page, pageWidth - rMargin - 20, pageHeight - 5);
       },
@@ -1482,11 +1489,17 @@ export class CommonService {
             data.cell.text[0] = '';
           }
         } else {
-          if (data.section === 'body' && data.cell.colSpan !== 15 && data.cell.raw !== '0') {
-            data.cell.text[0] = ' ' + data.cell.raw;
+          // if (data.section === 'body' && data.cell.colSpan !== 15 && data.cell.raw !== '0') {
+          //   data.cell.text[0] = ' ' + data.cell.raw;
+          // }
+          // if (data.cell.raw === '0' || data.cell.raw === '0.00') {
+          //   data.cell.text[0] = '';
+          // }
+          if (data.column.index === 0 && data.section === 'body') {
+            data.cell.styles.fontSize = 13;
           }
-          if (data.cell.raw === '0' || data.cell.raw === '0.00') {
-            data.cell.text[0] = '';
+          if ((data.column.index === 1 || data.column.index === 2) && data.section === 'body') {
+            data.cell.styles.fontSize = 11;
           }
         }
       },
@@ -1494,7 +1507,14 @@ export class CommonService {
         if ((data.column.index === 1 || data.column.index === 2) && data.cell.section === 'body') {
           if (currencySymbol === '₹' && data.cell.raw !== 0) {
             const textPos = data.cell.textPos;
-            doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+            // doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+            doc.addImage(
+              rupeeImage,
+              data.cell.x + 1,
+              textPos.y - 2,
+              1.7,
+              1.7
+            );
           }
         }
       },
@@ -1591,7 +1611,7 @@ export class CommonService {
 
           doc.addImage(kapil_logo, 'JPEG', 10, 5, 20, 20);
           doc.setFontSize(15);
-          doc.text(Companyreportdetails?.pCompanyName??'', 72, 10);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 72, 10);
 
           doc.setFontSize(8);
           const address1 = address.substr(0, 115);
@@ -1599,15 +1619,15 @@ export class CommonService {
           doc.text(address1, 110, 15, { align: 'center' });
           doc.text(address2, 110, 18);
 
-          if (Companyreportdetails?.pCinNo??'') {
-            doc.text(`CIN : ${Companyreportdetails?.pCinNo??''}`, 90, 22);
+          if (Companyreportdetails?.pCinNo ?? '') {
+            doc.text(`CIN : ${Companyreportdetails?.pCinNo ?? ''}`, 90, 22);
           }
 
           doc.setFontSize(14);
           doc.text(reportName, 90, 30);
 
           doc.setFontSize(10);
-          doc.text(`Branch : ${Companyreportdetails?.pBranchname??''}`, 160, 40);
+          doc.text(`Branch : ${Companyreportdetails?.pBranchname ?? ''}`, 160, 40);
 
           if (betweenorason === 'Between') {
             doc.text(`Between : ${fromdate} And ${todate}`, 15, 40);
@@ -1622,20 +1642,20 @@ export class CommonService {
 
           doc.addImage(kapil_logo, 'JPEG', 20, 15, 20, 20);
           doc.setFontSize(15);
-          doc.text(Companyreportdetails?.pCompanyName??'', 110, 20);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 110, 20);
 
           doc.setFontSize(10);
           doc.text(address, 80, 27);
 
           if (Companyreportdetails.pCinNo) {
-            doc.text(`CIN : ${Companyreportdetails?.pCinNo??''}`, 125, 32);
+            doc.text(`CIN : ${Companyreportdetails?.pCinNo ?? ''}`, 125, 32);
           }
 
           doc.setFontSize(14);
           doc.text(reportName, 130, 42);
 
           doc.setFontSize(10);
-          doc.text(`Branch : ${Companyreportdetails?.pBranchname??''}`, 235, 50);
+          doc.text(`Branch : ${Companyreportdetails?.pBranchname ?? ''}`, 235, 50);
 
           if (betweenorason === 'Between') {
             doc.text(`Between : ${fromdate} And ${todate}`, 15, 50);
@@ -2083,13 +2103,13 @@ export class CommonService {
           doc.addImage(logo, 'JPEG', 10, 5, 25, 15);
         }
 
-        doc.text(company?.pCompanyName??'', pageWidth / 2, 10, { align: 'center' });
+        doc.text(company?.pCompanyName ?? '', pageWidth / 2, 10, { align: 'center' });
 
         doc.setFontSize(8);
         doc.text(address, pageWidth / 2, 15, { align: 'center' });
 
-        if (company?.pCinNo??'') {
-          doc.text(`CIN : ${company?.pCinNo??''}`, pageWidth / 2, 20, { align: 'center' });
+        if (company?.pCinNo ?? '') {
+          doc.text(`CIN : ${company?.pCinNo ?? ''}`, pageWidth / 2, 20, { align: 'center' });
         }
 
         doc.setFontSize(12);
@@ -2103,7 +2123,7 @@ export class CommonService {
           doc.text(`As On : ${fromDate}`, 14, 34);
         }
 
-        doc.text(`Branch : ${company?.pBranchname??''}`, pageWidth - 14, 34, { align: 'right' });
+        doc.text(`Branch : ${company?.pBranchname ?? ''}`, pageWidth - 14, 34, { align: 'right' });
 
         doc.line(10, 36, pageWidth - 10, 36);
 
@@ -2140,7 +2160,7 @@ export class CommonService {
       isvalid = true;
     return isvalid;
   }
- _downloadReportsPdf(
+  _downloadReportsPdf(
     reportName: string,
     gridData: any[],
     gridheaders: any[],
@@ -2212,9 +2232,9 @@ export class CommonService {
           doc.text(address2, 110, 18);
 
           const cinNo = Companyreportdetails?.pCinNo ?? '';
-    if (cinNo) {
-      doc.text('CIN: ' + cinNo, 90, 22);
-    }
+          if (cinNo) {
+            doc.text('CIN: ' + cinNo, 90, 22);
+          }
 
           doc.setFontSize(14);
           doc.text(reportName, 90, 30);
@@ -2222,13 +2242,13 @@ export class CommonService {
           doc.setFontSize(10);
           const branchName = Companyreportdetails?.pBranchname ?? '';
           if (branchName) {
-      doc.text('Branch: ' + branchName, 163, 40);
-    }
+            doc.text('Branch: ' + branchName, 163, 40);
+          }
 
           if (betweenorason === 'Between') {
-            doc.text(`Between: ${fromdate??''} And ${todate??''}`, 15, 40);
+            doc.text(`Between: ${fromdate ?? ''} And ${todate ?? ''}`, 15, 40);
           } else if (betweenorason === 'As On' && fromdate) {
-            doc.text(`As on: ${fromdate??''}`, 15, 40);
+            doc.text(`As on: ${fromdate ?? ''}`, 15, 40);
           }
 
           doc.setDrawColor(0, 0, 0);
@@ -2297,239 +2317,239 @@ export class CommonService {
       this.setiFrameForPrint(doc);
     }
   }
-_groupwiseSummaryExport_pendingtransfer(griddata:any, groupdcol:any, groupdsummarycol: string, isgroupedcolDate: boolean) {
+  _groupwiseSummaryExport_pendingtransfer(griddata: any, groupdcol: any, groupdsummarycol: string, isgroupedcolDate: boolean) {
 
-  let a: any = {};
-  let keys: any[] = [];
+    let a: any = {};
+    let keys: any[] = [];
 
-  for (let i = 0; i < griddata.length; i++) {
-    let Jsongroupcol = isgroupedcolDate
-      ? this.getFormatDateGlobal(griddata[i][groupdcol])
-      : griddata[i][groupdcol];
+    for (let i = 0; i < griddata.length; i++) {
+      let Jsongroupcol = isgroupedcolDate
+        ? this.getFormatDateGlobal(griddata[i][groupdcol])
+        : griddata[i][groupdcol];
 
-    if (!a[Jsongroupcol]) {
-      keys.push(Jsongroupcol);
-      a[Jsongroupcol] = [];
+      if (!a[Jsongroupcol]) {
+        keys.push(Jsongroupcol);
+        a[Jsongroupcol] = [];
+      }
+      a[Jsongroupcol].push(griddata[i]);
     }
-    a[Jsongroupcol].push(griddata[i]);
-  }
 
-  // Add empty row at end of each group
-  for (let key of keys) {
-    a[key].push({});
-  }
+    // Add empty row at end of each group
+    for (let key of keys) {
+      a[key].push({});
+    }
 
-  let final: any[] = [];
+    let final: any[] = [];
 
-  for (let key of keys) {
-    let keypair = a[key];
-    let agesum = 0;
+    for (let key of keys) {
+      let keypair = a[key];
+      let agesum = 0;
 
-    for (let k = 0; k < keypair.length; k++) {
+      for (let k = 0; k < keypair.length; k++) {
 
-      // Group Header
-      if (k === 0) {
-        let groupcolHead = isgroupedcolDate
-          ? this.getFormatDateGlobal(keypair[k][groupdcol])
-          : keypair[k][groupdcol];
+        // Group Header
+        if (k === 0) {
+          let groupcolHead = isgroupedcolDate
+            ? this.getFormatDateGlobal(keypair[k][groupdcol])
+            : keypair[k][groupdcol];
 
+          final.push([
+            {
+              content: '' + groupcolHead + '',
+              colSpan: 13,
+              styles: { halign: 'left', fillColor: "#e6f7ff" }
+            }
+          ]);
+
+          continue;
+        }
+
+        // Empty row (separator)
+        if (k === keypair.length - 1) {
+          final.push([
+            {
+              content: 'Total: ' + this.convertAmountToPdfFormat(agesum),
+              colSpan: 13,
+              styles: { halign: 'center', fillColor: "#ffffb3" }
+            }
+          ]);
+          continue;
+        }
+
+        // Sum
+        agesum += Number(keypair[k][groupdsummarycol] || 0);
+
+        // Normal data row
         final.push([
-          {
-            content: '' + groupcolHead + '',
-            colSpan: 13,
-            styles: { halign: 'left', fillColor: "#e6f7ff" }
-          }
+          keypair[k].branchName,
+          keypair[k].chitNo,
+          keypair[k].subscriberName,
+          keypair[k].chitstatus,
+          keypair[k].receiptNo,
+          keypair[k].date,
+          keypair[k].trdate,
+          keypair[k].amount,
+          keypair[k].totaldays,
+          keypair[k].pduemonths,
+          keypair[k].reference_number,
+          keypair[k].cheque_date,
+          keypair[k].bankName
         ]);
-
-        continue;
       }
-
-      // Empty row (separator)
-      if (k === keypair.length - 1) {
-        final.push([
-          {
-            content: 'Total: ' + this.convertAmountToPdfFormat(agesum),
-            colSpan: 13,
-            styles: { halign: 'center', fillColor: "#ffffb3" }
-          }
-        ]);
-        continue;
-      }
-
-      // Sum
-      agesum += Number(keypair[k][groupdsummarycol] || 0);
-
-      // Normal data row
-      final.push([
-        keypair[k].branchName,
-        keypair[k].chitNo,
-        keypair[k].subscriberName,
-        keypair[k].chitstatus,
-        keypair[k].receiptNo,
-        keypair[k].date,
-        keypair[k].trdate,
-        keypair[k].amount,
-        keypair[k].totaldays,
-        keypair[k].pduemonths,
-        keypair[k].reference_number,
-        keypair[k].cheque_date,
-        keypair[k].bankName
-      ]);
-    }
-  }
-
-  return final;
-}
-
-_groupwiseSummaryExportDataTrialBalance(
-  gridData: Record<string, any>[],
-  groupedCol: string,
-  debitField: string,
-  creditField: string,
-  isGroupedColDate = false
-): Record<string, any>[] {
-
-  const groupedMap: Record<string, any[]> = {};
-  const keys: string[] = [];
-
-  for (const row of gridData) {
-    const groupValue = isGroupedColDate
-      ? this.getFormatDateGlobal(row[groupedCol])
-      : row[groupedCol];
-
-    if (!groupedMap[groupValue]) {
-      keys.push(groupValue);
-      groupedMap[groupValue] = [];
     }
 
-    groupedMap[groupValue].push(row);
+    return final;
   }
 
-  const final: Record<string, any>[] = [];
+  _groupwiseSummaryExportDataTrialBalance(
+    gridData: Record<string, any>[],
+    groupedCol: string,
+    debitField: string,
+    creditField: string,
+    isGroupedColDate = false
+  ): Record<string, any>[] {
 
-  for (const key of keys) {
-    const groupRows = groupedMap[key];
+    const groupedMap: Record<string, any[]> = {};
+    const keys: string[] = [];
 
-    let debitSum = 0;
-    let creditSum = 0;
+    for (const row of gridData) {
+      const groupValue = isGroupedColDate
+        ? this.getFormatDateGlobal(row[groupedCol])
+        : row[groupedCol];
 
-    final.push({
-      group: {
-        content: key,
-        colSpan: 3,
-        styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold' }
+      if (!groupedMap[groupValue]) {
+        keys.push(groupValue);
+        groupedMap[groupValue] = [];
       }
-    });
 
-    for (const row of groupRows) {
-      debitSum += Number(row[debitField] ?? 0);
-      creditSum += Number(row[creditField] ?? 0);
-      final.push(row);
+      groupedMap[groupValue].push(row);
     }
 
-    final.push({
-      group: {
-        content: `Total: ${this.currencyformat(debitSum)}   ${this.currencyformat(creditSum)}`,
-        colSpan: 3,
-        styles: { halign: 'right', fillColor: '#ffffb3' }
-      }
-    });
-  }
+    const final: Record<string, any>[] = [];
 
-  return final;
-}
+    for (const key of keys) {
+      const groupRows = groupedMap[key];
 
-_groupwiseSummaryExportDataTB(
-  gridData: Record<string, any>[],
-  groupedCol: string,
-  basicsalary: string,
-  vda: string,
-  arrears: string,
-  absent: string,
-  total: string,
-  bonus: string,
-  sumString: string,
-  isGroupedColDate = false
-): Record<string, any>[] {
+      let debitSum = 0;
+      let creditSum = 0;
 
-  const groupedMap: Record<string, Record<string, any>[]> = {};
-  const keys: string[] = [];
+      final.push({
+        group: {
+          content: key,
+          colSpan: 3,
+          styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold' }
+        }
+      });
 
-  for (const row of gridData) {
-    const groupValue = isGroupedColDate
-      ? this.getFormatDateGlobal(row[groupedCol])
-      : row[groupedCol];
-
-    if (!groupedMap[groupValue]) {
-      keys.push(groupValue);
-      groupedMap[groupValue] = [{ ...row }];
-    }
-
-    groupedMap[groupValue].push(row);
-  }
-
-  for (const key of keys) {
-    groupedMap[key].push({});
-  }
-
-  const final: Record<string, any>[] = [];
-
-  for (const key of keys) {
-    const groupRows = groupedMap[key];
-
-    let basicSum = 0;
-    let vdaSum = 0;
-    let arrearsSum = 0;
-    let absentSum = 0;
-    let totalSum = 0;
-    let bonusSum = 0;
-
-    for (let i = 0; i < groupRows.length; i++) {
-      const row = groupRows[i];
-
-      if (i !== 0 && i !== groupRows.length - 1) {
-        basicSum += Number(row[basicsalary] ?? 0);
-        vdaSum += Number(row[vda] ?? 0);
-        arrearsSum += Number(row[arrears] ?? 0);
-        absentSum += Number(row[absent] ?? 0);
-        totalSum += Number(row[total] ?? 0);
-        bonusSum += Number(row[bonus] ?? 0);
+      for (const row of groupRows) {
+        debitSum += Number(row[debitField] ?? 0);
+        creditSum += Number(row[creditField] ?? 0);
+        final.push(row);
       }
 
-      if (i === 0) {
-        const groupHeader = isGroupedColDate
-          ? this.getFormatDateGlobal(row[groupedCol])
-          : row[groupedCol];
-
-        row['group'] = {
-          content: `${groupHeader}`,
-          colSpan: 8,
-          styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold', fontSize: 9 }
-        };
-      }
-
-      if (i === groupRows.length - 1) {
-        row['group'] = {
-          content:
-            `${this.currencyformat(basicSum)}  ` +
-            `${this.currencyformat(vdaSum)}  ` +
-            `${this.currencyformat(arrearsSum)}  ` +
-            `${this.currencyFormat(absentSum)}  ` +
-            `${this.currencyformat(totalSum)}  ` +
-            `${this.currencyformat(bonusSum)}`,
-          colSpan: 7,
+      final.push({
+        group: {
+          content: `Total: ${this.currencyformat(debitSum)}   ${this.currencyformat(creditSum)}`,
+          colSpan: 3,
           styles: { halign: 'right', fillColor: '#ffffb3' }
-        };
-      }
-
-      final.push(row);
+        }
+      });
     }
+
+    return final;
   }
 
-  return final;
-}
+  _groupwiseSummaryExportDataTB(
+    gridData: Record<string, any>[],
+    groupedCol: string,
+    basicsalary: string,
+    vda: string,
+    arrears: string,
+    absent: string,
+    total: string,
+    bonus: string,
+    sumString: string,
+    isGroupedColDate = false
+  ): Record<string, any>[] {
 
-_getGroupingGridExportData<T extends Record<string, any>>(
+    const groupedMap: Record<string, Record<string, any>[]> = {};
+    const keys: string[] = [];
+
+    for (const row of gridData) {
+      const groupValue = isGroupedColDate
+        ? this.getFormatDateGlobal(row[groupedCol])
+        : row[groupedCol];
+
+      if (!groupedMap[groupValue]) {
+        keys.push(groupValue);
+        groupedMap[groupValue] = [{ ...row }];
+      }
+
+      groupedMap[groupValue].push(row);
+    }
+
+    for (const key of keys) {
+      groupedMap[key].push({});
+    }
+
+    const final: Record<string, any>[] = [];
+
+    for (const key of keys) {
+      const groupRows = groupedMap[key];
+
+      let basicSum = 0;
+      let vdaSum = 0;
+      let arrearsSum = 0;
+      let absentSum = 0;
+      let totalSum = 0;
+      let bonusSum = 0;
+
+      for (let i = 0; i < groupRows.length; i++) {
+        const row = groupRows[i];
+
+        if (i !== 0 && i !== groupRows.length - 1) {
+          basicSum += Number(row[basicsalary] ?? 0);
+          vdaSum += Number(row[vda] ?? 0);
+          arrearsSum += Number(row[arrears] ?? 0);
+          absentSum += Number(row[absent] ?? 0);
+          totalSum += Number(row[total] ?? 0);
+          bonusSum += Number(row[bonus] ?? 0);
+        }
+
+        if (i === 0) {
+          const groupHeader = isGroupedColDate
+            ? this.getFormatDateGlobal(row[groupedCol])
+            : row[groupedCol];
+
+          row['group'] = {
+            content: `${groupHeader}`,
+            colSpan: 8,
+            styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold', fontSize: 9 }
+          };
+        }
+
+        if (i === groupRows.length - 1) {
+          row['group'] = {
+            content:
+              `${this.currencyformat(basicSum)}  ` +
+              `${this.currencyformat(vdaSum)}  ` +
+              `${this.currencyformat(arrearsSum)}  ` +
+              `${this.currencyFormat(absentSum)}  ` +
+              `${this.currencyformat(totalSum)}  ` +
+              `${this.currencyformat(bonusSum)}`,
+            colSpan: 7,
+            styles: { halign: 'right', fillColor: '#ffffb3' }
+          };
+        }
+
+        final.push(row);
+      }
+    }
+
+    return final;
+  }
+
+  _getGroupingGridExportData<T extends Record<string, any>>(
     gridData: T[],
     groupedCol: keyof T,
     isGroupedColDate: boolean

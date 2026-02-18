@@ -49,10 +49,13 @@ export class ChitTransactionsService {
       'YES'
     );
   }
-  getCAOBranchlist(BranchSchema: any){
-    const params = new HttpParams().set('BranchSchema', BranchSchema);
-    return this._commonService.getAPI('/ChitTransactions/ChitReports/getCAOBranches', params, 'YES');
-
+  // getCAOBranchlist(BranchSchema: any){
+  //   const params = new HttpParams().set('BranchSchema', BranchSchema);
+  //   return this._commonService.getAPI('/ChitTransactions/ChitReports/getCAOBranches', params, 'YES');
+  // }
+  getCAOBranchlist(BranchSchema: any,GlobalSchema:any,CompanyCode:any,BranchCode:any){
+    const params = new HttpParams().set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._commonService.getAPI('/Accounts/GetCAOBranchList', params, 'YES');
   }
   GetkgmsCollectionReport(
     CAOSchema: string,
