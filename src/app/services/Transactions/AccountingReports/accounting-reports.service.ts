@@ -370,16 +370,28 @@ GetUnusedChequeDetails(_BankId: string | number, _ChqBookId: string | number, _C
   return this._CommonService.getAPI('/Accounts/GetUnUsedCheques', params, 'YES');
 }
 
-GetJvListReport(fromdate: string, todate: string, pmodeoftransaction: string): Observable<any> {
+// GetJvListReport(fromdate: string, todate: string, pmodeoftransaction: string): Observable<any> {
+//   const params = new HttpParams()
+//     .set('fromdate', fromdate)
+//     .set('todate', todate)
+//     .set('pmodeoftransaction', pmodeoftransaction)
+//     .set('BranchSchema', this._CommonService.getschemaname());
+
+//   return this._CommonService.getAPI('/Accounting/AccountingReports/GetJvListDetails', params, 'YES');
+// }
+GetJvListReport(fromdate: any, todate: any, pmodeoftransaction: string,BranchSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
   const params = new HttpParams()
     .set('fromdate', fromdate)
     .set('todate', todate)
     .set('pmodeoftransaction', pmodeoftransaction)
-    .set('BranchSchema', this._CommonService.getschemaname());
+    .set('BranchSchema', BranchSchema)
+    .set('CompanyCode', CompanyCode)
+    .set('BranchCode', BranchCode)
+    .set('GlobalSchema', GlobalSchema);
 
-  return this._CommonService.getAPI('/Accounting/AccountingReports/GetJvListDetails', params, 'YES');
+  return this._CommonService.getAPI('/Accounts/GetJvListDetails', params, 'YES');
 }
-GetJvListReportGroup(fromdate: string, todate: string, pmodeoftransaction: string): Observable<any> {
+GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string): Observable<any> {
   const params = new HttpParams()
     .set('fromdate', fromdate)
     .set('todate', todate)

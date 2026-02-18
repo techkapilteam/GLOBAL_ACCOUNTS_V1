@@ -3,12 +3,14 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { TableModule } from 'primeng/table';
+import { TreeTableModule } from 'primeng/treetable';
 import { Router } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { finalize } from 'rxjs';
+import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-jv-list',
@@ -18,75 +20,14 @@ import { finalize } from 'rxjs';
     FormsModule,
     BsDatepickerModule,
     NgxDatatableModule,
-    TableModule,ReactiveFormsModule
+    TableModule,
+    PaginatorModule,ReactiveFormsModule
   ],
   templateUrl: './jv-list.component.html',
   providers: [DatePipe]
 })
 export class JvListComponent implements OnInit {
-  // private datePipe = inject(DatePipe);
-
-  // fromDate!: Date;
-  // toDate!: Date;
-
-  // pformname = '';
-  // ptranstype = '';
-
-  // dpConfig: Partial<BsDatepickerConfig> = {};
-  // rows: any[] = [];
-
-  // ngOnInit(): void {
-  //   const today = new Date();
-  //   this.fromDate = today;
-  //   this.toDate = today;
-
-  //   this.dpConfig = {
-  //     dateInputFormat: 'DD-MMM-YYYY',
-  //     containerClass: 'theme-dark-blue',
-  //     showWeekNumbers: false,
-  //     maxDate: new Date()
-  //   };
-  // }
-  // validateDates() {
-
-  //   if (this.fromDate && this.toDate) {
-
-  //     const fromTime = new Date(this.fromDate).setHours(0, 0, 0, 0);
-  //     const toTime = new Date(this.toDate).setHours(0, 0, 0, 0);
-
-  //     if (fromTime > toTime) {
-  //       alert('From Date should not be greater than To Date');
-  //       this.toDate = new Date();
-  //     }
-  //   }
-  // }
-
-  // generateReport() {
-  //   if (!this.fromDate || !this.toDate || !this.pformname || !this.ptranstype) {
-  //     alert('Please select all fields');
-  //     return;
-  //   }
-
   
-  //   this.rows = [
-  //     { particulars: 'Transaction A', debit: 1000, credit: 0 },
-  //     { particulars: 'Transaction B', debit: 0, credit: 500 },
-  //     { particulars: 'Transaction C', debit: 200, credit: 0 }
-  //   ];
-  // }
-
-  // formatDate(date: Date | string | null): string {
-  //   if (!date) return '';
-  //   return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
-  // }
-
-  // get totalDebit(): number {
-  //   return this.rows.reduce((sum, r) => sum + r.debit, 0);
-  // }
-
-  // get totalCredit(): number {
-  //   return this.rows.reduce((sum, r) => sum + r.credit, 0);
-  // }
    private fb = inject(FormBuilder);
   private router = inject(Router);
   private commonService = inject(CommonService);
@@ -96,6 +37,8 @@ export class JvListComponent implements OnInit {
   @ViewChild('htmlData') htmlData!: ElementRef;
 
   @Output() printedDate: boolean = true;
+   treeData: any[] = [];
+  totalRecords: number = 0;
 
   dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
@@ -151,7 +94,7 @@ export class JvListComponent implements OnInit {
     this.JvlistReportForm = this.fb.group({
       fromDate: [this.today, Validators.required],
       toDate: [this.today, Validators.required],
-        formName: ['',Validators.required],
+        // formName: ['',Validators.required],
       ptranstype: ['', Validators.required]
     });
   }
@@ -226,7 +169,7 @@ export class JvListComponent implements OnInit {
       });
 
     this.jvReportService
-      .GetJvListReport(fromdate, todate, this.jvtype)
+      .GetJvListReport(fromdate, todate, this.jvtype,'accounts','KAPILCHITS','KLC01','global')
       .pipe(finalize(() => {
         this.isLoading = false;
         this.loading = false;
@@ -317,6 +260,33 @@ export class JvListComponent implements OnInit {
       printorpdf 
     );
   }
+  GetNameBasedOnvalue(value: any): string {
+  let returnValue: string = '';
+
+  if (value.parentId == null) {
+    returnValue = this.commonService.getFormatDateGlobal(value.formOrModulename);
+
+    value.pdebitamount = 0;
+    value.pcreditamount = 0;
+    value.balance = 0;
+  } 
+  else if (value.parentId < 30) {
+    returnValue = value.formOrModulename;
+
+    value.pdebitamount = 0;
+    value.pcreditamount = 0;
+  } 
+  else if (value.parentId > 30) {
+    if (value.pdebitamount !== 0 || value.pcreditamount !== 0) {
+      returnValue = value.formOrModulename;
+    } else {
+      returnValue = value.formOrModulename;
+    }
+  }
+
+  return returnValue;
+}
+
 
   showErrorMessage(err: any): void {
     this.commonService.showErrorMessage(err);
