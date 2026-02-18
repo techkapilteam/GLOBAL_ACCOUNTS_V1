@@ -242,8 +242,11 @@ dte:boolean=false;
   }
 
   private loadBranches(): void {
+    // this.chitService
+    //   .getCAOBranchlist(this.loginBranchschema)
+    //   .subscribe((res: any[]) => this.kgmsBranchList = res || []);
     this.chitService
-      .getCAOBranchlist(this.loginBranchschema)
+      .getCAOBranchlist('accounts','global','KAPILCHITS','KLC01')
       .subscribe((res: any[]) => this.kgmsBranchList = res || []);
   }
 

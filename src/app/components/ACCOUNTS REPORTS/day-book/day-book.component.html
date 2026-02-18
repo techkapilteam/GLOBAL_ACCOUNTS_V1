@@ -89,11 +89,12 @@
         <label class="form-label">Branch</label>
         <ng-select
           [items]="kgmsBranchList"
-          bindLabel="branch_name"
-          bindValue="branch_code"
+          bindLabel="branchName"
+          bindValue="branchCode"
           formControlName="branch_code"
           [searchable]="true"
-          [clearable]="false">
+          [clearable]="false"
+          appendTo="body">
         </ng-select>
       </div>
 

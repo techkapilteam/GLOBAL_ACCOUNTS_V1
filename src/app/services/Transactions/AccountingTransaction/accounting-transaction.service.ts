@@ -151,9 +151,13 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/AccountingTransactions/GetBankntList', params, 'YES')
   }
   
-  GetPayTmBanksList(BranchSchema: any, p0: string, p1: string): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', BranchSchema);
-    return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
+  // GetPayTmBanksList(BranchSchema: any, p0: string, p1: string): Observable<any> {
+  //   const params = new HttpParams().set('BranchSchema', BranchSchema);
+  //   return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
+  // }
+  GetPayTmBanksList(BranchSchema: any, CompanyCode: string, BranchCode: string): Observable<any> {
+    const params = new HttpParams().set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/BankUPIList', params, 'YES')
   }
   // GetCAOBranchList(BranchSchema: any,CompanyCode:any,BranchCode:any): Observable<any> {
   //   const params = new HttpParams().set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
@@ -322,9 +326,13 @@ export class AccountingTransactionsService {
     return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
   }
 
-  GetChequeReturnDetails(strFromDate: any, strToDate: any, p0: string, p1: string, p2: string, p3: string) {
-    const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequeReturnDetails', params, 'YES');
+  // GetChequeReturnDetails(strFromDate: any, strToDate: any, p0: string, p1: string, p2: string, p3: string) {
+  //   const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequeReturnDetails', params, 'YES');
+  // }
+  GetChequeReturnDetails(strFromDate: any, strToDate: any, BranchSchema: string, GlobalSchema: string, CompanyCode: string, BranchCode: string) {
+    const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetChequeReturnDetails', params, 'YES');
   }
 
   GetChequeCancelDetails(strFromDate: any, strToDate: any) {
@@ -534,6 +542,11 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
   }
+  // GetSubLedgerData(pledgerid: any,BranchSchema:any,): Observable<any> {
+  //   debugger;
+  //   const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', BranchSchema);
+  //   return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
+  // }
   //end.
   GetChitReceiptUPIDetails(upireferencenumber: any): any {//added by uday on 09-09-2024 for chit receipt upi details
     debugger
