@@ -1417,7 +1417,13 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
 
     public getLoadData() {
 
-        this._Accountservice.GetReceiptsandPaymentsLoadingData('GENERAL RECEIPT', this._CommonService.getschemaname()).subscribe(json => {
+
+
+
+        
+
+        this._Accountservice.GetReceiptsandPaymentsLoadingData(
+            'GENERAL RECEIPT', this._CommonService.getschemaname()).subscribe(json => {
 
             //console.log(json)
             if (json != null) {
