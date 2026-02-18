@@ -1,46 +1,101 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+
+    <div class="screen-header">
       <h2>Bank Transfer</h2>
     </div>
-<div class="screen-content">
-    <form autocomplete="off">
-      <div class="row g-3">
-        
-        <!-- Date -->
-        <div class="col-md-3 col-xl-3">
-          <div class="mb-3">
-            <label class="form-label required-field">Date</label>
-            <input type="date" id="todate" class="form-control">
-          </div>
-        </div>
-  
-        <!-- Transfer Type -->
-        <div class="col-md-6 col-xl-6">
-          <div class="mb-3">
-            <label class="form-label required-field">Transfer Type</label>
-            <select id="transferType" class="form-select">
-              <option value="">-- Select --</option>
-              <option value="Type 1">Type 1</option>
-              <option value="Type 2">Type 2</option>
-              <option value="Type 3">Type 3</option>
-            </select>
-            <div class="invalid-feedback">
-              <!-- Validation message placeholder -->
+
+    <div class="screen-content">
+
+     
+      <form autocomplete="off">
+        <div class="card shadow-sm p-3 mb-4">
+          <div class="row g-3 align-items-end">
+
+            <div class="col-md-3">
+              <label class="required-field">Date</label>
+              <input
+                type="text"
+                class="form-control"
+                bsDatepicker
+                [(ngModel)]="transferDate"
+                name="transferDate"
+                [bsConfig]="dpConfig"
+                readonly
+                onkeydown="return false">
             </div>
+
+            <div class="col-md-4">
+              <label class="required-field">Transfer Type</label>
+              <select
+                class="form-select"
+                [(ngModel)]="transferType"
+                name="transferType">
+                <option value="">Select</option>
+                <option>Type 1</option>
+                <option>Type 2</option>
+                <option>Type 3</option>
+              </select>
+            </div>
+
+            <div class="col-auto">
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="show()">
+                Show
+              </button>
+            </div>
+
           </div>
         </div>
-  
-        <!-- Save Button -->
-        <div class="col-md-3 col-xl-3 d-flex align-items-start mt-4 pt-4">
-          <button type="button" class="btn btn-primary d-flex align-items-center">
-            <i class="fa fa-spinner fa-spin me-2" style="display:none;"></i>
-            Save
-          </button>
+      </form>
+
+     
+      <div class="card shadow-sm" *ngIf="showReport">
+        <div class="card-body">
+
+          
+          <div class="d-flex justify-content-end mb-2">
+            <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+              <i class="fa fa-file-pdf me-1"></i> PDF
+            </button>          
+
+            <button class="btn btn-outline-secondary" (click)="pdfOrprint('Print')">
+              <i class="fa fa-print me-1"></i> Print
+            </button>
+             <button class="btn btn-outline-success me-2" (click)="exportExcel()">
+              <i class="fa fa-file-excel me-1"></i> Excel
+            </button>
+          </div>
+
+          
+          <div class="text-center fw-bold fs-5">
+            KAPIL CHITS (HYDERABAD) PVT. LTD.
+          </div>
+
+          <div class="text-center">
+            Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy
+          </div>
+
+          <div class="text-center fw-semibold mb-2">
+            CIN : U65992TG2008PTC060803
+          </div>
+
+          <hr>
+<!-- 
+          <h6 class="text-center fw-bold mb-3">
+            Bank Transfer Report
+          </h6> -->
+
+          <!-- NO DATA -->
+          <div class="text-center text-muted fw-semibold py-5">
+            No Data Available
+          </div>
+
         </div>
-  
       </div>
-    </form>
+
     </div>
-    </div>
-    </div>
+  </div>
+</div>

@@ -45,7 +45,8 @@ export class NavigationService {
           name: 'Accounts Config',
           icon: '👥',
           screens: [
-            { id: 'bank-config', name: 'Bank Configuration', route: '/dashboard/accounts/accounts-config/bank-config' },
+            { id: 'bank-config', name: 'Bank Configuration', route: '/dashboard/accounts/accounts-config/bank-config-view' },
+
             { id: 'cheque-management', name: 'Cheque Management', route: '/dashboard/accounts/accounts-config/cheque-management' }
 
           ]

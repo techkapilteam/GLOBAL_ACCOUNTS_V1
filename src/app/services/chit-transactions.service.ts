@@ -1,12 +1,13 @@
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CommonService } from './common.service';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChitTransactionsService {
-   constructor(private _commonService: CommonService) {}
+   constructor(private _commonService: CommonService,private http:HttpClient) {}
   getBranchesByCAO(BranchSchema: string, Caoname: string) {
 
     const params = new HttpParams()
@@ -47,6 +48,33 @@ export class ChitTransactionsService {
       params,
       'YES'
     );
+  }
+  getCAOBranchlist(BranchSchema: any){
+    const params = new HttpParams().set('BranchSchema', BranchSchema);
+    return this._commonService.getAPI('/ChitTransactions/ChitReports/getCAOBranches', params, 'YES');
+
+  }
+  GetkgmsCollectionReport(
+    CAOSchema: string,
+    Branchschema: string,
+    fromdate: string,
+    todate: string,
+    ReportType: string
+  ): Observable<any> {
+    const params = new HttpParams()
+      .set('CAOSchema', CAOSchema)
+      .set('Branchschema', Branchschema)
+      .set('fromdate', fromdate)
+      .set('todate', todate)
+      .set('ReportType', ReportType);
+
+    return this.http.get<any>('/ChitTransactions/GetkgmsCollectionReport', { params })
+      .pipe(
+        catchError((err) => {
+          this._commonService.showErrorMessage(err);
+          return throwError(() => err); // RxJS 7+ syntax
+        })
+      );
   }
   
 }

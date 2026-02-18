@@ -2,17 +2,18 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { CommonService } from '../../../services/common.service';
 import { BankBookService } from '../../../services/Transactions/AccountingReports/bank-book.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TableModule } from 'primeng/table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-issued-cheque',
-  imports: [NgxDatatableModule, FormsModule, CommonModule, ReactiveFormsModule, NgSelectModule],
+  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, NgSelectModule,NgxDatatableModule],
   templateUrl: './issued-cheque.component.html',
   styleUrl: './issued-cheque.component.css',
 })
@@ -78,7 +79,8 @@ export class IssuedChequeComponent implements OnInit {
   ngOnInit() {
     this.initForm();
     this.setPageModel();
-    this.loadDummyBanks();
+    // this.loadDummyBanks();
+    this.bankBookDetails();
   }
 
   private initForm() {
@@ -101,18 +103,21 @@ export class IssuedChequeComponent implements OnInit {
     this.pageCriteria.footerPageHeight = 50;
   }
 
-  // bankBookDetails() {
-  //   this.bankBookService.GetBankNames().subscribe({
-  //     next: (res: any) => (this.BankData = res),
-  //     error: (err: any) => this.commonService.showErrorMessage(err)
-  //   });
-  // }
-  loadDummyBanks() {
-    this.BankData = [
-      { pbankaccountid: 1, pbankname: 'HDFC Bank' },
-      { pbankaccountid: 2, pbankname: 'ICICI Bank' }
-    ];
+  bankBookDetails() {
+    this.bankBookService.GetBankNames(this.commonService.getschemaname(),
+  this.commonService.getbranchname(),
+  this.commonService.getCompanyCode(),
+  this.commonService.getBranchCode()).subscribe({
+      next: (res: any) => (this.BankData = res),
+      error: (err: any) => this.commonService.showErrorMessage(err)
+    });
   }
+  // loadDummyBanks() {
+  //   this.BankData = [
+  //     { pbankaccountid: 1, pbankname: 'HDFC Bank' },
+  //     { pbankaccountid: 2, pbankname: 'ICICI Bank' }
+  //   ];
+  // }
   BankName_Cahange(event: any) {
     this.gridData = [];
     this.gridDataDetails = [];
@@ -121,20 +126,22 @@ export class IssuedChequeComponent implements OnInit {
 
     if (!event) return;
 
-    const bankId = event.pbankaccountid;
-    this.BankName = event.pbankname;
+    const bankId = event.bankAccountId;
+    this.BankName = event.bankName;
 
     // this.reportService.GetBankChequeDetails(bankId).subscribe({
     //   next: res => (this.lstBankChequeDetails = res ?? []),
     //   error: err => this.commonService.showErrorMessage(err)
     // });
-    this.lstBankChequeDetails = [
-      { pchkBookId: 101, pchqfromto: '1001-1010' },
-      { pchkBookId: 102, pchqfromto: '2001-2010' }
-    ];
+    this.reportService.GetBankChequeDetails(bankId,'accounts','KAPILCHITS','KLC01').subscribe({
+      next: res => (this.lstBankChequeDetails = res ?? []),
+      error: err => this.commonService.showErrorMessage(err)
+    });
+    
   }
 
   GetIssuedBankDetails(event: any) {
+    debugger;
     this.isSubmited = true;
 
     if (this.FrmIssuedCheque.invalid) {
@@ -151,48 +158,49 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetData() {
+    debugger;
+    
     this.Showhide = false;
     const [from, to] = this.strChqNo.split('-');
     this._ChqFromNo = from;
     this._ChqToNo = to;
     this.ShowReport = false;
+    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILCHITS','KLC01')
+      .subscribe((res: any) => {
+        this.gridData = res ?? [];
+        this.pageCriteria.totalrows = this.gridData.length;
+      });
 
-    // this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to)
-    //   .subscribe((res: any) => {
-    //     this.gridData = res ?? [];
-    //     this.pageCriteria.totalrows = this.gridData.length;
-    //   });
+    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILAGRO','KIT')
+      .subscribe((res: any) => {
+        this.datagrid = res ?? [];
+        this.gridDataDetails = [...this.datagrid];
+        this.commencementgridPage.totalElements = this.gridDataDetails.length;
+      });
+    // this.gridData = [
+    //   { pchequenumber: from, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false },
+    //   { pchequenumber: +from + 1, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false }
+    // ];
 
-    // this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to)
-    //   .subscribe((res: any) => {
-    //     this.datagrid = res ?? [];
-    //     this.gridDataDetails = [...this.datagrid];
-    //     this.commencementgridPage.totalElements = this.gridDataDetails.length;
-    //   });
-    this.gridData = [
-      { pchequenumber: from, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false },
-      { pchequenumber: +from + 1, pbankname: this.BankName, pchkBookId: this._ChqBookId, pchequestatus: false }
-    ];
+    // this.pageCriteria.totalrows = this.gridData.length;
 
-    this.pageCriteria.totalrows = this.gridData.length;
+    // this.datagrid = [
+    //   {
+    //     pchequestatus: 'Issued',
+    //     pchequenumber: from,
+    //     ppaymentid: 'PAY001',
+    //     pparticulars: 'Vendor Payment',
+    //     ppaymentdate: new Date(),
+    //     pcleardate: new Date(),
+    //     ppaidamount: 15000,
+    //     pbankname: this.BankName,
+    //     pchkBookId: this._ChqBookId,
+    //     pstatus: 'Cleared'
+    //   }
+    // ];
 
-    this.datagrid = [
-      {
-        pchequestatus: 'Issued',
-        pchequenumber: from,
-        ppaymentid: 'PAY001',
-        pparticulars: 'Vendor Payment',
-        ppaymentdate: new Date(),
-        pcleardate: new Date(),
-        ppaidamount: 15000,
-        pbankname: this.BankName,
-        pchkBookId: this._ChqBookId,
-        pstatus: 'Cleared'
-      }
-    ];
-
-    this.gridDataDetails = [...this.datagrid];
-    this.commencementgridPage.totalElements = this.gridDataDetails.length;
+    // this.gridDataDetails = [...this.datagrid];
+    // this.commencementgridPage.totalElements = this.gridDataDetails.length;
   }
 
   export() {
@@ -205,7 +213,7 @@ export class IssuedChequeComponent implements OnInit {
       'Cleared Date': this.commonService.getFormatDateGlobal(element.pcleardate),
       'Paid Amt.': element.ppaidamount
         ? this.commonService.convertAmountToPdfFormat(
-          this.commonService.currencyformat(element.ppaidamount)
+          this.commonService.currencyFormat(element.ppaidamount)
         )
         : '',
       'Bank Name': element.pbankname,
@@ -250,25 +258,102 @@ export class IssuedChequeComponent implements OnInit {
     this.table?.groupHeader?.toggleExpandGroup(group);
   }
 
-  pdfOrprint(type: 'Pdf' | 'Print') {
-    const content = document.getElementById('print-section');
-    if (!content) return;
+  pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
+  const rows: any[] = [];
+  const reportname = 'Issued Cheque';
+  const gridheaders = [
+    'Cheque No.',
+    'Payment ID',
+    'Particulars',
+    'Payment Date',
+    'Cheque\nCleared Date',
+    'Paid Amt.',
+    'Bank Name',
+    'Cheque Book ID',
+    'Cheque Status'
+  ];
 
-    if (type === 'Print') {
-      window.print();
-      return;
+  const fromDate = '';
+  const toDate = '';
+
+  const colWidthHeight = {
+    0: { cellWidth: 'auto' },
+    1: { cellWidth: 'auto' },
+    2: { cellWidth: 'auto' },
+    3: { cellWidth: 'auto' },
+    4: { cellWidth: 'auto' },
+    5: { cellWidth: 'auto' },
+    6: { cellWidth: 'auto' },
+    7: { cellWidth: 'auto' },
+    8: { cellWidth: 'auto' }
+  };
+
+  const retungridData = this.commonService._getGroupingGridExportData(
+    this.gridDataDetails,
+    'pchequestatus',
+    false
+  );
+
+  retungridData.forEach((element: any) => {
+    let paymentdate = '';
+    let cleardate = '';
+    let paidamount = '';
+
+    if (element.ppaymentdate) {
+      paymentdate = this.commonService.getFormatDateGlobal(element.ppaymentdate);
     }
 
-    const win = window.open('', '', 'width=900,height=700');
-    win?.document.write(`
-      <html>
-        <head><title>Issued Cheques</title></head>
-        <body>${content.innerHTML}</body>
-      </html>
-    `);
-    win?.document.close();
-    win?.print();
-  }
+    if (element.pcleardate) {
+      cleardate = this.commonService.getFormatDateGlobal(element.pcleardate);
+    }
+
+    if (element.ppaidamount && element.ppaidamount !== 0) {
+      paidamount = this.commonService.convertAmountToPdfFormat(
+        this.commonService.currencyFormat(parseFloat(String(element.ppaidamount)))
+      );
+    }
+
+    const temp = element.group
+      ? [
+          element.group,
+          element.pchequenumber,
+          element.ppaymentid,
+          element.pparticulars,
+          paymentdate,
+          cleardate,
+          paidamount,
+          element.pbankname,
+          element.pchkBookId,
+          element.pstatus
+        ]
+      : [
+          element.pchequenumber,
+          element.ppaymentid,
+          element.pparticulars,
+          paymentdate,
+          cleardate,
+          paidamount,
+          element.pbankname,
+          element.pchkBookId,
+          element.pstatus
+        ];
+
+    rows.push(temp);
+  });
+
+  this.reportService._IssuedChequesReportsPdf(
+    reportname,
+    rows,
+    gridheaders,
+    colWidthHeight,
+    'landscape',
+    '',
+    fromDate,
+    toDate,
+    printorpdf
+  );
+}
+
   TotalPages: number = 0;
 
   checkedCancel(event: any, row: any) {

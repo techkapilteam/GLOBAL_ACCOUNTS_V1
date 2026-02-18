@@ -1,51 +1,31 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormGroup, FormsModule } from '@angular/forms';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { SelectionType } from '@swimlane/ngx-datatable';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { FormsModule, FormGroup } from '@angular/forms';
+import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
+import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-online-settlement',
   standalone: true,
   imports: [NgxDatatableModule, CommonModule, BsDatepickerModule, FormsModule],
   templateUrl: './online-settlement.component.html',
-  styleUrl: './online-settlement.component.css',
+  styleUrls: ['./online-settlement.component.css'],
+  providers: [DatePipe]
 })
-
-
-export class OnlineSettlementComponent {
+export class OnlineSettlementComponent implements OnInit {
   SelectionType = SelectionType;
   ChequesInBankForm!: FormGroup;
   today: string = '';
   selected: any[] = [];
-  // ngOnInit() {
-  //   this.today = this.formatDate(new Date());
-  // }
-  dateConfig = {
-    dateInputFormat: 'DD-MMM-YYYY',
-    adaptivePosition: true
-  };
- fromDate!: Date;
-  toDate!: Date;
 
-  ngOnInit() {
-    this.today = this.formatDate(new Date());
-    
-  }
-  receiptDate = new Date();
-  clearDate = new Date();
+  private datePipe = inject(DatePipe);
 
-  formatDate(date: Date): string {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  // Datepicker configuration
+  dpConfig: Partial<BsDatepickerConfig> = {};
 
-    const d = date.getDate().toString().padStart(2, '0');
-    const m = months[date.getMonth()];
-    const y = date.getFullYear();
+  receiptDate!: Date;
+  clearDate!: Date;
 
-    return `${d}-${m}-${y}`; // 29-Jan-2026
-  }
   rows = [
     {
       receiptNo: 'CR123',
@@ -75,6 +55,25 @@ export class OnlineSettlementComponent {
     }
   ];
 
+  ngOnInit() {
+    const today = new Date();
+    this.today = this.formatDate(today);
+    this.receiptDate = today;
+    this.clearDate = today;
+
+    this.dpConfig = {
+      dateInputFormat: 'DD-MMM-YYYY',
+      containerClass: 'theme-dark-blue',
+      showWeekNumbers: false,
+      maxDate: new Date()
+    };
+  }
+
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  }
+
   get grandTotal(): number {
     return this.rows.reduce((sum, r) => sum + r.amount, 0);
   }
@@ -86,5 +85,10 @@ export class OnlineSettlementComponent {
   get totalAmount() {
     return this.rows.reduce((sum, r) => sum + r.amount, 0);
   }
-}
 
+  // Clear button functionality
+  clearSelection() {
+    this.selected = [];
+    this.rows = [];
+  }
+}

@@ -1,123 +1,222 @@
 <div class="screen-container">
-    <div class="screen-card">
-      <div  class="screen-header">
-        <h2>JV List</h2>
-      </div>
-  <div class="screen-content">
-    <form autocomplete="off">
-        <div class="row g-3">
-
-            <!-- From and To Dates -->
-            <div class="col-md-4">
-                <div class="row g-2">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">From Date</label>
-                            <input type="date" class="form-control" placeholder="From Date">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">To Date</label>
-                            <input type="date" class="form-control" placeholder="To Date">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Transaction Type -->
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label required-field">Form Name</label>
-                    <select class="form-select" id="ptranstype">
-                        <option value="" selected>Select</option>
-                        <option value="All">All</option>
-                        <option value="Auto">A1</option>
-                        <option value="Manual">A2</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Select Transaction type
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="mb-3">
-                    <label class="form-label required-field">Transaction Type</label>
-                    <select class="form-select" id="ptranstype">
-                        <option value="" selected>Select</option>
-                        <option value="All">All</option>
-                        <option value="Auto">Auto</option>
-                        <option value="Manual">Manual</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Select Transaction type
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="col-md-2 mt-4 pt-4">
-                <button type="button" class="btn btn-primary d-flex align-items-center">
-                    Show
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-
-<!-- JV Report Table -->
-<div id="temp-box" class="section-content mt-2">
-
-    <div class="mt-2 border rounded shadow-sm bg-white p-3">
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <span class="fw-bold">Between:</span>
-                <span>01-Jan-2026 And 16-Jan-2026</span>
-            </div>
-            <div class="col-md-6 text-end">
-                <span class="fw-bold">JV Type:</span>
-                <span>All</span>
-            </div>
-        </div>
-
-        <!-- JV List Table -->
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead class="table-light">
-                    <tr>
-                        <th>Particulars</th>
-                        <th class="text-end">Debit Amount</th>
-                        <th class="text-end">Credit Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Transaction A</td>
-                        <td class="text-end">$1,000.00</td>
-                        <td class="text-end">$0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Transaction B</td>
-                        <td class="text-end">$0.00</td>
-                        <td class="text-end">$500.00</td>
-                    </tr>
-                    <tr>
-                        <td>Transaction C</td>
-                        <td class="text-end">$200.00</td>
-                        <td class="text-end">$0.00</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="fw-bold">
-                        <td class="text-end">Total</td>
-                        <td class="text-end">$1,200.00</td>
-                        <td class="text-end">$500.00</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+  <div class="screen-card">
+    <div class="screen-header">
+      <h2>JV List</h2>
     </div>
+
+    <div class="screen-content">
+      <div class="container-fluid">
+
+  <form [formGroup]="JvlistReportForm" autocomplete="off">
+  <div class="row">
+
+    <!-- From & To Section -->
+    <div class="col-md-4">
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="required-field">From Date</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="fromDate"
+              bsDatepicker
+              [bsConfig]="dpConfig"
+              placement="bottom"
+              readonly
+              (bsValueChange)="ToDateChange($event)"
+              [ngClass]="{
+                'is-invalid':
+                submitted && JvlistReportForm.controls['fromDate'].invalid
+              }"
+            />
+            <div class="invalid-feedback"
+              *ngIf="submitted && JvlistReportForm.controls['fromDate'].errors?.['required']">
+              From Date is required
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="required-field">To Date</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="toDate"
+              bsDatepicker
+              [bsConfig]="dpConfig1"
+              placement="bottom"
+              readonly
+              (bsValueChange)="FromDateChange($event)"
+              [ngClass]="{
+                'is-invalid':
+                submitted && JvlistReportForm.controls['toDate'].invalid
+              }"
+            />
+            <div class="invalid-feedback"
+              *ngIf="submitted && JvlistReportForm.controls['toDate'].errors?.['required']">
+              To Date is required
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    
+    <!-- <div class="col-md-2 form-group">
+      <label class="required-field">Form Name</label>
+      <select
+        class="form-control"
+        formControlName="formName"
+      >
+        <option value="">Select</option>
+        <option value="AUCTION">AUCTION</option>
+        <option value="RECEIPT">RECEIPT</option>
+        <option value="PAYMENT">PAYMENT</option>
+      </select>
+    </div> -->
+
+    <div class="col-md-3 form-group">
+      <label class="required-field">Transaction Type</label>
+      <select
+        class="form-control"
+        formControlName="ptranstype"
+        (change)="SelectTransactiontype()"
+        [ngClass]="{
+          'is-invalid':
+          submitted && JvlistReportForm.controls['ptranstype'].invalid
+        }"
+      >
+        <option value="">Select</option>
+        <option value="All">All</option>
+        <option value="A">Auto</option>
+        <option value="M">Manual</option>
+      </select>
+
+      <div class="invalid-feedback"
+        *ngIf="submitted && JvlistReportForm.controls['ptranstype'].errors?.['required']">
+        Select Transaction Type
+      </div>
+    </div>
+
+    <!-- Button -->
+    <div class="col-md-3">
+      <div class="form-group mt-4">
+        <button
+          type="button"
+          class="btn btn-s-icon px-3 border-0"
+          (click)="getjvListReports()"
+        >
+          <img
+            src="assets/images/icon-check-white.svg"
+            class="mr-2"
+            width="18"
+            height="18"
+          />
+          {{ savebutton }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+  <div id="temp-box" [hidden]="showHide" class="section-content mt-4">
+
+    <!-- PDF / Print -->
+    <div class="d-flex justify-content-end mb-3">
+      <img
+        src="assets/images/pdf-icon-blue.svg"
+        width="20"
+        class="me-3"
+        style="cursor:pointer"
+        title="PDF"
+        (click)="pdfOrprint('Pdf')"
+      />
+      <img
+        src="assets/images/print-icon-blue.svg"
+        width="20"
+        style="cursor:pointer"
+        title="Print"
+        (click)="pdfOrprint('Print')"
+      />
+    </div>
+
+    <!-- Company Header -->
+    <div class="border rounded shadow-sm bg-white p-3 mb-3">
+      <!-- <app-company-details
+        [PrintedDateShowhide]="printedDate">
+      </app-company-details> -->
+
+      <p class="text-center fw-bold m-0">JV List</p>
+    </div>
+
+    <!-- Date + Type Info -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Between :</strong>
+        {{ startDate | date:'dd-MMM-yyyy' }} And {{ endDate | date:'dd-MMM-yyyy' }}
+      </div>
+      <div class="col-md-6 text-end">
+        <strong>JV Type :</strong> {{ jvtype }}
+      </div>
+    </div>
+
+
+    <p-table
+      [value]="jvlistDataa"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [responsiveLayout]="'scroll'"
+      class="p-datatable-sm">
+
+      <!-- Header -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Particulars</th>
+          <th class="text-end">Debit Amount</th>
+          <th class="text-end">Credit Amount</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td>
+            {{ row.formOrModulename || row.pparticulars }}
+          </td>
+
+          <td class="text-end">
+            <ng-container *ngIf="row.pdebitamount != 0">
+              {{ currencysymbol }}
+              {{ row.pdebitamount | number:'1.2-2' }}
+            </ng-container>
+          </td>
+
+          <td class="text-end">
+            <ng-container *ngIf="row.pcreditamount != 0">
+              {{ currencysymbol }}
+              {{ row.pcreditamount | number:'1.2-2'}}
+            </ng-container>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="text-center">
+            No Records Found
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
 </div>
-</div>
+  </div>
 </div>

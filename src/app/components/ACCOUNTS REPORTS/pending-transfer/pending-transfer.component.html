@@ -75,11 +75,16 @@
         </div>
 
         <div class="col-md-2 text-end" *ngIf="showicons">
-          <ul class="d-flex justify-content-end list-unstyled mb-0 gap-3">
-            <li><img src="public/images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')" /></li>
-            <li><img src="public/images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')" /></li>
-            <li><img src="public/images/icon-excel.svg" width="18" (click)="export()" /></li>
-          </ul>
+          <button class="btn btn-outline-danger btn-sm" (click)="pdfOrprint('pdf')">
+            <i class="fa fa-file-pdf me-1"></i> PDF
+          </button>
+
+          <button class="btn btn-outline-success btn-sm" (click)="export()">
+            <i class="fa fa-file-excel me-1"></i> Excel
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('print')">
+            <i class="fa fa-print me-1"></i> Print
+          </button>
         </div>
       </div>
 
@@ -87,13 +92,45 @@
         No Records to Display
       </div>
 
-      <ngx-datatable *ngIf="showhidetable" #myTable class="material expandable table" [rows]="gridData"
-        [externalSorting]="true" (sort)="onSort($event)" [headerHeight]="50" [rowHeight]="50"
-        [footerHeight]="pageCriteria.footerPageHeight" [summaryRow]="true" [summaryHeight]="50" summaryPosition="bottom"
-        [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset" [groupRowsBy]="'modeofreceipt'"
-        [groupExpansionDefault]="true" [columnMode]="ColumnMode.force" [scrollbarH]="true">
+      <p-table *ngIf="showhidetable" [value]="gridData" [paginator]="true" [rows]="pageCriteria.pageSize"
+        [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+        [scrollable]="true" scrollHeight="400px" rowGroupMode="subheader" groupRowsBy="modeofreceipt"
+        sortField="modeofreceipt" [sortOrder]="1" [customSort]="true" (sortFunction)="onSort($event)"
+        responsiveLayout="scroll" styleClass="p-datatable-gridlines">
 
-      </ngx-datatable>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="modeofreceipt">
+              Mode of Receipt
+              <p-sortIcon field="modeofreceipt"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="groupheader" let-rowData>
+          <tr>
+            <td class="fw-bold">
+              {{ rowData.modeofreceipt }}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.modeofreceipt }}</td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="1">
+              Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }}
+              ({{ pageCriteria.totalrows }} items)
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
 
     </div>
 

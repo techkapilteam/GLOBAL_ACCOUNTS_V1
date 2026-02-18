@@ -1,1 +1,127 @@
-<button type="button" class="btn btn-secondary" routerLink="/accounts/accounts-config/bank-config">New</button>
+<!-- <form [formGroup]="BankViewForm" autocomplete="off"> -->
+  <div class="row">
+  <div class="col-lg-12 col-md-12">
+    <div class="section-content">
+      <div class="row ">
+        <div class="col-md-12 col-xl-12">
+        
+        <div class="row">
+            <div class="col-8 d-flex flex-wrap align-items-center">
+              <!-- <a (click)="addHandler($event)" class="btn btn-b-icon border-0">
+                <img src="assets/images/icon-add-blue-rounded.svg" class="mr-2" width="20px" height="20px"> ffffff</a> -->
+            <a routerLink="/dashboard/accounts/accounts-config/bank-config"
+            class="btn btn-primary border-0">New</a>
+            
+            
+              </div>
+          </div>         
+          
+          <div class="row mt-3 mb-4">
+            <div class="col-md-6 col-xl-6">
+              <div class="form-group mr-0 custom-search">
+                <input type="text" class="form-control" (keyup)="filterDatatable($event)">
+              </div>
+            </div>
+            <!-- <div class="col-md-8 col-xl-8">
+                <div class="d-flex justify-content-end">
+                  <a href="" class="export-icons"><img class="" src="assets/images/pdf-icon-blue.svg " title="pdf"
+                      width="18px"></a>
+                  <a href="" class="export-icons"><img class="" src="assets/images/icon-excel.svg " title="Excel"
+                      width="18px"></a>
+                  <a href="" class="export-icons"><img class="" src="assets/images/print-icon-blue.svg " title="Print"
+                      width="18px"></a>
+                </div>
+              </div> -->
+          </div>
+
+        </div>
+       
+
+
+        <div class="col-md-12 col-xl-12">
+
+  <p-table
+    [value]="gridData"
+    [paginator]="true"
+    [rows]="pageCriteria.pageSize"
+    [rowsPerPageOptions]="[5,10,20,50]"
+    [responsiveLayout]="'scroll'"
+    [style]="{ height: '400px' }"
+    [sortMode]="'single'"
+  >
+
+    <!-- Header -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:60px">Actions</th>
+        <th pSortableColumn="pBankname">Bank Name <p-sortIcon field="pBankname"></p-sortIcon></th>
+        <th pSortableColumn="pAccountnumber">Account No. <p-sortIcon field="pAccountnumber"></p-sortIcon></th>
+        <th>Name of the Account</th>
+        <th>A/C Status</th>
+        <th>A/C Type</th>
+      </tr>
+    </ng-template>
+
+    <!-- Body -->
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr>
+
+        <!-- Actions -->
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-text p-button-sm"
+            (click)="editHandler($event, row, rowIndex)">
+          </button>
+        </td>
+
+        <!-- Bank Name -->
+        <td>{{ row.pBankname }}</td>
+
+        <!-- Account No -->
+        <td>{{ row.pAccountnumber }}</td>
+
+        <!-- Account Name -->
+        <td>{{ row.pAccountname }}</td>
+
+        <!-- Status -->
+        <td>
+          {{ row.pStatusname ? 'Active' : 'Inactive' }}
+        </td>
+
+        <!-- A/C Type -->
+        <td>
+          <span *ngIf="row.isprimary">Primary Bank</span>
+          <span *ngIf="row.isintrestpaymentbank">Interest Payment Bank</span>
+          <span *ngIf="row.isformanbank">Foreman Bank</span>
+          <span *ngIf="row.isforemanpaymentbank">Foreman Payment Bank</span>
+        </td>
+
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </form> -->
+
+<div class="my-container">
+  <ng-template #customLoadingTemplate>
+    <div class="custom-class">
+      <h3>
+        Loading...
+      </h3>
+
+    </div>
+  </ng-template>
+  <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
+  </ngx-loading> -->
+
+</div>

@@ -1,12 +1,159 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div  class="screen-header">
+    <div class="screen-header">
       <h2>Online Receipts</h2>
     </div>
-<div class="screen-content">
+
+    <div class="section-content">
+      <div class="row ms-2">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Paytm Transaction Date</label>
+            <input class="form-control" readonly type="text" title="Transaction Date" id="fromdate"
+              formControlName="fromdate" (ngModelChange)="DateChange($event)" bsDatepicker   #dp="bsDatepicker"  [bsConfig]="dpConfig"
+              placeholder="">
+            <!-- <app-validation-message [messgae]="onlineformvalidation?.fromdate">
+                </app-validation-message> -->
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button (click)="onlineupdatedata()" class="btn btn-primary border-0 mt-1 mr-2" [disabled]="isdisabled2">
+              <!-- <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> -->
+              {{savebutton}}
+            </button>
+          </div>
+          <div *ngIf="iscompleted1">
+            <span class="col-md-4" style="color: green;">
+              COMPLETED
+            </span>
+          </div>
+        </div>
+
+        <div class="col-md-3 ms-4">
+          <div class="form-group">
+            <label>Cashfree Transaction Date</label>
+            <input class="form-control" readonly type="text" title="Cashfree" id="Cashfreefromdate"
+              formControlName="Cashfreefromdate" bsDatepicker [bsConfig]="dpConfig"   #dp="bsDatepicker"  placeholder="">
+            <!-- <app-validation-message [messgae]="onlineformvalidation?.Cashfreefromdate">
+                </app-validation-message> -->
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button (click)="onlineupdatedataCashfree()" class="btn btn-primary border-0 mt-1 mr-2"
+              [disabled]="CashFreedisabled">
+              <!-- <i class="fa" [ngClass]="{'fa-spin fa-spinner': Cashfreedisablesavebutton}"></i> -->
+              {{Cashfreesavebutton}}
+            </button>
+          </div>
+          <div *ngIf="CashFreecompleted">
+            <span class="col-md-4" style="color: green;">
+              COMPLETED
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="section-content">
+      <div class="row ms-2 mt-4">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Transaction Date</label>
+            <input class="form-control" readonly type="text" title="Transaction Date" id="date1" formControlName="date1"
+              (ngModelChange)="DateChange($event)" bsDatepicker [bsConfig]="dpConfig"  #dp="bsDatepicker"  placeholder="">
+            <!-- <app-validation-message [messgae]="onlineformvalidation?.date1">
+                </app-validation-message> -->
+          </div>
+          <div class="d-flex justify-content-end mt-4">
+            <button (click)="sqldumpeddata()" class="btn btn-primary border-0 mt-1 mr-2" [disabled]="isdisabled">
+              <!-- <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}"></i> -->
+              {{savebutton1}}
+            </button>
+          </div>
+          <div *ngIf="iscompleted">
+            <span class="col-md-4" style="color: green;">
+              COMPLETED
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="section-content">
+      <div class="row ms-2">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label>Transaction Date</label>
+            <input class="form-control" readonly type="text" title="Transaction Date" id="date2" formControlName="date2"
+              (ngModelChange)="DateChange1($event)" bsDatepicker [bsConfig]="dpConfig"  #dp="bsDatepicker"  placeholder="">
+            <!-- <app-validation-message [messgae]="onlineformvalidation?.date2">
+                </app-validation-message> -->
+          </div>
+
+
+          <div class="d-flex justify-content-end mt-4">
+            <button (click)="paytmreceipt()" class="btn btn-primary border-0 mt-1 mr-2" [disabled]="isdisabled1">
+              <!-- <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton2}"></i> -->
+              {{savebutton2}}
+            </button>
+          </div>
+          <div *ngIf="iscompleted2">
+            <span class="col-md-4" style="color: green;">
+              COMPLETED
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+
+        <div class="col-md-6">
+          <table class="table table-bordered">
+            <thead>
+              <th>Payment Mode</th>
+              <th>Status</th>
+              <th class="text-right">Count</th>
+              <th class="text-right">Amount</th>
+            </thead>
+
+
+
+            <tr *ngFor="let data of PaytmAutoreceiptCount">
+              <td>{{ data.paymentmode }}</td>
+              <td *ngIf="data.trstatus === 'Y'">Cleared</td>
+              <td *ngIf="data.trstatus === 'N'">Pending</td>
+              <td *ngIf="data.trstatus === ''"></td>
+              <td class="text-right">{{ data.count }}</td>
+              <td class="text-right">{{ data.sum | currency: currencysymbol }}</td>
+            </tr>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div>
+</div>
+
+
+
+<!-- <div class="screen-content">
     <div class="row g-3 align-items-end">
   
-      <!-- Paytm -->
+ 
       <div class="col-md-6 col-lg-4">
         <label class="form-label">Paytm Transaction Date</label>
         <div class="input-group">
@@ -22,7 +169,7 @@
         </div>
       </div>
   
-      <!-- Cashfree -->
+     
       <div class="col-md-6 col-lg-4">
         <label class="form-label">Cashfree Transaction Date</label>
         <div class="input-group">
@@ -42,7 +189,7 @@
     <hr class="light">
     <div class="row g-3 align-items-end mt-3">
   
-      <!-- Paytm -->
+    
       <div class="col-md-6 col-lg-4">
         <label class="form-label">Transaction Date</label>
         <div class="input-group">
@@ -62,7 +209,7 @@
     <hr class="light">
     <div class="row g-3 align-items-end mt-3">
   
-      <!-- Paytm -->
+     
       <div class="col-md-6 col-lg-4">
         <label class="form-label">Transaction Date</label>
         <div class="input-group">
@@ -79,10 +226,4 @@
       </div>
 
     </div>
-  </div>
-</div>
-</div>
-
-  
-
-  
+  </div> -->

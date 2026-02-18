@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
@@ -9,10 +9,11 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-gst-report',
-  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,NgSelectModule,BsDatepickerModule],
+  imports: [FormsModule,CommonModule,NgxDatatableModule,ReactiveFormsModule,NgSelectModule,BsDatepickerModule,TableModule],
   templateUrl: './gst-report.component.html',
   styleUrl: './gst-report.component.css',
 })
@@ -59,8 +60,9 @@ export class GstReportComponent implements OnInit {
     this.initDatePickers();
     this.setPageModel();
     this.buildForm();
-    this.setDummyLedgers();
-    this.loginbranchschema = 'DUMMY_SCHEMA';
+    // this.setDummyLedgers();
+    this.getLedger();
+    this.loginbranchschema = sessionStorage.getItem('loginBranchSchemaname');
   }
 
   initDatePickers() {
@@ -79,12 +81,30 @@ export class GstReportComponent implements OnInit {
       pledgerid: [null, Validators.required],
       pledgername: [''],
       receiptsPayments: ['receipts'],
-      fromdate: [today],
-      todate: [today]
-    });
+      fromdate: [today,Validators.required],
+      todate: [today,Validators.required]
+    },{ validators: this.dateRangeValidator() });
     this.gstReportType('receipts');
-    this.blurEventAllControls(this.GstReportForm);
   }
+  dateRangeValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+
+   
+    if (!this.showpayments) return null;
+
+    const from = group.get('fromdate')?.value;
+    const to = group.get('todate')?.value;
+
+    if (!from || !to) return null;
+
+    const fromTime = new Date(from).setHours(0,0,0,0);
+    const toTime = new Date(to).setHours(0,0,0,0);
+
+    return fromTime > toTime
+      ? { dateRangeInvalid: true }
+      : null;
+  };
+}
 
   setPageModel() {
     this.pageCriteria.pageSize = 10;
@@ -93,105 +113,218 @@ export class GstReportComponent implements OnInit {
     this.pageCriteria.footerPageHeight = 50;
   }
 
-  setDummyLedgers() {
-    this.ledgeraccountslist = [
-      { pledgername: 'GST Sales Ledger' },
-      { pledgername: 'GST Purchase Ledger' },
-      { pledgername: 'GST Output Ledger' }
-    ];
+  // setDummyLedgers() {
+  //   this.ledgeraccountslist = [
+  //     { pledgername: 'GST Sales Ledger' },
+  //     { pledgername: 'GST Purchase Ledger' },
+  //     { pledgername: 'GST Output Ledger' }
+  //   ];
+  // }
+  // getLedger() {
+  //   this.reportService.GetGstLedgerAccountList('GST REPORT')
+  //     .pipe(takeUntilDestroyed(this.destroyRef))
+  //     .subscribe({
+  //       next: res => this.ledgeraccountslist = res ?? [],
+  //       error: err => this.commonService.showErrorMessage(err)
+  //     });
+  // }
+  getLedger() {
+    this.reportService.GetGstLedgerAccountList('GST REPORT','accounts','KAPILCHITS','KLC01')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: res => this.ledgeraccountslist = res ?? [],
+        error: err => this.commonService.showErrorMessage(err)
+      });
   }
 
-  gstReportType(value: string) {
-    this.showreceipts = value === 'receipts';
-    this.showpayments = value === 'payments';
-    this.showhidegstreport = false;
-    this.showhidegstsummary = false;
-    this.showicons = false;
-  }
+  // gstReportType(value: string) {
+  //   this.showreceipts = value === 'receipts';
+  //   this.showpayments = value === 'payments';
+  //   this.showhidegstreport = false;
+  //   this.showhidegstsummary = false;
+  //   this.showicons = false;
+  // }
 
   ledgerName_Change(event: any) {
     this.GstReportForm.patchValue({ pledgername: event?.pledgername || '' });
   }
 
-  click_GstReport() {
-    this.GstReportDetails = [];
-    this.GstSummaryDetails = [];
-    this.gstpaymentsdata = [];
-    this.showhidegstsummary = false;
-    this.showicons = false;
+  click_GstReport(): void {
 
-    if (this.showreceipts) {
-      this.month = this.datePipe.transform(this.GstReportForm.value.month, "MMM-yyyy");
+  this.GstReportDetails = [];
+  this.GstSummaryDetails = [];
+  this.GstReportDetailsforAll = [];
 
-      this.GstReportDetails = [
-        { groupcode: 'CH001', gstnumber: '29ABCDE1234F1Z5', accountname: 'ABC Traders', city: 'Bangalore', state: 'Karnataka', receiptamount: 15000 },
-        { groupcode: 'CH002', gstnumber: '27PQRSX5678L1Z2', accountname: 'XYZ Enterprises', city: 'Mumbai', state: 'Maharashtra', receiptamount: 22000 }
-      ];
+  if (this.showreceipts) {
 
-      this.GSTExcel = this.GstReportDetails;
-      this.showicons = true;
-      this.showhidegstreport = true;
+    if (this.GstReportForm.invalid) {
+      this.GstReportForm.markAllAsTouched();
+      return;
+    }
 
-    } else {
-      this.gstpaymentsdata = [
-        {
-          pgstvoucherno: 'GST001',
-          vendorname: 'ABC Traders',
-          state: 'Telangana',
-          gstVoucherDate: new Date(),
-          taxableAmount: 10000,
-          cgstAmount: 900,
-          sgstAmount: 900,
-          igstAmount: 0,
-          invoice_total_amount: 11800
+    this.disablesavebutton = true;
+    this.savebutton = 'Processing';
+
+    const fromdate: Date = this.GstReportForm.value.month;
+    const ledgername = this.GstReportForm.value.pledgerid;
+
+    const todate = new Date(fromdate.getFullYear(), fromdate.getMonth() + 1, 0);
+    const from = this.commonService.getFormatDateNormal(fromdate);
+    const to = this.commonService.getFormatDateNormal(todate);
+
+    this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
+
+    this.tdsReportService
+      .getGstReportDetails(from, to, 'GST REPORT', ledgername)
+      .subscribe({
+        next: (res: any[]) => {
+
+          if (ledgername === 'ALL') {
+            this.handleSingleLedgerReport(res);
+          } else {
+            this.handleSingleLedgerReport(res);
+          }
+
+          this.disablesavebutton = false;
+          this.savebutton = 'GST Print';
+        },
+        error: () => {
+          this.disablesavebutton = false;
+          this.savebutton = 'GST Print';
         }
-      ];
-    }
+      });
+
+  } else {
+    this.loadGstPayments();
   }
+}
+private handleSingleLedgerReport(res: any[]): void {
 
-  click_GstSummary() {
-    this.showhidegstreport = false;
-    this.showicons = false;
+  this.GstReportDetails = res ?? [];
+  this.GSTExcel = res ?? [];
 
-    // this.GstSummaryDetails = [
-    //   { companyname: 'ABC Traders', state: 'Karnataka', count: 5 },
-    //   { companyname: 'XYZ Enterprises', state: 'Maharashtra', count: 3 }
-    // ];
+  this.showicons = this.GstReportDetails.length > 0;
+  this.showhidegstreport = true;
+  this.showhidegstsummary = false;
 
-    this.GSTSummaryExcel = this.GstSummaryDetails;
-    this.showhidegstsummary = true;
-  }
-
-  checkValidations(group: FormGroup, isValid: boolean): boolean {
-    Object.keys(group.controls).forEach(key => {
-      isValid = this.getValidationByControl(group, key, isValid);
+  this.cleanObjectValues(this.GstReportDetails);
+  this.updatePagination(this.GstReportDetails.length);
+}
+private cleanObjectValues(data: any[]): void {
+  data.forEach(item => {
+    Object.keys(item).forEach(key => {
+      if (JSON.stringify(item[key]) === '{}') {
+        item[key] = '';
+      }
     });
-    return isValid;
-  }
+  });
+}
+private loadGstPayments(): void {
 
-  getValidationByControl(formGroup: FormGroup, key: string, isValid: boolean): boolean {
-    const control = formGroup.get(key);
-    if (!control) return isValid;
+  this.disablesavebutton = true;
+  this.savebutton = 'Processing';
+  this.gstpaymentsdata = [];
 
-    if (control instanceof FormGroup) {
-      return this.checkValidations(control, isValid);
-    }
+  const fromdate = this.commonService.getFormatDateNormal(this.GstReportForm.value.fromdate);
+  const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
+  const branchschema = this.loginbranchschema;
 
-    this.GstReportValidationErrors[key] = '';
-
-    if (control.invalid && (control.dirty || control.touched)) {
-      isValid = false;
-    }
-    return isValid;
-  }
-
-  blurEventAllControls(group: FormGroup) {
-    Object.keys(group.controls).forEach(key => {
-      group.get(key)?.valueChanges
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.getValidationByControl(group, key, true));
+  this.tdsReportService.Getgstreport(branchschema, fromdate, todate)
+    .subscribe({
+      next: (result: any[]) => {
+        this.gstpaymentsdata = result ?? [];
+        this.updatePagination(this.gstpaymentsdata.length);
+        this.disablesavebutton = false;
+        this.savebutton = 'GST Print';
+      },
+      error: () => {
+        this.disablesavebutton = false;
+        this.savebutton = 'GST Print';
+      }
     });
+}
+click_GstSummary(): void {
+
+  this.GstReportDetails = [];
+  this.GstSummaryDetails = [];
+
+  if (!this.showreceipts) {
+    this.commonService.showWarningMessage('No data');
+    return;
   }
+
+  if (this.GstReportForm.invalid) {
+    this.GstReportForm.markAllAsTouched();
+    return;
+  }
+
+  const fromdate: Date = this.GstReportForm.value.month;
+  const todate = new Date(fromdate.getFullYear(), fromdate.getMonth() + 1, 0);
+
+  const from = this.commonService.getFormatDateNormal(fromdate);
+  const to = this.commonService.getFormatDateNormal(todate);
+  const ledgername = this.GstReportForm.value.pledgerid;
+
+  this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
+
+  this.tdsReportService
+    .getGstReportDetails(from, to, 'GST SUMMARY', ledgername)
+    .subscribe((res: any[]) => {
+
+      this.GstSummaryDetails = res ?? [];
+      this.GSTSummaryExcel = res ?? [];
+
+      this.showicons = this.GstSummaryDetails.length > 0;
+      this.showhidegstreport = false;
+      this.showhidegstsummary = true;
+
+      this.updatePagination(this.GstSummaryDetails.length);
+    });
+}
+private updatePagination(totalRows: number): void {
+
+  this.pageCriteria.totalrows = totalRows;
+  this.pageCriteria.TotalPages = Math.ceil(totalRows / this.pageCriteria.pageSize);
+
+  this.pageCriteria.currentPageRows =
+    totalRows < this.pageCriteria.pageSize
+      ? totalRows
+      : this.pageCriteria.pageSize;
+}
+gstReportType(type: string): void {
+
+  this.GstReportDetails = [];
+  this.GstSummaryDetails = [];
+  this.gstpaymentsdata = [];
+  this.showhidegstreport = false;
+
+  if (type === 'receipts') {
+
+    this.showreceipts = true;
+    this.showpayments = false;
+
+    this.GstReportForm.get('pledgerid')?.setValidators([Validators.required]);
+    this.GstReportForm.get('fromdate')?.clearValidators();
+    this.GstReportForm.get('todate')?.clearValidators();
+
+  } else {
+
+    this.showpayments = true;
+    this.showreceipts = false;
+
+    this.GstReportForm.patchValue({
+      fromdate: new Date(),
+      todate: new Date(),
+      pledgerid: null
+    });
+
+    this.GstReportForm.get('fromdate')?.setValidators([Validators.required]);
+    this.GstReportForm.get('todate')?.setValidators([Validators.required]);
+    this.GstReportForm.get('pledgerid')?.clearValidators();
+  }
+
+  this.GstReportForm.updateValueAndValidity();
+}
 }
 
 

@@ -1,26 +1,203 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { mergeMap, Subject } from 'rxjs';
+import { EventEmitter, Inject, Injectable, LOCALE_ID } from '@angular/core';
+import { mergeMap, of, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { formatDate } from 'ngx-bootstrap/chronos';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../envir/environment.prod';
+// import { environment } from '../envir/environment.prod';
 import { jsPDF } from 'jspdf';
 import autoTable, { ColumnInput, RowInput } from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { AbstractControl } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { environment } from '../envir/environment';
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
 
-  showSuccessMsg(arg0: string) {
-    throw new Error('Method not implemented.');
+
+
+  showSuccessMessage() {
+    this.toastr.success("Saved successfully", "Success", { timeOut: this.messageShowTimeOut });
   }
+  showSuccessMsg(message: any) {
+    this.toastr.success(message, "Success", { timeOut: this.messageShowTimeOut });
+  }
+  showErrorMessage(error: any) {
+    console.warn('API disabled (mock mode):', error?.message || error);
+  }
+
+  _downloadchequesReportsPdf(
+    reportname: string,
+    rows: any[],
+    headers: string[],
+    colWidthHeight: any,
+    orientation: string,
+    from: string,
+    to: string,
+    type: string,
+    printorpdf: string,
+    total: any
+  ) {
+    console.log("PDF Download Triggered", {
+      reportname, rows, headers, orientation, total
+    });
+  }
+  _downloadchqrecReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridHeaders: string[],
+    columnStyles: any,
+    pageType: 'a4' | 'landscape',
+    betweenOrAsOn: string,
+    fromDate: string,
+    toDate: string | null,
+    printOrPdf: 'Pdf' | 'Print',
+    amount: string
+  ): void {
+    const company = this._getCompanyDetails();
+    const address = this.getcompanyaddress();
+    const logo = this.getKapilGroupLogo();
+    const rupeeImage = this._getRupeeSymbol();
+    const currencySymbol = this.currencysymbol;
+    const today = this.pdfProperties('Date');
+
+    const doc = new jsPDF({
+      orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    const totalPagesExp = '{total_pages_count_string}';
+    const leftMargin = 15;
+    const rightMargin = 15;
+
+    const currencyColumnMap: Record<string, number[]> = {
+      'Recived Cheque Details': [3],
+      'Cheques On Hand': [2],
+      'Cheques In Bank': [2],
+      'Cheques Issued': [1],
+      'Bid Payable Adjustment': [2, 4, 5],
+      'Initial Payment Voucher': [4],
+      'PS List': [3, 4, 5, 6, 7, 8],
+      'TDS Report': [4, 5, 6],
+      'TDS': [5, 6],
+      'Subscriber Jv': [3, 4, 5]
+    };
+
+    const shouldDrawCurrency = (columnIndex: number): boolean =>
+      currencySymbol === '₹' &&
+      currencyColumnMap[reportName]?.includes(columnIndex);
+
+    autoTable(doc, {
+      head: [gridHeaders],
+      body: gridData,
+      theme: 'grid',
+      startY: 48,
+      columnStyles,
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right' | 'justify',
+        fontSize: Number(this.pdfProperties('Header Fontsize'))
+      },
+      styles: {
+        fontSize: Number(this.pdfProperties('Cell Fontsize')),
+        cellPadding: 1,
+        overflow: 'linebreak'
+      },
+      didDrawPage: (data: any) => {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        if (doc.getNumberOfPages() === 1) {
+          doc.addImage(logo, 'JPEG', 10, 5, 30, 15);
+          doc.setFontSize(14);
+          doc.text(company?.pCompanyName ?? '', pageWidth / 2, 12, { align: 'center' });
+          const companyName = company?.pCompanyName ?? '';
+          const textWidth = doc.getTextWidth(companyName);
+          doc.text(companyName, (pageWidth - textWidth) / 2, 12);
+          doc.setFontSize(9);
+          doc.text(address, pageWidth / 2, 18, { align: 'center' });
+          doc.setFontSize(12);
+          doc.text(reportName, pageWidth / 2, 30, { align: 'center' });
+          doc.setFontSize(9);
+          doc.text(`Branch : ${company?.pBranchname ?? ''}`, pageWidth - 60, 40);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between : ${fromDate} And ${toDate}`, 15, 40);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As on : ${fromDate}`, 15, 40);
+          }
+
+          doc.line(10, 45, pageWidth - leftMargin - rightMargin, 45);
+        }
+
+        const pageNumber =
+          'Page ' +
+          doc.getNumberOfPages() +
+          (typeof doc.putTotalPages === 'function'
+            ? ` of ${totalPagesExp}`
+            : '');
+
+        doc.line(
+          10,
+          pageHeight - 10,
+          pageWidth - leftMargin - rightMargin,
+          pageHeight - 10
+        );
+
+        doc.setFontSize(9);
+        doc.text(`Printed on : ${today}`, 10, pageHeight - 5);
+        doc.text(pageNumber, pageWidth - 30, pageHeight - 5);
+      },
+      didDrawCell: (data: any) => {
+        if (
+          data.cell.section === 'body' &&
+          shouldDrawCurrency(data.column.index) &&
+          data.cell.raw
+        ) {
+          const textPos = data.cell.textPos;
+          doc.addImage(
+            rupeeImage,
+            'JPEG',
+            textPos.x - data.cell.contentWidth,
+            textPos.y + 0.5,
+            1.5,
+            1.5
+          );
+        }
+      }
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY || 60;
+
+    doc.setFontSize(10);
+    doc.text('Total : ', 45, finalY + 10);
+    doc.text(amount, 90, finalY + 10);
+
+    if (currencySymbol === '₹') {
+      doc.addImage(rupeeImage, 'JPEG', 85, finalY + 8, 1.8, 1.8);
+    }
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printOrPdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else {
+      this.setiFrameForPrint(doc);
+    }
+  }
+
+
   exportAsExcelFile(json: any[], excelFileName: string): void {
     import("xlsx").then(xlsx => {
       const worksheet = xlsx.utils.json_to_sheet(json);
@@ -37,12 +214,34 @@ export class CommonService {
       FileSaver.saveAs(data, fileName + '.xlsx');
     });
   }
-  showWarningMessage(arg0: string) {
-    throw new Error('Method not implemented.');
+  showWarningMessage(message: string) {
+    this.toastr.warning(message);
   }
-  convertAmountToPdfFormat(arg0: any): any {
-    throw new Error('Method not implemented.');
+  convertAmountToPdfFormat(value: number | string | null | undefined): string {
+
+    if (value == null || value === '') {
+      return this.currencysymbol === "₹" ? "0" : this.currencysymbol + " 0";
+    }
+
+    const newAmount: number = Number(
+      this.removeCommasForEntredNumber(value)
+    );
+
+    const absoluteValue = Math.abs(newAmount);
+
+    let formattedAmount = this.currencyFormat(absoluteValue);
+
+    if (newAmount < 0) {
+      formattedAmount = `(${formattedAmount})`;
+    }
+
+    if (this.currencysymbol !== "₹") {
+      return `${this.currencysymbol} ${formattedAmount}`;
+    }
+
+    return formattedAmount;
   }
+
   pageSize: number = 10;
 
   datePickerPropertiesSetup(property: string): string | boolean {
@@ -88,9 +287,61 @@ export class CommonService {
     return 'MM-YYYY';
   }
 
-  currencyformat(ptotalreceivedamount: any): any {
-    throw new Error('Method not implemented.');
+  public currencyformat(
+    value: number | string | null | undefined,
+    format: 'India' | 'International' = 'India'
+  ): string {
+
+    if (value === null || value === undefined) {
+      value = 0;
+    }
+
+    let cleanValue = value;
+
+    if (typeof cleanValue === 'string') {
+      cleanValue = cleanValue.trim();
+
+      if (cleanValue.toLowerCase().startsWith('null')) {
+        cleanValue = cleanValue.substring(4).trim();
+      }
+    }
+
+    const numericValue: number = typeof cleanValue === 'string'
+      ? parseFloat(cleanValue.replace(/,/g, ''))
+      : cleanValue ?? 0;
+
+    const rupeeSymbol = '₹ ';
+
+    if (isNaN(numericValue) || numericValue === 0) {
+      return rupeeSymbol + '0.00';
+    }
+
+    const isNegative = numericValue < 0;
+    const absoluteValue = Math.abs(numericValue);
+
+    const fixedValue = absoluteValue.toFixed(2);
+    const [integerPart, decimalPart] = fixedValue.split('.');
+
+    let formattedInteger = '';
+
+    if (format === 'India') {
+      const lastThree = integerPart.slice(-3);
+      const otherNumbers = integerPart.slice(0, -3);
+
+      formattedInteger = otherNumbers
+        ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
+        : lastThree;
+
+    } else {
+      formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    const result = `${formattedInteger}.${decimalPart}`;
+
+    return isNegative ? `-${rupeeSymbol}${result}` : rupeeSymbol + result;
   }
+
+
   searchfilterlength = 3;
   searchplaceholder = 'Please enter 3 or more characters'
   ipaddress = sessionStorage.getItem("ipaddress");
@@ -154,11 +405,17 @@ export class CommonService {
   status: any;
   messageShowTimeOut = 1500;
   dateFormat!: string | null;
-  datepipe: any;
-
+  // datepipe: any;
+  private apiHostUrl: string | null = null;
 
   currencysymbol = sessionStorage.getItem("currencyformat");
-  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService) { }
+  // currencysymbol='₹'
+
+  constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe, @Inject(LOCALE_ID) private locale: string) {
+    this.pCreatedby = 'admin'; // or from auth/user session
+    this.ipaddress = '127.0.0.1';
+    console.log('DatePipe injected:', this.datepipe);
+  }
 
 
 
@@ -168,10 +425,23 @@ export class CommonService {
   // }
 
   getschemaname(): string {
-    return sessionStorage.getItem('schemaname') ?? '';
+    // return sessionStorage.getItem('schemaname') ?? '';
+    return 'global';
   }
   getbranchname(): string {
-    return sessionStorage.getItem('loginBranchName') ?? '';
+    // return sessionStorage.getItem('loginBranchName') ?? '';
+    return 'accounts';
+  }
+
+
+
+  getCompanyCode(): string {
+    // return sessionStorage.getItem('CompanyCode') ?? '';
+    return 'KAPILCHITS';
+  }
+  getBranchCode(): string {
+    // return sessionStorage.getItem('BranchCode') ?? '';
+    return 'KLC01';
   }
   getbrachid(): number | null {
     let companyDetailsRaw = sessionStorage.getItem('companydetails');
@@ -223,27 +493,66 @@ export class CommonService {
   }
 
 
+
+
+  private loadApiHostUrl() {
+    debugger;
+    this.apiHostUrl = environment.apiURL
+    if (this.apiHostUrl) {
+      return of(this.apiHostUrl);
+    }
+    return this.http.get<any>(environment.apiURL).pipe(
+      map(config => {
+        this.apiHostUrl = config['ApiHostUrl'];
+        return this.apiHostUrl;
+      })
+    )
+  }
   getAPI(apiPath: string, params: any, parameterStatus: string): Observable<any> {
-    const urldata = environment.apiURL;
+    // debugger;
+    // const urldata = environment.apiURL;
 
-    return this.http.get<any[]>(urldata).pipe(
-      mergeMap(json => {
-        const apiUrl = json[0].ApiHostUrl + apiPath;
+    // return this.http.get<any>(urldata).pipe(
+    //   mergeMap(json => {
+    //     debugger;
+    //     const apiUrl = json[0].ApiHostUrl + apiPath;
 
-        if (parameterStatus.toUpperCase() === 'YES') {
-          return this.http.get(apiUrl, { params }).pipe(
-            map(this.extractData),
-            catchError(this.handleError)
+    //     if (parameterStatus.toUpperCase() === 'YES') {
+    //       return this.http.get(apiUrl, { params }).pipe(
+    //         map(this.extractData),
+    //         catchError(this.handleError)
+    //       );
+    //     } else {
+    //       return this.http.get(apiUrl).pipe(
+    //         map(this.extractData),
+    //         catchError(this.handleError)
+    //       );
+    //     }
+    //   }),
+    //   catchError(this.handleError)
+    // );
+    debugger;
+    let urldata = environment.apiURL;
+
+    if (parameterStatus.toUpperCase() == 'YES')
+      return this.loadApiHostUrl().pipe(
+        switchMap(apiBaseUrl => {
+          debugger
+          const fullUrl = apiBaseUrl + apiPath + "?" + params;
+          return this.http.get(fullUrl).pipe(
+            map((res: any) => this.extractData(res)),
+            catchError(error => this.handleError(error))
           );
-        } else {
-          return this.http.get(apiUrl).pipe(
-            map(this.extractData),
-            catchError(this.handleError)
+        }));
+    else
+      return this.loadApiHostUrl().pipe(
+        switchMap(apiBaseUrl => {
+          const fullUrl = apiBaseUrl + apiPath;
+          return this.http.get(fullUrl).pipe(
+            map((res: any) => this.extractData(res)),
+            catchError(error => this.handleError(error))
           );
-        }
-      }),
-      catchError(this.handleError)
-    );
+        }));
   }
 
   postAPI(apiPath: string, data: any): Observable<any> {
@@ -302,85 +611,137 @@ export class CommonService {
     return raw ? JSON.parse(raw) : null;
   }
 
-  showErrorMessage(errormsg: string) {
+  // showErrorMessage(errormsg: string) {
 
-    this.toastr.error(errormsg, "Error!", { timeOut: this.messageShowTimeOut });
-  }
+  //   this.toastr.error(errormsg, "Error!", { timeOut: this.messageShowTimeOut });
+  // }
 
+  // pdfProperties(propertyType: string): string | number {
+  //   switch (propertyType) {
+  //     case 'Date': {
+  //       const time = formatDate(
+  //         new Date(),
+  //         'dd-MMM-yyyy/h:mm:ss a',
+  //         'en-IN'
+  //       ).split('/')[1];
+
+  //       return `${this.getFormatDateGlobal(new Date())} ${time}`;
+  //     }
+
+  //     case 'Header Color':
+  //       return '#0b4093';
+
+  //     case 'Header Color1':
+  //       return 'white';
+
+  //     case 'Header Alignment':
+  //       return 'center';
+
+  //     case 'Header Fontsize':
+  //     case 'Cell Fontsize':
+  //       return 7;
+
+  //     case 'Address Fontsize':
+  //       return 8;
+
+  //     default:
+  //       return '';
+  //   }
+  // }
   pdfProperties(propertyType: string): string | number {
-    switch (propertyType) {
-      case 'Date': {
-        const time = formatDate(
-          new Date(),
-          'dd-MMM-yyyy/h:mm:ss a',
-          'en-IN'
-        ).split('/')[1];
+    const now = new Date();
 
-        return `${this.getFormatDateGlobal(new Date())} ${time}`;
-      }
+    const datePart = this.getFormatDateGlobal(now);
 
-      case 'Header Color':
-        return '#0b4093';
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 || 12;
 
-      case 'Header Color1':
-        return 'white';
-
-      case 'Header Alignment':
-        return 'center';
-
-      case 'Header Fontsize':
-      case 'Cell Fontsize':
-        return 7;
-
-      case 'Address Fontsize':
-        return 8;
-
-      default:
-        return '';
+    const config: Record<string, string | number> = {
+      'Date': `${datePart} ${hour12}:${minutes}:${seconds} ${ampm}`,
+      'Header Color': '#0b4093',
+      'Header Color1': 'white',
+      'Header Alignment': 'center',
+      'Header Fontsize': 7,
+      'Cell Fontsize': 7,
+      'Address Fontsize': 8
+    };
+    if (!config[propertyType]) {
+      console.warn('Unknown pdf property:', propertyType);
     }
+
+    return config[propertyType] ?? '';
   }
-  getFormatDateGlobal(date: any) {
+  // getFormatDateGlobal(date: any)  {
 
-    this.dateFormat = sessionStorage.getItem("dateformat");
-    if (this.dateFormat == "MM DD YYYY") {
-      return this.datepipe.transform(date, 'MM dd yyyy')
+  //   this.dateFormat = sessionStorage.getItem("dateformat");
+
+  //   if (this.dateFormat == "MM DD YYYY") {
+  //     return this.datepipe.transform(date, 'MM dd yyyy')
+  //   }
+  //   if (this.dateFormat == "DD MM YYYY") {
+  //     return this.datepipe.transform(date, 'dd MM yyyy')
+  //   }
+  //   if (this.dateFormat == "YYYY MM DD") {
+  //     return this.datepipe.transform(date, 'yyyy MM dd')
+  //   }
+  //   if (this.dateFormat == "DD/MM/YYYY") {
+  //     return this.datepipe.transform(date, 'dd/MM/yyyy')
+  //   }
+  //   if (this.dateFormat == "MM/DD/YYYY") {
+  //     return this.datepipe.transform(date, 'MM/dd/yyyy')
+  //   }
+  //   if (this.dateFormat == "YYYY/MM/DD") {
+  //     return this.datepipe.transform(date, 'yyyy/MM/dd')
+  //   }
+  //   if (this.dateFormat == "DD-MM-YYYY") {
+  //     return this.datepipe.transform(date, 'dd-MM-yyyy')
+  //   }
+  //   if (this.dateFormat == "MM-DD-YYYY") {
+  //     return this.datepipe.transform(date, 'MM-dd-yyyy')
+  //   }
+  //   if (this.dateFormat == "YYYY-MM-DD") {
+  //     return this.datepipe.transform(date, 'yyyy-MM-dd')
+  //   }
+  //   if (this.dateFormat == "DD-MMM-YYYY") {
+  //     return this.datepipe.transform(date, 'dd-MMM-yyyy')
+  //   }
+  //   if (this.dateFormat == "MMM-DD-YYYY") {
+  //     return this.datepipe.transform(date, 'MMM-dd-yyyy')
+  //   }
+  //   if (this.dateFormat == "YYYY-MMM-DD") {
+  //     return this.datepipe.transform(date, 'yyyy-MMM-dd')
+  //   }
+  //   if (this.dateFormat == "YYYY-DD-MMM") {
+  //     return this.datepipe.transform(date, 'dd-MMM-yyyy')
+  //   }
+  // }
+  getFormatDateGlobal(date: any): string {
+    if (!date) return '';
+
+    const storedFormat = sessionStorage.getItem('dateformat') ?? '';
+
+    let format = 'dd/MM/yyyy';
+
+    switch (storedFormat) {
+      case "MM DD YYYY": format = 'MM dd yyyy'; break;
+      case "DD MM YYYY": format = 'dd MM yyyy'; break;
+      case "YYYY MM DD": format = 'yyyy MM dd'; break;
+      case "DD/MM/YYYY": format = 'dd/MM/yyyy'; break;
+      case "MM/DD/YYYY": format = 'MM/dd/yyyy'; break;
+      case "YYYY/MM/DD": format = 'yyyy/MM/dd'; break;
+      case "DD-MM-YYYY": format = 'dd-MM-yyyy'; break;
+      case "MM-DD-YYYY": format = 'MM-dd-yyyy'; break;
+      case "YYYY-MM-DD": format = 'yyyy-MM-dd'; break;
+      case "DD-MMM-YYYY": format = 'dd-MMM-yyyy'; break;
+      case "MMM-DD-YYYY": format = 'MMM-dd-yyyy'; break;
+      case "YYYY-MMM-DD": format = 'yyyy-MMM-dd'; break;
+      case "YYYY-DD-MMM": format = 'dd-MMM-yyyy'; break;
     }
-    if (this.dateFormat == "DD MM YYYY") {
-      return this.datepipe.transform(date, 'dd MM yyyy')
-    }
-    if (this.dateFormat == "YYYY MM DD") {
-      return this.datepipe.transform(date, 'yyyy MM dd')
-    }
-    if (this.dateFormat == "DD/MM/YYYY") {
-      return this.datepipe.transform(date, 'dd/MM/yyyy')
-    }
-    if (this.dateFormat == "MM/DD/YYYY") {
-      return this.datepipe.transform(date, 'MM/dd/yyyy')
-    }
-    if (this.dateFormat == "YYYY/MM/DD") {
-      return this.datepipe.transform(date, 'yyyy/MM/dd')
-    }
-    if (this.dateFormat == "DD-MM-YYYY") {
-      return this.datepipe.transform(date, 'dd-MM-yyyy')
-    }
-    if (this.dateFormat == "MM-DD-YYYY") {
-      return this.datepipe.transform(date, 'MM-dd-yyyy')
-    }
-    if (this.dateFormat == "YYYY-MM-DD") {
-      return this.datepipe.transform(date, 'yyyy-MM-dd')
-    }
-    if (this.dateFormat == "DD-MMM-YYYY") {
-      return this.datepipe.transform(date, 'dd-MMM-yyyy')
-    }
-    if (this.dateFormat == "MMM-DD-YYYY") {
-      return this.datepipe.transform(date, 'MMM-dd-yyyy')
-    }
-    if (this.dateFormat == "YYYY-MMM-DD") {
-      return this.datepipe.transform(date, 'yyyy-MMM-dd')
-    }
-    if (this.dateFormat == "YYYY-DD-MMM") {
-      return this.datepipe.transform(date, 'dd-MMM-yyyy')
-    } 
+
+    return this.datepipe.transform(date, format) ?? '';
   }
   _getRupeeSymbol() {
     return "data:image/png;base64,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";
@@ -562,7 +923,7 @@ export class CommonService {
           doc.setFontSize(15);
 
           doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
-          doc.text(Companyreportdetails.pCompanyName, 60, 10);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 10);
 
           doc.setFontSize(14);
           doc.text(reportName, 87, 30);
@@ -643,14 +1004,14 @@ export class CommonService {
 
     doc.setFont('times', 'normal');
     doc.setFontSize(15);
-    doc.text(company.pCompanyName, pageWidth / 2, 10, { align: 'center' });
+    doc.text(company?.pCompanyName ?? '', pageWidth / 2, 10, { align: 'center' });
 
     doc.setFontSize(8);
     doc.text(address.substring(0, 115), pageWidth / 2, 15, { align: 'center' });
     doc.text(address.substring(115), pageWidth / 2, 18, { align: 'center' });
 
     if (company?.pCinNo) {
-      doc.text(`CIN : ${company.pCinNo}`, pageWidth / 2, 22, { align: 'center' });
+      doc.text(`CIN : ${company?.pCinNo ?? ''}`, pageWidth / 2, 22, { align: 'center' });
     }
 
     doc.setFontSize(14);
@@ -730,13 +1091,1524 @@ export class CommonService {
       this.setiFrameForPrint(doc);
     }
   }
+  getDateObjectFromDataBase(date: any): Date | null {
+    if (!date) return null;
 
+    try {
+      // If already a Date object
+      if (date instanceof Date) {
+        return date;
+      }
+
+      // If string like "2024-01-31T00:00:00"
+      if (typeof date === 'string') {
+        return new Date(date);
+      }
+
+      // If numeric timestamp
+      if (typeof date === 'number') {
+        return new Date(date);
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Invalid date received from DB:', date);
+      return null;
+    }
+  }
+  getCreatedBy(): string {
+    const userId = sessionStorage.getItem('LoginUserid');
+    return userId ? JSON.parse(userId).toString() : '';
+  }
+
+  getIpAddress(): string {
+    const ip = sessionStorage.getItem('ipaddress');
+    return ip ?? '';
+  }
+  showInfoMessage(errormsg: string) {
+
+    this.toastr.success(errormsg, "Success!", { timeOut: this.messageShowTimeOut });
+  }
+
+
+  //     getValidationMessage(formcontrol: AbstractControl, errorkey: string, lablename: string, key: string, skipKey: string):
+  //      string {
+  //     let errormessage;
+  // let error1=formcontrol.errors;
+
+  //     if (errorkey == 'required')
+  //       errormessage = lablename + ' Required';
+  //     if (errorkey == 'email' || errorkey == 'pattern')
+  //       errormessage = 'Invalid ' + lablename;
+  //     if (errorkey == 'minlength') {
+  //       // let length = error1[errorkey].requiredLength;
+  //     const length = error1[errorkey].requiredLength;
+  //       errormessage = 'Enter the data with minimum(' + length + ') fixed length'
+  //     }
+  //     if (errorkey == 'maxlength' && key != skipKey) {
+  //       let length = formcontrol.errors[errorkey].requiredLength;
+  //       // errormessage = lablename + ' Must Have ' + length + ' Letters';
+  //       errormessage = 'Enter the data with maximum(' + length + ') fixed length'
+  //     }
+  //     if (errorkey == 'maxlength' && key == skipKey) {
+  //       errormessage = 'Invalid ' + lablename;
+  //     }
+  //     return errormessage;
+  //   }
+
+
+
+  getValidationMessage(
+    formcontrol: AbstractControl,
+    errorkey: string,
+    lablename: string,
+    key: string,
+    skipKey: string
+  ): string {
+
+    const errors = formcontrol.errors;
+
+    if (!errors || !errors[errorkey]) {
+      return '';
+    }
+
+    if (errorkey === 'required') {
+      return `${lablename} Required`;
+    }
+
+    if (errorkey === 'email' || errorkey === 'pattern') {
+      return `Invalid ${lablename}`;
+    }
+
+    if (errorkey === 'minlength') {
+      const length = errors[errorkey].requiredLength;
+      return `Enter the data with minimum (${length}) fixed length`;
+    }
+
+    if (errorkey === 'maxlength' && key !== skipKey) {
+      const length = errors[errorkey].requiredLength;
+      return `Enter the data with maximum (${length}) fixed length`;
+    }
+
+    if (errorkey === 'maxlength' && key === skipKey) {
+      return `Invalid ${lablename}`;
+    }
+
+    return '';
+  }
+
+
+
+
+  public currencyFormat(value: any) {
+    if (value == null) { value = "0"; }
+    else {
+      value = parseFloat(value.toString().replace(/,/g, ""));
+    }
+    value = value.toLocaleString("en", { useGrouping: false, minimumFractionDigits: 0 })
+    let withNegativeData: any;
+    var result: any;
+    //let currencyformat= this.cookieservice.get("savedformat")
+    let currencyformat;
+    if (this.currencysymbol == "₹") {
+      currencyformat = "India"
+    } else {
+      currencyformat = "other"
+    }
+
+    if (currencyformat == "India") {
+      if (value < 0) {
+        let stringData = value.toString();
+        withNegativeData = stringData.substring(1, stringData.length);
+        result = withNegativeData.toString().split('.');
+      }
+      else if (value >= 0) {
+        result = value.toString().split('.');
+      }
+      var lastThree = result[0].substring(result[0].length - 3);
+      var otherNumbers = result[0].substring(0, result[0].length - 3);
+      if (otherNumbers != '')
+        lastThree = ',' + lastThree;
+      var output = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+      if (result.length > 1) {
+        output += "." + result[1];
+      }
+      if (value >= 0) {
+        return output
+      }
+      else if (value < 0) {
+        output = '-' + '' + output;
+        return output
+      }
+      // }
+    }
+    else {
+      // this.symbol = this.cookieservice.get("symbolofcurrency")
+      var result = value.toString().split('.');
+      var lastThree = result[0].substring(result[0].length - 3);
+      var otherNumbers = result[0].substring(0, result[0].length - 3);
+      if (otherNumbers != '')
+        lastThree = ',' + lastThree;
+      var output = otherNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + lastThree;
+      if (result.length > 1) {
+        output += "." + result[1];
+      }
+      return output
+      //return this.symbol+"  "+output
+    }
+
+  }
+  getFormatDateNormal(date: any): string | null {
+    if (date != null && date != '' && date != undefined)
+      return this.datepipe.transform(date, 'dd/MM/yyyy');
+    else
+      return null;
+  }
+  // getFormatDateNormal(date: any): string | null {
+  //   if (date != null && date != '' && date != undefined)
+  //     return this.datepipe.transform(date, 'yyyy-MM-dd');
+  //   else
+  //     return null;
+  // }
+  removeCommasInAmount(value: string | number): string {
+    return String(value).replace(/,/g, '');
+  }
+  //   public removeCommasInAmount(value:any) {
+  //   if (this.isNullOrEmptyString(value))
+  //     value = 0;
+  //   return parseFloat(value.toString().replace(/,/g, ""))
+  //   // let a = value.split(',')
+  //   // let b = a.join('')
+  //   // let c = b
+  //   // return c;
+  // }
+  isNullOrEmpty(value: string | number | null | undefined): boolean {
+    // null or undefined → true
+    if (value == null) return true;
+
+    // number → not empty
+    if (typeof value === 'number') return false;
+
+    // string → check empty or only whitespace
+    return value.trim() === '';
+  }
+
+  fileUploadS3(formName: string, data: any) {
+    const urldata = environment.apiURL;
+
+    return this.http.get(urldata).pipe(
+      mergeMap((json: any) =>
+        this.http.post(`${json[0]['ApiHostUrl']}/uploadFile/${formName}`, data).pipe(
+          map(this.extractData),
+          catchError(this.handleError)
+        )
+      )
+    );
+  }
+  _MultipleGroupingGridExportData(
+    gridData: any[],
+    groupedCol: string,
+    isGroupedColDate: boolean
+  ): any[] {
+    const groupedByCol: Record<string, any[]> = {};
+    const groupedByTransaction: Record<string, any[]> = {};
+    const groupKeys: string[] = [];
+    const transactionKeys: string[] = [];
+    const finalList: any[] = [];
+
+    // 1️⃣ Group data by column and transaction
+    for (const row of gridData) {
+      const groupColValue = isGroupedColDate
+        ? this.getFormatDateGlobal(row[groupedCol])
+        : row[groupedCol];
+
+      const transactionNo = row["ptransactionno"];
+
+      // Group by column
+      if (!groupedByCol[groupColValue]) {
+        groupedByCol[groupColValue] = [{ ...row }];
+        groupKeys.push(groupColValue);
+      } else {
+        groupedByCol[groupColValue].push(row);
+      }
+
+      // Group by transaction
+      if (!groupedByTransaction[transactionNo]) {
+        groupedByTransaction[transactionNo] = [{ ...row }];
+        transactionKeys.push(transactionNo);
+      } else {
+        groupedByTransaction[transactionNo].push(row);
+      }
+    }
+
+    // 2️⃣ Add transaction-level headers
+    for (const txKey of transactionKeys) {
+      const transactionRows = groupedByTransaction[txKey];
+      transactionRows.forEach((row, idx) => {
+        if (idx === 0) {
+          row["group"] = {
+            content: `               ${row["ptransactionno"]}`,
+            colSpan: 15,
+            styles: { halign: "left", fontStyle: "bold", textColor: "#663300" },
+          };
+        }
+        finalList.push(row);
+      });
+    }
+
+    // 3️⃣ Build final grouped array
+    const newDataArray: any[] = [];
+
+    for (const key of groupKeys) {
+      // Add group header
+      newDataArray.push({
+        group: {
+          content: `${key}`,
+          colSpan: 15,
+          styles: { halign: "left", fontStyle: "bold", textColor: "#009933" },
+        },
+      });
+
+      // Add rows belonging to this group
+      for (const row of finalList) {
+        const rowGroupValue = isGroupedColDate
+          ? this.getFormatDateGlobal(row[groupedCol])
+          : row[groupedCol];
+
+        if (rowGroupValue === key) {
+          newDataArray.push(row);
+        }
+      }
+    }
+
+    return newDataArray;
+  }
+
+  _JvListdownloadReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridHeaders: any[],
+    colWidthHeight: any,
+    pageType: 'a4' | 'landscape',
+    betweenOrAsOn: 'Between' | 'As On',
+    fromDate: string,
+    toDate: string,
+    printOrPdf: 'Pdf' | 'Print'
+  ) {
+    const address = this.getcompanyaddress();
+    const Companyreportdetails = this._getCompanyDetails();
+    const currencySymbol = this.currencysymbol;
+    const totalPagesExp = '{total_pages_count_string}';
+    const today = this.pdfProperties('Date');
+    const kapilLogo = this.getKapilGroupLogo();
+    const rupeeImage = this._getRupeeSymbol();
+
+    const doc = new jsPDF({
+      orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      putOnlyUsedFonts: true,
+      compress: true,
+    });
+
+    const autoTableOptions: any = {
+      columns: gridHeaders,
+      body: gridData,
+      theme: 'grid',
+      // headStyles: {
+      //   fillColor: this.pdfProperties('Header Color'),
+      //   halign: this.pdfProperties('Header Alignment'),
+      //   fontSize: this.pdfProperties('Header Fontsize'),
+      // }
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: 'center',
+        fontSize: 15,
+        fontStyle: 'bold'
+      },
+      styles: {
+        cellPadding: 2,
+        // fontSize: this.pdfProperties('Cell Fontsize'),
+        fontSize: 11,
+        cellWidth: 'wrap',
+        overflow: 'linebreak',
+        rowPageBreak: 'avoid',
+      },
+      columnStyles: colWidthHeight,
+      startY: 52,
+      showHead: 'everyPage',
+      showFoot: 'lastPage',
+      didDrawPage: (data: any) => {
+        const pageSize = doc.internal.pageSize;
+        const pageWidth = pageSize.width || pageSize.getWidth();
+        const pageHeight = pageSize.height || pageSize.getHeight();
+        const lMargin = 15;
+        const rMargin = 15;
+        const pdfInMM = pageType === 'landscape' ? 315 : 233;
+
+        // Header
+        doc.setFont('Times', 'normal');
+        if ((doc.internal as any).getNumberOfPages() === 1) {
+          doc.setFontSize(pageType === 'landscape' ? 16 : 20);
+          doc.addImage(kapilLogo, 'JPEG', 10, pageType === 'landscape' ? 5 : 15, 20, 20);
+          doc.setTextColor('black');
+          doc.text(Companyreportdetails?.pCompanyName ?? '', pageWidth / 2, pageType === 'landscape' ? 10 : 15, { align: 'center' });
+          doc.setFontSize(14);
+          doc.text(address.substring(0, 150), pageWidth / 2, pageType === 'landscape' ? 15 : 24, { align: 'center' });
+
+          if (Companyreportdetails?.pCinNo ?? '') {
+            doc.text('CIN : ' + Companyreportdetails.pCinNo, pageWidth / 2, pageType === 'landscape' ? 20 : 28, { align: 'center' });
+          }
+
+          doc.setFontSize(22);
+          doc.text(reportName, pageWidth / 2, pageType === 'landscape' ? 30 : 38, { align: 'center' });
+
+          doc.setFontSize(14);
+          doc.text('Branch : ' + Companyreportdetails?.pBranchname, pageType === 'landscape' ? 235 : 163, pageType === 'landscape' ? 40 : 47);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between  : ${fromDate}  And  ${toDate}`, 15, pageType === 'landscape' ? 40 : 47);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As on  : ${fromDate}`, 15, pageType === 'landscape' ? 40 : 47);
+          }
+
+          doc.setDrawColor(0, 0, 0);
+          doc.line(10, pageType === 'landscape' ? 45 : 50, pdfInMM - lMargin - rMargin, pageType === 'landscape' ? 45 : 50);
+        }
+
+        // Footer
+        const page = `Page ${(doc.internal as any).getNumberOfPages()} of ${totalPagesExp}`;
+        doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
+        doc.setFontSize(14);
+        doc.text(`Printed on : ${today}`, lMargin, pageHeight - 5);
+        doc.text(page, pageWidth - rMargin - 20, pageHeight - 5);
+      },
+      willDrawCell: (data: any) => {
+        if (reportName === 'PAYMENT VOUCHER LIST') {
+          if (data.cell.raw === '0' || data.cell.raw === '0.00') {
+            data.cell.text[0] = '';
+          }
+        } else {
+          // if (data.section === 'body' && data.cell.colSpan !== 15 && data.cell.raw !== '0') {
+          //   data.cell.text[0] = ' ' + data.cell.raw;
+          // }
+          // if (data.cell.raw === '0' || data.cell.raw === '0.00') {
+          //   data.cell.text[0] = '';
+          // }
+          if (data.column.index === 0 && data.section === 'body') {
+            data.cell.styles.fontSize = 13;
+          }
+          if ((data.column.index === 1 || data.column.index === 2) && data.section === 'body') {
+            data.cell.styles.fontSize = 11;
+          }
+        }
+      },
+      didDrawCell: (data: any) => {
+        if ((data.column.index === 1 || data.column.index === 2) && data.cell.section === 'body') {
+          if (currencySymbol === '₹' && data.cell.raw !== 0) {
+            const textPos = data.cell.textPos;
+            // doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+            doc.addImage(
+              rupeeImage,
+              data.cell.x + 1,
+              textPos.y - 2,
+              1.7,
+              1.7
+            );
+          }
+        }
+      },
+    };
+
+    autoTable(doc, autoTableOptions);
+
+    // Put total pages
+    if ((doc as any).putTotalPages) {
+      (doc as any).putTotalPages(totalPagesExp);
+    }
+
+    if (printOrPdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else if (printOrPdf === 'Print') {
+      this.setiFrameForPrint(doc);
+    }
+  }
+  _downloadTrialBalanceReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridheaders: any[],
+    colWidthHeight: any,
+    pagetype: 'a4' | 'landscape',
+    betweenorason: string,
+    fromdate: string,
+    todate: string,
+    printorpdf: string,
+    totalamounts: any
+  ): void {
+
+    const address = this.getcompanyaddress();
+    const Companyreportdetails = this._getCompanyDetails();
+    const currencyformat = this.currencysymbol;
+    const today = this.pdfProperties('Date');
+    const kapil_logo = this.getKapilGroupLogo();
+    const rupeeImage = this._getRupeeSymbol();
+
+    const orientation = pagetype === 'landscape' ? 'landscape' : 'portrait';
+
+    const doc = new jsPDF({
+      orientation,
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const totalPagesExp = '{total_pages_count_string}';
+    const lMargin = 15;
+    const rMargin = 15;
+    let pdfInMM = pagetype === 'landscape' ? 315 : 233;
+
+    autoTable(doc, {
+      columns: gridheaders,
+      body: gridData,
+      theme: 'grid',
+
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: 'center',
+        fontSize: 11
+      },
+      rowPageBreak: 'avoid',
+      styles: {
+        cellPadding: 1,
+        fontSize: 10,
+        cellWidth: 'wrap',
+
+        overflow: 'linebreak'
+      },
+
+      columnStyles: {
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 'auto', halign: 'right' },
+        2: { cellWidth: 'auto', halign: 'right' }
+      },
+
+      startY: 48,
+      showHead: 'everyPage',
+      showFoot: 'lastPage',
+
+      // =====================================================
+      // HEADER + FOOTER
+      // =====================================================
+      didDrawPage: (data: any) => {
+
+        const pageSize = doc.internal.pageSize;
+        const pageWidth = pageSize.width;
+        const pageHeight = pageSize.height;
+
+        doc.setFont('helvetica', 'normal');
+
+        // ================= A4 =================
+        if (pagetype === 'a4') {
+
+          doc.addImage(kapil_logo, 'JPEG', 10, 5, 20, 20);
+          doc.setFontSize(15);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 72, 10);
+
+          doc.setFontSize(8);
+          const address1 = address.substr(0, 115);
+          const address2 = address.substring(115);
+          doc.text(address1, 110, 15, { align: 'center' });
+          doc.text(address2, 110, 18);
+
+          if (Companyreportdetails?.pCinNo ?? '') {
+            doc.text(`CIN : ${Companyreportdetails?.pCinNo ?? ''}`, 90, 22);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 30);
+
+          doc.setFontSize(10);
+          doc.text(`Branch : ${Companyreportdetails?.pBranchname ?? ''}`, 160, 40);
+
+          if (betweenorason === 'Between') {
+            doc.text(`Between : ${fromdate} And ${todate}`, 15, 40);
+          } else if (fromdate) {
+            doc.text(`As on : ${fromdate}`, 15, 40);
+          }
+
+          doc.line(10, 45, pdfInMM - lMargin - rMargin, 45);
+        }
+
+        if (pagetype === 'landscape') {
+
+          doc.addImage(kapil_logo, 'JPEG', 20, 15, 20, 20);
+          doc.setFontSize(15);
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 110, 20);
+
+          doc.setFontSize(10);
+          doc.text(address, 80, 27);
+
+          if (Companyreportdetails.pCinNo) {
+            doc.text(`CIN : ${Companyreportdetails?.pCinNo ?? ''}`, 125, 32);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 130, 42);
+
+          doc.setFontSize(10);
+          doc.text(`Branch : ${Companyreportdetails?.pBranchname ?? ''}`, 235, 50);
+
+          if (betweenorason === 'Between') {
+            doc.text(`Between : ${fromdate} And ${todate}`, 15, 50);
+          } else if (fromdate) {
+            doc.text(`As on : ${fromdate}`, 15, 50);
+          }
+
+          doc.line(10, 52, pdfInMM - lMargin - rMargin, 52);
+        }
+
+        data.settings.margin.top = 48;
+        data.settings.margin.bottom = 15;
+
+        let pageText = `Page ${doc.getNumberOfPages()}`;
+        if ((doc as any).putTotalPages) {
+          pageText += ` of ${totalPagesExp}`;
+        }
+
+        doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
+        doc.setFontSize(10);
+        doc.text(`Printed on : ${today}`, data.settings.margin.left, pageHeight - 5);
+        doc.text(pageText, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+      },
+
+      willDrawCell: (data: any) => {
+        if (data.row.index === gridData.length - 1) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(11);
+        }
+      },
+
+      didDrawCell: (data: any) => {
+        if (
+          (data.column.index === 1 || data.column.index === 2) &&
+          data.cell.section === 'body' &&
+          data.row.index !== gridData.length - 1 &&
+          currencyformat === '₹' &&
+          data.cell.raw !== ''
+        ) {
+          const pos = data.cell.textPos;
+          doc.setFont('helvetica', 'normal');
+          doc.addImage(
+            rupeeImage,
+            pos.x - data.cell.contentWidth,
+            pos.y + 0.5,
+            1.5,
+            1.5
+          );
+        }
+      }
+    });
+
+    if ((doc as any).putTotalPages) {
+      (doc as any).putTotalPages(totalPagesExp);
+    }
+
+    if (printorpdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else {
+      this.setiFrameForPrint(doc);
+    }
+  }
+
+  // ===================================================================
+  // PRINT SUPPORT (UNCHANGED LOGIC)
+  // ===================================================================
+  // setiFrameForPrint(doc: jsPDF): void {
+  //   const iframe = document.createElement('iframe');
+  //   iframe.style.display = 'none';
+  //   const blobUrl = doc.output('bloburl');
+  //   iframe.src = blobUrl.toString();
+  //   document.body.appendChild(iframe);
+  //   iframe.contentWindow?.print();
+  // }
+
+  // getcompanyaddress(): string { return ''; }
+  // _getCompanyDetails(): any { return {}; }
+  // getKapilGroupLogo(): string { return ''; }
+  // _getRupeeSymbol(): string { return ''; }
+  // pdfProperties(key: string): any { return ''; }
+
+
+
+
+
+  removeCommasForEntredNumber(enteredNumber: any) {
+    return this.removeCommasInAmount(enteredNumber);
+  }
+  getFormatDateYYYMMDD(date: Date | string | null | undefined): string | null {
+    if (!date) {
+      return null;
+    }
+
+    return this.datepipe.transform(date, 'yyyy-MM-dd');
+  }
+  _downloadBRSReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridheaders: any[],
+    colWidthHeight: any,
+    pagetype: any,
+    betweenorason: string,
+    fromdate: string,
+    todate: string,
+    BankBalance: any,
+    chequesdepositedbutnotcredited: any,
+    CHEQUESISSUEDBUTNOTCLEARED: any,
+    balanceperbankbook: any,
+    printorpdf: string,
+    bankname: string
+  ) {
+
+    const doc = new jsPDF({
+      orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const totalPagesExp = '{total_pages_count_string}';
+    const today = this.pdfProperties("Date");
+    const currencyformat = this.currencysymbol;
+    const kapil_logo = this.getKapilGroupLogo();
+
+    let pageHeight = doc.internal.pageSize.getHeight();
+    let pageWidth = doc.internal.pageSize.getWidth();
+
+    autoTable(doc, {
+      head: [gridheaders],
+      body: gridData,
+      startY: 46,
+      theme: 'grid',
+
+      headStyles: {
+        fillColor: this.pdfProperties("Header Color") as any,
+        halign: (this.pdfProperties("Header Alignment") as 'left' | 'center' | 'right') ?? 'center',
+        fontSize: Number(this.pdfProperties("Header Fontsize")) || 10
+      },
+
+      styles: {
+        fontSize: Number(this.pdfProperties("Cell Fontsize")) || 9,
+        cellPadding: 1,
+        overflow: 'linebreak'
+      },
+
+      columnStyles: {
+        0: { halign: 'center' as const },
+        1: { halign: 'center' as const },
+        3: { halign: 'right' as const, cellWidth: 30 }
+      },
+
+      didDrawPage: (data) => {
+
+        doc.setFont('times', 'bold');
+        doc.setFontSize(14);
+        doc.text("Bank Reconciliation - " + bankname, 15, 20);
+
+        doc.setFontSize(10);
+        if (betweenorason === "Between") {
+          doc.text(`Between : ${fromdate} And ${todate}`, 15, 26);
+        } else {
+          doc.text(`As On : ${fromdate}`, 15, 26);
+        }
+
+        doc.addImage(kapil_logo, 'JPEG', pageWidth - 40, 10, 25, 15);
+
+        let str = "Page " + doc.getNumberOfPages();
+        if (typeof doc.putTotalPages === 'function') {
+          str = str + " of " + totalPagesExp;
+        }
+
+        doc.setFontSize(9);
+        doc.text("Printed on : " + today, 15, pageHeight - 10);
+        doc.text(str, pageWidth - 40, pageHeight - 10);
+      }
+    });
+
+    let finalY = (doc as any).lastAutoTable.finalY + 15;
+
+    const addCurrencyIcon = (y: number) => {
+      if (currencyformat === "₹") {
+        doc.text("₹", 90, y);
+      }
+    };
+
+    if (finalY + 50 > pageHeight) {
+      doc.addPage();
+      finalY = 20;
+    }
+
+    doc.setFontSize(10);
+
+    addCurrencyIcon(finalY);
+    doc.text(`Balance as per bank book : ${BankBalance}`, 15, finalY);
+
+    addCurrencyIcon(finalY + 8);
+    doc.text(`Less: Cheques deposited but not credited : ${chequesdepositedbutnotcredited}`, 15, finalY + 8);
+
+    addCurrencyIcon(finalY + 16);
+    doc.text(`Add: Cheques issued but not cleared : ${CHEQUESISSUEDBUTNOTCLEARED}`, 15, finalY + 16);
+
+    addCurrencyIcon(finalY + 24);
+    doc.text(`Balance as per pass book / statement : ${balanceperbankbook}`, 15, finalY + 24);
+
+    doc.text("Account Officer", 15, finalY + 50);
+    doc.text("Manager", pageWidth / 2 - 20, finalY + 50);
+    doc.text("Verified by", pageWidth - 50, finalY + 50);
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printorpdf === "Pdf") {
+      doc.save(`${reportName}.pdf`);
+    }
+
+    if (printorpdf === "Print") {
+      this.setiFrameForPrint(doc);
+    }
+  }
+
+
+
+  transform(items: any[], searchText: string, columnName: string): any[] {
+    debugger
+    if (!items) return [];
+    if (!searchText) return items;
+    searchText = searchText.toString().toLowerCase();
+    return items.filter(it => {
+      return it[columnName].toString().toLowerCase().startsWith(searchText);
+      //return it[columnName].toString().toLowerCase().includes(searchText);
+    });
+  }
+
+  GetGlobalBanks(): Observable<any> {
+    debugger;
+    return this.getAPI('/Common/GetGlobalBanks', '', 'NO');
+  }
+  GetGlobalUPINames(): Observable<any> {
+    debugger;
+    return this.getAPI('/Common/GetGlobalUPINames', '', 'NO');
+  }
+  //  _MultipleGroupingGridExportData(griddata:any, groupdcol:any, isgroupedcolDate:any) {
+  //   debugger;
+
+  //   let a = [];
+  //   let Ajv = [];
+  //   let keys = [];
+  //   let Jvlist = [];
+  //   for (var i = 0; i < griddata.length; i++) {
+  //     let Jsongroupcol;
+  //     let Ajvlistgroupcol;
+  //     if (isgroupedcolDate == true) {
+  //       //Jsongroupcol = formatDate(griddata[i][groupdcol], 'dd-MM-yyyy', 'en-IN');
+  //       Jsongroupcol = this.getFormatDateGlobal(griddata[i][groupdcol]);
+  //       Ajvlistgroupcol = griddata[i]["ptransactionno"];
+  //     }
+  //     else {
+  //       Jsongroupcol = griddata[i][groupdcol];
+  //       Ajvlistgroupcol = griddata[i]["ptransactionno"];
+  //     }
+
+  //     if (!a[Jsongroupcol]) {
+
+
+  //       keys.push(Jsongroupcol);
+  //       let k = { ...griddata[i] }
+  //       a[Jsongroupcol] = [k];
+
+  //     }
+  //     a[Jsongroupcol].push(griddata[i]);
+
+
+  //     if (!Ajv[Ajvlistgroupcol]) {
+
+  //       Jvlist.push(Ajvlistgroupcol);
+  //       let k = { ...griddata[i] }
+  //       Ajv[Ajvlistgroupcol] = [k];
+  //     }
+
+  //     Ajv[Ajvlistgroupcol].push(griddata[i]);
+  //   }
+
+  //   let final = [];
+  //   for (var j = 0; j < Jvlist.length; j++) {
+
+  //     let keypair = Ajv[Jvlist[j]]
+  //     for (var k = 0; k < keypair.length; k++) {
+  //       let groupcolHead
+
+  //       if (k == 0) {
+  //         if (isgroupedcolDate == true) {
+  //           // groupcolHead = formatDate(keypair[k][groupdcol], 'dd-MM-yyyy', 'en-IN');
+  //           groupcolHead = (keypair[k]["ptransactionno"]);
+  //         }
+  //         else {
+  //           groupcolHead = keypair[k]["ptransactionno"];
+  //         }
+  //         keypair[k]["group"] = {
+  //           content: '               ' + groupcolHead + '',
+  //           colSpan: 15,
+  //           styles: { halign: 'left', fontStyle: 'bold', textColor: "#663300" }
+  //         };
+  //       }
+  //       final.push(keypair[k])
+  //     }
+  //   }
+  //   debugger;
+  //   let NewdataArray = [];
+  //   for (var RRR = 0; RRR < keys.length; RRR++) {
+  //     let KeysN = keys[RRR];
+  //     NewdataArray.push({
+  //       group: {
+  //         content: '' + KeysN + '',
+  //         colSpan: 15,
+  //         styles: { halign: 'left', fontStyle: 'bold', textColor: "#009933" }
+  //       }
+  //     });
+  //     for (var AAA = 0; AAA < final.length; AAA++) {
+
+  //       if (KeysN == this.getFormatDateGlobal(final[AAA][groupdcol])) {
+
+  //         NewdataArray.push(final[AAA]);
+  //       }
+
+  //     }
+
+  //   }
+  //   return NewdataArray;
+
+  // }
+
+
+  hrmsjvtypes = [
+    { "name": 'ESI', "value": 'ESI' },
+    { "name": 'PROVIDENT FUND', "value": 'PF' },
+    { "name": 'AO ALLOWANCES', "value": 'AO ALLOWANCES' },
+    { "name": 'PROFISSIONAL TAX', "value": 'PT' },
+    { "name": 'VDA', "value": 'VDA' },
+    { "name": 'HRA', "value": 'HRA' },
+    { "name": 'CHIT ACT ALLOWANCE', "value": 'CHIT ACT' },
+    { "name": 'PRO ALLOWANCE', "value": 'PRO' },
+    { "name": 'FOREMAN ALLOWANCE', "value": 'FOREMAN' },
+    { "name": 'DRIVER ALLOWANCE', "value": 'DRIVER ALLOWANCE' },
+    { "name": 'LOYALTY ALLOWANCES', "value": 'LOYALTY ALLOWANCES' },
+    { "name": 'VEHICLE ALLOWANCE', "value": 'VEHICLE' },
+    { "name": 'RISK ALLOWANCE', "value": 'RISK ALLOWANCE' },
+    { "name": 'BIDPAYABLE ALLOWANCE', "value": 'BID PAYABLE' },
+    { "name": 'ASSISTANT - AO ALLOWANCE', "value": 'ASSISTANT-AO' },
+    { "name": 'CHILDREN EDUCATION ALLOWANCE', "value": 'CHILDREN EDUCATION' },
+    { "name": 'CITY ALLOWANCE', "value": 'CITY ALLOWANCE' },
+    { "name": 'WASHING ALLOWANCE', "value": 'WASHING ALLOWANCE' },
+    { "name": 'CONVEYANCE ALLOWANCE', "value": 'CONVEYANCE ALLOWANCE' },
+    { "name": 'SPECIAL ALLOWANCE', "value": 'SPECIAL ALLOWANCE' },
+    { "name": 'STAFF SALARIES', "value": 'STAFF SALARIES' },
+    { "name": 'WELFARE-INSURANCE', "value": 'WELFARE-INSURANCE' },
+    { "name": 'COLLECTION TARGET DEDUCTION', "value": 'COLLECTION TARGET DEDUCTION' },
+    { "name": 'REAL ESTATE DEDUCTION', "value": 'REAL ESTATE DEDUCTION' },
+    { "name": 'TARGET RELEASE', "value": 'TARGET RELEASE' }
+
+  ]
+
+  exceptionHandlingMessages(formName: string, methodName: string, errorMessage: string) {
+    this.toastr.error(errorMessage, "Error!", { timeOut: 2500 });
+  }
+  getFormatDate1(date: Date | string | null): string | null {
+
+    if (!date) return null;
+
+    const dateFormat = sessionStorage.getItem('dateformat');
+
+    if (dateFormat === 'DD-MMM-YYYY') {
+      return this.datepipe.transform(date, 'dd-MM-yyyy');
+    }
+
+    return this.datepipe.transform(date, 'yyyy-MM-dd');
+  }
+  GetUPIClearedData_SummaryReport(
+    fromDate: string | null,
+    toDate: string | null
+  ): Observable<any> {
+
+    let params = new HttpParams()
+      .set('BranchSchema', this.getschemaname())
+      .set('fromdate', fromDate ?? '')
+      .set('todate', toDate ?? '');
+
+    return this.http.get<any>(
+      '/ChequesOnHand/GetUPIClearedData_SummaryReport',
+      { params }
+    );
+  }
+  _OnlineSettlementReportPdf(
+    reportName: string,
+    gridData: any[],
+    gridHeaders: string[],
+    colWidthHeight: any,
+    pageType: 'a4' | 'landscape',
+    betweenOrAsOn: 'Between' | 'As On',
+    fromDate: string,
+    toDate: string,
+    printOrPdf: 'Pdf' | 'Print',
+    amount?: string
+  ): void {
+    debugger;
+
+    const company = this._getCompanyDetails();
+    const address = this.getcompanyaddress();
+    const today = this.pdfProperties('Date');
+    const logo = this.getKapilGroupLogo();
+    const currencySymbol = this.currencysymbol;
+
+    const doc = new jsPDF({
+      orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const totalPagesExp = '{total_pages_count_string}';
+
+    autoTable(doc, {
+      head: [gridHeaders],
+      body: gridData,
+      startY: 40,
+      theme: 'grid',
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: (this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right') ?? 'center',
+        fontSize: Number(this.pdfProperties('Header Fontsize')) || 10
+      },
+      styles: {
+        fontSize: Number(this.pdfProperties('Cell Fontsize')) || 9,
+        cellPadding: 1,
+        overflow: 'linebreak'
+      },
+      columnStyles: colWidthHeight,
+      didDrawPage: (data: any) => {
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(14);
+
+        if (logo) {
+          doc.addImage(logo, 'JPEG', 10, 5, 25, 15);
+        }
+
+        doc.text(company?.pCompanyName ?? '', pageWidth / 2, 10, { align: 'center' });
+
+        doc.setFontSize(8);
+        doc.text(address, pageWidth / 2, 15, { align: 'center' });
+
+        if (company?.pCinNo ?? '') {
+          doc.text(`CIN : ${company?.pCinNo ?? ''}`, pageWidth / 2, 20, { align: 'center' });
+        }
+
+        doc.setFontSize(12);
+        doc.text(reportName, pageWidth / 2, 28, { align: 'center' });
+
+        doc.setFontSize(9);
+
+        if (betweenOrAsOn === 'Between') {
+          doc.text(`Between : ${fromDate}  And  ${toDate}`, 14, 34);
+        } else if (betweenOrAsOn === 'As On' && fromDate) {
+          doc.text(`As On : ${fromDate}`, 14, 34);
+        }
+
+        doc.text(`Branch : ${company?.pBranchname ?? ''}`, pageWidth - 14, 34, { align: 'right' });
+
+        doc.line(10, 36, pageWidth - 10, 36);
+
+        const pageNumber = doc.getNumberOfPages();
+        let pageText = `Page ${pageNumber}`;
+
+        if (typeof doc.putTotalPages === 'function') {
+          pageText += ` of ${totalPagesExp}`;
+        }
+
+        doc.line(10, pageHeight - 12, pageWidth - 10, pageHeight - 12);
+
+        doc.setFontSize(9);
+        doc.text(`Printed on : ${today}`, 10, pageHeight - 6);
+        doc.text(pageText, pageWidth - 10, pageHeight - 6, { align: 'right' });
+      }
+    });
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printOrPdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else {
+      this.setiFrameForPrint(doc);
+    }
+  }
+
+
+  isNullOrEmptyString(value: any): boolean {
+    let isvalid = false;
+    if (value == undefined || value == '' || value == null)
+      isvalid = true;
+    return isvalid;
+  }
+  _downloadReportsPdf(
+    reportName: string,
+    gridData: any[],
+    gridheaders: any[],
+    colWidthHeight: Record<string, any>,  // more specific than any
+    pagetype: 'a4' | 'landscape',
+    betweenorason: string,
+    fromdate: string,
+    todate: string,
+    printorpdf: 'Pdf' | 'Print'
+  ) {
+    const Companyreportdetails = this._getCompanyDetails();
+    const address = this.getcompanyaddress() || '';  // defensive default
+    const username = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
+    const kapil_logo = this.getKapilGroupLogo();
+    const currencyformat = this.currencysymbol || '';
+    const rupeeImage = this._getRupeeSymbol();
+    const today = this.pdfProperties('Date');
+
+    const doc = new jsPDF({
+      format: pagetype,
+      orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+    });
+
+    const lMargin = 15;
+    const rMargin = 15;
+
+    const totalPagesExp = '{total_pages_count_string}';
+
+    autoTable(doc, {
+      columns: gridheaders,
+      body: gridData,
+      theme: 'grid',
+      headStyles: {
+        fillColor: this.pdfProperties('Header Color'),
+        halign: this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right',
+        fontSize: Number(this.pdfProperties('Header Fontsize')) || 10,
+      },
+      styles: {
+        fontSize: Number(this.pdfProperties('Cell Fontsize')) || 8,
+        cellPadding: 1,
+        overflow: 'linebreak',
+        rowPageBreak: 'avoid',
+      } as any,
+      columnStyles: colWidthHeight,
+      startY: 48,
+      showHead: 'everyPage',
+      showFoot: 'lastPage',
+      didDrawPage: (data) => {
+        const pageSize = doc.internal.pageSize;
+        const pageWidth = pageSize.width;
+        const pageHeight = pageSize.height;
+
+
+
+        // Header (only on first page)
+        if (doc.getNumberOfPages() === 1) {
+          doc.setFontSize(15);
+          if (kapil_logo) {
+            doc.addImage(kapil_logo, 'JPEG', 10, 5, 50, 20); // provide width & height
+          }
+
+          doc.setTextColor('black');
+          doc.text(Companyreportdetails?.pCompanyName ?? '', 72, 10);
+          doc.setFontSize(8);
+
+          const address1 = address.substr(0, 115);
+          const address2 = address.substring(115);
+          doc.text(address1, 110, 15, { align: 'center' });
+          doc.text(address2, 110, 18);
+
+          const cinNo = Companyreportdetails?.pCinNo ?? '';
+          if (cinNo) {
+            doc.text('CIN: ' + cinNo, 90, 22);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 30);
+
+          doc.setFontSize(10);
+          const branchName = Companyreportdetails?.pBranchname ?? '';
+          if (branchName) {
+            doc.text('Branch: ' + branchName, 163, 40);
+          }
+
+          if (betweenorason === 'Between') {
+            doc.text(`Between: ${fromdate ?? ''} And ${todate ?? ''}`, 15, 40);
+          } else if (betweenorason === 'As On' && fromdate) {
+            doc.text(`As on: ${fromdate ?? ''}`, 15, 40);
+          }
+
+          doc.setDrawColor(0, 0, 0);
+          doc.line(10, 45, pageWidth - lMargin - rMargin, 45);
+        }
+
+        const internalDoc: any = doc.internal;
+        let pageStr = 'Page ' + internalDoc.getNumberOfPages();
+
+        if (typeof internalDoc.putTotalPages === 'function') {
+          pageStr += ' of ' + totalPagesExp;
+        }
+
+
+        doc.setFontSize(10);
+        doc.setDrawColor(0, 0, 0);
+
+        doc.line(lMargin, pageHeight - 10, pageWidth - rMargin, pageHeight - 10);
+
+        doc.text(`Printed on: ${today}, User: ${username.pEmployeeName || ''}`, lMargin, pageHeight - 5);
+
+        doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
+      },
+      willDrawCell: (data) => {
+        // Bold last row for PS List
+        if (data.row.index === gridData.length - 1 && reportName === 'PS List') {
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'bold');
+        }
+      },
+      didDrawCell: (data) => {
+        const td = data.cell.raw;
+        const rupeeColumns = [1, 2, 3, 4, 5, 6, 12]; // adjust based on your report
+
+        if (td && currencyformat === '₹' && rupeeColumns.includes(data.column.index)) {
+          if (rupeeImage) {
+            // Compute left padding safely
+            let paddingLeft = 2; // default
+            if (typeof data.cell.padding === 'number') {
+              const x = data.cell.x + paddingLeft;
+            } else if (typeof data.cell.padding === 'function') {
+              paddingLeft = data.cell.padding('left');
+            }
+
+            // Coordinates for the image
+            const x = data.cell.x + paddingLeft;
+            const y = data.cell.y + data.cell.height / 2 - 0.5; // vertically center
+            const size = 2.5; // image size in mm
+
+            // Add rupee image
+            doc.addImage(rupeeImage, 'PNG', x, y, size, size);
+          }
+        }
+      },
+
+
+    });
+
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
+    if (printorpdf === 'Pdf') {
+      doc.save(`${reportName}.pdf`);
+    } else if (printorpdf === 'Print') {
+      this.setiFrameForPrint(doc);
+    }
+  }
+  _groupwiseSummaryExport_pendingtransfer(griddata: any, groupdcol: any, groupdsummarycol: string, isgroupedcolDate: boolean) {
+
+    let a: any = {};
+    let keys: any[] = [];
+
+    for (let i = 0; i < griddata.length; i++) {
+      let Jsongroupcol = isgroupedcolDate
+        ? this.getFormatDateGlobal(griddata[i][groupdcol])
+        : griddata[i][groupdcol];
+
+      if (!a[Jsongroupcol]) {
+        keys.push(Jsongroupcol);
+        a[Jsongroupcol] = [];
+      }
+      a[Jsongroupcol].push(griddata[i]);
+    }
+
+    // Add empty row at end of each group
+    for (let key of keys) {
+      a[key].push({});
+    }
+
+    let final: any[] = [];
+
+    for (let key of keys) {
+      let keypair = a[key];
+      let agesum = 0;
+
+      for (let k = 0; k < keypair.length; k++) {
+
+        // Group Header
+        if (k === 0) {
+          let groupcolHead = isgroupedcolDate
+            ? this.getFormatDateGlobal(keypair[k][groupdcol])
+            : keypair[k][groupdcol];
+
+          final.push([
+            {
+              content: '' + groupcolHead + '',
+              colSpan: 13,
+              styles: { halign: 'left', fillColor: "#e6f7ff" }
+            }
+          ]);
+
+          continue;
+        }
+
+        // Empty row (separator)
+        if (k === keypair.length - 1) {
+          final.push([
+            {
+              content: 'Total: ' + this.convertAmountToPdfFormat(agesum),
+              colSpan: 13,
+              styles: { halign: 'center', fillColor: "#ffffb3" }
+            }
+          ]);
+          continue;
+        }
+
+        // Sum
+        agesum += Number(keypair[k][groupdsummarycol] || 0);
+
+        // Normal data row
+        final.push([
+          keypair[k].branchName,
+          keypair[k].chitNo,
+          keypair[k].subscriberName,
+          keypair[k].chitstatus,
+          keypair[k].receiptNo,
+          keypair[k].date,
+          keypair[k].trdate,
+          keypair[k].amount,
+          keypair[k].totaldays,
+          keypair[k].pduemonths,
+          keypair[k].reference_number,
+          keypair[k].cheque_date,
+          keypair[k].bankName
+        ]);
+      }
+    }
+
+    return final;
+  }
+
+  _groupwiseSummaryExportDataTrialBalance(
+    gridData: Record<string, any>[],
+    groupedCol: string,
+    debitField: string,
+    creditField: string,
+    isGroupedColDate = false
+  ): Record<string, any>[] {
+
+    const groupedMap: Record<string, any[]> = {};
+    const keys: string[] = [];
+
+    for (const row of gridData) {
+      const groupValue = isGroupedColDate
+        ? this.getFormatDateGlobal(row[groupedCol])
+        : row[groupedCol];
+
+      if (!groupedMap[groupValue]) {
+        keys.push(groupValue);
+        groupedMap[groupValue] = [];
+      }
+
+      groupedMap[groupValue].push(row);
+    }
+
+    const final: Record<string, any>[] = [];
+
+    for (const key of keys) {
+      const groupRows = groupedMap[key];
+
+      let debitSum = 0;
+      let creditSum = 0;
+
+      final.push({
+        group: {
+          content: key,
+          colSpan: 3,
+          styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold' }
+        }
+      });
+
+      for (const row of groupRows) {
+        debitSum += Number(row[debitField] ?? 0);
+        creditSum += Number(row[creditField] ?? 0);
+        final.push(row);
+      }
+
+      final.push({
+        group: {
+          content: `Total: ${this.currencyformat(debitSum)}   ${this.currencyformat(creditSum)}`,
+          colSpan: 3,
+          styles: { halign: 'right', fillColor: '#ffffb3' }
+        }
+      });
+    }
+
+    return final;
+  }
+
+  _groupwiseSummaryExportDataTB(
+    gridData: Record<string, any>[],
+    groupedCol: string,
+    basicsalary: string,
+    vda: string,
+    arrears: string,
+    absent: string,
+    total: string,
+    bonus: string,
+    sumString: string,
+    isGroupedColDate = false
+  ): Record<string, any>[] {
+
+    const groupedMap: Record<string, Record<string, any>[]> = {};
+    const keys: string[] = [];
+
+    for (const row of gridData) {
+      const groupValue = isGroupedColDate
+        ? this.getFormatDateGlobal(row[groupedCol])
+        : row[groupedCol];
+
+      if (!groupedMap[groupValue]) {
+        keys.push(groupValue);
+        groupedMap[groupValue] = [{ ...row }];
+      }
+
+      groupedMap[groupValue].push(row);
+    }
+
+    for (const key of keys) {
+      groupedMap[key].push({});
+    }
+
+    const final: Record<string, any>[] = [];
+
+    for (const key of keys) {
+      const groupRows = groupedMap[key];
+
+      let basicSum = 0;
+      let vdaSum = 0;
+      let arrearsSum = 0;
+      let absentSum = 0;
+      let totalSum = 0;
+      let bonusSum = 0;
+
+      for (let i = 0; i < groupRows.length; i++) {
+        const row = groupRows[i];
+
+        if (i !== 0 && i !== groupRows.length - 1) {
+          basicSum += Number(row[basicsalary] ?? 0);
+          vdaSum += Number(row[vda] ?? 0);
+          arrearsSum += Number(row[arrears] ?? 0);
+          absentSum += Number(row[absent] ?? 0);
+          totalSum += Number(row[total] ?? 0);
+          bonusSum += Number(row[bonus] ?? 0);
+        }
+
+        if (i === 0) {
+          const groupHeader = isGroupedColDate
+            ? this.getFormatDateGlobal(row[groupedCol])
+            : row[groupedCol];
+
+          row['group'] = {
+            content: `${groupHeader}`,
+            colSpan: 8,
+            styles: { halign: 'left', fillColor: '#e6f7ff', fontStyle: 'bold', fontSize: 9 }
+          };
+        }
+
+        if (i === groupRows.length - 1) {
+          row['group'] = {
+            content:
+              `${this.currencyformat(basicSum)}  ` +
+              `${this.currencyformat(vdaSum)}  ` +
+              `${this.currencyformat(arrearsSum)}  ` +
+              `${this.currencyFormat(absentSum)}  ` +
+              `${this.currencyformat(totalSum)}  ` +
+              `${this.currencyformat(bonusSum)}`,
+            colSpan: 7,
+            styles: { halign: 'right', fillColor: '#ffffb3' }
+          };
+        }
+
+        final.push(row);
+      }
+    }
+
+    return final;
+  }
+
+  _getGroupingGridExportData<T extends Record<string, any>>(
+    gridData: T[],
+    groupedCol: keyof T,
+    isGroupedColDate: boolean
+  ): T[] {
+    debugger;
+
+    if (!gridData?.length) return [];
+
+    const groupedMap = new Map<string, T[]>();
+
+    // 🔹 Grouping
+    for (const item of gridData) {
+      const rawValue = item[groupedCol];
+
+      const groupKey = isGroupedColDate
+        ? this.getFormatDateGlobal(rawValue)
+        : String(rawValue);
+
+      if (!groupedMap.has(groupKey)) {
+        groupedMap.set(groupKey, []);
+      }
+
+      groupedMap.get(groupKey)!.push({ ...item }); // clone to avoid mutation
+    }
+
+    const finalResult: T[] = [];
+
+    // 🔹 Build final array with group headers
+    groupedMap.forEach((items, key) => {
+      items.forEach((item, index) => {
+        if (index === 0) {
+          const groupHeader = isGroupedColDate
+            ? this.getFormatDateGlobal(item[groupedCol])
+            : String(item[groupedCol]);
+
+          (item as any).group = {
+            content: groupHeader,
+            colSpan: 17,
+            styles: {
+              halign: 'left',
+              fillColor: '#e6f7ff'
+            }
+          };
+        }
+
+        finalResult.push(item);
+      });
+    });
+
+    return finalResult;
+  }
 }
 
 
 
 
-function isNullOrEmptyString(pCinNo: any) {
-  throw new Error('Function not implemented.');
-}
+
+
+
+
+
 

@@ -8,6 +8,8 @@ import { CommonService } from './services/common.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +18,14 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideToastr(),
     provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
-    CommonService,
+    //  importProvidersFrom(
+    //   BsDatepickerModule.forRoot()
+    // ),
+     providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    })
     
   ]
 };
