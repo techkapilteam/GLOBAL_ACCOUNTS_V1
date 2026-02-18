@@ -147,6 +147,7 @@
                                             -->
                     </div>
                   </div>
+
                   <div id="UPI1" class="col-md-3" *ngIf="showupi">
                     <div class="form-group">
                       <label>UPI</label>
@@ -182,21 +183,13 @@
                   <div class="col-md-3 cheque ">
                     <div class="form-group">
                       <label id="pChequenumber" title="{{displaychequeno}}">{{displaychequeno}}</label>
-                      <!-- <select class="form-control" formControlName="pChequenumber"
+                      <select class="form-control" formControlName="pChequenumber"
                         [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }" *ngIf="showchequno"
                         (change)="chequenumber_Change()">
                         <option value="" ng-selected="selected">Select</option>
                         <option *ngFor="let chequenumbers of chequenumberslist;" [value]="chequenumbers.pChequenumber">
-                          {{chequenumbers.pchqfromto}}</option>
-                      </select> -->
-
-
-                      <ng-select *ngIf="showchequno" formControlName="pChequenumber" [items]="chequenumberslist"
-                        bindLabel="pchqfromto" bindValue="pchqfromto" placeholder="Select"
-                        [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }"
-                        (change)="chequenumber_Change()">
-                      </ng-select>
-
+                          {{chequenumbers.pChequenumber}}</option>
+                      </select>
                       <input class="form-control" type="text" placeholder="{{displaychequeno}}"
                         formControlName="pChequenumber" appAlphanumeric maxlength="20" *ngIf="!showchequno"
                         (blur)="chequenumber_Change()">
@@ -210,9 +203,9 @@
 
                   <div class="col-md-12 col-xl-12 mb-2">
                     <div id="sbi-bal">
-                      <span class="badge bg-info p-1 fw-light ">Bank Book -
+                      <span class="badge-info badge p-1 font-weight-light ">Bank Book -
                         {{bankbookBalance }} </span>
-                      <span class="badge bg-warning p-1 fw-light text-dark">Pass Book -
+                      <span class="badge-warning badge p-1 font-weight-light">Pass Book -
                         {{bankpassbookBalance }} </span>
                     </div>
                   </div>
@@ -311,11 +304,12 @@
           <div class="border rounded p-2 mt-3">
             <div class="col-md-12 col-xl-12 mt-2 mb-2">
               <fieldset [disabled]="disablegst">
-                <div class="material-switch">
-                  <span class="mr-2" id="pisgstapplicable" title="GST"> GST </span>
-                  <input id="gst-switch" name="gst-switch" formControlName="pisgstapplicable" type="checkbox"
-                    (change)="isgstapplicable_Checked();">
-                  <label for="gst-switch" class="badge-success" data-toggle="collapse" data-target="#gst"></label>
+                <div class="material-switch d-flex align-items-center">
+                  <span class="mr-2 font-weight-bold">GST</span>
+
+                  <input id="gst-switch" type="checkbox" formControlName="pisgstapplicable"
+                    (change)="showgst = paymentVoucherForm.get('pisgstapplicable')?.value">
+                  <label for="gst-switch" class="badge-success" style="margin-left:8px;"></label>
                 </div>
               </fieldset>
               <div id="gst" *ngIf="showgst">
