@@ -745,7 +745,7 @@ istdsapplicableChange(): void {
   }
 
   GetSubLedgerData(pledgerid: any): void {
-    this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(
+    this._AccountingTransactionsService.GetSubLedgerData(pledgerid,'accounts','KAPILCHITS','accounts','KLC01','global').subscribe(
       (json: any) => {
         if (!json) return;
 
