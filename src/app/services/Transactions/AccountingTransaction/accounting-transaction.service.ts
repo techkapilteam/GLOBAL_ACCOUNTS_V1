@@ -551,16 +551,16 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
   }
-  GetSubLedgerData(pledgerid: any): Observable<any> {
-    debugger;
-    const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
-  }
-  // GetSubLedgerData(pledgerid: any,BranchSchema:any,): Observable<any> {
+  // GetSubLedgerData(pledgerid: any): Observable<any> {
   //   debugger;
-  //   const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', BranchSchema);
+  //   const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', this._CommonService.getschemaname());
   //   return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
   // }
+  GetSubLedgerData(pledgerid: any,BranchSchema:any,CompanyCode:any,LocalSchema:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('LocalSchema', LocalSchema).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
+    return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
+  }
   //end.
   GetChitReceiptUPIDetails(upireferencenumber: any): any {//added by uday on 09-09-2024 for chit receipt upi details
     debugger
