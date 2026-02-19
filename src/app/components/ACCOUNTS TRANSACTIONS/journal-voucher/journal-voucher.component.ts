@@ -1209,25 +1209,37 @@ export class JournalVoucherComponent implements OnInit {
   //       this._commonService.showErrorMessage(error);
   //     });
   // }
-  getPartyDetailsbyid(ppartyid: string, partynamename: string): void {
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid).subscribe(
+ getPartyDetailsbyid(
+  ppartyid: string,
+  pStateId: any
+): void {
+
+  this._AccountingTransactionsService
+    .getPartyDetailsbyid(ppartyid, pStateId)
+    .subscribe(
       (json: any) => {
+
         if (!json) return;
 
-        // Reset lists
+        // Reset lists safely
         this.tdslist = json.lstTdsSectionDetails || [];
         this.tdssectionlist = [];
         this.statelist = json.statelist || [];
 
         // Get unique TDS sections
         const uniqueTdsSections = Array.from(
-          new Set(this.tdslist.map((item: any) => item.pTdsSection))
+          new Set(
+            this.tdslist.map((item: any) => item.pTdsSection)
+          )
         );
 
-        // Push unique sections to tdssectionlist
-        this.tdssectionlist = uniqueTdsSections.map(section => ({ pTdsSection: section }));
+        // Assign unique sections
+        this.tdssectionlist =
+          uniqueTdsSections.map(section => ({
+            pTdsSection: section
+          }));
 
-        // Update balances and recalculate GST/TDS
+        // Update balances and recalc GST/TDS
         this.setBalances('PARTY', json.accountbalance ?? 0);
         this.claculategsttdsamounts();
       },
@@ -1235,7 +1247,8 @@ export class JournalVoucherComponent implements OnInit {
         this._commonService.showErrorMessage(error);
       }
     );
-  }
+}
+
 
   gsno_change() {
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstno', true);
