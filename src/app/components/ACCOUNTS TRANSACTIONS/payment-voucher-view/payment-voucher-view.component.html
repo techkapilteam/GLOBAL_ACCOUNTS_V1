@@ -183,13 +183,21 @@
                   <div class="col-md-3 cheque ">
                     <div class="form-group">
                       <label id="pChequenumber" title="{{displaychequeno}}">{{displaychequeno}}</label>
-                      <select class="form-control" formControlName="pChequenumber"
+                      <!-- <select class="form-control" formControlName="pChequenumber"
                         [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }" *ngIf="showchequno"
                         (change)="chequenumber_Change()">
                         <option value="" ng-selected="selected">Select</option>
                         <option *ngFor="let chequenumbers of chequenumberslist;" [value]="chequenumbers.pChequenumber">
-                          {{chequenumbers.pChequenumber}}</option>
-                      </select>
+                          {{chequenumbers.pchqfromto}}</option>
+                      </select>  -->
+
+
+                      <ng-select *ngIf="showchequno" formControlName="pChequenumber" [items]="chequenumberslist"
+                        bindLabel="pChequenumber" bindValue="pChequenumber" placeholder="Select"
+                        [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }"
+                        (change)="chequenumber_Change()">
+                      </ng-select>
+
                       <input class="form-control" type="text" placeholder="{{displaychequeno}}"
                         formControlName="pChequenumber" appAlphanumeric maxlength="20" *ngIf="!showchequno"
                         (blur)="chequenumber_Change()">

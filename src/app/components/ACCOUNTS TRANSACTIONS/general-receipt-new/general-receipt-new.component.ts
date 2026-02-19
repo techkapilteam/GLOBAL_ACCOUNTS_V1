@@ -1417,7 +1417,22 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
 
     public getLoadData() {
 
-        this._Accountservice.GetReceiptsandPaymentsLoadingData('GENERAL RECEIPT', this._CommonService.getschemaname()).subscribe(json => {
+
+
+
+
+
+        this._Accountservice.GetReceiptsandPaymentsLoadingData2(
+            'GENERAL RECEIPT', 
+              this._commonService.getbranchname(),
+      this._commonService.getschemaname(),
+    this._commonService.getCompanyCode(),
+  this._commonService.getBranchCode(),
+'taxes'
+        )
+            .subscribe(
+                {
+                    next:(json:any) => {
 
             //console.log(json)
             if (json != null) {
@@ -1434,9 +1449,11 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
                 this.cashRestrictAmount = json.cashRestrictAmount;
             }
         },
-            (error) => {
+            error:(error) => {
                 this._commonService.showErrorMessage(error);
+            }
             });
+        
     }
 
     public gettypeofpaymentdata(): any {
@@ -1484,8 +1501,6 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
                 this.TempgstshowInclude = true;
             }
             else {
-
-
                 this.TempgstshowExclude = true;
                 this.TempgstshowInclude = false;
             }

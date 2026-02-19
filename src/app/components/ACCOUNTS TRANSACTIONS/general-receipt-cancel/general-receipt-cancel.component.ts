@@ -1,77 +1,150 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
+import { Observable, Subject, of } from 'rxjs';
 
 @Component({
   selector: 'app-general-receipt-cancel',
   standalone: true,
-  imports: [CommonModule, BsDatepickerModule, ReactiveFormsModule, NgxDatatableModule],
-  templateUrl: './general-receipt-cancel.component.html'
+  templateUrl: './general-receipt-cancel.component.html',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgSelectModule,
+    BsDatepickerModule,
+    TableModule
+  ]
 })
 export class GeneralReceiptCancelComponent {
 
-  generalrecipetcancelform!: FormGroup;
-  today: Date = new Date();
-  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  GeneralReceiptCancelForm!: FormGroup;
 
-  show: boolean = false;
-  selectedReceipt: any = null;
+  /** UI flags */
+  show = false;
+  disabletransactiondate = true;
+  disablesavebutton = false;
 
-  receipts = [
-    {
-      id: 1,
-      receiptNo: 'REC001',
-      receivedFrom: 'Kapil Chits Hyderabad Pvt Ltd',
-      receiptDate: '15-Nov-2025',
-      narration: 'Being the cash received from SECUNDERABAD-SAINIKPUR as on 20-08-2025 12:46:53 but not receipted (unknown)',
-      mode: 'Cash',
-      doneBy: 'DIRECT',
-      items: [
-        { sNo: 1, particulars: 'SUSPENSE ACCOUNT(UNKNOWN AMOUNT)', amount: 200 }
-      ]
-    },
-    {
-      id: 2,
-      receiptNo: 'REC002',
-      receivedFrom: 'Kapil Chits Hyderabad Pvt Ltd',
-      receiptDate: '16-Jan-2026',
-      narration: 'Payment received for consulting services',
-      mode: 'Bank Transfer',
-      doneBy: 'DIRECT',
-      items: [
-        { sNo: 1, particulars: 'Service Charges', amount: 100 },
-        { sNo: 2, particulars: 'Consulting Fees', amount: 250 }
-      ]
-    }
-  ];
+  /** Labels */
+  lblcontact = '';
+  lblreceiptdate: Date | null = null;
+  lblnarration = '';
+  lblmodeoftransaction = '';
+  lblemployee = '';
+  currencysymbol = '₹';
+  ButtonType = 'Save';
+
+  /** Dropdowns */
+  receiptdata: any[] = [];
+  authorizedbylist: Observable<any[]> = of([]);
+
+  /** Search */
+  contactSearchevent = new Subject<string>();
+  searchplaceholder = 'Search...';
+  dropDownDataSearchLength = 3;
+
+  /** Table */
+  generealreceiptdata: any[] = [];
+  pageCriteria = {
+    pageSize: 10,
+    offset: 0,
+    totalrows: 0
+  };
+
+  /** Datepicker */
+  dpConfig = {
+    dateInputFormat: 'DD/MM/YYYY',
+    showWeekNumbers: false
+  };
+
+  /** Error messages (index signature safe) */
+  GeneralReceiptCancelErrorMessages: Record<string, string> = {};
 
   constructor(private fb: FormBuilder) {
-    this.dpConfig.maxDate = new Date();
-    this.dpConfig.containerClass = 'theme-dark-blue';
-    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
-    this.dpConfig.showWeekNumbers = false;
+    this.createForm();
+    this.loadInitialData();
   }
 
-  ngOnInit() {
-    this.generalrecipetcancelform = this.fb.group({
-      receiptNo: [''],
-      toDate: [this.today]
+  private createForm(): void {
+    this.GeneralReceiptCancelForm = this.fb.group({
+      receiptid: [null, Validators.required],
+      ppaymentdate: [{ value: null, disabled: true }, Validators.required],
+      cancellationreason: ['', Validators.required],
+      autorizedcontactid: [null, Validators.required]
     });
   }
 
-  onSelectReceipt(event: any) {
-    const receiptId = parseInt(event.target.value, 10);
-    this.selectedReceipt = this.receipts.find(r => r.id === receiptId);
-    this.show = false;
+  private loadInitialData(): void {
+    // mock data – replace with API
+    this.receiptdata = [
+      { receiptid: 1, receiptnumber: 'RC-001' },
+      { receiptid: 2, receiptnumber: 'RC-002' }
+    ];
+
+    this.authorizedbylist = of([
+      {
+        subintroducedid: 1,
+        subintroducedcode: 'EMP01',
+        subintroducedname: 'John',
+        subintroducedmobilenumber: '9999999999',
+        subintroducedemailid: 'john@test.com'
+      }
+    ]);
   }
 
-  onShow() {
-    if (!this.selectedReceipt) {
-      alert('Please select a receipt first');
+  /** Events */
+  Show(): void {
+    this.show = true;
+  }
+
+  getreceiptdata(event: any): void {
+    if (!event) return;
+
+    this.lblcontact = 'Customer Name';
+    this.lblreceiptdate = new Date();
+    this.lblnarration = 'Receipt narration';
+    this.lblmodeoftransaction = 'Cash';
+    this.lblemployee = 'Admin';
+
+    this.generealreceiptdata = [
+      { parentaccountname: 'Cash', totalreceivedamount: 1500 }
+    ];
+
+    this.pageCriteria.totalrows = this.generealreceiptdata.length;
+  }
+
+  subIntroducedGridRowSelect(event: any): void {
+    // optional handler
+  }
+
+  onPrimePageChange(event: any): void {
+    this.pageCriteria.offset = event.first / event.rows;
+    this.pageCriteria.pageSize = event.rows;
+  }
+
+  Save(): void {
+    if (this.GeneralReceiptCancelForm.invalid) {
+      this.GeneralReceiptCancelErrorMessages = {
+        receiptid: 'Receipt is required',
+        ppaymentdate: 'Date is required',
+        cancellationreason: 'Reason is required',
+        autorizedcontactid: 'Authorised by is required'
+      };
       return;
     }
-    this.show = true;
+
+    this.disablesavebutton = true;
+
+    setTimeout(() => {
+      this.disablesavebutton = false;
+      alert('Receipt cancelled successfully');
+    }, 1000);
+  }
+
+  Cancel(): void {
+    this.GeneralReceiptCancelForm.reset();
+    this.show = false;
   }
 }
