@@ -559,7 +559,7 @@ export class AccountingTransactionsService {
   GetSubLedgerData(pledgerid: any, BranchSchema: any, CompanyCode: any, LocalSchema: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('pledgerid', pledgerid).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('LocalSchema', LocalSchema).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
-    return this._CommonService.getAPI('/accountingtransactions/GetSubLedgerData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetSubLedgerData', params, 'YES');
   }
   //end.
   GetChitReceiptUPIDetails(upireferencenumber: any): any {//added by uday on 09-09-2024 for chit receipt upi details

@@ -193,7 +193,11 @@ today = new Date();
       formattedFrom,
       formattedTo,
       pledgerid,
-      psubledgerid || 0
+      psubledgerid || 0,
+      'accounts',
+      'global',
+      'KLC01',
+      'KAPILCHITS'
     ).subscribe({
       next: (res) => {
         this.gridView = res ?? [];

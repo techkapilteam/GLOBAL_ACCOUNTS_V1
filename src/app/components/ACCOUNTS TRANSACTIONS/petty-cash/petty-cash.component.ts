@@ -749,7 +749,7 @@ export class PettyCashComponent implements OnInit {
   }
 
   GetSubLedgerData(pledgerid: any): void {
-    this._AccountingTransactionsService.GetSubLedgerData(pledgerid,this.BranchSchema,this.CompanyCode,this.LocalSchema,this.BranchCode,this.GlobalSchema).subscribe(
+    this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(
       (json: any) => {
         if (!json) return;
 
