@@ -134,11 +134,13 @@ ngOnInit(): void {
   this.getLoadData();
 }
 
-getLoadData(): void {
-
-  this._AccountingTransactionsService
-    .GetPaymentVoucherExistingData()
-    .subscribe({
+  getLoadData(): void {
+    this._AccountingTransactionsService.GetPaymentVoucherExistingData(
+      this._commonService.getschemaname(),
+      this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode()
+    ).subscribe({
       next: (json: any[]) => {
 
         if (!json || json.length === 0) {
