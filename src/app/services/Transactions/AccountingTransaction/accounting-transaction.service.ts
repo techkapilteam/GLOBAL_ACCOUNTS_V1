@@ -414,8 +414,11 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('Contactid', Contactid);
     return this._CommonService.getAPI('/Transactions/ChitTransations/AuctionController/gstvoucherdocuments', params, 'YES')
   }
+GetGlobalBanks(p0: string): Observable<any[]> {const params = new HttpParams().set('GlobalSchema', 'global');
+     return this._CommonService.getAPI('/Accounts/GetGlobalBanks', params, 'YES' );
+    }
 
-  // getpartywisestates(Contactid: any, BranchSchema: any): Observable<any> {
+  // getpettycashexistingdata(GlobalSchema: any, BranchSchema: any): Observable<any> {
   //   const params = new HttpParams().set('partyid', Contactid).set('BranchSchema', BranchSchema);
   //   return this._CommonService.getAPI('/AccountingTransactions/GetPartywiseStates', params, 'YES')
   // }

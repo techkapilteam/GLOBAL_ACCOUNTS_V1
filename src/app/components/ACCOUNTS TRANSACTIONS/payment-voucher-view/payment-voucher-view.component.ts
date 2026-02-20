@@ -867,8 +867,6 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
   // }
   bankName_Change($event: any): void {
     debugger;
-    // const pbankid = $event.target.value;
-    // const pbankid = $event.bankAccountId;
     const pbankid = $event.pbankid;
     const bankname = $event.pbankname;
     
