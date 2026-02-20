@@ -23,8 +23,8 @@ export class AccountingTransactionsService {
   constructor(private http: HttpClient, private _CommonService: CommonService) { }
 
   GetPaymentVoucherExistingData(): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/accountingtransactions/GetPaymentVoucherExistingData', params, 'YES');
+    const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', this._CommonService.getschemaname()).set('CompanyCode', this._CommonService.getCompanyCode()).set('BranchCode', this._CommonService.getBranchCode());
+    return this._CommonService.getAPI('/Accounts/GetPaymentVoucherExistingData', params, 'YES');
   }
 
 
@@ -37,14 +37,17 @@ export class AccountingTransactionsService {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
   GetPettyCashExistingData(): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/accountingtransactions/GetPettyCashExistingData', params, 'YES');
+    const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', this._CommonService.getschemaname())
+      .set('CompanyCode', this._CommonService.getCompanyCode()).set('Branchcode', this._CommonService.getBranchCode());
+    return this._CommonService.getAPI('/Accounts/GetPettyCashExistingData', params, 'YES');
   }
 
-  GetGeneralReceiptExistingData(): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/AccountingTransactions/GetGeneralReceiptsData', params, 'YES');
+  GetGeneralReceiptExistingData(): Observable<any> {const params = new HttpParams().set('GlobalSchema', 'global')
+    .set('BranchSchema', this._CommonService.getschemaname()).set('TaxSchema', 'taxes')
+    .set('CompanyCode', this._CommonService.getCompanyCode()).set('BranchCode', this._CommonService.getBranchCode());
+    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData', params,'YES');
   }
+  
   GetModeoftransactions(): Observable<any> {
     return this._CommonService.getAPI('/AccountingTransactions/GetModeoftransactions', '', 'NO');
   }
@@ -144,9 +147,9 @@ export class AccountingTransactionsService {
   }
 
   getPartyDetailsbyid(ppartyid: any, pStateId: any): Observable<any> {
-     debugger;
+    debugger;
     const params = new HttpParams().set('ppartyid', ppartyid).set('pStateId', pStateId).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/accountingtransactions/getPartyDetailsbyid',params,'YES');
+    return this._CommonService.getAPI('/accountingtransactions/getPartyDetailsbyid', params, 'YES');
   }
 
   GetCashRestrictAmountpercontact(formname: any, branchschema: any, ppartyid: any, trans_date: any): Observable<any> {
