@@ -42,16 +42,21 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/Accounts/GetPettyCashExistingData', params, 'YES');
   }
 
-  GetGeneralReceiptExistingData(): Observable<any> {const params = new HttpParams().set('GlobalSchema', 'global')
-    .set('BranchSchema', this._CommonService.getschemaname()).set('TaxSchema', 'taxes')
-    .set('CompanyCode', this._CommonService.getCompanyCode()).set('BranchCode', this._CommonService.getBranchCode());
-    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData', params,'YES');
+  GetGeneralReceiptExistingData(): Observable<any> {
+    const params = new HttpParams().set('GlobalSchema', 'global')
+      .set('BranchSchema', this._CommonService.getschemaname()).set('TaxSchema', 'taxes')
+      .set('CompanyCode', this._CommonService.getCompanyCode()).set('BranchCode', this._CommonService.getBranchCode());
+    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData', params, 'YES');
   }
-  
   GetModeoftransactions(): Observable<any> {
     return this._CommonService.getAPI('/AccountingTransactions/GetModeoftransactions', '', 'NO');
   }
+  GetGeneralReceiptsData(GlobalSchema: string,BranchSchema: string,TaxSchema: string,CompanyCode: string,
+    BranchCode: string): Observable<any> {
 
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('TaxSchema', TaxSchema)
+      .set('CompanyCode', CompanyCode).set('BranchCode', BranchCode); return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData',params,'YES');
+  }
   GetReceiptsandPaymentsLoadingData(formname: any, BranchSchema: any): Observable<any> {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema);
     return this._CommonService.getAPI('/accountingtransactions/GetReceiptsandPaymentsLoadingData', params, 'YES');

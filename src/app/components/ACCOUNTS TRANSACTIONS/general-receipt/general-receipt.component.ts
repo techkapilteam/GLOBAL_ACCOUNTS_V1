@@ -43,7 +43,13 @@ export class GeneralReceiptComponent implements OnInit {
     this.loading = true;
 
     this.accountingTransactionsService
-      .GetGeneralReceiptExistingData()
+      .GetGeneralReceiptsData(
+        'global',
+        this.commonService.getbranchname(),
+        'taxes',
+        this.commonService.getCompanyCode(),
+        this.commonService.getBranchCode()
+      )
       .subscribe({
         next: (data: any[]) => {
 
@@ -57,7 +63,6 @@ export class GeneralReceiptComponent implements OnInit {
             return;
           }
 
-          // Format and normalize API data
           this.gridView = data.map(item => ({
             ...item,
             preceiptdate:
