@@ -1948,7 +1948,7 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
     }
     GetSubLedgerData(pledgerid: any) {
 
-        this._Accountservice.GetSubLedgerData(pledgerid).subscribe(json => {
+        this._Accountservice.GetSubLedgerData(pledgerid,'accounts','KAPILCHITS','accounts','KLC01','global').subscribe(json => {
 
             if (json != null) {
 

@@ -118,9 +118,13 @@ export class PettyCashComponent implements OnInit {
     containerClass: 'theme-default',
     showWeekNumbers: false
   };
-
-  paymentVoucherForm!: FormGroup;
-  checkValidations: any;
+    BranchSchema: string = "accounts";
+    CompanyCode:string= "";
+    LocalSchema: string = "accounts";
+    BranchCode: string = "";
+    GlobalSchema: string = "global";
+    paymentVoucherForm!: FormGroup;
+    checkValidations: any;
 
   constructor(
     private _FormBuilder: FormBuilder,
@@ -745,7 +749,7 @@ export class PettyCashComponent implements OnInit {
   }
 
   GetSubLedgerData(pledgerid: any): void {
-    this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(
+    this._AccountingTransactionsService.GetSubLedgerData(pledgerid,this.BranchSchema,this.CompanyCode,this.LocalSchema,this.BranchCode,this.GlobalSchema).subscribe(
       (json: any) => {
         if (!json) return;
 
