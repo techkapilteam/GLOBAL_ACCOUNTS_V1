@@ -45,28 +45,28 @@
               </tr>
             </ng-template>
 
-            <!-- Body -->
+            
             <ng-template pTemplate="body" let-row>
               <tr>
 
-                <!-- Actions -->
+                
                 <td class="cell-center">
                   <button class="btn btn-sm btn-primary" (click)="viewRow(row)">
                     View
                   </button>
                 </td>
 
-                <!-- Receipt Date -->
+                
                 <td class="cell-left" [title]="row.preceiptdate">
                   {{ row.preceiptdate }}
                 </td>
 
-                <!-- Receipt No -->
+                
                 <td class="cell-center">
                   {{ row.preceiptid }}
                 </td>
 
-                <!-- Payment Details -->
+               
                 <td class="cell-left">
                   <div *ngIf="row.pmodofreceipt === 'CASH'">
                     {{ row.pmodofreceipt }}
@@ -77,13 +77,13 @@
                   </div>
                 </td>
 
-                <!-- Received Amount -->
+                
                 <td class="cell-right">
                   {{ currencySymbol }}
                   {{ row.ptotalreceivedamount | currency }}
                 </td>
 
-                <!-- Narration -->
+                
                 <td class="cell-left" style="width:400px">
                   <div *ngIf="row.pnarration === ''">
                     -- NA --

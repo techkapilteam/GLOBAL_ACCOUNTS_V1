@@ -3,60 +3,65 @@
     <div class="screen-header">
       <h2>General Receipt Cancel</h2>
     </div>
-
     <div class="screen-content">
       <form [formGroup]="GeneralReceiptCancelForm">
-
-        <!-- Receipt -->
         <div class="row">
           <div class="col-md-4">
             <label class="required-field">Receipt No.</label>
-            <ng-select
-              [items]="receiptdata"
-              bindLabel="receiptnumber"
-              bindValue="receiptid"
-              formControlName="receiptid"
-              (change)="getreceiptdata($event)"
-              [searchable]="true"
-              [clearable]="true"
-              [ngClass]="{ 'is-invalid': GeneralReceiptCancelErrorMessages['receiptid'] }">
+
+            <ng-select [items]="receiptdata" bindLabel="payment_number" bindValue="tbl_trans_pettycash_voucher_id"
+              formControlName="receiptid" [searchable]="true" [clearable]="true" [ngClass]="{
+        'is-invalid':
+          GeneralReceiptCancelForm.get('receiptid')?.invalid &&
+          GeneralReceiptCancelForm.get('receiptid')?.touched
+      }">
             </ng-select>
+
+            <div class="invalid-feedback" *ngIf="
+        GeneralReceiptCancelForm.get('receiptid')?.invalid &&
+        GeneralReceiptCancelForm.get('receiptid')?.touched
+      ">
+              Receipt No is required
+            </div>
           </div>
 
           <div class="col-md-4 mt-4">
-            <button type="button" class="btn btn-primary" (click)="Show()">Show</button>
+            <button type="button" class="btn btn-primary" (click)="Show()"
+              [disabled]="GeneralReceiptCancelForm.get('receiptid')?.invalid">
+              Show
+            </button>
           </div>
 
           <div class="col-md-4">
             <label class="required-field">Date</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="ppaymentdate"
-              bsDatepicker
-              [bsConfig]="dpConfig"
-              readonly
-              [ngClass]="{ 'is-invalid': GeneralReceiptCancelErrorMessages['ppaymentdate'] }">
+            <input type="text" class="form-control" formControlName="ppaymentdate" bsDatepicker [bsConfig]="dpConfig"
+              readonly [ngClass]="{
+        'is-invalid':
+          GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
+          GeneralReceiptCancelForm.get('ppaymentdate')?.touched
+      }">
+
+            <div class="invalid-feedback" *ngIf="
+        GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
+        GeneralReceiptCancelForm.get('ppaymentdate')?.touched
+      ">
+              Date is required
+            </div>
           </div>
         </div>
-
-        <!-- Details -->
         <div *ngIf="show" class="mt-3">
           <div class="row">
-            <div class="col-md-6">Received From: <b>{{ lblcontact }}</b></div>
-            <div class="col-md-6 text-end">Receipt Date: <b>{{ lblreceiptdate | date:'dd/MMM/yyyy' }}</b></div>
+            <div class="col-md-6">
+              Received From: <b>{{ lblcontact }}</b>
+            </div>
+            <div class="col-md-6 text-end">
+              Receipt Date:
+              <b>{{ lblreceiptdate | date:'dd/MMM/yyyy' }}</b>
+            </div>
           </div>
-
-          <!-- Table -->
-          <p-table
-            class="mt-3"
-            [value]="generealreceiptdata"
-            [paginator]="true"
-            [rows]="pageCriteria.pageSize"
-            [first]="pageCriteria.offset * pageCriteria.pageSize"
-            [totalRecords]="pageCriteria.totalrows"
+          <p-table class="mt-3" [value]="generealreceiptdata" [paginator]="true" [rows]="pageCriteria.pageSize"
+            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
             (onPage)="onPrimePageChange($event)">
-
             <ng-template pTemplate="header">
               <tr>
                 <th>S.No</th>
@@ -64,48 +69,56 @@
                 <th class="text-end">Amount</th>
               </tr>
             </ng-template>
-
             <ng-template pTemplate="body" let-row let-i="rowIndex">
               <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ row.parentaccountname }}</td>
-                <td class="text-end">{{ currencysymbol }} {{ row.totalreceivedamount | number:'1.2-2' }}</td>
+                <td class="text-end">
+                  {{ currencysymbol }}
+                  {{ row.totalreceivedamount | number:'1.2-2' }}
+                </td>
               </tr>
             </ng-template>
-
           </p-table>
-
-          <!-- Reason -->
           <div class="row mt-3">
             <div class="col-md-6">
               <label class="required-field">Reason</label>
-              <textarea
-                class="form-control"
-                formControlName="cancellationreason"
-                [ngClass]="{ 'is-invalid': GeneralReceiptCancelErrorMessages['cancellationreason'] }">
+              <textarea class="form-control" formControlName="cancellationreason" [ngClass]="{
+                  'is-invalid':
+                    GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
+                    GeneralReceiptCancelForm.get('cancellationreason')?.touched
+                }">
               </textarea>
+              <div class="invalid-feedback" *ngIf="GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
+                          GeneralReceiptCancelForm.get('cancellationreason')?.touched">
+                Reason is required
+              </div>
             </div>
-
             <div class="col-md-6">
               <label class="required-field">Authorised By</label>
-              <ng-select
-                [items]="(authorizedbylist | async) ?? []"
-                bindLabel="subintroducedname"
-                bindValue="subintroducedid"
-                formControlName="autorizedcontactid"
-                [ngClass]="{ 'is-invalid': GeneralReceiptCancelErrorMessages['autorizedcontactid'] }">
+              <ng-select [items]="(authorizedbylist | async) ?? []" bindLabel="subintroducedname"
+                bindValue="subintroducedid" formControlName="autorizedcontactid" [ngClass]="{
+                  'is-invalid':
+                    GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
+                    GeneralReceiptCancelForm.get('autorizedcontactid')?.touched
+                }">
               </ng-select>
+              <div class="invalid-feedback" *ngIf="GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
+                          GeneralReceiptCancelForm.get('autorizedcontactid')?.touched">
+                Authorised By is required
+              </div>
             </div>
           </div>
 
           <!-- Actions -->
           <div class="text-end mt-3">
-            <button type="button" class="btn btn-secondary me-2" (click)="Cancel()">Cancel</button>
+            <button type="button" class="btn btn-secondary me-2" (click)="Cancel()">
+              Cancel
+            </button>
             <button type="button" class="btn btn-success" (click)="Save()" [disabled]="disablesavebutton">
               {{ ButtonType }}
             </button>
           </div>
-
         </div>
       </form>
     </div>

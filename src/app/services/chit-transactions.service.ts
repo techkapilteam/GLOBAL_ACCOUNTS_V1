@@ -31,7 +31,63 @@ export class ChitTransactionsService {
       'YES'
     );
   }
+   getPaytmAutoreceiptCount(branchcode:any,OfflineSchema:any,trdate:any)
+  {
+    const params = new HttpParams().set('OfflineSchema',OfflineSchema).set('branchcode',branchcode).set('trdate',trdate);
+    return this._commonService.getAPI('/ChitTransactions/getPaytmAutoreceiptCount', params, 'YES');
+  }
 
+
+   updatestatuspatm(transactiondate:any):any{
+    try{
+      debugger;
+      const params = new HttpParams().set('transactiondate',transactiondate);
+      return this._commonService.getAPI('/ChitTransactions/updatestatuspatm',params,'YES');
+    }
+    catch(errormssg){
+      this._commonService.showErrorMessage(errormssg);
+    }
+  }
+
+
+
+     updatestatusCashfree(transactiondate:any):any{
+    try{
+      debugger;
+      const params = new HttpParams().set('transactiondate',transactiondate);
+      return this._commonService.getAPI('/ChitTransactions/updatestatuscashfree',params,'YES');
+    }
+    catch(errormssg){
+      this._commonService.showErrorMessage(errormssg);
+    }
+  }
+
+
+
+   gettransations(OfflineSchema:any,transactiondate:any):any{
+    try{
+      //let params =this._commonService.getschemaname()
+      let params = new HttpParams().set('OfflineSchema',OfflineSchema).set('caoname',this._commonService.getbranchname()).set('transactiondate', transactiondate)
+    return this._commonService.getAPI('/ChitTransactions/GetSQLonlinetransactions',params, 'YES')
+    }
+    catch(errormssg){
+      this._commonService.showErrorMessage(errormssg);
+    }
+  }
+
+
+ 
+  getpaytmautoreceipt(fromdate:any,globalschema:any):any{
+    try{
+      debugger;
+      //let params =this._commonService.getschemaname()
+      let params = new HttpParams().set('strdate',fromdate).set('BranchSchema',  this._commonService.getschemaname()).set('GLOBAL',globalschema)
+    return this._commonService.getAPI('/ChitTransactions/paytmautoreceipt',params, 'YES')
+    }
+    catch(errormssg){
+      this._commonService.showErrorMessage(errormssg);
+    }
+  }
   getCAOpendingtrasferlist(
     BranchSchema: string,
     Caoschema: string,

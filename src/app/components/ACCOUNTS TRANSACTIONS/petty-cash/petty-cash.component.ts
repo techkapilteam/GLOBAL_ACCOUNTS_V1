@@ -118,9 +118,13 @@ export class PettyCashComponent implements OnInit {
     containerClass: 'theme-default',
     showWeekNumbers: false
   };
-
-  paymentVoucherForm!: FormGroup;
-  checkValidations: any;
+    BranchSchema: string = "accounts";
+    CompanyCode:string= "";
+    LocalSchema: string = "accounts";
+    BranchCode: string = "";
+    GlobalSchema: string = "global";
+    paymentVoucherForm!: FormGroup;
+    checkValidations: any;
 
   constructor(
     private _FormBuilder: FormBuilder,
