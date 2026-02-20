@@ -89,16 +89,33 @@ export class AccountingReportsService {
     );
   }
 
-  GetLedgerReport(fromDate: string, toDate: string, pAccountId: string | number, pSubAccountId: string | number): Observable<any> {
+  // GetLedgerReport(fromDate: string, toDate: string, pAccountId: string | number, pSubAccountId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromDate', fromDate)
+  //     .set('toDate', toDate)
+  //     .set('pAccountId', pAccountId.toString())
+  //     .set('pSubAccountId', pSubAccountId.toString())
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/AccountingReports/GetAccountLedgerDetails',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  GetLedgerReport(fromDate: string, toDate: string, pAccountId: string | number, pSubAccountId: string | number,BranchSchema:any,GlobalSchema:any,BranchCode:any,CompanyCode:any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromDate)
       .set('toDate', toDate)
       .set('pAccountId', pAccountId.toString())
       .set('pSubAccountId', pSubAccountId.toString())
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema)
+      .set('BranchCode', BranchCode)
+      .set('CompanyCode', CompanyCode);
 
     return this._CommonService.getAPI(
-      '/Accounting/AccountingReports/GetAccountLedgerDetails',
+      '/Accounts/GetAccountLedgerDetails',
       params,
       'YES'
     );

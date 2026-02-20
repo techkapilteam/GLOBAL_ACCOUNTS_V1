@@ -8,7 +8,7 @@ import { ValidationMessageComponent } from '../../../common/validation-message/v
 
 @Component({
   selector: 'app-online-receipts',
-  imports: [CurrencyPipe, BsDatepickerModule, CommonModule, ValidationMessageComponent, ReactiveFormsModule],
+  imports: [BsDatepickerModule, CommonModule, ValidationMessageComponent, ReactiveFormsModule],
   templateUrl: './online-receipts.component.html',
   styleUrl: './online-receipts.component.css'
 })
