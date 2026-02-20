@@ -137,6 +137,8 @@ today = new Date();
   onLedgerChange(event: any): void {
     const ledgerId = event?.pledgerid;
 
+    this.accountLedgerForm.get('psubledgerid')?.reset();
+
     this.subledgeraccountslist = [];
 
     if (!ledgerId) return;

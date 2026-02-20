@@ -215,7 +215,7 @@ private datePipe = inject(DatePipe);
   this.BRStatmentForm = this.fb.group({
     fromDate: [new Date(this.dbdate!), Validators.required],
     toDate: [new Date()],
-    pbankname: ['', Validators.required],
+    bankAccountId: ['', Validators.required],
     pbankbalance: [0, [Validators.required, Validators.min(0)]],
     pFilename: ['']
   });
@@ -297,11 +297,11 @@ setPageModel(): void {
 
     const fromDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.fromDate)??'';
     const toDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.toDate)??'';
-    const pbankname = this.BRStatmentForm.value.pbankname;
+    const _pBankAccountId = this.BRStatmentForm.value.bankAccountId;
 
     if (!this.chequesInfo) {
 
-      this.brstatement.GetBrStatementReportByDates(fromDate, pbankname).subscribe({
+      this.brstatement.GetBrStatementReportByDates(fromDate, _pBankAccountId,'accounts','KLC01','KAPILCHITS','global').subscribe({
         next: (res: any[]) => {
           this.gridView = res || [];
           this.show = true;
@@ -318,7 +318,7 @@ setPageModel(): void {
 
     } else {
 
-      this.brstatement.GetBrStatementReportByDatesChequesInfo(fromDate, toDate, pbankname)
+      this.brstatement.GetBrStatementReportByDatesChequesInfo(fromDate, toDate, _pBankAccountId)
         .subscribe({
           next: (res: never[]) => {
             this.ChequesInfoDetails = res || [];
@@ -406,23 +406,33 @@ setPageModel(): void {
     return ['jpg', 'png', 'pdf'].includes(ext || '');
   }
 
-  uploadAndProgress(event: any, files: FileList): void {
+  uploadAndProgress(event: Event): void {
 
-    if (!this.validateFile(event.target.value)) {
-      this.commonService.showWarningMessage("Upload jpg, png or pdf files");
-      return;
-    }
+  const input = event.target as HTMLInputElement;
 
-    const formData = new FormData();
-    Array.from(files).forEach(file => {
-      formData.append(file.name, file);
-    });
-
-    this.commonService.fileUploadS3("BPO", formData).subscribe(data => {
-      this.kycFileName = data[0];
-      this.BRStatmentForm.patchValue({ pFilename: this.kycFileName });
-    });
+  if (!input.files || input.files.length === 0) {
+    return;
   }
+
+  if (!this.validateFile(input.value)) {
+    this.commonService.showWarningMessage("Upload jpg, png or pdf files");
+    return;
+  }
+
+  const formData = new FormData();
+
+  Array.from(input.files).forEach(file => {
+    formData.append(file.name, file);
+  });
+
+  this.commonService.fileUploadS3("BPO", formData)
+    .subscribe(data => {
+      this.kycFileName = data[0];
+      this.BRStatmentForm.patchValue({
+        pFilename: this.kycFileName
+      });
+    });
+}
 
   saveWithPrint(): void {
 

@@ -950,6 +950,372 @@ export class CommonService {
     }
 
   }
+  downloadgstprintpdf(
+  reportName: string,
+  month: string,
+  gridData: any[],
+  gridheaders: string[],
+  colWidthHeight: any,
+  pagetype: 'a4' | 'landscape',
+  printorpdf: 'Pdf' | 'Print'
+): void {
+
+  const address: string = this.getcompanyaddress() ?? '';
+  const companyDetails: any = this._getCompanyDetails() ?? {};
+
+  const companyName: string = companyDetails?.pCompanyName ?? '';
+  const cinNo: string = companyDetails?.pCinNo ?? '';
+  const branchName: string = companyDetails?.pBranchname ?? '';
+
+  const doc = new jsPDF({
+    orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const totalPagesExp = '{total_pages_count_string}';
+  const today: string|number = this.pdfProperties('Date') ?? '';
+  const currencyformat: string = this.currencysymbol ?? '';
+  const rupeeImage: any = this._getRupeeSymbol();
+  const kapilLogo: any = this.getKapilGroupLogo();
+
+  const lMargin = 15;
+  const rMargin = 15;
+  let pdfInMM = 0;
+
+  autoTable(doc, {
+    head: [gridheaders],
+    body: gridData,
+    theme: 'grid',
+    startY: 48,
+    showHead: 'everyPage',
+    columnStyles: colWidthHeight,
+
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: this.pdfProperties('Header Alignment')as 'left' | 'center' | 'right',
+      fontSize: Number(this.pdfProperties('Header Fontsize'))
+    },
+
+    styles: {
+      cellPadding: 1,
+      fontSize: Number(this.pdfProperties('Cell Fontsize')),
+      cellWidth: 'wrap',
+      overflow: 'linebreak'
+    },
+
+    didDrawPage: (data: any) => {
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      doc.setFont('helvetica', 'normal');
+
+      if (doc.getNumberOfPages() === 1) {
+
+        doc.setFontSize(15);
+
+        if (pagetype === 'a4') {
+
+          if (kapilLogo) {
+            doc.addImage(kapilLogo, 'JPEG', 10, 5, 20, 20);
+          }
+
+          if (companyName) {
+            doc.text(companyName, pageWidth / 2, 10, { align: 'center' });
+          }
+
+          doc.setFontSize(9);
+
+          if (address) {
+            doc.text(address, pageWidth / 2, 16, { align: 'center' });
+          }
+
+          if (cinNo) {
+            doc.text(`CIN : ${cinNo}`, pageWidth / 2, 21, { align: 'center' });
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, pageWidth / 2, 30, { align: 'center' });
+
+          doc.setFontSize(10);
+
+          if (branchName) {
+            doc.text(`Branch : ${branchName}`, pageWidth - 20, 40, { align: 'right' });
+          }
+
+          pdfInMM = pageWidth;
+          doc.line(10, 45, pdfInMM - 10, 45);
+        }
+
+        if (pagetype === 'landscape') {
+
+          if (kapilLogo) {
+            doc.addImage(kapilLogo, 'JPEG', 15, 5, 25, 20);
+          }
+
+          if (companyName) {
+            doc.text(companyName, pageWidth / 2, 10, { align: 'center' });
+          }
+
+          doc.setFontSize(10);
+
+          if (address) {
+            doc.text(address.substring(0, 150), pageWidth / 2, 16, { align: 'center' });
+          }
+
+          if (cinNo) {
+            doc.text(`CIN : ${cinNo}`, pageWidth / 2, 21, { align: 'center' });
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, pageWidth / 2, 30, { align: 'center' });
+
+          doc.setFontSize(10);
+
+          if (month) {
+            doc.text(`Month : ${month}`, 15, 40);
+          }
+
+          if (branchName) {
+            doc.text(`Branch : ${branchName}`, pageWidth - 15, 40, { align: 'right' });
+          }
+
+          pdfInMM = pageWidth;
+          doc.line(10, 45, pdfInMM - 10, 45);
+        }
+
+      } else {
+        data.settings.margin.top = 20;
+        data.settings.margin.bottom = 15;
+      }
+
+      // Footer
+      let pageText = `Page ${doc.getNumberOfPages()}`;
+      if (typeof doc.putTotalPages === 'function') {
+        pageText += ` of ${totalPagesExp}`;
+      }
+
+      doc.line(10, pageHeight - 10, pdfInMM - 10, pageHeight - 10);
+
+      doc.setFontSize(9);
+      doc.text(`Printed on : ${today}`, 15, pageHeight - 5);
+      doc.text(pageText, pageWidth - 15, pageHeight - 5, { align: 'right' });
+    },
+
+    didDrawCell: (data: any) => {
+
+      if (
+        reportName === 'GST Report' &&
+        data.cell.section === 'body' &&
+        [9, 10, 11, 12].includes(data.column.index)
+      ) {
+        if (data.cell.raw && currencyformat === '₹' && rupeeImage) {
+          const textPos = data.cell.textPos;
+          doc.addImage(
+            rupeeImage,
+            'PNG',
+            textPos.x - data.cell.contentWidth,
+            textPos.y + 0.5,
+            1.5,
+            1.5
+          );
+        }
+      }
+    }
+  });
+
+  if (typeof doc.putTotalPages === 'function') {
+    doc.putTotalPages(totalPagesExp);
+  }
+
+  if (printorpdf === 'Pdf') {
+    doc.save(`${reportName}.pdf`);
+  }
+
+  if (printorpdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
+downloadtdsaccountingpdf(
+  reportName: string,
+  grouptype: string,
+  from: string,
+  to: string,
+  gridData: any[],
+  gridheaders: any[],
+  colWidthHeight: any,
+  pagetype: 'a4' | 'landscape',
+  betweenorason: string,
+  fromdate: string,
+  todate: string,
+  printorpdf: 'Pdf' | 'Print'
+): void {
+
+  const company = this._getCompanyDetails();
+  const address = this.getcompanyaddress();
+  const doc = new jsPDF({
+    orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+  const totalPagesExp = '{total_pages_count_string}';
+  const today = this.pdfProperties('Date');
+  const kapilLogo = this.getKapilGroupLogo();
+  const currencyformat = this.currencysymbol;
+  const rupeeImage = this._getRupeeSymbol();
+
+  const lMargin = 15;
+  const rMargin = 15;
+  let pdfInMM = pagetype === 'landscape' ? 315 : 233;
+
+ autoTable(doc, {
+    head: [gridheaders],
+    body: gridData,
+    theme: 'grid',
+    startY: 48,
+    showHead: 'everyPage',
+    showFoot: 'lastPage',
+    rowPageBreak: 'avoid',
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: this.pdfProperties('Header Alignment')as 'left' | 'center' | 'right',
+      fontSize: Number(this.pdfProperties('Header Fontsize'))
+    },
+    styles: {
+      cellPadding: 1,
+      fontSize: Number(this.pdfProperties('Cell Fontsize')),
+      cellWidth: 'wrap',
+      
+      overflow: 'linebreak'
+    },
+    columnStyles: colWidthHeight,
+
+    didDrawPage: (data: any) => {
+
+      const pageSize = doc.internal.pageSize;
+      const pageWidth = pageSize.getWidth();
+      const pageHeight = pageSize.getHeight();
+
+      if (doc.getNumberOfPages() === 1) {
+
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor('black');
+        doc.addImage(kapilLogo, 'JPEG', 10, 5,20,20);
+
+        if (pagetype === 'a4') {
+
+          doc.setFontSize(15);
+          doc.text(company?.pCompanyName??'', 60, 10);
+
+          doc.setFontSize(8);
+          doc.text(address, 40, 17);
+
+          if (company?.pCinNo??'') {
+            doc.text('CIN : ' + company?.pCinNo, 85, 22);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 30);
+
+          doc.setFontSize(10);
+          doc.text('Branch : ' + company?.pBranchname, 163, 40);
+
+          if (grouptype === 'Between') {
+            doc.text('Between : ' + from + ' And ' + to, 15, 40);
+          } else if (grouptype === 'Ason' && from) {
+            doc.text('As on : ' + from, 15, 40);
+          }
+
+        } else {
+
+          doc.setFontSize(15);
+          doc.text(company?.pCompanyName??'', 110, 10);
+
+          doc.setFontSize(10);
+          doc.text(address.substring(0, 150), 150, 15, { align: 'center' });
+
+          if (company?.pCinNo??'') {
+            doc.text('CIN : ' + company?.pCinNo, 125, 20);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 130, 30);
+
+          doc.setFontSize(10);
+          doc.text('Branch : ' + company?.pBranchname, 235, 40);
+
+          if (grouptype === 'Between') {
+            doc.text('Between : ' + from + ' And ' + to, 15, 40);
+          } else if (grouptype === 'Ason' && from) {
+            doc.text('As on : ' + from, 15, 40);
+          }
+
+          if (reportName === 'TDS Report' || reportName === 'TDS Report (Summary)') {
+            doc.text('Section Name - ' + fromdate, 15, 35);
+          }
+        }
+
+        doc.line(10, 45, pdfInMM - lMargin - rMargin, 45);
+      }
+
+      let pageText = 'Page ' + doc.getNumberOfPages();
+      if (typeof doc.putTotalPages === 'function') {
+        pageText += ' of ' + totalPagesExp;
+      }
+
+      doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
+      doc.setFontSize(10);
+      doc.text('Printed on : ' + today, 10, pageHeight - 5);
+      doc.text(pageText, pageWidth - 35, pageHeight - 5);
+    },
+
+    willDrawCell: (data: any) => {
+      if (data.row.index === gridData.length - 1) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+      }
+    },
+
+    didDrawCell: (data: any) => {
+
+      const currencyColumns =
+        reportName === 'TDS Report'
+          ? [6, 7, 8]
+          : [3, 4, 5];
+
+      if (
+        currencyColumns.includes(data.column.index) &&
+        data.cell.section === 'body' &&
+        data.cell.raw &&
+        currencyformat === '₹'
+      ) {
+
+        const textPos = data.cell.textPos;
+
+        if (data.row.index === gridData.length - 1) {
+          doc.setFont('helvetica', 'bold');
+          doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth - 4, textPos.y + 0.7, 2, 2);
+        } else {
+          doc.setFont('helvetica', 'normal');
+          doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.5, 1.5);
+        }
+      }
+    }
+  });
+
+  if (typeof doc.putTotalPages === 'function') {
+    doc.putTotalPages(totalPagesExp);
+  }
+
+  if (printorpdf === 'Pdf') {
+    doc.save(reportName + '.pdf');
+  }
+
+  if (printorpdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
   setiFrameForPrint(doc: any) {
     debugger;
     const iframe = document.createElement('iframe');
@@ -2601,6 +2967,381 @@ export class CommonService {
 
     return finalResult;
   }
+  _downloadReportsPdfAccountSummaryason(
+  reportName: string,
+  gridData: any[],
+  gridHeaders: any[],
+  columnStyles: any,
+  pageType: 'a4' | 'landscape',
+  betweenOrAsOn: 'Between' | 'As On',
+  fromDate: string,
+  toDate: string,
+  printOrPdf: 'Pdf' | 'Print'
+): void {
+
+  const address = this.getcompanyaddress();
+  const companyDetails = this._getCompanyDetails();
+  const currencySymbol = this.currencysymbol;
+
+  const doc = new jsPDF({
+    orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const rupeeImage = this._getRupeeSymbol();
+  const kapilLogo = this.getKapilGroupLogo();
+  const today = this.pdfProperties('Date');
+  const totalPagesExp = '{total_pages_count_string}';
+
+  const lMargin = 15;
+  const rMargin = 15;
+  let pdfWidth = pageType === 'landscape' ? 315 : 233;
+
+  autoTable(doc, {
+    head: [gridHeaders],
+    body: gridData,
+    theme: 'grid',
+    startY: 48,
+    showHead: 'everyPage',
+    showFoot: 'lastPage',
+
+    styles: {
+      cellPadding: 1,
+      fontSize: Number(this.pdfProperties('Cell Fontsize')),
+      cellWidth: 'wrap',
+      overflow: 'linebreak'
+    },
+
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right' | 'justify',
+      fontSize: Number(this.pdfProperties('Header Fontsize'))
+    },
+
+    columnStyles: columnStyles,
+
+    didDrawPage: (data: any) => {
+
+      const pageSize = doc.internal.pageSize;
+      const pageWidth = pageSize.getWidth();
+      const pageHeight = pageSize.getHeight();
+
+      doc.setFont('helvetica', 'normal');
+
+      // HEADER ONLY FIRST PAGE
+      if (doc.getNumberOfPages() === 1) {
+
+        if (pageType === 'a4') {
+
+          doc.addImage(kapilLogo, 'JPEG', 10, 5,20,20);
+          doc.setFontSize(15);
+          doc.text(companyDetails?.pCompanyName??'', 60, 10);
+
+          doc.setFontSize(8);
+          doc.text(address, 30, 15);
+
+          if (companyDetails?.pCinNo) {
+            doc.text(`CIN : ${companyDetails?.pCinNo??''}`, 85, 20);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 85, 30);
+
+          doc.setFontSize(10);
+          doc.text(`Branch : ${companyDetails?.pBranchname??''}`, 155, 40);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between : ${fromDate} And ${toDate}`, 10, 40);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As On : ${fromDate}`, 10, 40);
+          }
+
+          doc.line(10, 45, (pdfWidth - lMargin - rMargin), 45);
+        }
+
+        if (pageType === 'landscape') {
+
+          doc.addImage(kapilLogo, 'JPEG', 20, 15, 20, 20);
+          doc.setFontSize(15);
+          doc.text(companyDetails?.pCompanyName??'', 110, 20);
+
+          doc.setFontSize(10);
+          doc.text(address, 70, 27);
+
+          if (companyDetails?.pCinNo) {
+            doc.text(`CIN : ${companyDetails?.pCinNo??''}`, 125, 32);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 125, 42);
+
+          doc.setFontSize(10);
+          doc.text(`Branch : ${companyDetails?.pBranchname??''}`, 235, 47);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between : ${fromDate} And ${toDate}`, 15, 47);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As On : ${fromDate}`, 15, 47);
+          }
+
+          doc.line(10, 50, (pdfWidth - lMargin - rMargin), 50);
+        }
+
+      } else {
+        data.settings.margin.top = 20;
+        data.settings.margin.bottom = 15;
+      }
+
+      // FOOTER
+      let pageText = `Page ${doc.getNumberOfPages()}`;
+
+      if (typeof (doc as any).putTotalPages === 'function') {
+        pageText += ` of ${totalPagesExp}`;
+      }
+
+      doc.line(5, pageHeight - 10, (pdfWidth - lMargin - rMargin), pageHeight - 10);
+
+      doc.setFontSize(10);
+      doc.text(`Printed on : ${today}`, data.settings.margin.left, pageHeight - 5);
+      doc.text(pageText, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+    },
+
+    willDrawCell: (data: any) => {
+      if (data.row.index === gridData.length - 1) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+      }
+    },
+
+    didDrawCell: (data: any) => {
+
+      if (
+        (data.column.index === 2 || data.column.index === 3) &&
+        data.cell.section === 'body'
+      ) {
+
+        const cellValue = data.cell.raw;
+
+        if (cellValue && currencySymbol === '₹') {
+
+          const textPos = data.cell.textPos;
+
+          doc.addImage(
+            rupeeImage,
+            textPos.x - data.cell.contentWidth,
+            textPos.y + 0.5,
+            1.5,
+            1.5
+          );
+        }
+      }
+    }
+
+  });
+
+  if (typeof (doc as any).putTotalPages === 'function') {
+    (doc as any).putTotalPages(totalPagesExp);
+  }
+
+  if (printOrPdf === 'Pdf') {
+    doc.save(`${reportName}.pdf`);
+  }
+
+  if (printOrPdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
+_downloadReportsPdfAccountSummary(
+  reportName: string,
+  gridData: any[],
+  gridHeaders: any[],
+  columnStyles: any,
+  pageType: 'a4' | 'landscape',
+  betweenOrAsOn: 'Between' | 'As On',
+  fromDate: string,
+  toDate: string,
+  printOrPdf: 'Pdf' | 'Print'
+): void {
+
+  const address: string = this.getcompanyaddress();
+  const companyDetails = this._getCompanyDetails();
+  const currencySymbol: string|null = this.currencysymbol;
+
+  const doc = new jsPDF({
+    orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const rupeeImage = this._getRupeeSymbol();
+  const kapilLogo = this.getKapilGroupLogo();
+  const today = this.pdfProperties('Date');
+  const totalPagesExp = '{total_pages_count_string}';
+
+  const lMargin = 15;
+  const rMargin = 15;
+  const pdfWidth = pageType === 'landscape' ? 315 : 233;
+
+   autoTable(doc, {
+
+    head: [gridHeaders],
+    body: gridData,
+    theme: 'grid',
+    startY: 48,
+    showHead: 'everyPage',
+    showFoot: 'lastPage',
+
+    styles: {
+      cellPadding: 1,
+      fontSize: Number(this.pdfProperties('Cell Fontsize')),
+      cellWidth: 'wrap',
+      overflow: 'linebreak'
+    },
+
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: this.pdfProperties('Header Alignment') as 'left' | 'center' | 'right' | 'justify',
+      fontSize: Number(this.pdfProperties('Header Fontsize'))
+    },
+
+    columnStyles: columnStyles,
+
+    didDrawPage: (data: any) => {
+
+      const pageSize = doc.internal.pageSize;
+      const pageWidth = pageSize.getWidth();
+      const pageHeight = pageSize.getHeight();
+
+      doc.setFont('helvetica', 'normal');
+
+      // HEADER ONLY ON FIRST PAGE
+      if (doc.getNumberOfPages() === 1) {
+
+        if (pageType === 'a4') {
+
+          doc.addImage(kapilLogo, 'JPEG', 10, 15, 20, 20);
+          doc.setFontSize(15);
+          doc.text(companyDetails?.pCompanyName??'', 60, 20);
+
+          doc.setFontSize(8);
+          doc.text(address, 40, 27, { align: 'left' });
+
+          if (companyDetails?.pCinNo) {
+            doc.text(`CIN : ${companyDetails?.pCinNo??''}`, 85, 32);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 42);
+
+          doc.setFontSize(10);
+          doc.text(`Branch : ${companyDetails?.pBranchname??''}`, 163, 47);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between : ${fromDate} And ${toDate}`, 15, 47);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As On : ${fromDate}`, 15, 47);
+          }
+
+          doc.line(10, 50, pdfWidth - lMargin - rMargin, 50);
+        }
+
+        if (pageType === 'landscape') {
+
+          doc.addImage(kapilLogo, 'JPEG', 10, 5,20,20);
+          doc.setFontSize(15);
+          doc.text(companyDetails?.pCompanyName??'', 110, 10);
+
+          doc.setFontSize(10);
+          const trimmedAddress = address?.substring(0, 150) ?? '';
+          doc.text(trimmedAddress, 150, 15, { align: 'center' });
+
+          if (companyDetails?.pCinNo) {
+            doc.text(`CIN : ${companyDetails?.pCinNo??''}`, 125, 20);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 125, 30);
+
+          doc.setFontSize(10);
+          doc.text(`Branch : ${companyDetails?.pBranchname??''}`, 235, 40);
+
+          if (betweenOrAsOn === 'Between') {
+            doc.text(`Between : ${fromDate} And ${toDate}`, 15, 40);
+          } else if (betweenOrAsOn === 'As On' && fromDate) {
+            doc.text(`As On : ${fromDate}`, 15, 40);
+          }
+
+          doc.line(10, 45, pdfWidth - lMargin - rMargin, 45);
+        }
+
+      } else {
+        data.settings.margin.top = 20;
+        data.settings.margin.bottom = 15;
+      }
+
+      // FOOTER
+      let pageText = `Page ${doc.getNumberOfPages()}`;
+
+      if (typeof (doc as any).putTotalPages === 'function') {
+        pageText += ` of ${totalPagesExp}`;
+      }
+
+      doc.line(5, pageHeight - 10, pdfWidth - lMargin - rMargin, pageHeight - 10);
+
+      doc.setFontSize(10);
+      doc.text(`Printed on : ${today}`, data.settings.margin.left, pageHeight - 5);
+      doc.text(pageText, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+    },
+
+    willDrawCell: (data: any) => {
+      if (data.row.index === gridData.length - 1) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+      }
+    },
+
+    didDrawCell: (data: any) => {
+
+      const isAmountColumn =
+        [2, 3, 4, 5].includes(data.column.index) &&
+        data.cell.section === 'body';
+
+      if (!isAmountColumn) return;
+
+      const cellValue = data.cell.raw;
+
+      if (!cellValue || currencySymbol !== '₹') return;
+
+      const textPos = data.cell.textPos;
+
+      const isLastRow = data.row.index === gridData.length - 1;
+
+      doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
+
+      doc.addImage(
+        rupeeImage,
+        textPos.x - data.cell.contentWidth + (isLastRow ? 3 : 0),
+        textPos.y + (isLastRow ? 0.7 : 0.5),
+        isLastRow ? 2 : 1.5,
+        isLastRow ? 2 : 1.5
+      );
+    }
+
+  });
+
+  if (typeof (doc as any).putTotalPages === 'function') {
+    (doc as any).putTotalPages(totalPagesExp);
+  }
+
+  if (printOrPdf === 'Pdf') {
+    doc.save(`${reportName}.pdf`);
+  }
+
+  if (printOrPdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
 }
 
 

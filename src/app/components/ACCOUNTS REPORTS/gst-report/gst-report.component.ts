@@ -325,6 +325,248 @@ gstReportType(type: string): void {
 
   this.GstReportForm.updateValueAndValidity();
 }
+pdfOrprintGstSummary(printorpdf: 'Pdf' | 'Print'): void {
+
+  const rows: any[] = [];
+  const reportname = 'GST Summary';
+
+  const gridheaders = [
+    'Company',
+    'State',
+    'Trans Type',
+    'From No.',
+    'To No.',
+    'Count'
+  ];
+
+  const colWidthHeight = {
+    0: { cellWidth: 'auto', halign: 'left' },
+    1: { cellWidth: 'auto', halign: 'left' },
+    2: { cellWidth: 'auto', halign: 'left' },
+    3: { cellWidth: 'auto', halign: 'left' },
+    4: { cellWidth: 'auto', halign: 'left' },
+    5: { cellWidth: 'auto', halign: 'left' }
+  };
+
+  this.GstSummaryDetails?.forEach(element => {
+    rows.push([
+      element.companyname,
+      element.state,
+      element.transtype,
+      element.transactionfrom,
+      element.transactionto,
+      element.count
+    ]);
+  });
+
+  this.commonService.downloadgstsummarypdf(
+    reportname,
+    this.month,
+    rows,
+    gridheaders,
+    colWidthHeight,
+    'a4',
+    printorpdf
+  );
+}
+pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
+
+  const rows: any[] = [];
+  const reportname = 'GST Report';
+
+  const gridheaders = [
+    'Chit No.', 'GST No.', 'Name', 'Area', 'City', 'State',
+    'Subscriber Address', 'Transaction Date', 'Transaction No.',
+    'Taxable Amount', 'IGST', 'CGST', 'SGST'
+  ];
+
+  const colWidthHeight = {
+    0: { cellWidth: 20, halign: 'left' },
+    1: { cellWidth: 20, halign: 'left' },
+    2: { cellWidth: 23, halign: 'left' },
+    3: { cellWidth: 22, halign: 'left' },
+    4: { cellWidth: 23, halign: 'left' },
+    5: { cellWidth: 18, halign: 'left' },
+    6: { cellWidth: 'auto', halign: 'center' },
+    7: { cellWidth: 'auto', halign: 'center' },
+    8: { cellWidth: 'auto', halign: 'center' },
+    9: { cellWidth: 15, halign: 'right' },
+    10: { cellWidth: 15, halign: 'right' },
+    11: { cellWidth: 15, halign: 'right' },
+    12: { cellWidth: 15, halign: 'right' }
+  };
+
+  const returnGridData = this.commonService._getGroupingGridExportData(
+    this.GstReportDetails,
+    'parentname',
+    false
+  );
+
+  returnGridData?.forEach((element: { gstnumber: string; chitreceiptdate: any; receiptamount: any; igstamount: any; cgstamount: any; sgstamount: any; group: undefined; groupcode: any; accountname: any; area: any; city: any; state: any; guarantoraddress: any; receiptnumber: any; }) => {
+
+    const gstNumber =
+      element.gstnumber && element.gstnumber !== '[object Object]'
+        ? element.gstnumber
+        : '--NA--';
+
+    const transactionDate = element.chitreceiptdate
+      ? this.commonService.getFormatDateGlobal(element.chitreceiptdate)
+      : '';
+
+    const taxableAmount = this.commonService.convertAmountToPdfFormat(
+      this.commonService.currencyformat(Number(element.receiptamount || 0))
+    );
+
+    const igstAmount = this.commonService.convertAmountToPdfFormat(
+      this.commonService.currencyformat(Number(element.igstamount || 0))
+    );
+
+    const cgstAmount = this.commonService.convertAmountToPdfFormat(
+      this.commonService.currencyformat(Number(element.cgstamount || 0))
+    );
+
+    const sgstAmount = this.commonService.convertAmountToPdfFormat(
+      this.commonService.currencyformat(Number(element.sgstamount || 0))
+    );
+
+    let temp: any[];
+
+    if (element.group !== undefined) {
+      temp = [
+        element.group,
+        element.groupcode,
+        gstNumber,
+        element.accountname,
+        element.area,
+        element.city,
+        element.state,
+        element.guarantoraddress,
+        transactionDate,
+        element.receiptnumber,
+        taxableAmount,
+        igstAmount,
+        cgstAmount,
+        sgstAmount
+      ];
+    } else if (element.groupcode && element.accountname) {
+      temp = [
+        element.groupcode,
+        gstNumber,
+        element.accountname,
+        element.area,
+        element.city,
+        element.state,
+        element.guarantoraddress,
+        transactionDate,
+        element.receiptnumber,
+        taxableAmount,
+        igstAmount,
+        cgstAmount,
+        sgstAmount
+      ];
+    } else {
+      temp = [
+        '', '', '', '', '', '', '', '',
+        'Total',
+        taxableAmount,
+        igstAmount,
+        cgstAmount,
+        sgstAmount
+      ];
+    }
+
+    rows.push(temp);
+  });
+
+  const grandtotal1 = this.GstReportDetails
+    .reduce((sum, c) => sum + Number(c.receiptamount || 0), 0)
+    .toFixed(2);
+
+  const grandtotal2 = this.GstReportDetails
+    .reduce((sum, c) => sum + Number(c.igstamount || 0), 0)
+    .toFixed(2);
+
+  const grandtotal3 = this.GstReportDetails
+    .reduce((sum, c) => sum + Number(c.cgstamount || 0), 0)
+    .toFixed(2);
+
+  const grandtotal4 = this.GstReportDetails
+    .reduce((sum, c) => sum + Number(c.sgstamount || 0), 0)
+    .toFixed(2);
+
+  const totalRow = [
+    '', '', '', '', '', '', '', '',
+    'Grand Total',
+    this.commonService.convertAmountToPdfFormat(this.commonService.currencyFormat(grandtotal1)),
+    this.commonService.convertAmountToPdfFormat(this.commonService.currencyFormat(grandtotal2)),
+    this.commonService.convertAmountToPdfFormat(this.commonService.currencyFormat(grandtotal3)),
+    this.commonService.convertAmountToPdfFormat(this.commonService.currencyFormat(grandtotal4))
+  ];
+
+  rows.push(totalRow);
+
+  this.commonService.downloadgstprintpdf(
+    reportname,
+    this.month,
+    rows,
+    gridheaders,
+    colWidthHeight,
+    'landscape',
+    printorpdf
+  );
+}
+exportSummary(): void {
+
+  const rows: any[] = [];
+
+  this.GstSummaryDetails?.forEach(element => {
+    rows.push({
+      Company: element.companyname,
+      State: element.state,
+      'Transaction Type': element.transtype,
+      'From No.': element.transactionfrom,
+      'To No.': element.transactionto,
+      Count: element.count
+    });
+  });
+
+  this.commonService.exportAsExcelFile(rows, 'GSTSummary');
+}
+export(): void {
+
+  const rows: any[] = [];
+
+  this.GstReportDetails?.forEach(element => {
+
+    const gstnumber =
+      element.gstnumber && element.gstnumber !== '[object Object]'
+        ? element.gstnumber
+        : '--NA--';
+
+    const datereceipt = element.chitreceiptdate
+      ? this.commonService.getFormatDateGlobal(element.chitreceiptdate)
+      : '';
+
+    rows.push({
+      'Parent Name': element.parentname,
+      'GSTNo.': gstnumber,
+      'Chit No.': element.groupcode,
+      Name: element.accountname,
+      Area: element.area,
+      City: element.city,
+      State: element.state,
+      'Subscriber Name': element.guarantoraddress,
+      'Transaction Date': datereceipt,
+      'Transaction No.': element.receiptnumber,
+      'Taxable Amount': Number(element.receiptamount || 0),
+      IGST: Number(element.igstamount || 0),
+      CGST: Number(element.cgstamount || 0),
+      SGST: Number(element.sgstamount || 0)
+    });
+  });
+
+  this.commonService.exportAsExcelFile(rows, 'GST');
+}
 }
 
 
