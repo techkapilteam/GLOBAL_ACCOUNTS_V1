@@ -688,7 +688,16 @@ export class JournalVoucherComponent implements OnInit {
   getLoadData() {
 
     // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('JOURNAL VOUCHER', this._commonService.getschemaname()).subscribe((json:any) => {
-    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('JOURNAL VOUCHER', this._commonService.getschemaname()).subscribe((json: any) => {
+    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData2(
+      'JOURNAL VOUCHER',
+      this._commonService.getbranchname(),
+      this._commonService.getschemaname(),
+    this._commonService.getCompanyCode(),
+  this._commonService.getBranchCode(),
+'taxes')
+.subscribe(
+  {
+    next:(json: any) => {
 
       //console.log(json)
       if (json != null) {
@@ -710,10 +719,11 @@ export class JournalVoucherComponent implements OnInit {
         //this.titleDetails = this.titleDetails.FT;
       }
     },
-      (error: any) => {
+      error:(error: any) => {
 
         this._commonService.showErrorMessage(error);
-      });
+     
+   } });
   }
 
   gettypeofpaymentdata(): any {
@@ -814,13 +824,16 @@ export class JournalVoucherComponent implements OnInit {
 
   GetSubLedgerData(pledgerid: any) {
     debugger
-    this._AccountingTransactionsService.GetSubLedgerDataACCOUNTS(pledgerid,
+    this._AccountingTransactionsService.GetSubLedgerData3(pledgerid,
 
       this._commonService.getbranchname(),
         this._commonService.getCompanyCode(),
+        this._commonService.getbranchname(),
         this._commonService.getBranchCode(),
         this._commonService.getschemaname()
-    ).subscribe((json: any) => {
+    ).subscribe(
+      {
+      next:(json: any) => {
 
       //console.log(json)
       if (json != null) {
@@ -857,10 +870,12 @@ export class JournalVoucherComponent implements OnInit {
         //this.titleDetails = this.titleDetails.FT;
       }
     },
-      (error: any) => {
+     error: (error: any) => {
 
         this._commonService.showErrorMessage(error);
-      });
+     
+   }
+   });
   }
   subledger_Change($event: any) {
 

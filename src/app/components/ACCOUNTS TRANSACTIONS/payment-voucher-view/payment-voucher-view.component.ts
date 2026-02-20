@@ -868,9 +868,12 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
   bankName_Change($event: any): void {
     debugger;
     // const pbankid = $event.target.value;
-    const pbankid = $event.bankAccountId;
+    // const pbankid = $event.bankAccountId;
+    const pbankid = $event.pbankid;
+    const bankname = $event.pbankname;
+    
 
-
+  this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
 
     this.upinameslist = [];
     this.chequenumberslist = [];
@@ -880,8 +883,8 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     if (pbankid && pbankid != '') {
       // const bankname = $event.target.options[$event.target.selectedIndex].text;
       this.GetBankDetailsbyId(pbankid);
-      //  this.getBankBranchName(pbankid);
-      // this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
+        this.getBankBranchName(pbankid);
+       this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
 
     }
     else {
@@ -1013,9 +1016,10 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     this._AccountingTransactionsService
-      .GetSubLedgerDataACCOUNTS(pledgerid,
+      .GetSubLedgerData3(pledgerid,
         this._commonService.getbranchname(),
         this._commonService.getCompanyCode(),
+        this._commonService.getbranchname(),
         this._commonService.getBranchCode(),
         this._commonService.getschemaname()
 
@@ -1184,18 +1188,21 @@ debugger
       
     }
 
-  getBankBranchName(pbankid: any) {
-    debugger
-    let data = this.banklist.filter(
-      (res: { pbankid: any }) =>
-        res.pbankid == pbankid
-    );
+getBankBranchName(pbankid: any) {
+  const bank = this.banklist.find(
+    (res: { pbankid: any }) => res.pbankid == pbankid
+  );
 
-
-    this.paymentVoucherForm['controls']['pbranchname'].setValue(data[0].pbranchname);
-    this.setBalances('BANKBOOK', data[0].pbankbalance);
-    this.setBalances('PASSBOOK', data[0].pbankpassbookbalance);
+  if (!bank) {
+    console.warn('Bank not found for id:', pbankid);
+    return;
   }
+
+  this.paymentVoucherForm.controls['pbranchname'].setValue(bank.pbranchname);
+  this.setBalances('BANKBOOK', bank.pbankbalance);
+  this.setBalances('PASSBOOK', bank.pbankpassbookbalance);
+}
+
   // setenableordisabletdsgst(ppartyname, changetype) {
 
 
@@ -1228,8 +1235,8 @@ debugger
   //   }
   // }
 
-  setenableordisabletdsgst(ppartyname: any, changetype: string): void {
-
+  setenableordisabletdsgst(ppartyname: any, changetype: string) {
+debugger
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     // reset GST/TDS
@@ -1422,7 +1429,7 @@ debugger
 
 
   partyName_Change($event: any): void {
-
+debugger
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
     const ppartyid = $event?.ppartyid;
 
@@ -1451,11 +1458,15 @@ debugger
 
     // get restricted cash amount
     this._AccountingTransactionsService
-      .GetCashRestrictAmountpercontact(
+      .GetCashRestrictAmountpercontact1(
         'PAYMENT VOUCHER',
-        this._commonService.getschemaname(),
+        'KGMS',
+        this._commonService.getbranchname(),
         ppartyid,
-        trans_date
+        trans_date,
+        this._commonService.getCompanyCode(),
+        this._commonService.getschemaname(),
+        this._commonService.getBranchCode()
       )
       .subscribe((amt: number) => {
         this.availableAmount = this.cashRestrictAmount - amt;

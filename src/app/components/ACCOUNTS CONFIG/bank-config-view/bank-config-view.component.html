@@ -73,17 +73,18 @@
             icon="pi pi-pencil"
             class="p-button-text p-button-sm"
             (click)="editHandler($event, row, rowIndex)">
+            <i class="pi pi-pencil"></i>
           </button>
         </td>
 
         <!-- Bank Name -->
-        <td>{{ row.pBankname }}</td>
+        <td>{{ row.bankName }}</td>
 
         <!-- Account No -->
-        <td>{{ row.pAccountnumber }}</td>
+        <td>{{ row.account_number }}</td>
 
         <!-- Account Name -->
-        <td>{{ row.pAccountname }}</td>
+        <td>{{ row.account_name }}</td>
 
         <!-- Status -->
         <td>

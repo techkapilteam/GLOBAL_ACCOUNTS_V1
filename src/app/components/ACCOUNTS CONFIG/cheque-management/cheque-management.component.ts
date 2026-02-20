@@ -49,7 +49,13 @@ export class ChequeManagementComponent {
 
   getChequeManagementGridData(): void {
     this.loading = true;
-    this.accountingService.ViewChequeManagementDetails().subscribe({
+    this.accountingService.ViewChequeManagementDetails(
+      this.commonService.getbranchname(),
+      this.commonService.getschemaname(),
+      this.commonService.getCompanyCode(),
+      this.commonService.getBranchCode(),
+      1,1
+    ).subscribe({
       next: (data: any[]) => {
         this.loading = false;
         this.gridData = data ?? [];
@@ -82,7 +88,8 @@ export class ChequeManagementComponent {
       return;
     }
 
-    const isActive = row.pChqegeneratestatus ? 'false' : 'true';
+    // const isActive = row.pChqegeneratestatus ? 'false' : 'true';
+    const isActive = row.pchequegeneratestatus ? 'false' : 'true';
 
     const item = {
       pBankId: row.pBankId,
@@ -164,16 +171,17 @@ export class ChequeManagementComponent {
     };
 
     this.gridData.forEach(e => {
-      const status = e.pChqegeneratestatus ? 'Active' : 'Generate Cheques';
+      // const status = e.pChqegeneratestatus ? 'Active' : 'Generate Cheques';
+      const status = e.pchequegeneratestatus ? 'Active' : 'Generate Cheques';
       rows.push([
-        e.pChqbookid,
-        e.pNoofcheques,
-        e.pChequefrom,
-        e.pChequeto,
+        e.pchequebookid,
+        e.pnoofcheques,
+        e.pchequefromnumber,
+        e.pchequetonumber,
         status,
-        e.pBankname,
-        e.pAccountnumber,
-        e.pchequestatus
+        e.pbankname,
+        e.paccountnumber,
+        e.pstatus
       ]);
     });
 
@@ -189,14 +197,14 @@ export class ChequeManagementComponent {
 
   excel(): void {
     const rows = this.gridData.map(e => ({
-      'Book ID': e.pChqbookid,
-      'No. of Cheques': e.pNoofcheques,
-      'From': e.pChequefrom,
-      'To': e.pChequeto,
-      'Cheque Status': e.pChqegeneratestatus ? 'Active' : 'Generate Cheques',
-      'Bank Name': e.pBankname,
-      'Account No.': e.pAccountnumber,
-      'Book Status': e.pchequestatus
+      'Book ID': e.pchequebookid,
+      'No. of Cheques': e.pnoofcheques,
+      'From': e.pchequefromnumber,
+      'To': e.pchequetonumber,
+      'Cheque Status': e.pchequegeneratestatus ? 'Active' : 'Generate Cheques',
+      'Bank Name': e.pbankname,
+      'Account No.': e.paccountnumber,
+      'Book Status': e.pstatus
     }));
 
     this.commonService.exportAsExcelFile(rows, 'Cheque Management');

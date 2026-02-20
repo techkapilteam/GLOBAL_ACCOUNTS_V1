@@ -83,7 +83,7 @@
                       </select> -->
 
                       <ng-select id="bankName" title="Bank Name" [items]="banklist" formControlName="pbankname"
-                        bindLabel="bankName" bindValue="bankAccountId" [multiple]=false placeholder="Select"
+                        bindLabel="pbankname" bindValue="pbankname" [multiple]=false placeholder="Select"
                         [searchable]=true [clearable]=false dropdownPosition="bottom" [clearOnBackspace]=true
                         (change)="bankName_Change($event)">
 
@@ -209,14 +209,27 @@
                   </div>
 
 
-                  <div class="col-md-12 col-xl-12 mb-2">
+                  <!-- <div class="col-md-12 col-xl-12 mb-2">
                     <div id="sbi-bal">
                       <span class="badge-info badge p-1 font-weight-light ">Bank Book -
                         {{bankbookBalance }} </span>
                       <span class="badge-warning badge p-1 font-weight-light">Pass Book -
                         {{bankpassbookBalance }} </span>
                     </div>
-                  </div>
+                  </div> -->
+
+                  <div class="col-md-12 col-xl-12 mb-2">
+  <div id="sbi-bal">
+    <span class="badge bg-info p-1 fw-light">
+      Bank Book - {{ bankbookBalance }}
+    </span>
+
+    <span class="badge bg-warning p-1 fw-light">
+      Pass Book - {{ bankpassbookBalance }}
+    </span>
+  </div>
+</div>
+
                 </div>
               </div>
             </div>
