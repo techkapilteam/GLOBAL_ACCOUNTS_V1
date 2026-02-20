@@ -1236,17 +1236,20 @@ getBankBranchName(pbankid: any) {
   // }
 
   setenableordisabletdsgst(ppartyname: any, changetype: string) {
-debugger
+    debugger
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     // reset GST/TDS
     group?.get('pistdsapplicable')?.setValue(false);
     group?.get('pisgstapplicable')?.setValue(false);
 
-    const data = this.paymentslist.find(
-      (x: { ppartyname: any; pistdsapplicable: boolean; pisgstapplicable: boolean; pgstcalculationtype: any; ptdscalculationtype: any }) =>
-        x.ppartyname === ppartyname
-    );
+    // const data = this.paymentslist.find(
+    //   (x: { ppartyname: any; pistdsapplicable: boolean; pisgstapplicable: boolean; pgstcalculationtype: any; ptdscalculationtype: any }) =>
+    //     x.ppartyname === ppartyname
+    // );
+
+
+ let data = this.paymentslist.filter((x:any) => x.ppartyname == ppartyname);
 
     if (data) {
       this.disablegst = true;
