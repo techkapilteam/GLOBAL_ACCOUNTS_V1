@@ -4,100 +4,122 @@
       <h2>General Receipt Cancel</h2>
     </div>
     <div class="screen-content">
-
-      <form [formGroup]="generalrecipetcancelform" autocomplete="off">
-        <div class="row g-3">
+      <form [formGroup]="GeneralReceiptCancelForm">
+        <div class="row">
           <div class="col-md-4">
-            <label class="form-label required-field">Receipt No.</label>
-            <select class="form-select" formControlName="receiptNo" (change)="onSelectReceipt($event)">
-              <option value="" disabled selected>Select</option>
-              <option *ngFor="let r of receipts" [value]="r.id">{{ r.receiptNo }}</option>
-            </select>
-          </div>
+            <label class="required-field">Receipt No.</label>
 
-          <div class="col-md-4 mt-4 pt-4">
-            <button type="button" class="btn btn-primary" (click)="onShow()">Show</button>
-          </div>
+            <ng-select [items]="receiptdata" bindLabel="payment_number" bindValue="tbl_trans_pettycash_voucher_id"
+              formControlName="receiptid" [searchable]="true" [clearable]="true" [ngClass]="{
+        'is-invalid':
+          GeneralReceiptCancelForm.get('receiptid')?.invalid &&
+          GeneralReceiptCancelForm.get('receiptid')?.touched
+      }">
+            </ng-select>
 
-          <div class="col-md-4">
-            <label class="form-label required-field">Date</label>
-            <input type="text" class="form-control w-auto" formControlName="toDate"
-              [bsConfig]="dpConfig" bsDatepicker placement="bottom">
-          </div>
-        </div>
-
-        <div *ngIf="show && selectedReceipt" class="mt-3 border rounded shadow-sm p-3 bg-light">
-
-          <div class="row mb-2">
-            <div class="col-md-6"><b>Received From:</b> {{ selectedReceipt.receivedFrom }}</div>
-            <div class="col-md-6 text-end"><b>Receipt Date:</b> {{ selectedReceipt.receiptDate }}</div>
-          </div>
-
-          <ngx-datatable class="bootstrap table-bordered"
-                         [rows]="selectedReceipt.items"
-                         [headerHeight]="40"
-                         [rowHeight]="'auto'"
-                         [columnMode]="'standard'"
-                         [scrollbarH]="false">
-
-            <!-- S.No Column -->
-            <ngx-datatable-column name="S.No" prop="sNo" [width]="50" [resizeable]="false" [sortable]="false">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <div style="text-align:center; padding:0 5px;">{{ row.sNo }}</div>
-              </ng-template>
-            </ngx-datatable-column>
-
-            <!-- Particulars Column -->
-            <ngx-datatable-column name="Particulars" prop="particulars" [resizeable]="true" sortable="false">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <div style="padding-left:5px;">{{ row.particulars }}</div>
-              </ng-template>
-            </ngx-datatable-column>
-
-            <!-- Amount Column -->
-            <ngx-datatable-column name="Amount" prop="amount" [width]="120" [resizeable]="false" sortable="false">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <div style="text-align:right; padding-right:5px;">₹ {{ row.amount | number:'1.2-2' }}</div>
-              </ng-template>
-            </ngx-datatable-column>
-
-          </ngx-datatable>
-
-          <div class="mt-2" style="display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start;">
-            <div style="flex:2; min-width:300px;">
-              <b>Narration:</b> {{ selectedReceipt.narration }}
-            </div>
-            <div style="flex:1; min-width:150px;">
-              <b>Mode:</b> {{ selectedReceipt.mode }}
-            </div>
-            <div style="flex:1; min-width:150px;">
-              <b>Done By:</b> {{ selectedReceipt.doneBy }}
+            <div class="invalid-feedback" *ngIf="
+        GeneralReceiptCancelForm.get('receiptid')?.invalid &&
+        GeneralReceiptCancelForm.get('receiptid')?.touched
+      ">
+              Receipt No is required
             </div>
           </div>
 
-        </div>
-
-        <div *ngIf="show && selectedReceipt" class="row mt-3 g-3 border rounded p-3 bg-light">
-          <div class="col-md-6">
-            <label class="form-label required-field">Reason</label>
-            <textarea class="form-control" maxlength="250"></textarea>
+          <div class="col-md-4 mt-4">
+            <button type="button" class="btn btn-primary" (click)="Show()"
+              [disabled]="GeneralReceiptCancelForm.get('receiptid')?.invalid">
+              Show
+            </button>
           </div>
+
           <div class="col-md-4">
-            <label class="form-label required-field">Authorized By</label>
-            <select class="form-select">
-              <option value="" disabled selected>Select</option>
-              <option>John Manager</option>
-              <option>Alice Supervisor</option>
-              <option>Bob Admin</option>
-            </select>
-          </div>
+            <label class="required-field">Date</label>
+            <input type="text" class="form-control" formControlName="ppaymentdate" bsDatepicker [bsConfig]="dpConfig"
+              readonly [ngClass]="{
+        'is-invalid':
+          GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
+          GeneralReceiptCancelForm.get('ppaymentdate')?.touched
+      }">
 
-          <div class="d-flex justify-content-end gap-2 mt-3">
-            <button type="reset" class="btn btn-secondary">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <div class="invalid-feedback" *ngIf="
+        GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
+        GeneralReceiptCancelForm.get('ppaymentdate')?.touched
+      ">
+              Date is required
+            </div>
           </div>
         </div>
+        <div *ngIf="show" class="mt-3">
+          <div class="row">
+            <div class="col-md-6">
+              Received From: <b>{{ lblcontact }}</b>
+            </div>
+            <div class="col-md-6 text-end">
+              Receipt Date:
+              <b>{{ lblreceiptdate | date:'dd/MMM/yyyy' }}</b>
+            </div>
+          </div>
+          <p-table class="mt-3" [value]="generealreceiptdata" [paginator]="true" [rows]="pageCriteria.pageSize"
+            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+            (onPage)="onPrimePageChange($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>S.No</th>
+                <th>Particulars</th>
+                <th class="text-end">Amount</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ row.parentaccountname }}</td>
+                <td class="text-end">
+                  {{ currencysymbol }}
+                  {{ row.totalreceivedamount | number:'1.2-2' }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label class="required-field">Reason</label>
+              <textarea class="form-control" formControlName="cancellationreason" [ngClass]="{
+                  'is-invalid':
+                    GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
+                    GeneralReceiptCancelForm.get('cancellationreason')?.touched
+                }">
+              </textarea>
+              <div class="invalid-feedback" *ngIf="GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
+                          GeneralReceiptCancelForm.get('cancellationreason')?.touched">
+                Reason is required
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="required-field">Authorised By</label>
+              <ng-select [items]="(authorizedbylist | async) ?? []" bindLabel="subintroducedname"
+                bindValue="subintroducedid" formControlName="autorizedcontactid" [ngClass]="{
+                  'is-invalid':
+                    GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
+                    GeneralReceiptCancelForm.get('autorizedcontactid')?.touched
+                }">
+              </ng-select>
+              <div class="invalid-feedback" *ngIf="GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
+                          GeneralReceiptCancelForm.get('autorizedcontactid')?.touched">
+                Authorised By is required
+              </div>
+            </div>
+          </div>
 
+          <!-- Actions -->
+          <div class="text-end mt-3">
+            <button type="button" class="btn btn-secondary me-2" (click)="Cancel()">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-success" (click)="Save()" [disabled]="disablesavebutton">
+              {{ ButtonType }}
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   </div>

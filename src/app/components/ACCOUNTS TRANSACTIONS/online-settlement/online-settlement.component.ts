@@ -1,72 +1,123 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormsModule, FormGroup } from '@angular/forms';
-import { NgxDatatableModule, SelectionType } from '@swimlane/ngx-datatable';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
+import { HttpClient } from '@angular/common/http';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-online-settlement',
   standalone: true,
-  imports: [NgxDatatableModule, CommonModule, BsDatepickerModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,  
+    BsDatepickerModule,
+    TableModule,
+    NgSelectModule
+  ],
   templateUrl: './online-settlement.component.html',
   styleUrls: ['./online-settlement.component.css'],
   providers: [DatePipe]
 })
 export class OnlineSettlementComponent implements OnInit {
-  SelectionType = SelectionType;
+
+  
   ChequesInBankForm!: FormGroup;
-  today: string = '';
+
+  
+  gridData: any[] = [];
   selected: any[] = [];
 
-  private datePipe = inject(DatePipe);
+  
+  bankList: any[] = [];
+  PaytmList: any[] = [];
 
-  // Datepicker configuration
-  dpConfig: Partial<BsDatepickerConfig> = {};
+ 
+  currencySymbol = '₹';
+  bankbalance = 0;
+  bankbalancetype = 'Dr';
+  brsdate = '';
 
+  
+  today = '';
   receiptDate!: Date;
   clearDate!: Date;
 
-  rows = [
-    {
-      receiptNo: 'CR123',
-      referenceNo: 'REF456',
-      branch: 'Hyderabad',
-      amount: 5000,
-      party: 'Ramesh',
-      receiptDate: '12/01/2026',
-      depositedDate: '13/01/2026',
-      clearDate: '23/01/2026',
-      receiptId: 'R001',
-      mode: 'CHEQUE',
-      upi: 'Paytm'
-    },
-    {
-      receiptNo: 'CR124',
-      referenceNo: 'REF999',
-      branch: 'Bangalore',
-      amount: 7500,
-      party: 'Suresh',
-      receiptDate: '15/01/2026',
-      depositedDate: '16/01/2026',
-      clearDate: '—',
-      receiptId: 'R002',
-      mode: 'UPI',
-      upi: 'PhonePe'
-    }
-  ];
+  dpConfig: Partial<BsDatepickerConfig> = {};
+  ptransactiondateConfig: Partial<BsDatepickerConfig> = {};
+  pchequecleardateConfig: Partial<BsDatepickerConfig> = {};
 
-  ngOnInit() {
-    const today = new Date();
-    this.today = this.formatDate(today);
-    this.receiptDate = today;
-    this.clearDate = today;
+  private datePipe = inject(DatePipe);
+  private http = inject(HttpClient);
+  private fb = inject(FormBuilder);
+
+  
+  ngOnInit(): void {
+
+    const todayDate = new Date();
+    this.today = this.formatDate(todayDate);
+
+    
+    this.ChequesInBankForm = this.fb.group({
+      ptransactiondate: [todayDate],
+      pchequereceiptdate: [todayDate],
+      pchequecleardate: [todayDate],
+      bankname: [''],
+      paytmname: [''],
+      chequeintype: ['A'],
+      searchtext: ['']
+    });
 
     this.dpConfig = {
       dateInputFormat: 'DD-MMM-YYYY',
-      containerClass: 'theme-dark-blue',
       showWeekNumbers: false,
       maxDate: new Date()
     };
+
+    this.ptransactiondateConfig = this.dpConfig;
+    this.pchequecleardateConfig = this.dpConfig;
+
+    this.loadBanks();
+    this.loadDataFromBackend();
+  }
+
+  loadBanks(): void {
+    this.http.get<any[]>('YOUR_BANK_API_URL')
+      .subscribe({
+        next: (res) => {
+          this.bankList = res || [];
+          this.PaytmList = res || []; 
+        },
+        error: (err) => {
+          console.error('Bank API Error:', err);
+        }
+      });
+  }
+
+  loadDataFromBackend(): void {
+    this.http.get<any[]>('YOUR_GRID_API_URL')
+      .subscribe({
+        next: (response) => {
+          this.gridData = response || [];
+        },
+        error: (error) => {
+          console.error('Grid API Error:', error);
+        }
+      });
+  }
+
+  onSearch(value: string): void {
+    if (!value) {
+      this.loadDataFromBackend();
+      return;
+    }
+
+    const search = value.toLowerCase();
+    this.gridData = this.gridData.filter(item =>
+      JSON.stringify(item).toLowerCase().includes(search)
+    );
   }
 
   formatDate(date: Date | string | null): string {
@@ -74,21 +125,18 @@ export class OnlineSettlementComponent implements OnInit {
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
   }
 
-  get grandTotal(): number {
-    return this.rows.reduce((sum, r) => sum + r.amount, 0);
+  getSelectedTotal(): number {
+    return this.selected.reduce(
+      (sum, row) => sum + (row.ptotalreceivedamount || 0),
+      0
+    );
   }
 
-  onSelect(event: any) {
-    this.selected = [...event.selected];
-  }
-
-  get totalAmount() {
-    return this.rows.reduce((sum, r) => sum + r.amount, 0);
-  }
-
-  // Clear button functionality
-  clearSelection() {
+  clearSelection(): void {
     this.selected = [];
-    this.rows = [];
+  }
+
+  Save(): void {
+    console.log('Selected Rows:', this.selected);
   }
 }

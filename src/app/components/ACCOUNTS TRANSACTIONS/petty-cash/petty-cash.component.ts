@@ -54,7 +54,7 @@ export class PettyCashComponent implements OnInit {
   selectedLedger: number | string | null = null;
   selectedSubLedger: number | string | null = null;
   selectedParty: number | string | null = null;
-  currencyCode: string = '₹'; 
+  currencyCode: string = '₹';
 
 
   // Form fields
@@ -118,9 +118,13 @@ export class PettyCashComponent implements OnInit {
     containerClass: 'theme-default',
     showWeekNumbers: false
   };
-
-  paymentVoucherForm!: FormGroup;
-  checkValidations: any;
+    BranchSchema: string = "accounts";
+    CompanyCode:string= "";
+    LocalSchema: string = "accounts";
+    BranchCode: string = "";
+    GlobalSchema: string = "global";
+    paymentVoucherForm!: FormGroup;
+    checkValidations: any;
 
   constructor(
     private _FormBuilder: FormBuilder,
@@ -144,41 +148,41 @@ export class PettyCashComponent implements OnInit {
 
   ngOnInit(): void {
 
-  this.currencySymbol = this._commonService.currencysymbol || '';
+    this.currencySymbol = this._commonService.currencysymbol || '';
 
-  if (this._commonService.comapnydetails != null)
-    this.disabletransactiondate = this._commonService.comapnydetails.pdatepickerenablestatus;
+    if (this._commonService.comapnydetails != null)
+      this.disabletransactiondate = this._commonService.comapnydetails.pdatepickerenablestatus;
 
-  this.paymentVoucherForm = this._FormBuilder.group({
-    ppaymentid: [''],
-    schemaname: [this._commonService.getschemaname()],
-    ppaymentdate: [new Date(), Validators.required], // ← set default to today
-    ptotalpaidamount: [''],
-    pnarration: ['', Validators.required],
-    pmodofpayment: ['CASH'],
-    pbankname: [''],
-    pbranchname: [''],
-    ptranstype: ['CHEQUE', Validators.required],
-    pCardNumber: [''],
-    pUpiname: [''],
-    pUpiid: [''],
-    ptypeofpayment: [''],
-    pChequenumber: [''],
-    pchequedate: [''],
-    pbankid: [''],
-    pCreatedby: [this._commonService.getCreatedBy()],
-    pStatusname: [this._commonService.pStatusname],
-    ptypeofoperation: [this._commonService.ptypeofoperation],
-    pipaddress: [this._commonService.getIpAddress()],
-    ppaymentsslistcontrols: this.addppaymentsslistcontrols(),
-    pDocStorePath: ['']
-  });
+    this.paymentVoucherForm = this._FormBuilder.group({
+      ppaymentid: [''],
+      schemaname: [this._commonService.getschemaname()],
+      ppaymentdate: [new Date(), Validators.required], // ← set default to today
+      ptotalpaidamount: [''],
+      pnarration: ['', Validators.required],
+      pmodofpayment: ['CASH'],
+      pbankname: [''],
+      pbranchname: [''],
+      ptranstype: ['CHEQUE', Validators.required],
+      pCardNumber: [''],
+      pUpiname: [''],
+      pUpiid: [''],
+      ptypeofpayment: [''],
+      pChequenumber: [''],
+      pchequedate: [''],
+      pbankid: [''],
+      pCreatedby: [this._commonService.getCreatedBy()],
+      pStatusname: [this._commonService.pStatusname],
+      ptypeofoperation: [this._commonService.ptypeofoperation],
+      pipaddress: [this._commonService.getIpAddress()],
+      ppaymentsslistcontrols: this.addppaymentsslistcontrols(),
+      pDocStorePath: ['']
+    });
 
-  // Optional: Ensure the datepicker sees the current date
-  this.paymentVoucherForm.get('ppaymentdate')?.setValue(new Date());
+    // Optional: Ensure the datepicker sees the current date
+    this.paymentVoucherForm.get('ppaymentdate')?.setValue(new Date());
 
-  this.BlurEventAllControll(this.paymentVoucherForm);
-}
+    this.BlurEventAllControll(this.paymentVoucherForm);
+  }
 
 
   addppaymentsslistcontrols(): FormGroup {
@@ -471,135 +475,135 @@ export class PettyCashComponent implements OnInit {
     UpiidControl.updateValueAndValidity();
     this.GetValidationByControl(this.paymentVoucherForm, 'ptypeofpayment');
   }
- // Called when GST checkbox is clicked
-isgstapplicable_Checked(): void {
-  const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!subForm) return;
+  // Called when GST checkbox is clicked
+  isgstapplicable_Checked(): void {
+    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!subForm) return;
 
-  // Reset state if needed
-  subForm.get('pStateId')?.setValue('');
-  if (typeof this.gst_clear === 'function') {
-    this.gst_clear();
-  }
-
-  const ppartyname = subForm.get('ppartyname')?.value;
-  const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname == ppartyname);
-
-  if (griddata.length > 0) {
-    subForm.get('pisgstapplicable')?.setValue(griddata[0].pisgstapplicable);
-  }
-
-  // Call change handler
-  this.isgstapplicableChange();
-}
-
-// Called when TDS checkbox is clicked
-istdsapplicable_Checked(): void {
-  const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!subForm) return;
-
-  const ppartyname = subForm.get('ppartyname')?.value;
-  const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname == ppartyname);
-
-  if (griddata.length > 0) {
-    subForm.get('pistdsapplicable')?.setValue(griddata[0].pistdsapplicable);
-  }
-
-  // Call change handler
-  this.istdsapplicableChange();
-}
-
-// Handles GST checkbox value change
-isgstapplicableChange(): void {
-  const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!subForm) return;
-
-  const data = subForm.get('pisgstapplicable')?.value;
-
-  const gstCalculationControl = subForm.get('pgstcalculationtype');
-  const gstpercentageControl = subForm.get('pgstpercentage');
-  const stateControl = subForm.get('pStateId'); // fixed from pState to pStateId
-  const gstamountControl = subForm.get('pgstamount');
-
-  if (data) {
-    this.showgst = true; // <-- template will now check showgst
-
-    if (!this.disablegst) {
-      gstCalculationControl?.setValue('INCLUDE');
+    // Reset state if needed
+    subForm.get('pStateId')?.setValue('');
+    if (typeof this.gst_clear === 'function') {
+      this.gst_clear();
     }
 
-    gstCalculationControl?.setValidators(Validators.required);
-    gstpercentageControl?.setValidators(Validators.required);
-    stateControl?.setValidators(Validators.required);
-    gstamountControl?.setValidators(Validators.required);
-  } else {
-    this.showgst = false;
+    const ppartyname = subForm.get('ppartyname')?.value;
+    const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname == ppartyname);
 
-    if (!this.disablegst) {
-      gstCalculationControl?.setValue('');
+    if (griddata.length > 0) {
+      subForm.get('pisgstapplicable')?.setValue(griddata[0].pisgstapplicable);
     }
 
-    gstCalculationControl?.clearValidators();
-    gstpercentageControl?.clearValidators();
-    stateControl?.clearValidators();
-    gstamountControl?.clearValidators();
+    // Call change handler
+    this.isgstapplicableChange();
   }
 
-  gstCalculationControl?.updateValueAndValidity();
-  gstpercentageControl?.updateValueAndValidity();
-  stateControl?.updateValueAndValidity();
-  gstamountControl?.updateValueAndValidity();
+  // Called when TDS checkbox is clicked
+  istdsapplicable_Checked(): void {
+    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!subForm) return;
 
-  if (typeof this.claculategsttdsamounts === 'function') {
-    this.claculategsttdsamounts();
-  }
-}
+    const ppartyname = subForm.get('ppartyname')?.value;
+    const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname == ppartyname);
 
-// Handles TDS checkbox value change
-istdsapplicableChange(): void {
-  const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-  if (!subForm) return;
-
-  const data = subForm.get('pistdsapplicable')?.value;
-
-  const tdsCalculationControl = subForm.get('ptdscalculationtype');
-  const tdspercentageControl = subForm.get('pTdsPercentage');
-  const sectionControl = subForm.get('pTdsSection');
-  const tdsamountControl = subForm.get('ptdsamount');
-
-  if (data) {
-    this.showtds = true; 
-
-    if (!this.disabletds) {
-      tdsCalculationControl?.setValue('INCLUDE');
+    if (griddata.length > 0) {
+      subForm.get('pistdsapplicable')?.setValue(griddata[0].pistdsapplicable);
     }
 
-    tdsCalculationControl?.setValidators(Validators.required);
-    tdspercentageControl?.setValidators(Validators.required);
-    sectionControl?.setValidators(Validators.required);
-    tdsamountControl?.setValidators(Validators.required);
-  } else {
-    this.showtds = false;
+    // Call change handler
+    this.istdsapplicableChange();
+  }
 
-    if (!this.disabletds) {
-      tdsCalculationControl?.setValue('');
+  // Handles GST checkbox value change
+  isgstapplicableChange(): void {
+    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!subForm) return;
+
+    const data = subForm.get('pisgstapplicable')?.value;
+
+    const gstCalculationControl = subForm.get('pgstcalculationtype');
+    const gstpercentageControl = subForm.get('pgstpercentage');
+    const stateControl = subForm.get('pStateId'); // fixed from pState to pStateId
+    const gstamountControl = subForm.get('pgstamount');
+
+    if (data) {
+      this.showgst = true; // <-- template will now check showgst
+
+      if (!this.disablegst) {
+        gstCalculationControl?.setValue('INCLUDE');
+      }
+
+      gstCalculationControl?.setValidators(Validators.required);
+      gstpercentageControl?.setValidators(Validators.required);
+      stateControl?.setValidators(Validators.required);
+      gstamountControl?.setValidators(Validators.required);
+    } else {
+      this.showgst = false;
+
+      if (!this.disablegst) {
+        gstCalculationControl?.setValue('');
+      }
+
+      gstCalculationControl?.clearValidators();
+      gstpercentageControl?.clearValidators();
+      stateControl?.clearValidators();
+      gstamountControl?.clearValidators();
     }
 
-    tdsCalculationControl?.clearValidators();
-    tdspercentageControl?.clearValidators();
-    sectionControl?.clearValidators();
-    tdsamountControl?.clearValidators();
+    gstCalculationControl?.updateValueAndValidity();
+    gstpercentageControl?.updateValueAndValidity();
+    stateControl?.updateValueAndValidity();
+    gstamountControl?.updateValueAndValidity();
+
+    if (typeof this.claculategsttdsamounts === 'function') {
+      this.claculategsttdsamounts();
+    }
   }
 
-  tdsCalculationControl?.updateValueAndValidity();
-  tdspercentageControl?.updateValueAndValidity();
-  sectionControl?.updateValueAndValidity();
-  tdsamountControl?.updateValueAndValidity();
+  // Handles TDS checkbox value change
+  istdsapplicableChange(): void {
+    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!subForm) return;
 
-  if (typeof this.claculategsttdsamounts === 'function') {
-    this.claculategsttdsamounts();
+    const data = subForm.get('pistdsapplicable')?.value;
+
+    const tdsCalculationControl = subForm.get('ptdscalculationtype');
+    const tdspercentageControl = subForm.get('pTdsPercentage');
+    const sectionControl = subForm.get('pTdsSection');
+    const tdsamountControl = subForm.get('ptdsamount');
+
+    if (data) {
+      this.showtds = true;
+
+      if (!this.disabletds) {
+        tdsCalculationControl?.setValue('INCLUDE');
+      }
+
+      tdsCalculationControl?.setValidators(Validators.required);
+      tdspercentageControl?.setValidators(Validators.required);
+      sectionControl?.setValidators(Validators.required);
+      tdsamountControl?.setValidators(Validators.required);
+    } else {
+      this.showtds = false;
+
+      if (!this.disabletds) {
+        tdsCalculationControl?.setValue('');
+      }
+
+      tdsCalculationControl?.clearValidators();
+      tdspercentageControl?.clearValidators();
+      sectionControl?.clearValidators();
+      tdsamountControl?.clearValidators();
+    }
+
+    tdsCalculationControl?.updateValueAndValidity();
+    tdspercentageControl?.updateValueAndValidity();
+    sectionControl?.updateValueAndValidity();
+    tdsamountControl?.updateValueAndValidity();
+
+    if (typeof this.claculategsttdsamounts === 'function') {
+      this.claculategsttdsamounts();
+    }
   }
-}
 
   getLoadData() {
 
@@ -745,7 +749,7 @@ istdsapplicableChange(): void {
   }
 
   GetSubLedgerData(pledgerid: any): void {
-    this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(
+    this._AccountingTransactionsService.GetSubLedgerData(pledgerid,'accounts','KAPILCHITS','accounts','KLC01','global').subscribe(
       (json: any) => {
         if (!json) return;
 
@@ -1006,35 +1010,36 @@ istdsapplicableChange(): void {
   }
 
 
-  getPartyDetailsbyid(ppartyid: any, partynamename: any): void {
+  getPartyDetailsbyid(ppartyid: any, pStateId: any): void {
+    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid, pStateId).subscribe(
+        (json: any) => {
+          if (!json) return;
+          this.tdslist = json.lstTdsSectionDetails || [];
+          const newdata = this.tdslist
+            .map(item => item.pTdsSection)
+            .filter((value, index, self) =>
+              self.indexOf(value) === index
+            );
 
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid).subscribe(
-      (json: any) => {
+          this.tdssectionlist = [];
 
-        if (!json) return;
+          for (let i = 0; i < newdata.length; i++) {
+            this.tdssectionlist.push({
+              pTdsSection: newdata[i]
+            });
+          }
 
-        this.tdslist = json.lstTdsSectionDetails || [];
+          this.statelist = json.statelist || [];
 
-        const newdata = this.tdslist
-          .map(item => item.pTdsSection)
-          .filter((value, index, self) => self.indexOf(value) === index);
-
-        this.tdssectionlist = [];
-
-        for (let i = 0; i < newdata.length; i++) {
-          this.tdssectionlist.push({ pTdsSection: newdata[i] });
+          this.claculategsttdsamounts();
+          this.setBalances('PARTY', json.accountbalance);
+        },
+        (error) => {
+          this._commonService.showErrorMessage(error);
         }
-
-        this.statelist = json.statelist || [];
-
-        this.claculategsttdsamounts();
-        this.setBalances('PARTY', json.accountbalance);
-      },
-      (error) => {
-        this._commonService.showErrorMessage(error);
-      }
-    );
+      );
   }
+
 
   gsno_change(): void {
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstno');
@@ -1658,12 +1663,12 @@ istdsapplicableChange(): void {
     return this.paymentVoucherForm.get('pgstno');
   }
   saveJournalVoucher(): void {
-  console.log('Save Journal Voucher clicked');
+    console.log('Save Journal Voucher clicked');
 
-  // TODO: Implement your actual save logic here
-  // Example:
-  // if (this.paymentVoucherForm.valid) {
-  //   this._AccountingTransactionsService.saveVoucher(this.paymentVoucherForm.value).subscribe(...);
-  // }
-}
+    // TODO: Implement your actual save logic here
+    // Example:
+    // if (this.paymentVoucherForm.valid) {
+    //   this._AccountingTransactionsService.saveVoucher(this.paymentVoucherForm.value).subscribe(...);
+    // }
+  }
 }

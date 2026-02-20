@@ -36,15 +36,15 @@ export class PettyCashViewComponent implements OnInit {
     this.pageCriteria = new PageCriteria();
   }
 
- ngOnInit(): void {
-  this.setPageModel();
-  this.getLoadData();
+  ngOnInit(): void {
+    this.setPageModel();
+    this.getLoadData();
 
-  
-  this.currencySymbol = this._commonService.currencysymbol 
-    ? this._commonService.currencysymbol 
-    : '₹'; 
-}
+
+    this.currencySymbol = this._commonService.currencysymbol
+      ? this._commonService.currencysymbol
+      : '₹';
+  }
 
   setPageModel() {
     this.pageCriteria.pageSize = this._commonService.pageSize;
@@ -54,39 +54,51 @@ export class PettyCashViewComponent implements OnInit {
   }
 
 
-  getLoadData() {
-    this._AccountingTransactionsService.GetPettyCashExistingData().subscribe(
-      (json) => {
-        if (json) {
-          this.gridData = json;
-          this.gridView = [...this.gridData];
-          this.list = json;
+  getLoadData(): void {
 
-          this.gridView.forEach((data: any) => {
-            data.preceiptdate = this._commonService.getFormatDateGlobal(data.preceiptdate);
-          });
+  this._AccountingTransactionsService
+    .GetPettyCashExistingData()
+    .subscribe({
+      next: (json: any[]) => {
 
-          this.filteredData = [...this.gridView];
-          this.columnsWithSearch = Object.keys(this.gridView[0]);
-
-          this.pageCriteria.totalrows = this.gridView.length;
-          this.pageCriteria.TotalPages = 1;
-          if (this.pageCriteria.totalrows > this.pageCriteria.pageSize) {
-            this.pageCriteria.TotalPages =
-              Math.ceil(this.pageCriteria.totalrows / this.pageCriteria.pageSize);
-          }
-          this.pageCriteria.currentPageRows =
-            this.gridView.length < this.pageCriteria.pageSize
-              ? this.gridData.length
-              : this.pageCriteria.pageSize;
+        if (!json || json.length === 0) {
+          this.gridData = [];
+          this.gridView = [];
+          this.filteredData = [];
+          this.pageCriteria.totalrows = 0;
+          this.pageCriteria.TotalPages = 0;
+          return;
         }
+
+        this.gridData = json;
+        this.gridView = [...json];
+        this.list = json;
+
+        this.gridView.forEach((data: any) => {
+          data.preceiptdate =
+            this._commonService.getFormatDateGlobal(data.preceiptdate);
+        });
+
+        this.filteredData = [...this.gridView];
+
+        this.columnsWithSearch =
+          this.gridView.length > 0 ? Object.keys(this.gridView[0]) : [];
+
+        this.pageCriteria.totalrows = this.gridView.length;
+        this.pageCriteria.TotalPages = Math.ceil(
+          this.pageCriteria.totalrows / this.pageCriteria.pageSize
+        );
+
+        this.pageCriteria.currentPageRows =
+          this.gridView.length < this.pageCriteria.pageSize
+            ? this.gridView.length
+            : this.pageCriteria.pageSize;
       },
-      (error) => {
+      error: (error) => {
         this._commonService.showErrorMessage(error);
       }
-    );
-  }
-
+    });
+}
   viewRow(row: any) {
     const receipt = btoa(row.preceiptid + ',' + 'Petty Cash');
     window.open('/#/PaymentVoucherReport?id=' + receipt, '_blank');

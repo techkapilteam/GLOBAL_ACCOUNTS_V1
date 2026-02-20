@@ -1531,32 +1531,47 @@ debugger
 
 
 
-  getPartyDetailsbyid(ppartyid: any, partynamename: string): void {
+ getPartyDetailsbyid(
+  ppartyid: any,
+  pStateId: any
+): void {
 
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid)
-      .subscribe(
-        (json: any) => {
+  this._AccountingTransactionsService
+    .getPartyDetailsbyid(ppartyid, pStateId)
+    .subscribe(
+      (json: any) => {
 
-          if (!json) return;
+        if (!json) return;
 
-          this.tdslist = json.lstTdsSectionDetails;
+        // Clear previous data
+        this.tdssectionlist = [];
 
-          // extract unique TDS sections
-          const newdata = json.lstTdsSectionDetails
-            .map((item: { pTdsSection: any }) => item.pTdsSection)
-            .filter((value: any, index: number, self: any[]) => self.indexOf(value) === index);
+        this.tdslist = json.lstTdsSectionDetails || [];
 
-          this.tdssectionlist = newdata.map((section: any) => ({ pTdsSection: section }));
+        // Extract unique TDS sections
+        const uniqueSections =
+          this.tdslist
+            .map((item: any) => item.pTdsSection)
+            .filter((value: any, index: number, self: any[]) =>
+              self.indexOf(value) === index
+            );
 
-          this.statelist = json.statelist;
-          this.claculategsttdsamounts();
-          this.setBalances('PARTY', json.accountbalance);
-        },
-        (error: any) => {
-          this._commonService.showErrorMessage(error);
-        }
-      );
-  }
+        this.tdssectionlist =
+          uniqueSections.map((section: any) => ({
+            pTdsSection: section
+          }));
+
+        this.statelist = json.statelist || [];
+
+        this.claculategsttdsamounts();
+        this.setBalances('PARTY', json.accountbalance);
+      },
+      (error: any) => {
+        this._commonService.showErrorMessage(error);
+      }
+    );
+}
+
 
   gsno_change() {
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstno', true);

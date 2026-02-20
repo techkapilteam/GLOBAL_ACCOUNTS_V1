@@ -96,8 +96,6 @@ import { CommonService } from '../../../services/common.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-
-// PrimeNG modules (you need to import these in your Angular module, not here)
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 
@@ -132,9 +130,9 @@ export class PaymentVoucherComponent implements OnInit {
     private currencyPipe: CurrencyPipe
   ) { }
 
-  ngOnInit(): void {
-    this.getLoadData();
-  }
+ngOnInit(): void {
+  this.getLoadData();
+}
 
   getLoadData(): void {
     this._AccountingTransactionsService.GetPaymentVoucherExistingData(
@@ -144,50 +142,40 @@ export class PaymentVoucherComponent implements OnInit {
       this._commonService.getBranchCode()
     ).subscribe({
       next: (json: any[]) => {
-        if (json && json.length > 0) {
 
-          // Assign data
-          this.gridData = json;
-
-          // Format payment dates
-          this.gridData.forEach(row => {
-            row.ppaymentdate = this._commonService.getFormatDateGlobal(row.ppaymentdate);
-          });
-
-          // For filtering/searching
-          this.filteredData = [...this.gridData];
-          this.columnsWithSearch = Object.keys(this.gridData[0]);
-
-          // Pagination info
-          this.pageCriteria.totalrows = this.gridData.length;
-          this.pageCriteria.TotalPages = Math.ceil(this.pageCriteria.totalrows / this.pageCriteria.pageSize);
-          this.pageCriteria.currentPageRows =
-            this.gridData.length < this.pageCriteria.pageSize
-              ? this.gridData.length
-              : this.pageCriteria.pageSize;
-
-        } else {
-          // Empty dataset
+        if (!json || json.length === 0) {
           this.gridData = [];
           this.filteredData = [];
           this.pageCriteria.totalrows = 0;
           this.pageCriteria.TotalPages = 0;
           this.pageCriteria.currentPageRows = 0;
+          return;
         }
+        this.gridData = json;
+        this.gridData.forEach(row => {
+          row.ppaymentdate =
+            this._commonService.getFormatDateGlobal(row.ppaymentdate);
+        });
+        this.filteredData = [...this.gridData];
+        this.columnsWithSearch = Object.keys(this.gridData[0]);
+        this.pageCriteria.totalrows = this.gridData.length;
+        this.pageCriteria.TotalPages = Math.ceil(
+          this.pageCriteria.totalrows / this.pageCriteria.pageSize
+        );
+        this.pageCriteria.currentPageRows =
+          this.gridData.length < this.pageCriteria.pageSize
+            ? this.gridData.length
+            : this.pageCriteria.pageSize;
       },
       error: (error) => {
         this._commonService.showErrorMessage(error);
       }
     });
-  }
-
-  // Example action handler
-  removeHandler(event: any, row: any): void {
-    console.log('Remove clicked for row:', row);
-  }
-
-  // Format currency for PrimeNG
-  formatCurrency(amount: number): string {
+}
+removeHandler(event: any, row: any): void {
+  console.log('Remove clicked for row:', row);
+}
+formatCurrency(amount: number): string {
     return this.currencyPipe.transform(amount, 'INR', 'symbol', '1.2-2') || '';
   }
 

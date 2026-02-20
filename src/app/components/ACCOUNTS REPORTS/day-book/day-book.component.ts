@@ -230,6 +230,7 @@ dte:boolean=false;
   ngOnInit(): void {
 
     this.dayBookForm = this.fb.group({
+      date:[new Date()],
       dfromdate: [new Date()],
       dtodate: [new Date()],
       branch_code: ['']

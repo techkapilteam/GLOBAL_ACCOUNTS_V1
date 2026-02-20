@@ -338,13 +338,17 @@
                         </div> -->
                   <div class="form-group">
                     <label>Bank Name</label>
-                    <ng-select class="form-control" id="pbankid" title="Bank Name" formControlName="pbankid"
+                    <ng-select id="pbankid" title="Bank Name" formControlName="pbankid"
                       [ngClass]="{ 'is-invalid': formValidationMessages.pbankid }" (change)="BankIdChange($event)">
+
                       <ng-option value="">Select</ng-option>
+
                       <ng-option *ngFor="let bank of banksList; trackBy: trackByFn" [value]="bank.pBankId">
-                        {{bank.pBankName}}
+                        {{ bank.pBankName }}
                       </ng-option>
+
                     </ng-select>
+
                     <app-validation-message [messgae]="formValidationMessages?.pbankid">
                     </app-validation-message>
                   </div>
@@ -354,15 +358,19 @@
                     <label id="ptypeofpayment" title="Type of Payment" class="required-field">
                       Type of Payment
                     </label>
-                    <ng-select class="form-control" id="ptypeofpayment" title="Type of Payment"
-                      formControlName="ptypeofpayment" (change)="typeofPaymentChange($event)"
+                    <ng-select id="ptypeofpayment" title="Type of Payment" formControlName="ptypeofpayment"
+                      (change)="typeofPaymentChange($event)"
                       [ngClass]="{ 'is-invalid': formValidationMessages.ptypeofpayment }">
+
                       <ng-option value="" disabled>Select</ng-option>
+
                       <ng-option *ngFor="let typeofpayment of typeofpaymentlist; trackBy: trackByFn"
                         [value]="typeofpayment.ptypeofpayment">
-                        {{typeofpayment.ptypeofpayment}}
+                        {{ typeofpayment.ptypeofpayment }}
                       </ng-option>
+
                     </ng-select>
+
                     <!-- <span class="position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
                     <app-validation-message [messgae]="formValidationMessages?.ptypeofpayment">
                     </app-validation-message>
@@ -423,15 +431,11 @@
                     <label id="pdepositbankid" title="Deposited Bank Name">
                       Deposited Bank Name
                     </label>
-                    <ng-select class="form-control" id="pdepositbankid" title="Deposited Bank Name"
-                      formControlName="pdepositbankid" (change)="typeofDepositBank($event)"
-                      [attr.disabled]="DepositBankDisable ? '' : null"
-                      [ngClass]="{ 'is-invalid': formValidationMessages.pdepositbankid }">
-                      <ng-option value="" disabled>Select</ng-option>
-                      <ng-option *ngFor="let bank of banklist; trackBy: trackByFn" [value]="bank.pbankid">
-                        {{bank.pbankname}}
-                      </ng-option>
+                    <ng-select [items]="banklist" bindLabel="pbankname" bindValue="pbankid" placeholder="Select"
+                      formControlName="pdepositbankid" [disabled]="DepositBankDisable"
+                      (change)="typeofDepositBank($event)">
                     </ng-select>
+
                     <!-- <span class="position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
                     <app-validation-message [messgae]="formValidationMessages?.pdepositbankid">
                     </app-validation-message>

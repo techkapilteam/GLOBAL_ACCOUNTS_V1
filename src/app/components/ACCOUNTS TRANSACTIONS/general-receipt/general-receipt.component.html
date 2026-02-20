@@ -72,12 +72,12 @@
                   </ng-template>
                 </td>
 
-                <!-- Received Amount -->
+              
                 <td class="cell-right">
                   {{ currencySymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}
                 </td>
 
-                <!-- Narration -->
+              
                 <td class="cell-left" style="width:400px">
                   <span *ngIf="!row.pnarration">-- NA --</span>
                   <span *ngIf="row.pnarration" [title]="row.pnarration">{{ row.pnarration }}</span>
@@ -85,7 +85,7 @@
               </tr>
             </ng-template>
 
-            <!-- Table Footer -->
+          
             <ng-template pTemplate="footer">
               <tr *ngIf="gridView?.length">
                 <td colspan="6">
