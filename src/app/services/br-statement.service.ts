@@ -8,21 +8,47 @@ import { HttpParams } from '@angular/common/http';
 })
 export class BrStatementService {
    constructor(private _commonService: CommonService) {}
-    GetBrStatementReportByDates(
+  // GetBrStatementReportByDates(
+  //   fromDate: string,
+  //   bankAccountId: number
+  // ): Observable<any> {
+
+  //   const params = new HttpParams({
+  //     fromObject: {
+  //       fromdate: fromDate,
+  //       _pBankAccountId: bankAccountId.toString(),
+  //       BranchSchema: this._commonService.getschemaname()
+  //     }
+  //   });
+
+  //   return this._commonService.getAPI(
+  //     '/Accounting/AccountingReports/GetBrs',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  GetBrStatementReportByDates(
     fromDate: string,
-    bankAccountId: number
+    _pBankAccountId: number,
+    BranchSchema:any,
+    branchCode:any,
+    companyCode:any,
+    GlobalSchema:any
   ): Observable<any> {
 
     const params = new HttpParams({
       fromObject: {
         fromdate: fromDate,
-        _pBankAccountId: bankAccountId.toString(),
-        BranchSchema: this._commonService.getschemaname()
+        _pBankAccountId: _pBankAccountId,
+        BranchSchema: BranchSchema,
+        branchCode:branchCode,
+        companyCode:companyCode,
+        GlobalSchema:GlobalSchema
       }
     });
 
     return this._commonService.getAPI(
-      '/Accounting/AccountingReports/GetBrs',
+      '/Accounts/GetBrs',
       params,
       'YES'
     );

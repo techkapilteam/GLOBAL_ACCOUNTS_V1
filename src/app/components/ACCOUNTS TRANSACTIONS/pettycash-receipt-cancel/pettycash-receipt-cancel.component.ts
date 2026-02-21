@@ -1,6 +1,13 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { catchError, concat, distinctUntilChanged, of, Subject, switchMap } from 'rxjs';
 import { PageCriteria } from '../../../Models/pageCriteria';
@@ -9,30 +16,42 @@ import { CommonService } from '../../../services/common.service';
 import { Router } from '@angular/router';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { SubscriberConfigurationService } from '../../../services/subscriber-configuration.service';
-import { GeneralReceiptCancelService } from '../../../services/general-receipt-cancel.service';
+import { GeneralReceiptCancelService } from '../../../services/Transactions/general-receipt-cancel.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-pettycash-receipt-cancel',
-  imports: [CommonModule, BsDatepickerModule, ReactiveFormsModule, NgxDatatableModule, FormsModule, NgSelectModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    BsDatepickerModule,
+    ReactiveFormsModule,
+    NgxDatatableModule,
+    FormsModule,
+    NgSelectModule
+  ],
   templateUrl: './pettycash-receipt-cancel.component.html',
   styleUrl: './pettycash-receipt-cancel.component.css'
 })
 export class PettycashReceiptCancelComponent implements OnInit {
+
   dropDownDataSearchLength!: number;
   searchplaceholder!: string;
 
-  currencysymbol!: string;
+  currencysymbol: string = '₹';
+
   creditto = '';
   Employee: any[] = [];
   receiptdata: any[] = [];
+
   ButtonType = 'Save';
   isLoading = false;
   disablesavebutton = false;
-  showtotalamount = 0;
 
+  showtotalamount = 0;
   show = false;
+
   receivedfrom = '';
   receiptdate!: Date;
   narration = '';
@@ -47,11 +66,9 @@ export class PettycashReceiptCancelComponent implements OnInit {
   pettycashReceiptCancelData: any = [];
 
   pDobConfig: Partial<BsDatepickerConfig> = {};
-  tempPaymentData: any[] = [];
-
   disabletransactiondate = false;
-  pettycashValidation: Record<string, string> = {};
 
+  pettycashValidation: Record<string, string> = {};
   pageCriteria = new PageCriteria();
 
   PettyCashCancel!: FormGroup<{
@@ -80,37 +97,29 @@ export class PettycashReceiptCancelComponent implements OnInit {
     private _SubscriberConfigurationService: SubscriberConfigurationService,
     private _generalreceiptcancelservice: GeneralReceiptCancelService
   ) {
-    this.currencysymbol = "₹";
-    // this._commonService.datePickerPropertiesSetup('currencysymbol');
 
     this.pDobConfig = {
       containerClass: 'theme-dark-blue',
-      // this._commonService.datePickerPropertiesSetup('containerClass')
       showWeekNumbers: false,
       maxDate: new Date(),
       dateInputFormat: 'DD-MMM-YYYY'
-      // this._commonService.datePickerPropertiesSetup('dateInputFormat')
     };
 
     if (this._commonService.comapnydetails) {
-      this.disabletransactiondate = this._commonService.comapnydetails.pdatepickerenablestatus;
+      this.disabletransactiondate =
+        this._commonService.comapnydetails.pdatepickerenablestatus;
     }
+
     this.dropDownDataSearchLength = this._commonService.searchfilterlength;
     this.searchplaceholder = this._commonService.searchplaceholder;
   }
+
   ngOnInit(): void {
     this.buildForm();
     this.setPageModel();
     this.contactSearch();
     this.getEmployeeName(this._commonService.getschemaname());
     this.getReceiptNumber();
-    this.receiptdata = [
-      { receiptid: 201, receiptnumber: 'PCR/BLR/25-26/001' },
-      { receiptid: 202, receiptnumber: 'PCR/BLR/25-26/002' },
-      { receiptid: 203, receiptnumber: 'PCR/BLR/25-26/003' },
-      { receiptid: 204, receiptnumber: 'PCR/BLR/25-26/004' },
-      { receiptid: 205, receiptnumber: 'PCR/BLR/25-26/005' }
-    ];
   }
 
   private buildForm() {
@@ -137,11 +146,16 @@ export class PettycashReceiptCancelComponent implements OnInit {
       return;
     }
 
+    if (!confirm('Do you want to save ?')) return;
+
     this.isLoading = true;
     this.disablesavebutton = true;
     this.ButtonType = 'Processing';
 
-    const formattedDate = this._commonService.getFormatDateGlobal(this.PettyCashCancel.value.ppaymentdate);
+    const formattedDate = this._commonService.getFormatDateGlobal(
+      this.PettyCashCancel.value.ppaymentdate
+    );
+
     this.PettyCashCancel.patchValue({
       ipaddress: this._commonService.getIpAddress(),
       userid: this._commonService.getCreatedBy(),
@@ -150,20 +164,18 @@ export class PettycashReceiptCancelComponent implements OnInit {
 
     const payload = JSON.stringify(this.PettyCashCancel.value);
 
-    if (confirm('Do you want to save ?')) {
-      this._generalreceiptcancelservice.savepettycashcancel(payload).subscribe({
-        next: () => {
-          this._commonService.showInfoMessage('Cancelled Successfully');
-          this.clear();
-        },
-        error: (err: any) => this.showErrorMessage(err),
-        complete: () => {
-          this.isLoading = false;
-          this.disablesavebutton = false;
-          this.ButtonType = 'Save';
-        }
-      });
-    }
+    this._generalreceiptcancelservice.savepettycashcancel(payload).subscribe({
+      next: () => {
+        this._commonService.showInfoMessage('Cancelled Successfully');
+        this.clear();
+      },
+      error: (err: any) => this.showErrorMessage(err),
+      complete: () => {
+        this.isLoading = false;
+        this.disablesavebutton = false;
+        this.ButtonType = 'Save';
+      }
+    });
   }
 
   private contactSearch() {
@@ -172,33 +184,42 @@ export class PettycashReceiptCancelComponent implements OnInit {
       this.contactSearchevent.pipe(
         distinctUntilChanged(),
         switchMap(term =>
-          this._SubscriberConfigurationService.GetSubInterducedDetails(term).pipe(
-            catchError(() => of([]))
-          )
+          this._SubscriberConfigurationService
+            .GetSubInterducedDetails(term)
+            .pipe(catchError(() => of([])))
         )
       )
     );
   }
 
   getreceiptdata(event: any) {
+    if (!event) return;
+
     this.showtotalamount = 0;
-    this._paymentVouecherServices.GetPettyCashbyId(event.receiptnumber).subscribe(res => {
-      const data = res?.[0];
-      if (!data) return;
 
-      this.creditto = data.pcontactname;
-      this.receivedfrom = data.pcontactname;
-      this.receiptdate = data.ppaymentdate;
-      this.narration = data.pnarration;
-      this.doneby = data.pemployeename;
-      this.pmodofPayment = data.pmodofPayment;
-      this.lstdetails = data.ppaymentslist || [];
+    this._paymentVouecherServices
+      .GetPettyCashbyId(event)
+      .subscribe(res => {
 
-      this.showtotalamount = this.lstdetails.reduce((sum, x) => sum + x.pLedgeramount, 0);
-      this.totalledgeramount = this.showtotalamount;
+        const data = res?.[0];
+        if (!data) return;
 
-      this.pageCriteria.totalrows = this.lstdetails.length;
-    });
+        this.creditto = data.pcontactname;
+        this.receivedfrom = data.pcontactname;
+        this.receiptdate = data.ppaymentdate;
+        this.narration = data.pnarration;
+        this.doneby = data.pemployeename;
+        this.pmodofPayment = data.pmodofPayment;
+
+        this.lstdetails = data.ppaymentslist || [];
+
+        this.showtotalamount = this.lstdetails
+          .reduce((sum: number, x: any) => sum + x.pLedgeramount, 0);
+
+        this.totalledgeramount = this.showtotalamount;
+
+        this.pageCriteria.totalrows = this.lstdetails.length;
+      });
   }
 
   showdata() {
@@ -210,22 +231,30 @@ export class PettycashReceiptCancelComponent implements OnInit {
   }
 
   clear() {
-    this.PettyCashCancel.reset({ ppaymentdate: new Date() });
+    this.PettyCashCancel.reset({
+      ppaymentdate: new Date()
+    });
+
     this.lstdetails = [];
     this.show = false;
     this.showtotalamount = 0;
     this.ButtonType = 'Save';
     this.disablesavebutton = false;
     this.isLoading = false;
+
     this.getReceiptNumber();
   }
 
   getReceiptNumber() {
-    this._AccountingTransactionsService.getReceiptNumber().subscribe(res => this.receiptdata = res);
+    this._AccountingTransactionsService
+      .getReceiptNumber()
+      .subscribe(res => this.receiptdata = res);
   }
 
   getEmployeeName(schema: string) {
-    this._generalreceiptcancelservice.getEmployeeName(schema).subscribe((res: any) => this.Employee = res);
+    this._generalreceiptcancelservice
+      .getEmployeeName(schema)
+      .subscribe((res: any) => this.Employee = res);
   }
 
   setPageModel() {
@@ -238,6 +267,7 @@ export class PettycashReceiptCancelComponent implements OnInit {
   showErrorMessage(msg: string) {
     this._commonService.showErrorMessage(msg);
   }
+
   subIntroducedGridRowSelect(selected: any) {
     if (selected) {
       this.PettyCashCancel.patchValue({

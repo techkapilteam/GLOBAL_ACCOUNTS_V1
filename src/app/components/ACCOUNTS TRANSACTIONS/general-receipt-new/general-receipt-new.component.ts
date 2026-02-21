@@ -19,6 +19,7 @@ import { ValidationMessageComponent } from '../../../common/validation-message/v
 //import { isNullOrEmptyString } from '@progress/kendo-angular-grid/dist/es2015/utils';
 //import { error } from 'console';
 import { TableModule } from 'primeng/table'
+import { HttpParams } from '@angular/common/http';
 
 
 
@@ -376,101 +377,167 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.partyBalance = this.currencySymbol + ' 0.00' + ' Dr';
         let trans_date = this.GeneralReceiptForm.controls['preceiptdate'].value;
         trans_date = this._commonService.getFormatDateNormal(trans_date);
-        let amt = 0
-        this._Accountservice.GetCashRestrictAmountpercontact('GENERAL RECEIPT', this._CommonService.getschemaname(), ppartyid, trans_date).subscribe(json => {
-            amt = json
-            this.availableAmount = this.cashRestrictAmount - amt
-        })
-        if (ppartyid && ppartyid != '') {
-            const ledgername = $event.ppartyname;
-            this.getPartyDetailsbyid(ppartyid);
-            this.GeneralReceiptForm.controls['ppartyname'].setValue(ledgername);
-            //let data = (this.partylist.filter(x => x.ppartyid = ppartyid))[0];
-            let emptydata: any[] = []
-            this.partylist.filter(function (ReqData: any) {
-                //if (ReqData.ppartyname == ledgername) {
-                emptydata.push(ReqData);
-                //}
-            })
-            this.data = emptydata;
-            let arraydata = this.data
-            // this.modeoftransactionslist.filter(function (Data) {
-            //   if (Data.ptypeofpayment == type && Data.pmodofPayment == Modeofpayment && Data.ptranstype == trantype) {
-            // this.modeoftransactionslist.filter(function (Data) {
-            //   if (Data.ptypeofpayment == type && Data.pmodofPayment == Modeofpayment && Data.ptranstype == trantype) {
-            this.GeneralReceiptForm.controls['ppartyreferenceid'].setValue(arraydata[0].ppartyreferenceid);
-            this.GeneralReceiptForm.controls['ppartyreftype'].setValue(arraydata[0].ppartyreftype);
-            this.GeneralReceiptForm.controls['ppartypannumber'].setValue(arraydata[0].ppartypannumber);
-        }
-        else {
-            this.setBalances('PARTY', 0);
-            this.GeneralReceiptForm.controls['ppartyname'].setValue('');
-        }
+       let amt = 0;
+
+this._Accountservice
+  .GetCashRestrictAmountpercontact(
+    'GENERAL RECEIPT',
+    this._CommonService.getschemaname(),
+    ppartyid,
+    trans_date
+  )
+  .subscribe(
+    (json: any) => {
+
+      amt = Number(json) || 0;
+      this.availableAmount =
+        (Number(this.cashRestrictAmount) || 0) - amt;
+
+    },
+    (error) => {
+      this._commonService.showErrorMessage(error);
     }
-    getPartyDetailsbyid(ppartyid: any) {
-        this._Accountservice.getPartyDetailsbyid(ppartyid).subscribe(json => {
-            //console.log(json)
-            if (json != null) {
-                this.tdslist = json.lstTdsSectionDetails;
-                let newdata = json.lstTdsSectionDetails.map((item: { pTdsSection: any; }) => item.pTdsSection)
-                    .filter((value: any, index: any, self: string | any[]) => self.indexOf(value) === index)
-                for (let i = 0; i < newdata.length; i++) {
-                    let object = { pTdsSection: newdata[i] }
-                    this.tdssectionlist.push(object);
-                }
-                this.statelist = json.statelist;
-                this.claculategsttdsamounts();
-                this.claculateTDSamount();
-                this.setBalances('PARTY', json.accountbalance);
-            }
-        },
-            (error) => {
-                this._commonService.showErrorMessage(error);
+  );
+
+
+if (ppartyid && ppartyid !== '') {
+
+  const ledgername = $event.ppartyname;
+  const pStateId = $event.pStateId;   // 👈 Important
+
+  // ✅ Call API with both parameters
+  this.getPartyDetailsbyid(ppartyid, pStateId);
+
+  this.GeneralReceiptForm.controls['ppartyname']
+    .setValue(ledgername);
+
+  this.GeneralReceiptForm.controls['pstatename']
+    .setValue($event.pstatename);
+
+  // ✅ Get selected party safely
+  const selectedParty = this.partylist.find(
+    (x: any) => x.ppartyid == ppartyid
+  );
+
+  if (selectedParty) {
+
+    this.GeneralReceiptForm.controls['ppartyreferenceid']
+      .setValue(selectedParty.ppartyreferenceid);
+
+    this.GeneralReceiptForm.controls['ppartyreftype']
+      .setValue(selectedParty.ppartyreftype);
+
+    this.GeneralReceiptForm.controls['ppartypannumber']
+      .setValue(selectedParty.ppartypannumber);
+  }
+
+} else {
+
+  this.setBalances('PARTY', 0);
+
+  this.GeneralReceiptForm.controls['ppartyname']
+    .setValue('');
+}
+
+}
+    getPartyDetailsbyid(ppartyid: any, pStateId: any) {
+
+  this._Accountservice
+    .getPartyDetailsbyid(ppartyid, pStateId)
+    .subscribe(
+      (json: any) => {
+
+        if (json != null) {
+
+          // ✅ Clear old data
+          this.tdssectionlist = [];
+
+          this.tdslist =
+            json.lstTdsSectionDetails || [];
+
+          // Remove duplicate TDS sections
+          const uniqueSections =
+            this.tdslist
+              .map((item: any) => item.pTdsSection)
+              .filter((value: any, index: number, self: any[]) =>
+                self.indexOf(value) === index
+              );
+
+          uniqueSections.forEach((section: any) => {
+            this.tdssectionlist.push({
+              pTdsSection: section
             });
-    } setBalances(balancetype: string, balanceamount: string | number): void {
+          });
 
-        const amount = parseFloat(balanceamount?.toString() || '0');
+          this.statelist = json.statelist || [];
 
-        let balanceDetails = '';
+          this.claculategsttdsamounts();
+          this.claculateTDSamount();
 
-        if (amount < 0) {
-            balanceDetails =
-                this._CommonService.currencyFormat(Math.abs(amount).toFixed(2)) + ' Cr';
-        } else {
-            balanceDetails =
-                this._CommonService.currencyFormat(amount.toFixed(2)) + ' Dr';
+          this.setBalances('PARTY', json.accountbalance);
         }
 
-        switch (balancetype) {
-            case 'CASH':
-                this.cashBalance = balanceDetails;
-                break;
+      },
+      (error) => {
+        this._commonService.showErrorMessage(error);
+      }
+    );
+}
 
-            case 'BANK':
-                this.bankBalance = balanceDetails;
-                break;
+     setBalances(
+  balancetype: string,
+  balanceamount: string | number
+): void {
 
-            case 'BANKBOOK':
-                this.bankbookBalance = `${this.currencySymbol} ${balanceDetails}`;
-                break;
+  const amount = Number(balanceamount) || 0;
 
-            case 'PASSBOOK':
-                this.bankpassbookBalance = `${this.currencySymbol} ${balanceDetails}`;
-                break;
+  const formattedAmount =
+    this._CommonService.currencyFormat(
+      Math.abs(amount).toFixed(2)
+    );
 
-            case 'LEDGER':
-                this.ledgerBalance = `${this.currencySymbol} ${balanceDetails}`;
-                break;
+  const balanceDetails =
+    amount < 0
+      ? `${formattedAmount} Cr`
+      : `${formattedAmount} Dr`;
 
-            case 'SUBLEDGER':
-                this.subledgerBalance = `${this.currencySymbol} ${balanceDetails}`;
-                break;
+  switch (balancetype) {
 
-            case 'PARTY':
-                this.partyBalance = `${this.currencySymbol} ${balanceDetails}`;
-                break;
-        }
-    }
+    case 'CASH':
+      this.cashBalance = balanceDetails;
+      break;
+
+    case 'BANK':
+      this.bankBalance = balanceDetails;
+      break;
+
+    case 'BANKBOOK':
+      this.bankbookBalance =
+        `${this.currencySymbol} ${balanceDetails}`;
+      break;
+
+    case 'PASSBOOK':
+      this.bankpassbookBalance =
+        `${this.currencySymbol} ${balanceDetails}`;
+      break;
+
+    case 'LEDGER':
+      this.ledgerBalance =
+        `${this.currencySymbol} ${balanceDetails}`;
+      break;
+
+    case 'SUBLEDGER':
+      this.subledgerBalance =
+        `${this.currencySymbol} ${balanceDetails}`;
+      break;
+
+    case 'PARTY':
+      this.partyBalance =
+        `${this.currencySymbol} ${balanceDetails}`;
+      break;
+  }
+}
+
     public Paymenttype(type: string) {
 
         for (var n = 0; n < this.Paymentbuttondata.length; n++) {
@@ -760,7 +827,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.GeneralReceiptForm['controls']['pUpiid'].setValue('');
         if (pbankid && pbankid != '') {
             const bankname = $event.target.options[$event.target.selectedIndex].text;
-            this.GetBankDetailsbyId(pbankid);
+            this.GetStatedetailsbyId(pbankid);
             this.getBankBranchName(pbankid);
             //this.GeneralReceiptForm['controls']['pbankname'].setValue(bankname);
             this.GeneralReceiptForm['controls']['pbankid'].setValue(bankname);
@@ -770,34 +837,27 @@ export class GeneralReceiptNewComponent implements OnInit {
             this.GeneralReceiptForm['controls']['pbankname'].setValue('');
         }
     }
-    getBankBranchName(pbankid: any) {
-        let data = this.banklist.filter(function (bank: { pbankid: any; }) {
-            return bank.pbankid == pbankid;
-        });
-        this.GeneralReceiptForm['controls']['pbranchname'].setValue(data[0].pbranchname);
-        this.setBalances('BANKBOOK', data[0].pbankbalance);
-        this.setBalances('PASSBOOK', data[0].pbankpassbookbalance);
-    }
+ getBankBranchName(pbankid: any): void {
 
-    GetBankDetailsbyId(pbankid: any) {
+  if (!pbankid) {
+    this.GeneralReceiptForm.controls['pbranchname'].setValue('');
+    this.setBalances('BANKBOOK', 0);
+    this.setBalances('PASSBOOK', 0);
+    return;
+  }
 
-        this._Accountservice.GetReceiptsandPaymentsLoadingData('GENERAL RECEIPT', this._CommonService.getschemaname()).subscribe(json => {
-            debugger;
-            //console.log(json)
-            if (json != null) {
-                this.upinameslist = json.bankupilist;
-                this.chequenumberslist = json.chequeslist;
-                //this.lstLoanTypes = json
-                //this.titleDetails = json as string
-                //this.titleDetails = eval("(" + this.titleDetails + ')');
-                //this.titleDetails = this.titleDetails.FT;
-            }
-        },
-            (error) => {
-                this._commonService.showErrorMessage(error);
-            });
-    }
+  const selectedBank = this.banklist.find(
+    (bank: any) => bank.pbankid === pbankid
+  );
 
+  if (selectedBank) {
+    this.GeneralReceiptForm.controls['pbranchname']
+      .setValue(selectedBank.pbranchname || '');
+
+    this.setBalances('BANKBOOK', selectedBank.pbankbalance || 0);
+    this.setBalances('PASSBOOK', selectedBank.pbankpassbookbalance || 0);
+  }
+}
     addvalidations(): boolean {
         this.formValidationMessages = {};
         let isValid = true;
@@ -1417,7 +1477,18 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
 
     public getLoadData() {
 
-        this._Accountservice.GetReceiptsandPaymentsLoadingData('GENERAL RECEIPT', this._CommonService.getschemaname()).subscribe(json => {
+
+        this._Accountservice.GetReceiptsandPaymentsLoadingData2(
+            'GENERAL RECEIPT', 
+              this._commonService.getbranchname(),
+      this._commonService.getschemaname(),
+    this._commonService.getCompanyCode(),
+  this._commonService.getBranchCode(),
+'taxes'
+        )
+            .subscribe(
+                {
+                    next:(json:any) => {
 
             //console.log(json)
             if (json != null) {
@@ -1434,21 +1505,29 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
                 this.cashRestrictAmount = json.cashRestrictAmount;
             }
         },
-            (error) => {
+            error:(error) => {
                 this._commonService.showErrorMessage(error);
+            }
             });
+        
     }
+   GetGlobalBanks(): Observable<any[]> {
+  const params = new HttpParams().set('GlobalSchema', 'global');
+
+  return this._CommonService.getAPI(
+    '/Accounts/GetGlobalBanks',
+    params,
+    'YES'
+  );
+}
 
     public gettypeofpaymentdata(): any {
-
         let data = this.modeoftransactionslist.filter(function (payment: { ptranstype: any; ptypeofpayment: any; }) {
             return payment.ptranstype != payment.ptypeofpayment;
         });
         return data;
     }
-
     tdsSection_Change($event: any): void {
-
         const pTdsSection = $event.target.value;
         this.tdspercentagelist = [];
         //this.GeneralReceiptForm['controls']['pTdsPercentage'].setValue('');
@@ -1484,8 +1563,6 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
                 this.TempgstshowInclude = true;
             }
             else {
-
-
                 this.TempgstshowExclude = true;
                 this.TempgstshowInclude = false;
             }
@@ -1867,7 +1944,7 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
     }
     GetSubLedgerData(pledgerid: any) {
 
-        this._Accountservice.GetSubLedgerData(pledgerid).subscribe(json => {
+        this._Accountservice.GetSubLedgerData(pledgerid,'accounts','KAPILCHITS','accounts','KLC01','global').subscribe(json => {
 
             if (json != null) {
 
@@ -2165,14 +2242,37 @@ editHandler(event: Event, row: any, rowIndex: number, group: any): void {
     }
 
     
-
-    BankNameChange() {
-        this.GetValidationByControl(this.GeneralReceiptForm, 'pbankname', true);
+loadBanks(): void {
+  this._Accountservice.GetGlobalBanks('global').subscribe({
+    next: (res: any[]) => {
+      this.banklist = (res || []).map(bank => ({
+        pbankid: bank.bankId,
+        pbankname: bank.bankName
+      }));
+    },
+    error: (err) => {
+      this._CommonService.showErrorMessage(err);
     }
-    BankIdChange(selectedBank: any) {
+  });
+}
+
+BankNameChange(): void {
+  this.GetValidationByControl(this.GeneralReceiptForm, 'pbankname', true);
+}
+
+BankIdChange(selectedBankName: string): void {
+
   this.GetValidationByControl(this.GeneralReceiptForm, 'pbankid', true);
 
-  this.GeneralReceiptForm.controls['pbankname'].setValue(selectedBank.pBankName);
+
+  const bank = this.banklist.find(
+    (b: any) => b.pbankname === selectedBankName
+  );
+
+  if (bank) {
+    this.GeneralReceiptForm.controls['pbankname'].setValue(bank.pbankname);
+    this.GeneralReceiptForm.controls['pbankid'].setValue(bank.pbankname); // bindValue is name
+  }
 }
     ChequeNoChange() {
         this.GetValidationByControl(this.GeneralReceiptForm, 'pChequenumber', true);

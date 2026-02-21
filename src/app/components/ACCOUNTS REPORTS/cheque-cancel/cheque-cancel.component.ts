@@ -112,7 +112,8 @@ export class ChequeCancelComponent implements OnInit {
   }
 
   GetChequeCancelDetails() {
-    if (this.validation) return;
+    // if (this.validation) return;
+    debugger;
 
     const startdate = this.commonService.getFormatDateNormal(this.f.fromdate.value);
     const enddate = this.commonService.getFormatDateNormal(this.f.todate.value);
@@ -121,7 +122,7 @@ export class ChequeCancelComponent implements OnInit {
     this.savebutton = 'Processing';
     this.disablesavebutton = true;
 
-    this.reportService.GetChequeCancelDetails(startdate, enddate).subscribe({
+    this.reportService.GetChequeCancelDetails(startdate, enddate,'accounts','global','KAPILCHITS','KLC01').subscribe({
       next: (res: any[]) => {
         this.gridData = res || [];
         this.showicons = this.gridData.length > 0;
@@ -156,18 +157,18 @@ export class ChequeCancelComponent implements OnInit {
     this.commonService.exportAsExcelFile(rows, 'Cheque_Cancel');
   }
 
-  pdfOrprint(printorpdf: 'pdf' | 'print') {
+  pdfOrprint(printorpdf: 'Pdf' | 'Print') {
     const fromDate = this.commonService.getFormatDateGlobal(this.f.fromdate.value);
     const toDate = this.commonService.getFormatDateGlobal(this.f.todate.value);
 
     const rows = this.gridData.map(e => ([
-      this.commonService.getFormatDateGlobal(e.pdepositeddate),
-      e.preferencenumber,
-      this.commonService.currencyformat(e.ptotalreceivedamount),
-      e.pbankname,
-      e.preceiptid,
-      this.commonService.getFormatDateGlobal(e.pchequedate),
-      e.pparticulars
+      this.commonService.getFormatDateGlobal(e.depositedDate),
+      e.referenceNumber,
+      this.commonService.currencyformat(e.totalReceivedAmount),
+      e.bankName,
+      e.receiptNumber,
+      this.commonService.getFormatDateGlobal(e.receiptDate),
+      e.particulars
     ]));
 
     const headers = ["Cancel Date", "Cheque No.", "Cheque Amt.", "Bank Name", "Receipt No.", "Receipt Date", "Particulars"];

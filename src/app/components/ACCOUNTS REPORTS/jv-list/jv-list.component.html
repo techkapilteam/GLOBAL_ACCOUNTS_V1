@@ -65,8 +65,8 @@
       </div>
     </div>
 
-    <!-- Form Name -->
-    <div class="col-md-2 form-group">
+    
+    <!-- <div class="col-md-2 form-group">
       <label class="required-field">Form Name</label>
       <select
         class="form-control"
@@ -77,9 +77,8 @@
         <option value="RECEIPT">RECEIPT</option>
         <option value="PAYMENT">PAYMENT</option>
       </select>
-    </div>
+    </div> -->
 
-    <!-- Transaction Type -->
     <div class="col-md-3 form-group">
       <label class="required-field">Transaction Type</label>
       <select
@@ -93,8 +92,8 @@
       >
         <option value="">Select</option>
         <option value="All">All</option>
-        <option value="Auto">Auto</option>
-        <option value="Manual">Manual</option>
+        <option value="A">Auto</option>
+        <option value="M">Manual</option>
       </select>
 
       <div class="invalid-feedback"
@@ -108,7 +107,7 @@
       <div class="form-group mt-4">
         <button
           type="button"
-          class="btn btn-s-icon px-3 border-0"
+          class="btn btn-primary px-3 border-0"
           (click)="getjvListReports()"
         >
           <img
@@ -159,7 +158,7 @@
     <div class="row mb-3">
       <div class="col-md-6">
         <strong>Between :</strong>
-        {{ startDate | date:'DD-MMM-YYYY' }} And {{ endDate | date:'DD-MMM-YYYY' }}
+        {{ startDate | date:'dd-MMM-yyyy' }} And {{ endDate | date:'dd-MMM-yyyy' }}
       </div>
       <div class="col-md-6 text-end">
         <strong>JV Type :</strong> {{ jvtype }}

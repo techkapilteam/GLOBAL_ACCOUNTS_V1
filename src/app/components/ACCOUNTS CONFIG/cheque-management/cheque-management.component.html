@@ -126,10 +126,10 @@
         <!-- Body -->
         <ng-template pTemplate="body" let-row>
           <tr>
-            <td class="text-center">{{ row.pChqbookid }}</td>
-            <td class="text-center">{{ row.pNoofcheques }}</td>
-            <td class="text-center">{{ row.pChequefrom }}</td>
-            <td class="text-center">{{ row.pChequeto }}</td>
+            <td class="text-center">{{ row.pchequebookid }}</td>
+            <td class="text-center">{{ row.pnoofcheques }}</td>
+            <td class="text-center">{{ row.pchequefromnumber }}</td>
+            <td class="text-center">{{ row.pchequetonumber }}</td>
 
             <td class="text-center">
               <span *ngIf="row.pChqegeneratestatus">Active</span>
@@ -138,9 +138,9 @@
               </a>
             </td>
 
-            <td class="text-left">{{ row.pBankname }}</td>
-            <td class="text-left">{{ row.pAccountnumber }}</td>
-            <td class="text-left">{{ row.pchequestatus }}</td>
+            <td class="text-left">{{ row.pbankname }}</td>
+            <td class="text-left">{{ row.paccountnumber }}</td>
+            <td class="text-left">{{ row.pstatus }}</td>
           </tr>
 
         </ng-template>

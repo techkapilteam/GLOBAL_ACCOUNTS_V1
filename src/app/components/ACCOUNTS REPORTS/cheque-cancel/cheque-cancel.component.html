@@ -69,14 +69,14 @@
 
           <div class="text-center fw-bold fs-5">Cheque Cancel</div>
           <div class="d-flex justify-content-end gap-2 mt-3" *ngIf="showicons">
-            <button class="btn btn-outline-danger btn-sm" (click)="pdfOrprint('pdf')">
+            <button class="btn btn-outline-danger btn-sm" (click)="pdfOrprint('Pdf')">
               <i class="fa fa-file-pdf me-1"></i> PDF
             </button>
             
             <button class="btn btn-outline-success btn-sm" (click)="export()">
               <i class="fa fa-file-excel me-1"></i> Excel
             </button>
-            <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('print')">
+            <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('Print')">
               <i class="fa fa-print me-1"></i> Print
             </button>
           </div>
@@ -118,13 +118,13 @@
 
         <ng-template pTemplate="body" let-row>
           <tr>
-            <td>{{ row.pdepositeddate | date:'dd-MM-yyyy' }}</td>
-            <td>{{ row.preferencenumber }}</td>
-            <td>{{ currencysymbol }} {{ row.ptotalreceivedamount | number:'1.2-2' }}</td>
-            <td>{{ row.pbankname }}</td>
-            <td>{{ row.preceiptid }}</td>
-            <td>{{ row.pchequedate | date:'dd-MM-yyyy' }}</td>
-            <td>{{ row.pparticulars }}</td>
+            <td>{{ row.depositedDate | date:'dd-MM-yyyy' }}</td>
+            <td>{{ row.referenceNumber }}</td>
+            <td>{{ currencysymbol }} {{ row.totalReceivedAmount | number:'1.2-2' }}</td>
+            <td>{{ row.bankName }}</td>
+            <td>{{ row.receiptNumber }}</td>
+            <td>{{ row.receiptDate | date:'dd-MM-yyyy' }}</td>
+            <td>{{ row.particulars }}</td>
           </tr>
         </ng-template>
 

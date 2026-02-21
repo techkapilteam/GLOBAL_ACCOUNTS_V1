@@ -2,7 +2,7 @@
 
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { State, process, GroupDescriptor } from '@progress/kendo-data-query';
 import { ExcelExportData } from '@progress/kendo-angular-excel-export';
 import { DataBindingDirective } from '@progress/kendo-angular-grid';
@@ -23,7 +23,8 @@ import { TableModule } from 'primeng/table';
     NgxDatatableModule,
     // CurrencyPipe,
     RouterLink,
-    TableModule
+    TableModule,
+    RouterModule
   ],
   templateUrl: './bank-config-view.component.html',
   styleUrl: './bank-config-view.component.css'
@@ -141,7 +142,14 @@ export class BankConfigViewComponent implements OnInit
     this.loading = true;
     // this.pageSize = this._commonservice.pageSize;
     this.setPageModel();
-    this.accountingmasterservice.viewbankinformation().subscribe(data => {
+    this.accountingmasterservice.viewbankinformation(
+      this._commonservice.getschemaname(),
+      this._commonservice.getbranchname(),
+      this._commonservice.getBranchCode(),
+      this._commonservice.getCompanyCode()
+    ).subscribe(
+      {
+      next:(data:any) => {
            
       this.gridView = data;
       this.gridData = this.gridView;
@@ -158,9 +166,11 @@ export class BankConfigViewComponent implements OnInit
           this.setpagenumbers(this.gridView);
    
     },
-    (error) => {
+    error:(error:any) => {
       this._commonservice.showErrorMessage(error);
-    });
+    
+  }
+});
 
     
   }
@@ -215,12 +225,19 @@ export class BankConfigViewComponent implements OnInit
   // }
   editHandler(event:any, row:any, rowIndex:any) {
     debugger;
-    this.router.navigate(['/configuration/BankConfiguration']);
+    // this.router.navigate(['/configuration/BankConfiguration']);
+    // this.router.navigate(['/accounts/accounts-config/bank-config']);
+    this.router.navigate(['/dashboard/accounts/accounts-config/bank-config']);
+
+
     this.accountingmasterservice.newformstatus("edit")
     //console.log(event.dataItem)
     //this.recordid = event.dataItem.pRecordid
     this.recordid=row.pContactId;
     this.accountingmasterservice.GetBankDetails1(row.pRecordid,row)
+
+
+
   }
   public group: any[] = [{
     field: 'pBankname'

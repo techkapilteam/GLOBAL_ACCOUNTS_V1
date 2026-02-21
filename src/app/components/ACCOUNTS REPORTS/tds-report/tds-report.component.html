@@ -7,145 +7,222 @@
 
 
     <div class="screen-content">
-      <form [formGroup]="TDSReport" class="screen-container">
+      <form [formGroup]="TdsReportForm">
 
-        <div class="screen-card">
+  <div class="section-content">
 
-          <div class="screen-content">
-            <div class="row">
+    <div class="row">
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label class="required-field">TDS Section</label>
-                  <select class="form-control" formControlName="pTdsSection" (change)="sectionchange($event)">
-                    <option value="">-- Select Section --</option>
-                    <option *ngFor="let section of tdssectionlist; trackBy: trackByFn" [value]="section.pTdsSection">
-                      {{ section.pTdsSection }}
-                    </option>
-                  </select>
-                </div>
-              </div>
+      <div class="col-md-8 col-xl-8">
+        <div class="row">
 
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label>Section Name</label>
-                  <input type="text" class="form-control" [value]="sectionName" readonly>
-                </div>
-              </div>
+          <div class="col-md-6 col-xl-6">
+            <div class="form-group">
+              <label class="required-field">Section</label>
 
-            </div>
-          </div>
-
-          <div class="screen-content">
-            <div class="row align-items-end">
-
-              <div class="col-md-2">
-                <div class="form-check mt-4">
-                  <input type="checkbox" class="form-check-input" id="asOn" (change)="onAsOnChange($event)">
-                  <label class="form-check-label" for="asOn">
-                    As On
-                  </label>
-                </div>
-              </div>
-
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="required-field">
-                    {{ asOnChecked ? 'Date' : 'From Date' }}
-                  </label>
-                  <input type="text" class="form-control" bsDatepicker formControlName="fromDate"
-                    [bsConfig]="dpFromConfig" (bsValueChange)="FromDateChange($event)" onkeydown="return false">
-                </div>
-              </div>
-
-              <div class="col-md-3" *ngIf="!asOnChecked">
-                <div class="form-group">
-                  <label class="required-field">To Date</label>
-                  <input type="text" class="form-control" bsDatepicker formControlName="toDate" [bsConfig]="dpToConfig"
-                    (bsValueChange)="ToDateChange($event)" onkeydown="return false">
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <div class="form-check mt-4">
-                  <input type="checkbox" class="form-check-input" id="summary" (change)="onSummaryChange($event)">
-                  <label class="form-check-label" for="summary">
-                    Summary
-                  </label>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <button type="button" class="btn btn-primary w-100 mt-3" (click)="generatetdsreport()"
-                  [disabled]="isLoading">
-                  {{ savebutton }}
-                </button>
-              </div>
+              <ng-select
+                [items]="tdssectiondata"
+                bindLabel="sectionid"
+                bindValue="tblmsttdsid"
+                placeholder="Select"
+                [multiple]="false"
+                [searchable]="true"
+                [clearable]="true"
+                dropdownPosition="bottom"
+                formControlName="sectionid"
+                (change)="onsectionidchange($event)"
+               >
+              </ng-select>
 
             </div>
           </div>
 
-        </div>
-      </form>
-
-      <div class="row mt-4" *ngIf="showResult && !isSummary">
-
-        <div class="col-md-12">
-
-          <p-table [value]="gridData" [paginator]="true" [rows]="10" [scrollable]="true" scrollHeight="400px"
-            responsiveLayout="scroll" styleClass="p-datatable-gridlines">
-
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Section</th>
-                <th>From Date</th>
-                <th>To Date</th>
-                <th class="text-end">Amount</th>
-              </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-row>
-              <tr>
-                <td>{{ row.pTdsSection }}</td>
-                <td>{{ row.fromDate }}</td>
-                <td>{{ row.toDate }}</td>
-                <td class="text-end">
-                  ₹ {{ row.amount | number:'1.2-2' }}
-                </td>
-              </tr>
-            </ng-template>
-
-          </p-table>
+          <div class="col-md-6 col-xl-6">
+            <div class="form-group">
+              <label>Section Name</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="sectionname"
+                readonly />
+            </div>
+          </div>
 
         </div>
       </div>
+    </div>
 
-      <div class="row mt-4" *ngIf="showResult && isSummary">
-
-        <div class="col-md-12">
-
-          <p-table [value]="summaryData" [scrollable]="true" scrollHeight="400px" styleClass="p-datatable-gridlines">
-
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Section</th>
-                <th class="text-end">Total Amount</th>
-              </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-row>
-              <tr>
-                <td>{{ row.pTdsSection }}</td>
-                <td class="text-end">
-                  ₹ {{ row.amount | number:'1.2-2' }}
-                </td>
-              </tr>
-            </ng-template>
-
-          </p-table>
-
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-check form-check-inline check-btn-secondary">
+          <input type="checkbox"
+                 class="form-check-input"
+                 id="pay-date"
+                 (change)="oncheck($event)" />
+          <label for="pay-date">As On</label>
         </div>
       </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>{{ lblfromdate }}</label>
+          <input type="text"
+                 class="form-control"
+                 bsDatepicker
+                 [bsConfig]="dpConfig"
+                 formControlName="fromdate"
+                 readonly
+                 (bsValueChange)="fromDate_Change($event)" />
+        </div>
+      </div>
+
+      <div class="col-md-3" *ngIf="betweendate">
+        <div class="form-group">
+          <label>To Date</label>
+          <input type="text"
+                 class="form-control"
+                 bsDatepicker
+                 [bsConfig]="dpConfig"
+                 formControlName="todate"
+                 readonly
+                 (bsValueChange)="toDate_Change($event)" />
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-md-2 mt-4">
+        <div class="form-check form-check-inline check-btn-secondary">
+          <input type="checkbox"
+                 class="form-check-input"
+                 formControlName="reportType"
+                 id="ason"
+                 (change)="checkox($event)" />
+          <label for="ason" class="mt-2 ms-2">Summary</label>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="d-flex justify-content-start mt-4">
+          <button type="button"
+                  class="btn btn-primary border-0 mt-1 me-3"
+                  (click)="Show()"
+                  [disabled]="disablesavebutton">
+            <i class="fa"
+               [ngClass]="{'fa-spin fa-spinner': disablesavebutton}">
+            </i>
+            {{ savebutton }}
+          </button>
+        </div>
+      </div>
+
+      <!-- <div class="col-xl-2 col-md-2 mt-4">
+        <div class="form-check form-check-inline check-btn-secondary">
+          <input type="checkbox"
+                 id="mismatch"
+                 class="form-check-input"
+                 (change)="mismatchcheckInfo($event)" />
+          <label for="mismatch" class="mt-2">Mismatch Info</label>
+        </div>
+      </div> -->
+
+    </div>
+
+    <div *ngIf="noDtTable" class="col-md-12 mt-2">
+      NO RECORDS TO DISPLAY
+    </div>
+
+  </div>
+
+  <div class="section-content mt-3" *ngIf="dtTable">
+
+    <div class="d-flex justify-content-end mb-2">
+      <a (click)="pdfOrprint('Pdf')" class="export-icons me-2">
+        <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" />
+      </a>
+
+      <a (click)="pdfOrprint('Print')" class="export-icons me-2">
+        <img src="assets/images/print-icon-blue.svg" width="18" title="Print" />
+      </a>
+
+      <a (click)="export()" class="export-icons">
+        <img src="assets/images/icon-excel.svg" width="18" title="Excel" />
+      </a>
+    </div>
+
+    <p-table
+      [value]="tdsreportdata"
+      [paginator]="true"
+      [rows]="pageCriteria.pageSize"
+      [rowsPerPageOptions]="[10,25,50,100]"
+      [responsiveLayout]="'scroll'"
+      [scrollable]="true"
+      scrollHeight="500px"
+      styleClass="p-datatable-gridlines p-datatable-sm">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th *ngIf="!summary">Particulars</th>
+          <th>Pan Number</th>
+          <th *ngIf="!summary">PAN Status</th>
+          <th>Agent Name</th>
+          <th>Agent Code</th>
+          <th *ngIf="!summary">Transaction Date</th>
+          <th class="text-end">Paid Amount</th>
+          <th class="text-end">TDS Calculated Amount</th>
+          <th class="text-end">Amount</th>
+          <th *ngIf="!summary">Effective JV</th>
+          <th *ngIf="!summary">Subscriber Branch</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-row>
+        <tr>
+
+          <td *ngIf="!summary">{{ row.paid_to || '--NA--' }}</td>
+
+          <td>{{ row.pannumber || '--NA--' }}</td>
+
+          <td *ngIf="!summary">{{ row.panstatus || '--NA--' }}</td>
+
+          <td>{{ row.agentName }}</td>
+
+          <td>{{ row.referalcode }}</td>
+
+          <td *ngIf="!summary">
+            {{ row.transaction_date | date:'dd-MMM-yyyy' }}
+          </td>
+
+          <td class="text-end">
+            {{ currencysymbol }}
+            {{ row.paidamount < 0 ? '(' + (getAbsoluteValue(row.paidamount) | number:'1.2-2') + ')' : (row.paidamount | number:'1.2-2') }}
+          </td>
+
+          <td class="text-end">
+            {{ currencysymbol }}
+            {{ row.tdscalculatedamount < 0 ? '(' + (getAbsoluteValue(row.tdscalculatedamount) | number:'1.2-2') + ')' : (row.tdscalculatedamount | number:'1.2-2') }}
+          </td>
+
+          <td class="text-end">
+            {{ currencysymbol }}
+            {{ row.ledgeramount < 0 ? '(' + (getAbsoluteValue(row.ledgeramount) | number:'1.2-2') + ')' : (row.ledgeramount | number:'1.2-2') }}
+          </td>
+
+          <td *ngIf="!summary">{{ row.effectedjvid }}</td>
+
+          <td *ngIf="!summary">
+            {{ row.subscriberbranchname || '--NA--' }}
+          </td>
+
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
+</form>
     </div>
   </div>
 </div>
