@@ -291,13 +291,22 @@ export class AccountingReportsService {
     return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherReportData', params, 'YES');
   }
 
-  GetComparisionTB(fromdate: string, todate: string): Observable<any> {
+  // GetComparisionTB(fromdate: string, todate: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromDate', fromdate)
+  //     .set('todate', todate)
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetComparisionTB', params, 'YES');
+  // }
+  GetComparisionTB(fromdate: string, todate: string,BranchSchema:any,GlobalSchema:any,company_code:any,branch_code:any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromdate)
       .set('todate', todate)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema).set('company_code', company_code).set('branch_code', branch_code);
 
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetComparisionTB', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetComparisionTB', params, 'YES');
   }
 
   // GetTrialBalanceData(fromdate: string, todate: string, grouptype: string): Observable<any> {
@@ -1112,86 +1121,193 @@ export class AccountingReportsService {
     if (printorpdf === 'Print') this.setiFrameForPrint(doc);
   }
 
+  // _ComparisionTBReportsPdf(
+  //   reportName: string,
+  //   gridData: any[],
+  //   gridheaders: any[],
+  //   colWidthHeight: any,
+  //   pagetype: any,
+  //   betweenorason: string,
+  //   fromdate: string,
+  //   todate: string,
+  //   printorpdf: string
+  // ) {
+  //   const Companyreportdetails = this._CommonService._getCompanyDetails();
+  //   const doc = new jsPDF({
+  //     orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+  //     format: 'a4'
+  //   });
+
+  //   const today = this._CommonService.pdfProperties('Date');
+  //   const kapil_logo = this._CommonService.getKapilGroupLogo();
+  //   const currencyformat = this._CommonService.currencysymbol;
+  //   const totalPagesExp = '{total_pages_count_string}';
+
+  //   autoTable(doc, {
+  //     head: [gridheaders],
+  //     body: gridData,
+  //     startY: 55,
+  //     theme: 'grid',
+  //     columnStyles: colWidthHeight,
+  //     didDrawPage: () => {
+  //       const pageHeight = doc.internal.pageSize.getHeight();
+  //       const pageWidth = doc.internal.pageSize.getWidth();
+
+  //       doc.setFont('helvetica', 'normal');
+  //       if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
+
+  //       doc.setFontSize(15);
+  //       doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
+
+  //       doc.setFontSize(14);
+  //       doc.text(String(reportName ?? ''), 90, 30);
+
+  //       if (betweenorason === 'Between') {
+  //         doc.text(String(`Between : ${fromdate ?? ''} And ${todate ?? ''}`), 15, 40);
+  //       }
+
+  //       const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
+  //       let page = 'Page ' + String(pageNo);
+
+  //       if (typeof (doc as any).putTotalPages === 'function') {
+  //         page += ' of ' + totalPagesExp;
+  //       }
+
+  //       doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+  //       doc.setFontSize(10);
+  //       doc.text(String('Printed on : ' + today), 15, pageHeight - 5);
+  //       doc.text(String(page), pageWidth - 30, pageHeight - 5);
+  //     },
+  //     didDrawCell: (data: any) => {
+  //       if (data.cell.section === 'body' && data.column.index > 0 && data.cell.raw !== 0 && currencyformat === '₹') {
+  //         const rupeeImg = this._CommonService._getRupeeSymbol();
+  //         const textPos = data.cell.textPos;
+  //         doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+  //       }
+  //     }
+      
+  //   });
+
+  //   if (typeof (doc as any).putTotalPages === 'function') {
+  //     (doc as any).putTotalPages(totalPagesExp);
+  //   }
+
+  //   if (printorpdf === 'Pdf') {
+  //     doc.save(`${reportName ?? 'report'}.pdf`);
+  //   }
+
+  //   if (printorpdf === 'Print') {
+  //     this.setiFrameForPrint(doc);
+  //   }
+  // }
   _ComparisionTBReportsPdf(
-    reportName: string,
-    gridData: any[],
-    gridheaders: any[],
-    colWidthHeight: any,
-    pagetype: any,
-    betweenorason: string,
-    fromdate: string,
-    todate: string,
-    printorpdf: string
-  ) {
-    const Companyreportdetails = this._CommonService._getCompanyDetails();
-    const doc = new jsPDF({
-      orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
-      format: 'a4'
-    });
+  reportName: string,
+  gridData: any[],
+  gridheaders: any[],
+  colWidthHeight: any,
+  pagetype: any,
+  betweenorason: string,
+  fromdate: string,
+  todate: string,
+  printorpdf: string
+) {
+  const Companyreportdetails = this._CommonService._getCompanyDetails();
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    format: 'a4'
+  });
 
-    const today = this._CommonService.pdfProperties('Date');
-    const kapil_logo = this._CommonService.getKapilGroupLogo();
-    const currencyformat = this._CommonService.currencysymbol;
-    const totalPagesExp = '{total_pages_count_string}';
+  const today = this._CommonService.pdfProperties('Date');
+  const kapil_logo = this._CommonService.getKapilGroupLogo();
+  const currencyformat = this._CommonService.currencysymbol;
+  const totalPagesExp = '{total_pages_count_string}';
 
-    (doc as any).autoTable({
-      head: [gridheaders],
-      body: gridData,
-      startY: 55,
-      theme: 'grid',
-      columnStyles: colWidthHeight,
-      didDrawPage: () => {
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const pageWidth = doc.internal.pageSize.getWidth();
+  // ✅ Use index-based column styles since rows are flat arrays
+  const columnStyles: any = {
+    0: { cellWidth: 82 },              // Particulars (wide)
+    1: { cellWidth: 28, halign: 'right' }, // Debit 1
+    2: { cellWidth: 28, halign: 'right' }, // Credit 1
+    3: { cellWidth: 28, halign: 'right' }, // Debit 2
+    4: { cellWidth: 28, halign: 'right' }, // Credit 2
+    5: { cellWidth: 28, halign: 'right' }, // Debit Total
+    6: { cellWidth: 28, halign: 'right' }, // Credit Total
+  };
 
-        doc.setFont('helvetica', 'normal');
-        if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
+  autoTable(doc, {
+    head: [gridheaders],
+    body: gridData,
+    startY: 55,
+    theme: 'grid',
+    columnStyles: columnStyles,  // ✅ use index-based styles
+    tableWidth: 250,
+    margin: { left: 10, right: 10 },
+    styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
+    headStyles: { fillColor: [0, 168, 168], textColor: 255, fontSize: 8 },
+    didParseCell: (data: any) => {
+    if (data.row.raw?.isSubtotal === true) {
+      data.cell.styles.fillColor = '#ffffb3';
+      data.cell.styles.halign = data.column.index === 0 ? 'left' : 'right';
+      data.cell.styles.fontStyle = 'bold';
+    }
+  },
+    didDrawPage: () => {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const pageWidth = doc.internal.pageSize.getWidth();
 
-        doc.setFontSize(15);
-        doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
+      doc.setFont('helvetica', 'normal');
+      if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
 
-        doc.setFontSize(14);
-        doc.text(String(reportName ?? ''), 90, 30);
+      doc.setFontSize(15);
+      doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
 
-        if (betweenorason === 'Between') {
-          doc.text(String(`Between : ${fromdate ?? ''} And ${todate ?? ''}`), 15, 40);
-        }
+      doc.setFontSize(14);
+      doc.text(String(reportName ?? ''), pageWidth / 2, 30, { align: 'center' });
 
-        const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
-        let page = 'Page ' + String(pageNo);
-
-        if (typeof (doc as any).putTotalPages === 'function') {
-          page += ' of ' + totalPagesExp;
-        }
-
-        doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
-        doc.setFontSize(10);
-        doc.text(String('Printed on : ' + today), 15, pageHeight - 5);
-        doc.text(String(page), pageWidth - 30, pageHeight - 5);
-      },
-      didDrawCell: (data: any) => {
-        if (data.cell.section === 'body' && data.column.index > 0 && data.cell.raw !== 0 && currencyformat === '₹') {
-          const rupeeImg = this._CommonService._getRupeeSymbol();
-          const textPos = data.cell.textPos;
-          doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
-        }
+      if (betweenorason === 'Between') {
+        doc.setFontSize(11);
+        doc.text(`Between : ${fromdate ?? ''} And ${todate ?? ''}`, 15, 42);
       }
-    });
 
-    if (typeof (doc as any).putTotalPages === 'function') {
-      (doc as any).putTotalPages(totalPagesExp);
-    }
+      const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
+      let page = 'Page ' + String(pageNo);
+      if (typeof (doc as any).putTotalPages === 'function') {
+        page += ' of ' + totalPagesExp;
+      }
 
-    if (printorpdf === 'Pdf') {
-      doc.save(`${reportName ?? 'report'}.pdf`);
+      doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+      doc.setFontSize(10);
+      doc.text('Printed on : ' + today, 15, pageHeight - 5);
+      doc.text(page, pageWidth - 30, pageHeight - 5);
+    },
+    didDrawCell: (data: any) => {
+      if (
+        data.cell.section === 'body' &&
+        data.column.index > 0 &&
+        data.cell.raw !== 0 &&
+        data.cell.raw !== '' &&
+        currencyformat === '₹'
+      ) {
+        const rupeeImg = this._CommonService._getRupeeSymbol();
+        const textPos = data.cell.textPos;
+        doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+      }
     }
+  });
 
-    if (printorpdf === 'Print') {
-      this.setiFrameForPrint(doc);
-    }
+  if (typeof (doc as any).putTotalPages === 'function') {
+    (doc as any).putTotalPages(totalPagesExp);
   }
 
+  if (printorpdf === 'Pdf') {
+    doc.save(`${reportName ?? 'report'}.pdf`);
+  }
 
+  if (printorpdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
+  
+  
   setiFrameForPrint(doc: any) {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';

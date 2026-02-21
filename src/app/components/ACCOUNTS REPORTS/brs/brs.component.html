@@ -241,150 +241,124 @@
     </div>
     <div *ngIf="!Showhide" class="section-content mt-2">
 
-  <div class="d-flex justify-content-end mt-4">
-    <img src="assets/images/pdf-icon-blue.svg"
-         width="20"
-         class="me-3"
-         style="cursor:pointer"
-         (click)="pdfOrprint('Pdf')" />
+      <div class="d-flex justify-content-end mt-4">
+        <img src="assets/images/pdf-icon-blue.svg" width="20" class="me-3" style="cursor:pointer"
+          (click)="pdfOrprint('Pdf')" />
 
-    <img src="assets/images/print-icon-blue.svg"
-         width="20"
-         style="cursor:pointer"
-         (click)="pdfOrprint('Print')" />
-  </div>
-
-  <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
-    <h5 class="m-0 fw-bold">Bank Reconciliation</h5>
-    <div class="mt-2">
-      <span class="fw-bold">As on :</span>
-      {{ startDate | date }}
-    </div>
-    <div class="fw-bold">
-      {{ bankname }}
-    </div>
-  </div>
-
-  <div class="mt-4">
-
-    <p-table
-      [value]="gridView"
-      rowGroupMode="subheader"
-      groupRowsBy="pGroupType"
-      sortField="pGroupType"
-      [sortOrder]="1"
-      [paginator]="true"
-      [rows]="pageCriteria.pageSize"
-      [tableStyle]="{'min-width':'100%'}">
-
-      <ng-template pTemplate="rowgroupheader" let-rowData>
-        <tr>
-          <td colspan="4" class="fw-bold bg-light">
-            {{ rowData.pGroupType }}
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Transaction Date</th>
-          <th>Cheque No.</th>
-          <th>Particulars</th>
-          <th class="text-end">Amount</th>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="body" let-row>
-        <tr>
-          <td>{{ row.ptransactiondate | date }}</td>
-          <td>{{ row.pChequeNumber || '--NA--' }}</td>
-          <td>{{ row.pparticulars || '--NA--' }}</td>
-          <td class="text-end">
-            {{ currencysymbol }}
-            {{ row.ptotalreceivedamount | number:'1.2-2' }}
-          </td>
-        </tr>
-      </ng-template>
-
-      <ng-template pTemplate="rowgroupfooter" let-rowData>
-        <tr class="fw-bold">
-          <td colspan="3" class="text-end">Total :</td>
-          <td class="text-end">
-
-            <ng-container *ngIf="rowData.pGroupType === 'CHEQUES DEPOSITED BUT NOT CREDITED'">
-              {{ currencysymbol }}
-              {{ chequesdepositedbutnotcredited | number:'1.2-2' }}
-            </ng-container>
-
-            <ng-container *ngIf="rowData.pGroupType === 'CHEQUES ISSUED BUT NOT CLEARED'">
-              {{ currencysymbol }}
-              {{ CHEQUESISSUEDBUTNOTCLEARED | number:'1.2-2' }}
-            </ng-container>
-
-          </td>
-        </tr>
-      </ng-template>
-
-    </p-table>
-
-  </div>
-
-  <div class="border rounded shadow-sm bg-white p-3 mt-4" *ngIf="show">
-
-    <form [formGroup]="BRStatmentForm">
-
-      <p><b>Balance as per bank book:</b>
-        {{ currencysymbol }} {{ pBankBookBalance | number:'1.2-2' }}</p>
-
-      <p><b>Less: Cheques deposited but not credited:</b>
-        {{ currencysymbol }} {{ chequesdepositedbutnotcredited | number:'1.2-2' }}</p>
-
-      <p><b>Add: Cheques issued but not cleared:</b>
-        {{ currencysymbol }} {{ CHEQUESISSUEDBUTNOTCLEARED | number:'1.2-2' }}</p>
-
-      <p><b>Balance as per pass book:</b>
-        {{ currencysymbol }} {{ Balanceasperbankbook | number:'1.2-2' }}</p>
-
-      <div class="mb-3">
-        <label class="fw-bold">Bank Balance</label>
-        <input type="text"
-               class="form-control"
-               formControlName="pbankbalance" />
+        <img src="assets/images/print-icon-blue.svg" width="20" style="cursor:pointer" (click)="pdfOrprint('Print')" />
       </div>
 
-      <div class="mb-3">
-        <label class="fw-bold">Upload Document</label>
-        <div class="input-group">
-          <input type="text"
-                 class="form-control"
-                 formControlName="pFilename"
-                 readonly />
-          <button type="button"
-                  class="btn btn-outline-primary"
-                  (click)="fileInput.click()">Upload</button>
-          <input hidden type="file"
-                 #fileInput
-                 (change)="uploadAndProgress($event)" />
+      <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
+        <h5 class="m-0 fw-bold">Bank Reconciliation</h5>
+        <div class="mt-2">
+          <span class="fw-bold">As on :</span>
+          {{ startDate | date:'dd-MM-yyyy' }}
+        </div>
+        <div class="fw-bold">
+          {{ bankname }}
         </div>
       </div>
 
-      <div class="text-end"
-           *ngIf="BRStatmentForm.get('pbankbalance')?.value">
+      <div class="mt-4">
 
-        <button type="button"
-                class="btn btn-primary"
-                [disabled]="isLoading"
-                (click)="saveWithPrint()">
+        <p-table [value]="gridView" rowGroupMode="subheader" groupRowsBy="pGroupType" sortField="pGroupType"
+          [sortOrder]="1" [paginator]="true" [rows]="pageCriteria.pageSize" [tableStyle]="{'min-width':'100%'}">
 
-          {{ isLoading ? 'Processing...' : 'Save' }}
+          <ng-template pTemplate="rowgroupheader" let-rowData>
+            <tr>
+              <td colspan="4" class="fw-bold bg-light">
+                {{ rowData.pGroupType }}
+              </td>
+            </tr>
+          </ng-template>
 
-        </button>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Transaction Date</th>
+              <th>Cheque No.</th>
+              <th>Particulars</th>
+              <th class="text-end">Amount</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-row>
+            <tr>
+              <td>{{ row.ptransactiondate | date }}</td>
+              <td>{{ row.pChequeNumber || '--NA--' }}</td>
+              <td>{{ row.pparticulars || '--NA--' }}</td>
+              <td class="text-end">
+                {{ currencysymbol }}
+                {{ row.ptotalreceivedamount | number:'1.2-2' }}
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="rowgroupfooter" let-rowData>
+            <tr class="fw-bold">
+              <td colspan="3" class="text-end">Total :</td>
+              <td class="text-end">
+
+                <ng-container *ngIf="rowData.pGroupType === 'CHEQUES DEPOSITED BUT NOT CREDITED'">
+                  {{ currencysymbol }}
+                  {{ chequesdepositedbutnotcredited | number:'1.2-2' }}
+                </ng-container>
+
+                <ng-container *ngIf="rowData.pGroupType === 'CHEQUES ISSUED BUT NOT CLEARED'">
+                  {{ currencysymbol }}
+                  {{ CHEQUESISSUEDBUTNOTCLEARED | number:'1.2-2' }}
+                </ng-container>
+
+              </td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+
       </div>
 
-    </form>
+      <div class="border rounded shadow-sm bg-white p-3 mt-4" *ngIf="show">
 
-  </div>
+        <form [formGroup]="BRStatmentForm">
 
-</div>
+          <p><b>Balance as per bank book:</b>
+            {{ currencysymbol }} {{ pBankBookBalance | number:'1.2-2' }}</p>
+
+          <p><b>Less: Cheques deposited but not credited:</b>
+            {{ currencysymbol }} {{ chequesdepositedbutnotcredited | number:'1.2-2' }}</p>
+
+          <p><b>Add: Cheques issued but not cleared:</b>
+            {{ currencysymbol }} {{ CHEQUESISSUEDBUTNOTCLEARED | number:'1.2-2' }}</p>
+
+          <p><b>Balance as per pass book:</b>
+            {{ currencysymbol }} {{ Balanceasperbankbook | number:'1.2-2' }}</p>
+
+          <div class="mb-3">
+            <label class="fw-bold">Bank Balance</label>
+            <input type="text" class="form-control" formControlName="pbankbalance" />
+          </div>
+
+          <div class="mb-3">
+            <label class="fw-bold">Upload Document</label>
+            <div class="input-group">
+              <input type="text" class="form-control" formControlName="pFilename" readonly />
+              <button type="button" class="btn btn-outline-primary" (click)="fileInput.click()">Upload</button>
+              <input hidden type="file" #fileInput (change)="uploadAndProgress($event)" />
+            </div>
+          </div>
+
+          <div class="text-end" *ngIf="BRStatmentForm.get('pbankbalance')?.value">
+
+            <button type="button" class="btn btn-primary" [disabled]="isLoading" (click)="saveWithPrint()">
+
+              {{ isLoading ? 'Processing...' : 'Save' }}
+
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
   </div>
 </div>

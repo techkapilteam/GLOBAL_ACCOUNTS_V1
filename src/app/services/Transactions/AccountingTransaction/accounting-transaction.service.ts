@@ -352,9 +352,13 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherData', params, 'YES');
   }
-  UnusedhequeCancel(data: any) {
-    debugger
-    return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
+  // UnusedhequeCancel(data: any) {
+  //   debugger
+  //   return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
+  // }
+  UnusedhequeCancel(data: any,BranchCode:any,CompanyCode:any,branchSchema:any,GlobalSchema:any) {
+    const params = new HttpParams().set('data', data).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode).set('branchSchema', branchSchema).set('GlobalSchema', GlobalSchema);
+    return this._CommonService.postAPI('/Accounts/UnusedhequeCancel', params)
   }
 
   // GetChequeReturnDetails(strFromDate: any, strToDate: any, p0: string, p1: string, p2: string, p3: string) {

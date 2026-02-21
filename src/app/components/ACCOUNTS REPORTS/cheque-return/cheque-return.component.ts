@@ -222,8 +222,6 @@ export class ChequeReturnComponent implements OnInit {
     this.pageCriteria.currentPageRows = Math.min(this.gridData.length, this.pageCriteria.pageSize);
   }
 
-  // ------------------ EXPORT EXCEL ------------------
-
   export(): void {
     const rows = this.gridData.map(e => ({
       "Return Date": this.commonService.getFormatDateGlobal(e.pcleardate),
@@ -238,8 +236,6 @@ export class ChequeReturnComponent implements OnInit {
 
     this.commonService.exportAsExcelFile(rows, 'Cheque_Return');
   }
-
-  // ------------------ PDF / PRINT ------------------
 
   pdfOrprint(type: 'Pdf' | 'Print') {
 

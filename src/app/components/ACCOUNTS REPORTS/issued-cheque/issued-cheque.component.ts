@@ -141,7 +141,6 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetIssuedBankDetails(event: any) {
-    debugger;
     this.isSubmited = true;
 
     if (this.FrmIssuedCheque.invalid) {
@@ -229,6 +228,7 @@ export class IssuedChequeComponent implements OnInit {
       this.commonService.showWarningMessage('Select Atleast One Un Used Cheque No.');
       return;
     }
+    debugger;
 
     this.savebutton = 'Processing';
 
@@ -243,7 +243,7 @@ export class IssuedChequeComponent implements OnInit {
       pchqfromto: this.chequefrom
     };
 
-    this.accountingTransaction.UnusedhequeCancel(JSON.stringify(payload)).subscribe({
+    this.accountingTransaction.UnusedhequeCancel(JSON.stringify(payload),'KLC01','KAPILCHITS','accounts','global').subscribe({
       next: () => {
         this.commonService.showSuccessMsg('Cancelled Successfully');
         this.savebutton = 'Submit';
