@@ -53,7 +53,7 @@ export class ChequesInbankComponent implements OnInit {
   public todayDate: any;
   endindex: any;
 
-  selectedTab: string = 'all'; // default active tab
+  selectedTab: string = 'all'; 
 
   tabsShowOrHideBasedOnfromFormName: boolean = false;
   BanksList: any[] = [];
@@ -101,7 +101,9 @@ export class ChequesInbankComponent implements OnInit {
   brsdateshowhidereturned = false;
   validatebrsdateclear = false;
   validatebrsdatereturn = false;
-  showicons = false
+  //showicons = true;
+  showicons: boolean = true;
+
   ChequesInBankForm!: FormGroup;
   BrsDateForm!: FormGroup;
   ChequesInBankValidation: any = {};
@@ -2277,7 +2279,7 @@ export class ChequesInbankComponent implements OnInit {
     this.Totlaamount = 0;
     let GetChequesInBankData = this._accountingtransaction.GetChequesInBankData(this.bankid, 0, 99999, this.modeofreceipt, this._searchText, "PDF");
     let ChequesClearReturnData = this._accountingtransaction.DataFromBrsDatesChequesInBank(this.fromdate, this.todate, this.bankid, this.modeofreceipt, this._searchText, 0, 99999);
-    //this._accountingtransaction.GetChequesInBankData(this.bankid,0,999999,this.modeofreceipt,this._searchText,"PDF")
+    //this._accountingtransaction.GetChequesInBankData(this.bankid,0,999999,this.modeofreceipt,this._searchText,printorpdf )
     forkJoin(GetChequesInBankData, ChequesClearReturnData)
       .subscribe(result => {
         let gridData: any;
@@ -2288,7 +2290,7 @@ export class ChequesInbankComponent implements OnInit {
         else {
           gridData = result[0].pchequesOnHandlist;
         }
-        // this.ChequesClearReturnData = result.pchequesclearreturnlist;
+         //this.ChequesClearReturnData = result.pchequesclearreturnlist;
 
         let rows: any[] = [];
         let reportname = "Cheques In Bank";
@@ -3484,6 +3486,8 @@ export class ChequesInbankComponent implements OnInit {
 
     // Call your data fetching method
     this.GetChequesInBank(this.bankid, first, rows, '');
+
+    
   }
 
 
