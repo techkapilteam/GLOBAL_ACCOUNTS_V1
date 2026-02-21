@@ -22,6 +22,9 @@ import { environment } from '../envir/environment';
   providedIn: 'root',
 })
 export class CommonService {
+  addWrappedText(arg0: { text: any[]; textWidth: number; doc: jsPDF; fontSize: number; fontType: string; lineSpacing: number; xPosition: number; initialYPosition: number; pageWrapInitialYPosition: number; }) {
+    throw new Error('Method not implemented.');
+  }
 
 
 
