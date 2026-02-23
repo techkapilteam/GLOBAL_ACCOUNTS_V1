@@ -4,8 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
-import { Observable } from 'rxjs';
-import { GeneralReceiptCancelService } from '../../../services/Transactions/general-receipt-cancel.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-general-receipt-cancel',
@@ -34,9 +33,22 @@ export class GeneralReceiptCancelComponent implements OnInit {
   lblemployee = '';
   currencysymbol = '₹';
 
-  receiptdata: any[] = [];
+  // 🔹 Dummy receipt dropdown data
+  receiptdata: any[] = [
+    {
+      payment_number: 'GR-001',
+      tbl_trans_pettycash_voucher_id: 1
+    },
+    {
+      payment_number: 'GR-002',
+      tbl_trans_pettycash_voucher_id: 2
+    }
+  ];
+
+  // 🔹 Dummy authorised-by list
   authorizedbylist!: Observable<any[]>;
 
+  // 🔹 Dummy grid data
   generealreceiptdata: any[] = [];
 
   pageCriteria = {
@@ -50,14 +62,16 @@ export class GeneralReceiptCancelComponent implements OnInit {
     showWeekNumbers: false
   };
 
-  constructor(
-    private fb: FormBuilder,
-    private service: GeneralReceiptCancelService
-  ) {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.createForm();
-    this.loadReceiptNumbers();
+
+    // Dummy authorised-by observable
+    this.authorizedbylist = of([
+      { subintroducedid: 1, subintroducedname: 'Manager One' },
+      { subintroducedid: 2, subintroducedname: 'Manager Two' }
+    ]);
   }
 
   private createForm(): void {
@@ -78,46 +92,35 @@ export class GeneralReceiptCancelComponent implements OnInit {
 
     this.show = true;
 
-    const receiptId = this.GeneralReceiptCancelForm.value.receiptid;
-    console.log('Selected Receipt ID:', receiptId);
+    // 🔹 Bind dummy header + grid data
+    this.bindDummyReceiptData();
   }
 
-  loadReceiptNumbers(): void {
-    this.service.getReceiptNumber().subscribe({
-      next: (res: any) => this.receiptdata = res || [],
-      error: (err: any) => console.error(err)
-    });
-  }
+  // 🔹 Dummy receipt details (exactly matching HTML bindings)
+  private bindDummyReceiptData(): void {
 
-  getreceiptdata(receiptId: any): void {
+    this.lblcontact = 'Dummy Customer';
+    this.lblreceiptdate = new Date();
+    this.lblnarration = 'Dummy receipt narration';
+    this.lblmodeoftransaction = 'Cash';
+    this.lblemployee = 'Dummy Employee';
 
-    if (!receiptId) {
-      this.generealreceiptdata = [];
-      this.show = false;
-      return;
-    }
-
-    // Always set current date
-    this.GeneralReceiptCancelForm.patchValue({
-      ppaymentdate: new Date()
-    });
-
-    this.service.getreceiptdata(receiptId).subscribe({
-      next: (res: any) => {
-
-        if (!res) return;
-
-        this.lblcontact = res.contactname;
-        this.lblreceiptdate = res.receiptdate;
-        this.lblnarration = res.narration;
-        this.lblmodeoftransaction = res.modeoftransaction;
-        this.lblemployee = res.employee;
-
-        this.generealreceiptdata = res.receiptDetails || [];
-        this.pageCriteria.totalrows = this.generealreceiptdata.length;
+    this.generealreceiptdata = [
+      {
+        parentaccountname: 'Sales Account',
+        totalreceivedamount: 3000
       },
-      error: (err: any) => console.error(err)
-    });
+      {
+        parentaccountname: 'Service Charges',
+        totalreceivedamount: 1500
+      },
+      {
+        parentaccountname: 'Tax',
+        totalreceivedamount: 500
+      }
+    ];
+
+    this.pageCriteria.totalrows = this.generealreceiptdata.length;
   }
 
   Save(): void {
@@ -131,18 +134,14 @@ export class GeneralReceiptCancelComponent implements OnInit {
     this.ButtonType = 'Processing';
 
     const payload = this.GeneralReceiptCancelForm.getRawValue();
+    console.log('Dummy Save Payload:', payload);
 
-    this.service.saveReceiptCancel(payload).subscribe({
-      next: () => {
-        alert('Receipt cancelled successfully');
-        this.resetForm();
-      },
-      error: (err: any) => console.error(err),
-      complete: () => {
-        this.disablesavebutton = false;
-        this.ButtonType = 'Save';
-      }
-    });
+    setTimeout(() => {
+      alert('Receipt cancelled successfully (Dummy)');
+      this.resetForm();
+      this.disablesavebutton = false;
+      this.ButtonType = 'Save';
+    }, 1000);
   }
 
   Cancel(): void {
@@ -158,10 +157,10 @@ export class GeneralReceiptCancelComponent implements OnInit {
     });
 
     this.generealreceiptdata = [];
+    this.pageCriteria.totalrows = 0;
     this.show = false;
   }
 
-  
   onPrimePageChange(event: any): void {
     this.pageCriteria.offset = event.first / event.rows;
     this.pageCriteria.pageSize = event.rows;
