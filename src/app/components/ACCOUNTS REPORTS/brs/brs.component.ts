@@ -287,12 +287,14 @@ setPageModel(): void {
   }
 
   getBRStatmentReports(): void {
+    debugger;
 
     this.submitted = true;
     if (this.BRStatmentForm.invalid) return;
 
     this.loading = true;
     this.isLoading = true;
+    this.Showhide=false
     this.savebutton = 'Processing';
 
     const fromDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.fromDate)??'';
