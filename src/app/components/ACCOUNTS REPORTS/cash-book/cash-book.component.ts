@@ -158,8 +158,23 @@ export class CashBookComponent implements OnInit {
     const formattedFrom = this.commonService.getFormatDateGlobal(fromDate)??'';
     const formattedTo = this.commonService.getFormatDateGlobal(toDate)??'';
 
-    this.reportService
-      .GetCashBookReportbyDates(formattedFrom, formattedTo, ptranstype)
+  //   this.reportService
+  //     .GetCashBookReportbyDates(formattedFrom, formattedTo, ptranstype,'accounts','KAPILCHITS','KLC01')
+  //     .subscribe({
+  //       next: (res: any) => {
+  //         this.temppsubarray = res?.plstcashbookdata ?? [];
+  //         this.gridView = [...this.temppsubarray];
+  //         this.showicons = this.gridView.length > 0;
+  //         this.isLoading = false;
+  //       },
+  //       error: (err) => {
+  //         this.commonService.showErrorMessage(err);
+  //         this.isLoading = false;
+  //       }
+  //     });
+  // }
+  this.reportService
+      .GetCashBookReportbyDates(formattedFrom, formattedTo,'accounts','KAPILCHITS','KLC01')
       .subscribe({
         next: (res: any) => {
           this.temppsubarray = res?.plstcashbookdata ?? [];

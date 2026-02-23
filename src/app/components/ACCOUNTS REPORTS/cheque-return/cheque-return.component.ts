@@ -193,7 +193,7 @@ export class ChequeReturnComponent implements OnInit {
     const fromdate = this.commonService.getFormatDateNormal(from);
     const todate = this.commonService.getFormatDateNormal(to);
 
-    this.reportService.GetChequeReturnDetails(fromdate, todate).subscribe({
+    this.reportService.GetChequeReturnDetails(fromdate, todate,'accounts','global','KAPILCHITS','KLC01').subscribe({
       next: (res: any[]) => {
         this.gridData = res || [];
         this.showicons = this.gridData.length > 0;
@@ -252,7 +252,7 @@ export class ChequeReturnComponent implements OnInit {
       this.commonService.getFormatDateGlobal(e.pcleardate),
       e.preferencenumber,
       this.commonService.convertAmountToPdfFormat(
-        this.commonService.currencyformat(e.ptotalreceivedamount)
+        this.commonService.currencyFormat(e.ptotalreceivedamount)
       ),
       e.pbankname,
       e.preceiptid,

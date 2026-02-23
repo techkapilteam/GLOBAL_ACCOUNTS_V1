@@ -141,9 +141,7 @@ today = new Date();
 
     if (!ledgerId) return;
 
-    this.transactionService.GetSubLedgerData(ledgerId
-      
-    )
+    this.transactionService.GetSubLedgerData(ledgerId)
       .subscribe({
         next: (res) => this.subledgeraccountslist = res ?? [],
         error: (err) => this.commonService.showErrorMessage(err)

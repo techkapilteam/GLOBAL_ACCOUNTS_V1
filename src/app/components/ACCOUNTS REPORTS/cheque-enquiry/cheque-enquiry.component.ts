@@ -321,7 +321,7 @@ export class ChequeEnquiryComponent implements OnInit {
   });
 
   const amountTotal = this.commonService.convertAmountToPdfFormat(
-    this.commonService.currencyformat(this.amounttotal)
+    this.commonService.currencyFormat(this.amounttotal)
   );
 
   this.commonService._downloadchqrecReportsPdf(

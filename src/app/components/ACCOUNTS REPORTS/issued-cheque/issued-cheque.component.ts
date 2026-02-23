@@ -126,20 +126,22 @@ export class IssuedChequeComponent implements OnInit {
 
     if (!event) return;
 
-    const bankId = event.pbankaccountid;
-    this.BankName = event.pbankname;
+    const bankId = event.bankAccountId;
+    this.BankName = event.bankName;
 
-    this.reportService.GetBankChequeDetails(bankId).subscribe({
+    // this.reportService.GetBankChequeDetails(bankId).subscribe({
+    //   next: res => (this.lstBankChequeDetails = res ?? []),
+    //   error: err => this.commonService.showErrorMessage(err)
+    // });
+    this.reportService.GetBankChequeDetails(bankId,'accounts','KAPILCHITS','KLC01').subscribe({
       next: res => (this.lstBankChequeDetails = res ?? []),
       error: err => this.commonService.showErrorMessage(err)
     });
-    // this.lstBankChequeDetails = [
-    //   { pchkBookId: 101, pchqfromto: '1001-1010' },
-    //   { pchkBookId: 102, pchqfromto: '2001-2010' }
-    // ];
+    
   }
 
   GetIssuedBankDetails(event: any) {
+    debugger;
     this.isSubmited = true;
 
     if (this.FrmIssuedCheque.invalid) {
@@ -156,19 +158,20 @@ export class IssuedChequeComponent implements OnInit {
   }
 
   GetData() {
+    debugger;
+    
     this.Showhide = false;
     const [from, to] = this.strChqNo.split('-');
     this._ChqFromNo = from;
     this._ChqToNo = to;
     this.ShowReport = false;
-
-    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to)
+    this.reportService.GetUnusedChequeDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILCHITS','KLC01')
       .subscribe((res: any) => {
         this.gridData = res ?? [];
         this.pageCriteria.totalrows = this.gridData.length;
       });
 
-    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to)
+    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILAGRO','KIT')
       .subscribe((res: any) => {
         this.datagrid = res ?? [];
         this.gridDataDetails = [...this.datagrid];
@@ -210,7 +213,7 @@ export class IssuedChequeComponent implements OnInit {
       'Cleared Date': this.commonService.getFormatDateGlobal(element.pcleardate),
       'Paid Amt.': element.ppaidamount
         ? this.commonService.convertAmountToPdfFormat(
-          this.commonService.currencyformat(element.ppaidamount)
+          this.commonService.currencyFormat(element.ppaidamount)
         )
         : '',
       'Bank Name': element.pbankname,

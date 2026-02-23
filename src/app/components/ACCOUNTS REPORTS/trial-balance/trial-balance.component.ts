@@ -137,7 +137,7 @@ export class TrialBalanceComponent {
     const tdate = this.commonService.getFormatDateNormal(todate)??'';
 
     this.accountingService
-      .GetTrialBalanceData(fdate, tdate, grouptype)
+      .GetTrialBalanceData(fdate, tdate, grouptype,'accounts','KAPILCHITS','KLC01','global')
       .subscribe({
         next: (res: any[]) => {
           this.Trialbalancelst = res.filter(
@@ -312,7 +312,7 @@ private generateNormalReport(printOrpdf: 'Print' | 'Pdf'): void {
 private formatAmount(value: number | null | undefined): string {
   if (!value) return '';
 
-  let amount = this.commonService.currencyformat(parseFloat(value.toString()));
+  let amount = this.commonService.currencyFormat(parseFloat(value.toString()));
   amount = this.commonService.convertAmountToPdfFormat(amount);
 
   const decimal = amount.split('.')[1];

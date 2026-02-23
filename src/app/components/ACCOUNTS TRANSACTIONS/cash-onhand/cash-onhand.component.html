@@ -32,7 +32,7 @@
             <div class="col-md-3 col-xl-3" *ngIf="fromdatevisible">
                 <div class="form-group">
                     <label class="required-field">From Date</label>
-                    <input class="form-control w-auto" type="text" title="Date" id="fromdate"
+                    <input class="form-control w-auto" type="text"  id="fromdate"
                          formControlName="fromdate" placeholder="" readonly (ngModelChange)="fromdateChange($event)"
                         [bsConfig]="fromdate" #dp="bsDatepicker" bsDatepicker placement="bottom"
                         >

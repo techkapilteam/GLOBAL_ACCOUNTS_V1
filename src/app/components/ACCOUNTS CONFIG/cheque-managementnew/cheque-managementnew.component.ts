@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-cheque-managementnew',
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, TableModule, ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, TableModule, ButtonModule,NgSelectModule],
   templateUrl: './cheque-managementnew.component.html',
   styleUrl: './cheque-managementnew.component.css',
 })
@@ -213,13 +214,15 @@ export class ChequeManagementnewComponent implements OnInit {
     }
   }
   getrecordid(event: any) {
-    for (let i = 0; i < this.bankdetails.length; i++) {
-      if (event.target.value == this.bankdetails[i].pBankname) {
-        //console.log(this.bankdetails[i].pRecordid)
-        this.recordid = this.bankdetails[i].pRecordid;
-        this.selectedbank = this.bankdetails[i].pBankname;
-      }
-    }
+    debugger;
+    // for (let i = 0; i < this.bankdetails.length; i++) {
+    //   if (event.target.value == this.bankdetails[i].pBankname) {
+    //     this.recordid = this.bankdetails[i].pRecordid;
+    //     this.selectedbank = this.bankdetails[i].pBankname;
+    //   }
+    // }
+    this.recordid=event.bankAccountId
+   this.selectedbank= event.bankName
 
     this.chequemanagementform.controls["pBankId"].setValue(this.recordid);
     this.gridData = [];

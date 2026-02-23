@@ -155,8 +155,6 @@ export class BankBookComponent implements OnInit {
         next: (res: any) => {
           console.log(res)
           this.bankData = res;
-          alert('hello');
-
           console.log('SUCCESS:', res);
         },
         error: (err: any) => {

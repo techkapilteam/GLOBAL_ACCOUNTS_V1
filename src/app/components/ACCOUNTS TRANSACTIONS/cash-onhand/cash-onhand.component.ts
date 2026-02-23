@@ -174,7 +174,10 @@ export class CashOnhandComponent implements OnInit {
     //this.GetBankBalance(this.bankid);
     this.GetCashonhandBalance();
 
-    this._accountingtransaction.GetCAOBranchList(this._commonService.getschemaname()).subscribe(bankslist => {
+    // this._accountingtransaction.GetCAOBranchList(this._commonService.getschemaname()).subscribe(bankslist => {
+    //   this.BanksList = bankslist;
+    // })
+    this._accountingtransaction.GetCAOBranchList('accounts','KAPILCHITS','KLC01','global').subscribe(bankslist => {
       this.BanksList = bankslist;
     })
 
