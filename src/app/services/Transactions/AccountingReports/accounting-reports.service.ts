@@ -151,15 +151,28 @@ export class AccountingReportsService {
     );
   }
 
-  GetDayBook(fromdate: string, todate: string, Ason: string): Observable<any> {
+  // GetDayBook(fromdate: string, todate: string, Ason: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromdate', fromdate)
+  //     .set('todate', todate)
+  //     .set('Ason', Ason)
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/AccountingReports/getDaybook',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  GetDayBook(fromdate: string, todate: string, Ason: string,BranchSchema:any,branchCode:any,companyCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('fromdate', fromdate)
       .set('todate', todate)
       .set('Ason', Ason)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema).set('branchCode', branchCode).set('companyCode', companyCode).set('GlobalSchema', GlobalSchema);
 
     return this._CommonService.getAPI(
-      '/Accounting/AccountingReports/getDaybook',
+      '/Accounts/getDaybook',
       params,
       'YES'
     );
@@ -214,12 +227,22 @@ export class AccountingReportsService {
     return this._CommonService.getAPI('/Accounts/GetLedgerSummaryAccountList', params, 'YES');
   }
 
-  GetGeneralReceiptbyId(ReceiptId: string | number, branchSchema: string): Observable<any> {
+  // GetGeneralReceiptbyId(ReceiptId: string | number, branchSchema: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('ReceiptId', ReceiptId.toString())
+  //     .set('BranchSchema', branchSchema);
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetgeneralreceiptReportData', params, 'YES');
+  // }
+  GetGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('ReceiptId', ReceiptId.toString())
-      .set('BranchSchema', branchSchema);
+      .set('BranchSchema', BranchSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetgeneralreceiptReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptReportData', params, 'YES');
   }
 
   GetInterBranchGeneralReceiptbyId(ReceiptId: string | number): Observable<any> {
@@ -252,43 +275,92 @@ export class AccountingReportsService {
     return this._CommonService.getAPI('/ChitTransactions/GetChitReceiptslist', params, 'YES');
   }
 
-  GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, branchschema: string): Observable<any> {
+  // GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, branchschema: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('ReceiptId', ReceiptId.toString())
+  //     .set('BranchSchema', branchschema);
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
+  // }
+  GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('ReceiptId', ReceiptId.toString())
-      .set('BranchSchema', branchschema);
+      .set('BranchSchema', BranchSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
   }
-  GetPaymentVoucherbyId(paymentId: string | number): Observable<any> {
+  // GetPaymentVoucherbyId(paymentId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('paymentId', paymentId.toString())
+  //     .set('LocalSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetPaymentVoucherReportData', params, 'YES');
+  // }
+  GetPaymentVoucherbyId(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
-      .set('LocalSchema', this._CommonService.getschemaname());
+      .set('LocalSchema', LocalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetPaymentVoucherReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetPaymentVoucherReportData', params, 'YES');
   }
 
-  GetChitPaymentReportData(paymentId: string | number): Observable<any> {
+  // GetChitPaymentReportData(paymentId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('paymentId', paymentId.toString())
+  //     .set('LocalSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetChitPaymentReportData', params, 'YES');
+  // }
+  GetChitPaymentReportData(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
-      .set('LocalSchema', this._CommonService.getschemaname());
+      .set('LocalSchema', LocalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);;
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetChitPaymentReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetChitPaymentReportData', params, 'YES');
   }
 
-  GetPettyCashbyId(paymentId: string | number): Observable<any> {
+  // GetPettyCashbyId(paymentId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('paymentId', paymentId.toString())
+  //     .set('LocalSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetPettyCashReportData', params, 'YES');
+  // }
+  GetPettyCashbyId(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
-      .set('LocalSchema', this._CommonService.getschemaname());
+      .set('LocalSchema', LocalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetPettyCashReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetPettyCashReportData', params, 'YES');
   }
 
-  GetJvReport(Jvnumber: string | number): Observable<any> {
+  // GetJvReport(Jvnumber: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('Jvnumber', Jvnumber.toString())
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherReportData', params, 'YES');
+  // }
+  GetJvReport(Jvnumber: string | number,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('Jvnumber', Jvnumber.toString())
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
-    return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetJournalVoucherReportData', params, 'YES');
   }
 
   // GetComparisionTB(fromdate: string, todate: string): Observable<any> {
@@ -1222,15 +1294,14 @@ export class AccountingReportsService {
   const currencyformat = this._CommonService.currencysymbol;
   const totalPagesExp = '{total_pages_count_string}';
 
-  // ✅ Use index-based column styles since rows are flat arrays
   const columnStyles: any = {
-    0: { cellWidth: 82 },              // Particulars (wide)
-    1: { cellWidth: 28, halign: 'right' }, // Debit 1
-    2: { cellWidth: 28, halign: 'right' }, // Credit 1
-    3: { cellWidth: 28, halign: 'right' }, // Debit 2
-    4: { cellWidth: 28, halign: 'right' }, // Credit 2
-    5: { cellWidth: 28, halign: 'right' }, // Debit Total
-    6: { cellWidth: 28, halign: 'right' }, // Credit Total
+    0: { cellWidth: 82 },             
+    1: { cellWidth: 28, halign: 'right' }, 
+    2: { cellWidth: 28, halign: 'right' }, 
+    3: { cellWidth: 28, halign: 'right' }, 
+    4: { cellWidth: 28, halign: 'right' }, 
+    5: { cellWidth: 28, halign: 'right' }, 
+    6: { cellWidth: 28, halign: 'right' }, 
   };
 
   autoTable(doc, {
@@ -1238,7 +1309,7 @@ export class AccountingReportsService {
     body: gridData,
     startY: 55,
     theme: 'grid',
-    columnStyles: columnStyles,  // ✅ use index-based styles
+    columnStyles: columnStyles,  
     tableWidth: 250,
     margin: { left: 10, right: 10 },
     styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },

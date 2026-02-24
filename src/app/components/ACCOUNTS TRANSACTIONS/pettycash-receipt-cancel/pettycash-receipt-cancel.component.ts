@@ -198,7 +198,7 @@ export class PettycashReceiptCancelComponent implements OnInit {
     this.showtotalamount = 0;
 
     this._paymentVouecherServices
-      .GetPettyCashbyId(event)
+      .GetPettyCashbyId(event,'accounts','KAPILCHITS','KLC01','global')
       .subscribe(res => {
 
         const data = res?.[0];
