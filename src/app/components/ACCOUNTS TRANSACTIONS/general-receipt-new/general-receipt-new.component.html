@@ -164,9 +164,9 @@
                 <div class="col-md-12 col-xl-12 mb-2">
                   <div id="sbi-bal">
                     <span class="badge-success badge p-1 font-weight-light ">Bank Book -
-                      {{bankbookBalance | currency: currencyCode:'symbol':'1.2-2'}} </span>
+                      {{bankbookBalance || 0 }} </span>
                     <span class="badge-warning badge p-1 font-weight-light">Pass Book -
-                      {{bankpassbookBalance | currency: currencyCode:'symbol':'1.2-2'}}
+                      {{bankpassbookBalance || 0 }}
                     </span>
                   </div>
                 </div>
