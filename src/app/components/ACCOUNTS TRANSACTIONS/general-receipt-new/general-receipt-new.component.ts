@@ -410,75 +410,37 @@ export class GeneralReceiptNewComponent implements OnInit {
                 }
             );
 
-
-        if (ppartyid && ppartyid !== '') {
-
-            const ledgername = $event.ppartyname;
-            const pStateId = $event.pStateId;   // 👈 Important
-
-            // ✅ Call API with both parameters
-            this.getPartyDetailsbyid(ppartyid, pStateId);
-
-            this.GeneralReceiptForm.controls['ppartyname']
-                .setValue(ledgername);
-
-            this.GeneralReceiptForm.controls['pstatename']
-                .setValue($event.pstatename);
-
-            // ✅ Get selected party safely
-            const selectedParty = this.partylist.find(
-                (x: any) => x.ppartyid == ppartyid
-            );
-
-            if (selectedParty) {
-
-                this.GeneralReceiptForm.controls['ppartyreferenceid']
-                    .setValue(selectedParty.ppartyreferenceid);
-
-                this.GeneralReceiptForm.controls['ppartyreftype']
-                    .setValue(selectedParty.ppartyreftype);
-
-                this.GeneralReceiptForm.controls['ppartypannumber']
-                    .setValue(selectedParty.ppartypannumber);
-            }
-
-        } else {
-
-            this.setBalances('PARTY', 0);
-
-            this.GeneralReceiptForm.controls['ppartyname']
-                .setValue('');
-        }
-
+    if (ppartyid && ppartyid !== '') {const ledgername = $event.ppartyname;
+     const pStateId = $event.pStateId; this.getPartyDetailsbyid(ppartyid, pStateId);
+     this.GeneralReceiptForm.controls['ppartyname'].setValue(ledgername);
+     this.GeneralReceiptForm.controls['pstatename'].setValue($event.pstatename);
+     const selectedParty = this.partylist.find((x: any) => x.ppartyid == ppartyid);
+     if (selectedParty) 
+        {this.GeneralReceiptForm.controls['ppartyreferenceid'].setValue(selectedParty.ppartyreferenceid);
+     this.GeneralReceiptForm.controls['ppartyreftype'].setValue(selectedParty.ppartyreftype);
+     this.GeneralReceiptForm.controls['ppartypannumber'].setValue(selectedParty.ppartypannumber);
     }
-    getPartyDetailsbyid(ppartyid: any, pStateId: any) {
+  }
+   else 
+    {
+     this.setBalances('PARTY', 0); this.GeneralReceiptForm.controls['ppartyname'].setValue('');
+    }
 
-        this._Accountservice
-            .getPartyDetailsbyid(ppartyid, pStateId)
-            .subscribe(
-                (json: any) => {
-
-                    if (json != null) {
-
-                        // ✅ Clear old data
-                        this.tdssectionlist = [];
-
-                        this.tdslist =
-                            json.lstTdsSectionDetails || [];
-
-                        // Remove duplicate TDS sections
-                        const uniqueSections =
-                            this.tdslist
-                                .map((item: any) => item.pTdsSection)
-                                .filter((value: any, index: number, self: any[]) =>
-                                    self.indexOf(value) === index
-                                );
-
-                        uniqueSections.forEach((section: any) => {
-                            this.tdssectionlist.push({
-                                pTdsSection: section
-                            });
-                        });
+}
+    getPartyDetailsbyid(ppartyid: any, pStateId: any) 
+    {
+        this._Accountservice.getPartyDetailsbyid(ppartyid, pStateId).subscribe((json: any) => 
+            {
+          if (json != null) 
+            {
+               this.tdssectionlist = [];
+               this.tdslist = json.lstTdsSectionDetails || [];
+               let uniqueSections = this.tdslist.map((item: any) => item.pTdsSection)
+               .filter((value: any, index: number, self: any[]) => self.indexOf(value) === index );
+               uniqueSections.forEach((section: any) =>
+                 {
+                   this.tdssectionlist.push({ pTdsSection: section });
+              });
 
                         this.statelist = json.statelist || [];
 
