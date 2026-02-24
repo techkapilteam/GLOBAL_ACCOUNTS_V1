@@ -56,12 +56,12 @@ export class SubscriberjvService {
         return this._commonService.getAPI('/ChitTransactions/GetTDSSubcategoryDetails', params, 'YES');
     }
 
-    GetdebitchitCheckbalance(accountheadid:any, subcategory:any,subcategoryid:any) {
-        const params = new HttpParams().set('BranchSchema', this._commonService.getschemaname())
-            .set('accountheadId', accountheadid)
+    GetdebitchitCheckbalance(BranchSchema:any,accountheadId:any, subcategory:any,subcategoryId:any,GlobalSchema:any,companyCode:any,branchCode:any) {
+        const params = new HttpParams().set('BranchSchema', BranchSchema)
+            .set('accountheadId', accountheadId)
             .set('subcategory', subcategory)
-            .set('subcategoryId', subcategoryid);
-        return this._commonService.getAPI('/ChitTransactions/SubscriberJVCheckbalance', params, 'YES');
+            .set('subcategoryId', subcategoryId).set('GlobalSchema',GlobalSchema).set('companyCode',companyCode).set('branchCode',branchCode);
+        return this._commonService.getAPI('/Accounts/SubscriberJVCheckbalance', params, 'YES');
     }
 
     PartyStatusChecking(accounthead:any, subcategory:any) {

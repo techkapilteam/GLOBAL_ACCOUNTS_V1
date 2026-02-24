@@ -43,68 +43,7 @@
             </div>
             <div class="row mt-4">
                 <div class="col-md-12 col-xl-12">
-                    <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force"
-                        [headerHeight]="50" [rowHeight]="50" [footerHeight]="pageCriteria.footerPageHeight"
-                        [limit]="pageCriteria.pageSize">
-
-                        <!-- <ngx-datatable class="material expandable table" [rows]="Journalvoucherlist" columnMode="force" [scrollbarH]="true"
-                [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="'auto'" [limit]="pageCriteria.pageSize">
-                
-                 -->
-                        <ngx-datatable-column name="Actions" prop="" editable="true" [width]="100" title="View"
-                            [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
-                                let-row="row" let-group="group">
-                                <label for="View{{ rowIndex }}">
-                                    <div id="icon-view" (click)="viewHandler($event, row)"></div>
-                                </label>
-                            </ng-template>
-                        </ngx-datatable-column>
-
-                        <ngx-datatable-column name="Date" prop="pjvdate" [cellClass]="'cell-center'"
-                            [headerClass]="'header-center'">
-                        </ngx-datatable-column>
-
-                        <ngx-datatable-column name="JV No." prop="pjvnumber" [cellClass]="'cell-center'"
-                            [headerClass]="'header-center'">
-                        </ngx-datatable-column>
-
-                        <ngx-datatable-column name="Amount" prop="ptotalpaidamount" [cellClass]="'cell-right'"
-                            [headerClass]="'header-right'" [width]="200">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span title="{{currencySymbol}} {{row.ptotalpaidamount }}">
-
-                                    {{currencySymbol}} {{row.ptotalpaidamount.toFixed(2) }}</span>
-
-                                <!-- <span
-      [title]="row.ptotalpaidamount | currency:currencyCode:'symbol':'1.2-2'">
-      {{ row.ptotalpaidamount | currency:currencyCode:'symbol':'1.2-2' }}
-    </span> -->
-
-
-
-                            </ng-template>
-                        </ngx-datatable-column>
-
-                        <ngx-datatable-column name="Narration" prop="pnarration" [width]="500">
-
-                        </ngx-datatable-column>
-                        <!-- <ngx-datatable-footer *ngIf="Journalvoucherlist">
-                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
-                      let-selectedCount="selectedCount" let-curPage="curPage" let-offset="pageCriteria.offset"
-                      let-isVisible=" ">
-                      <div style="padding: 5px 10px" *ngIf="Journalvoucherlist.length>0">
-                        <div>Page {{pageCriteria.CurrentPage}} of {{pageCriteria.TotalPages}} ({{ pageCriteria.totalrows }} items) </div>
-                      </div>
-                      <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
-                        [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
-                        [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
-                        (change)="onFooterPageChange($event)" [hidden]="!((rowCount / pageSize) > 0)"  >
-                      </datatable-pager>
-                    </ng-template>
-                  </ngx-datatable-footer> -->
-
-                    </ngx-datatable>
+                   
 
                     <p-table [value]="Journalvoucherlist" dataKey="pjvnumber" [rows]="pageCriteria.pageSize"
                         [paginator]="false" [totalRecords]="pageCriteria.totalrows" [rowsPerPageOptions]="[10, 20, 50]"
@@ -136,19 +75,23 @@
                                 </td>
 
                                 <td class="text-center">
-                                    {{ row.pjvdate }}
+                                    <!-- {{ row.pjvdate }} -->
+                                    {{ row.jvDate }}
                                 </td>
 
                                 <td class="text-center">
-                                    {{ row.pjvnumber }}
+                                    {{ row.journalVoucherNo }}
+                                    <!-- {{ row.pjvnumber }} -->
                                 </td>
 
                                 <td class="text-right">
-                                    {{ row.ptotalpaidamount | currency:'INR':'symbol':'1.2-2' }}
+                                    <!-- {{ row.ptotalpaidamount | currency:'INR':'symbol':'1.2-2' }} -->
+                                    {{ row.amount | currency:'INR':'symbol':'1.2-2' }}
                                 </td>
 
                                 <td>
-                                    {{ row.pnarration }}
+                                    <!-- {{ row.pnarration }} -->
+                                    {{ row.narration }}
                                 </td>
 
                             </tr>

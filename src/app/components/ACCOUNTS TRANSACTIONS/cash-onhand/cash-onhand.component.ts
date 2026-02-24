@@ -204,9 +204,15 @@ export class CashOnhandComponent implements OnInit {
 
   bankNamesList() {
     debugger;
-    this._accountingtransaction.GetBanksList(this._commonService.getschemaname()).subscribe(res => {
+    this._accountingtransaction.GetBanksList(this._commonService.getschemaname()
+  
+  ).subscribe(res => {
       debugger;
       this.BankNamesList = res;
+
+
+
+
     })
   }
 
@@ -233,7 +239,10 @@ export class CashOnhandComponent implements OnInit {
 
 
   GetCashonhandBalance() {
-    this._accountingtransaction.GetCashonhandBalance().subscribe(data => {
+    this._accountingtransaction.GetCashonhandBalance(
+      this._commonService.getschemaname(),this._commonService.getbranchname(),this._commonService.getBranchCode()
+      ,this._commonService.getCompanyCode()
+    ).subscribe(data => {
       console.log(data);
       this.pcashonhandbalance = data;
       if (parseFloat(this.pcashonhandbalance) != 0) {
@@ -280,10 +289,12 @@ export class CashOnhandComponent implements OnInit {
     this.gridLoading = true;
     let fromdate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['fromdate'].value);
     let todate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['todate'].value);
+    let caobarnch=this.CashOnHandForm.controls['bankname'].value;
     this.disableShowbutton = true;
     this.showbuttontext = "Processing"
     // this._accountingtransaction.GetCashOnHandData(bankid).subscribe(data => {
-    this._accountingtransaction.GetCashOnHandData_(bankid, fromdate, todate, this.AsOnDate).subscribe(data => {
+    this._accountingtransaction.GetCashOnHandData_(this._commonService.getbranchname(),caobarnch,
+       fromdate, todate, this.AsOnDate,this._commonService.getCompanyCode(),this._commonService.getBranchCode(),this._commonService.getschemaname()).subscribe(data => {
       debugger;
       console.log(data)
       this.disableShowbutton = false;
@@ -385,36 +396,7 @@ export class CashOnhandComponent implements OnInit {
     //this.CashOnHandForm.controls.SearchClear.setValue('');
   }
 
-  // onSearch(event: any) {
-  //   debugger;
-
-  //   let searchText = event.toString();
-  //   if (searchText != "") {
-  //     let columnName;
-  //     let lastChar = searchText.substr(searchText.length - 1);
-  //     let asciivalue = lastChar.charCodeAt()
-  //     if (asciivalue > 47 && asciivalue < 58) {
-  //       columnName = "pChequenumber";
-  //     } else {
-  //       columnName = "";
-  //     }
-
-  //     this.gridData = this._commonService.transform(this.gridDatatemp, searchText, columnName);
-  //   }
-  //   else {
-  //     this.gridData = this.gridDatatemp;
-  //   }
-  //   this.pageCriteria.totalrows = this.gridData.length;
-  //   this.pageCriteria.TotalPages = 1;
-  //   if (this.pageCriteria.totalrows > 10)
-  //     this.pageCriteria.TotalPages = parseInt((this.pageCriteria.totalrows / 10).toString()) + 1;
-  //   if (this.gridData.length < this.pageCriteria.pageSize) {
-  //     this.pageCriteria.currentPageRows = this.gridData.length;
-  //   }
-  //   else {
-  //     this.pageCriteria.currentPageRows = this.pageCriteria.pageSize;
-  //   }
-  // }
+ 
 
 
   onSearch(event: Event) {

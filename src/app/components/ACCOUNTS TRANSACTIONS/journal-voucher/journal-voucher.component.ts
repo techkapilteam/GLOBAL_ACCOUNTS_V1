@@ -88,7 +88,7 @@ export class JournalVoucherComponent implements OnInit {
   chequenumberslist: any;
   upinameslist: any;
   upiidlist: any;
-  paymentslist: any;
+  paymentslist: any[] = [];
   debittotalamount: any;
   credittotalamount: any;
   cashBalance: any;;
@@ -161,6 +161,9 @@ export class JournalVoucherComponent implements OnInit {
       pChequenumber: [''],
       pchequedate: [''],
       pbankid: [''],
+      pdebitamount:[''],
+      pcreditamount:[''],
+pamount:[''],
 
       pCreatedby: [this._commonService.getCreatedBy()],
       pipaddress: [this._commonService.getIpAddress()],
@@ -692,38 +695,39 @@ export class JournalVoucherComponent implements OnInit {
       'JOURNAL VOUCHER',
       this._commonService.getbranchname(),
       this._commonService.getschemaname(),
-    this._commonService.getCompanyCode(),
-  this._commonService.getBranchCode(),
-'taxes')
-.subscribe(
-  {
-    next:(json: any) => {
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode(),
+      'taxes')
+      .subscribe(
+        {
+          next: (json: any) => {
 
-      //console.log(json)
-      if (json != null) {
+            //console.log(json)
+            if (json != null) {
 
-        this.banklist = json.banklist;
-        this.modeoftransactionslist = json.modeofTransactionslist;
-        this.typeofpaymentlist = this.gettypeofpaymentdata();
-        this.ledgeraccountslist = json.accountslist;
-        this.partylist = json.partylist;
-        this.gstlist = json.gstlist;
+              this.banklist = json.banklist;
+              this.modeoftransactionslist = json.modeofTransactionslist;
+              this.typeofpaymentlist = this.gettypeofpaymentdata();
+              this.ledgeraccountslist = json.accountslist;
+              this.partylist = json.partylist;
+              this.gstlist = json.gstlist;
 
-        this.debitcardlist = json.bankdebitcardslist;
+              this.debitcardlist = json.bankdebitcardslist;
 
-        this.setBalances('CASH', json.cashbalance);
-        this.setBalances('BANK', json.bankbalance);
-        //this.lstLoanTypes = json
-        //this.titleDetails = json as string
-        //this.titleDetails = eval("(" + this.titleDetails + ')');
-        //this.titleDetails = this.titleDetails.FT;
-      }
-    },
-      error:(error: any) => {
+              this.setBalances('CASH', json.cashbalance);
+              this.setBalances('BANK', json.bankbalance);
+              //this.lstLoanTypes = json
+              //this.titleDetails = json as string
+              //this.titleDetails = eval("(" + this.titleDetails + ')');
+              //this.titleDetails = this.titleDetails.FT;
+            }
+          },
+          error: (error: any) => {
 
-        this._commonService.showErrorMessage(error);
-     
-   } });
+            this._commonService.showErrorMessage(error);
+
+          }
+        });
   }
 
   gettypeofpaymentdata(): any {
@@ -827,55 +831,55 @@ export class JournalVoucherComponent implements OnInit {
     this._AccountingTransactionsService.GetSubLedgerData3(pledgerid,
 
       this._commonService.getbranchname(),
-        this._commonService.getCompanyCode(),
-        this._commonService.getbranchname(),
-        this._commonService.getBranchCode(),
-        this._commonService.getschemaname()
+      this._commonService.getCompanyCode(),
+      this._commonService.getbranchname(),
+      this._commonService.getBranchCode(),
+      this._commonService.getschemaname()
     ).subscribe(
       {
-      next:(json: any) => {
+        next: (json: any) => {
 
-      //console.log(json)
-      if (json != null) {
+          //console.log(json)
+          if (json != null) {
 
-        this.subledgeraccountslist = json;
+            this.subledgeraccountslist = json;
 
-        // let subLedgerControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'];
-        // let subLedgerControl = <FormGroup>this.paymentVoucherForm.get('ppaymentsslistcontrols.psubledgername');
+            // let subLedgerControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'];
+            // let subLedgerControl = <FormGroup>this.paymentVoucherForm.get('ppaymentsslistcontrols.psubledgername');
 
-        const subLedgerControl = this.paymentVoucherForm
-          .get('ppaymentsslistcontrols.psubledgername') as FormGroup;
+            const subLedgerControl = this.paymentVoucherForm
+              .get('ppaymentsslistcontrols.psubledgername') as FormGroup;
 
-        subLedgerControl?.patchValue({ someField: 'value' });
+            subLedgerControl?.patchValue({ someField: 'value' });
 
 
 
-        if (this.subledgeraccountslist.length > 0) {
-          this.showsubledger = true;
-          subLedgerControl.setValidators(Validators.required);
+            if (this.subledgeraccountslist.length > 0) {
+              this.showsubledger = true;
+              subLedgerControl.setValidators(Validators.required);
+
+            }
+            else {
+              subLedgerControl.clearValidators();
+
+              this.showsubledger = false;
+              this.paymentVoucherForm.get('ppaymentsslistcontrols.psubledgerid')?.setValue(pledgerid);
+              this.paymentVoucherForm.get('ppaymentsslistcontrols.psubledgername')?.setValue(this.paymentVoucherForm.get('ppaymentsslistcontrols.pledgername')?.value);
+              this.formValidationMessages['psubledgername'] = '';
+            }
+            subLedgerControl.updateValueAndValidity();
+            //this.lstLoanTypes = json
+            //this.titleDetails = json as string
+            //this.titleDetails = eval("(" + this.titleDetails + ')');
+            //this.titleDetails = this.titleDetails.FT;
+          }
+        },
+        error: (error: any) => {
+
+          this._commonService.showErrorMessage(error);
 
         }
-        else {
-          subLedgerControl.clearValidators();
-
-          this.showsubledger = false;
-          this.paymentVoucherForm.get('ppaymentsslistcontrols.psubledgerid')?.setValue(pledgerid);
-          this.paymentVoucherForm.get('ppaymentsslistcontrols.psubledgername')?.setValue(this.paymentVoucherForm.get('ppaymentsslistcontrols.pledgername')?.value);
-          this.formValidationMessages['psubledgername'] = '';
-        }
-        subLedgerControl.updateValueAndValidity();
-        //this.lstLoanTypes = json
-        //this.titleDetails = json as string
-        //this.titleDetails = eval("(" + this.titleDetails + ')');
-        //this.titleDetails = this.titleDetails.FT;
-      }
-    },
-     error: (error: any) => {
-
-        this._commonService.showErrorMessage(error);
-     
-   }
-   });
+      });
   }
   subledger_Change($event: any) {
 
@@ -1061,41 +1065,7 @@ export class JournalVoucherComponent implements OnInit {
 
   }
 
-  // partyName_Change($event: any): void {
 
-  //   let ppartyid;
-  //   if ($event != undefined) {
-  //     ppartyid = $event.ppartyid;
-  //   }
-  //   this.statelist = [];
-  //   this.tdssectionlist = [];
-  //   this.tdspercentagelist = [];
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pStateId'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pState'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsSection'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsPercentage'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreferenceid'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreftype'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartypannumber'].setValue('');
-  //   this.partyBalance = this.currencySymbol + ' 0.00' + ' Dr';
-  //   if (ppartyid && ppartyid != '') {
-  //     //const ledgername = $event.target.options[$event.target.selectedIndex].text;
-  //     //this.getPartyDetailsbyid(ppartyid);
-  //     //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyname'].setValue(ledgername);
-  //     const partynamename = $event.ppartyname;
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyname'].setValue(partynamename);
-  //     let data = (this.partylist.filter(x => x.ppartyid == ppartyid))[0];
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreferenceid'].setValue(data.ppartyreferenceid);
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyreftype'].setValue(data.ppartyreftype);
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartypannumber'].setValue(data.ppartypannumber);
-  //     this.getPartyDetailsbyid(ppartyid, partynamename);
-  //     this.setenableordisabletdsgst(partynamename, 'PARTYCHANGE');
-  //   }
-  //   else {
-  //     this.setBalances('PARTY', 0);
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyname'].setValue('');
-  //   }
-  // }
   partyName_Change($event: any): void {
 
     const ppartyid = $event?.ppartyid;
@@ -1133,37 +1103,7 @@ export class JournalVoucherComponent implements OnInit {
     }
   }
 
-  // setenableordisabletdsgst(ppartyname, changetype) {
 
-
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pistdsapplicable'].setValue(false);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pisgstapplicable'].setValue(false);
-  //   let data = this.paymentslist.filter(x => x.ppartyname == ppartyname);
-  //   if (data != null) {
-  //     if (data.length > 0) {
-
-  //       this.disablegst = true;
-  //       this.disabletds = true;
-
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pistdsapplicable'].setValue(data[0].pistdsapplicable);
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pisgstapplicable'].setValue(data[0].pisgstapplicable);
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pgstcalculationtype'].setValue(data[0].pgstcalculationtype)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptdscalculationtype'].setValue(data[0].ptdscalculationtype)
-  //     }
-  //     else {
-  //       this.disablegst = false;
-  //       this.disabletds = false;
-  //     }
-  //   }
-  //   else {
-  //     this.disablegst = false;
-  //     this.disabletds = false;
-  //   }
-  //   if (changetype = 'PARTYCHANGE') {
-  //     this.isgstapplicableChange();
-  //     this.istdsapplicableChange();
-  //   }
-  // }
 
   setenableordisabletdsgst(ppartyname: string, changetype: string) {
 
@@ -1224,45 +1164,55 @@ export class JournalVoucherComponent implements OnInit {
   //       this._commonService.showErrorMessage(error);
   //     });
   // }
- getPartyDetailsbyid(
-  ppartyid: string,
-  pStateId: any
-): void {
+  getPartyDetailsbyid(
+    ppartyid: string,
+    pStateId: any
+  ): void {
 
-  this._AccountingTransactionsService
-    .getPartyDetailsbyid(ppartyid, pStateId)
-    .subscribe(
-      (json: any) => {
+    this._AccountingTransactionsService
+      .getPartyDetailsbyid(
+        ppartyid,
+        this._commonService.getbranchname(),
+        this._commonService.getBranchCode(),
+        this._commonService.getCompanyCode(),
+        this._commonService.getschemaname(),
+        'taxes'
+      )
+      .subscribe(
+        {
+          next: (json: any) => {
 
-        if (!json) return;
+            if (!json) return;
 
-        // Reset lists safely
-        this.tdslist = json.lstTdsSectionDetails || [];
-        this.tdssectionlist = [];
-        this.statelist = json.statelist || [];
+            // Reset lists safely
+            this.tdslist = json.lstTdsSectionDetails || [];
+            this.tdssectionlist = [];
+            this.statelist = json.statelist || [];
 
-        // Get unique TDS sections
-        const uniqueTdsSections = Array.from(
-          new Set(
-            this.tdslist.map((item: any) => item.pTdsSection)
-          )
-        );
+            // Get unique TDS sections
+            const uniqueTdsSections = Array.from(
+              new Set(
+                this.tdslist.map((item: any) => item.pTdsSection)
+              )
+            );
 
-        // Assign unique sections
-        this.tdssectionlist =
-          uniqueTdsSections.map(section => ({
-            pTdsSection: section
-          }));
+            // Assign unique sections
+            this.tdssectionlist =
+              uniqueTdsSections.map(section => ({
+                pTdsSection: section
+              }));
 
-        // Update balances and recalc GST/TDS
-        this.setBalances('PARTY', json.accountbalance ?? 0);
-        this.claculategsttdsamounts();
-      },
-      (error: any) => {
-        this._commonService.showErrorMessage(error);
-      }
-    );
-}
+            // Update balances and recalc GST/TDS
+            this.setBalances('PARTY', json.accountbalance ?? 0);
+            this.claculategsttdsamounts();
+          },
+          error: (error: any) => {
+            this._commonService.showErrorMessage(error);
+
+          }
+        }
+      );
+  }
 
 
   gsno_change() {
@@ -1664,111 +1614,16 @@ export class JournalVoucherComponent implements OnInit {
 
     return isValid;
   }
-  // addPaymentDetails() {
-  //   debugger;
-  //   const control = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols'];
-  //   if (this.validateaddPaymentDetails()) {
-  //     let accounthedadid = this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pledgerid'].value;
-  //     let subcategoryid = this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].value;
-  //     //let amount = this._commonService.removeCommasInAmount(this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pactualpaidamount'].value);
 
-  //     let amount = this._commonService.removeCommasInAmount(this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pamount'].value);
-
-
-  //     let stateid = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pStateId').value;
-  //     if (stateid == "" || stateid == null)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pStateId'].setValue(0);
-
-  //     let tdspercentage = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pTdsPercentage').value;
-  //     if (tdspercentage == "" || tdspercentage == null)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsPercentage'].setValue(0);
-
-  //     let gstpercentage = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pgstpercentage').value;
-  //     if (gstpercentage == "" || gstpercentage == null)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pgstpercentage'].setValue(0);
-
-  //     let debitamount = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('ptotaldebitamount').value;
-  //     if (debitamount == "" || debitamount == null || debitamount == 0)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptotaldebitamount'].setValue('');
-
-  //     let creditamount = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('ptotalcreditamount').value;
-  //     if (creditamount == "" || creditamount == null || creditamount == 0)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptotalcreditamount'].setValue('');
-
-  //     this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subcategoryid).subscribe(res => {
-  //       debugger;
-  //       let creditstatus = res[0].credit_restriction_status;
-  //       let debitstatus = res[0].debit_restriction_status;
-  //       if ((debitamount > 0 && debitstatus == false) || (creditamount > 0 && creditstatus == false)) {
-
-  //         this._SubscriberJVService.GetdebitchitCheckbalance(accounthedadid, "", subcategoryid).subscribe(result => {
-  //           debugger;
-  //           this.debittotalamount = 0;
-  //           this.credittotalamount = 0;
-
-  //           if (amount <= parseFloat(result['balanceamount'].toString()) && Boolean(result['balancecheckstatus'].toString()) || amount <= parseFloat(result['balanceamount'].toString()) || ((result['balancecheckstatus'].toString())) == 'false') {
-  //             //ADDED ON 19.05.2023
-  //             //if (amount <= parseFloat(result['balanceamount'].toString()) || Boolean(result['balancecheckstatus'].toString())) {
-  //             //this.paymentslist.push(control.value);
-  //             let data = control.value;
-  //             this.paymentslist = [...this.paymentslist, data]
-  //             this.paymentslist.filter(data => {
-  //               if (data.ptotalcreditamount != "") {
-  //                 data.ptotalcreditamount = this._commonService.removeCommasForEntredNumber(data.ptotalcreditamount);
-  //                 data.ptotalcreditamount = parseFloat(data.ptotalcreditamount);
-  //                 this.credittotalamount = this.credittotalamount + data.ptotalcreditamount;
-  //                 //this.credittotalamount = parseFloat(this.paymentslist.reduce((sum, c) => sum + c.ptotalcreditamount, 0));
-  //               }
-  //               if (data.ptotaldebitamount != "") {
-  //                 data.ptotaldebitamount = this._commonService.removeCommasForEntredNumber(data.ptotaldebitamount);
-  //                 data.ptotaldebitamount = parseFloat(data.ptotaldebitamount);
-  //                 //this.debittotalamount = parseFloat(this.paymentslist.reduce((sum, c) => sum + c.ptotaldebitamount, 0));
-  //                 this.debittotalamount = this.debittotalamount + data.ptotaldebitamount;
-  //               }
-  //             })
-  //             console.log("Total Debit amount is:" + this.debittotalamount);
-  //             console.log("Total credit amount is:" + this.credittotalamount);
-  //             this.getpartyJournalEntryData();
-  //             this.clearPaymentDetails1();
-  //             this.getPaymentListColumnWisetotals();
-  //             this.disableamounttype('');
-  //             this.validateDebitCreditAmounts();
-  //             this.showhidegrid = true;
-  //           }
-  //           else {
-  //             this._commonService.showWarningMessage("Insufficient balance ");
-  //           }
-  //         })
-  //       }
-  //       else {
-
-  //         if (debitamount > 0) {
-  //           this._commonService.showWarningMessage("Debit Transaction Not Allowed ");
-
-  //         }
-
-  //         if (creditamount > 0) {
-  //           this._commonService.showWarningMessage("Credit Transaction Not Allowed ");
-
-  //         }
-
-  //       }
-
-  //     })
-  //   }
-  //   else {
-  //     this.showhidegrid = false;
-  //   }
-  // }
 
   addPaymentDetails() {
     debugger;
     const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-    if (!this.validateaddPaymentDetails()) {
-      this.showhidegrid = false;
-      return;
-    }
+    // if (!this.validateaddPaymentDetails()) {
+    //   this.showhidegrid = false;
+    //   return;
+    // }
 
     const ledgerId = paymentControls.get('pledgerid')?.value;
     const subledgerId = paymentControls.get('psubledgerid')?.value;
@@ -1788,15 +1643,30 @@ export class JournalVoucherComponent implements OnInit {
       if (val === '' || val == null || val === 0) paymentControls.get(field)?.setValue('');
     });
 
-    const debitAmount = parseFloat(paymentControls.get('ptotaldebitamount')?.value || '0');
-    const creditAmount = parseFloat(paymentControls.get('ptotalcreditamount')?.value || '0');
-
+    // const debitAmount = parseFloat(paymentControls.get('ptotaldebitamount')?.value || '0');
+    // const creditAmount = parseFloat(paymentControls.get('ptotalcreditamount')?.value || '0');
+    const debitAmount = parseFloat(paymentControls.get('pdebitamount')?.value || '0');
+    const creditAmount = parseFloat(paymentControls.get('pcreditamount')?.value || '0');
     // Check subledger restrictions
-    this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subledgerId).subscribe(res => {
+    this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subledgerId,
+
+      this._commonService.getbranchname(),
+      this._commonService.getschemaname(),
+      this._commonService.getBranchCode(),
+      this._commonService.getCompanyCode(),
+    ).subscribe(res => {
       const { credit_restriction_status, debit_restriction_status } = res[0];
 
       if ((debitAmount > 0 && !debit_restriction_status) || (creditAmount > 0 && !credit_restriction_status)) {
-        this._SubscriberJVService.GetdebitchitCheckbalance(ledgerId, '', subledgerId).subscribe(result => {
+        // this._SubscriberJVService.GetdebitchitCheckbalance(ledgerId, '', subledgerId).subscribe(result => {
+        this._SubscriberJVService.GetdebitchitCheckbalance(
+          this._commonService.getbranchname(),
+          
+          ledgerId, 36, subledgerId,this._commonService.getschemaname(),this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+        
+        
+        
+        ).subscribe(result => {
           debugger;
 
           this.debittotalamount = 0;
@@ -1806,21 +1676,28 @@ export class JournalVoucherComponent implements OnInit {
           const balanceCheckStatus = result.balancecheckstatus?.toString() !== 'false';
           const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/,/g, '')) : amount;
 
-          if (numericAmount <= balanceAmount && balanceCheckStatus) {
-
+          // if (numericAmount <= balanceAmount && balanceCheckStatus) {
+if (
+  (numericAmount <= balanceAmount && balanceCheckStatus) ||
+  numericAmount <= balanceAmount ||
+  balanceCheckStatus === false
+){
 
 
             // if (amount <= balanceAmount && balanceCheckStatus) {
             // Add payment
             const data = paymentControls.value;
             this.paymentslist = [...this.paymentslist, data];
+console.log('........',this.paymentslist);
 
             // Calculate totals
             this.debittotalamount = this.paymentslist
-              .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotaldebitamount) || '0'), 0);
+              // .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotaldebitamount) || '0'), 0);
+              .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.pdebitamount) || '0'), 0);
 
             this.credittotalamount = this.paymentslist
-              .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotalcreditamount) || '0'), 0);
+              // .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotalcreditamount) || '0'), 0);
+              .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.pcreditamount) || '0'), 0);
 
             console.log("Total Debit amount:", this.debittotalamount);
             console.log("Total Credit amount:", this.credittotalamount);
@@ -1832,11 +1709,13 @@ export class JournalVoucherComponent implements OnInit {
             this.validateDebitCreditAmounts();
             this.showhidegrid = true;
 
-          } else {
+          }
+         else {
             this._commonService.showWarningMessage("Insufficient balance");
           }
         });
-      } else {
+      }
+       else {
         if (debitAmount > 0) this._commonService.showWarningMessage("Debit Transaction Not Allowed");
         if (creditAmount > 0) this._commonService.showWarningMessage("Credit Transaction Not Allowed");
       }
@@ -1850,18 +1729,7 @@ export class JournalVoucherComponent implements OnInit {
     this.hidefootertemplate = false;
     let totalacreditmount = 0;
     this.paymentlistcolumnwiselist = {};
-    //totaladebitmount = this.paymentslist.reduce((sum, c) => sum + parseFloat((c.ptotaldebitamount).replace(/,/g, "")), 0);
-    //if (isNaN(totaladebitmount)) { totaladebitmount = ""; }
-    //if (totaladebitmount==0) { totaladebitmount = ""; }
-    //else { totaladebitmount = (totaladebitmount); }
 
-
-    //this.paymentlistcolumnwiselist['ptotaldebitamount'] = totaladebitmount;
-
-    //totalacreditmount = this.paymentslist.reduce((sum, c) => sum + parseFloat((c.ptotalcreditamount).replace(/,/g, "")), 0);
-    //if (isNaN(totalacreditmount)) { totalacreditmount = ""; } if (totalacreditmount == 0) { totalacreditmount = ""; } else { totalacreditmount = (totalacreditmount);}
-
-    //this.paymentlistcolumnwiselist['ptotalcreditamount'] = totalacreditmount;
 
     this.paymentslist.reduce((acc: any, item: any) => {
       totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(item.ptotaldebitamount.replace(/,/g, ""));
@@ -1887,33 +1755,7 @@ export class JournalVoucherComponent implements OnInit {
     totalamount = this.paymentslist.reduce((sum: any, c: any) => sum + (this._commonService.removeCommasInAmount(c.ptdsamount)), 0);
     this.paymentlistcolumnwiselist['ptdsamount'] = (totalamount);
   }
-  // clearPaymentDetails() {
-
-  //   const formControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols'];
-  //   formControl.reset();
-  //   this.showsubledger = true;
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pistdsapplicable'].setValue(false);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pisgstapplicable'].setValue(false);
-
-
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pledgerid'].setValue(null);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].setValue(null);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ppartyid'].setValue(null);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pStateId'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pgstpercentage'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsSection'].setValue('');
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsPercentage'].setValue('');
-  //   this.setBalances('LEDGER', 0);
-  //   this.setBalances('SUBLEDGER', 0);
-  //   this.setBalances('PARTY', 0);
-  //   this.isgstapplicableChange();
-  //   this.istdsapplicableChange();
-  //   this.formValidationMessages = {};
-  //   let date = new Date();
-  //   //this.paymentVoucherForm['controls']['pjvdate'].setValue(date);
-  //   this.formValidationMessages = {};
-
-  // }
+ 
 
   clearPaymentDetails() {
     const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
@@ -2109,8 +1951,10 @@ export class JournalVoucherComponent implements OnInit {
         //}, 0);
         // commented on 05-03-2025 by Uday for vijayanagar issue end
         // added on 05-03-2025 by Uday for vijayanagar issue start
-        let totaladebitmount = Number(parseFloat(this.paymentslist.reduce((sum: any, item: any) => sum + Number(item.ptotaldebitamount), 0)).toFixed(2));
-        let totalacreditmount = Number(parseFloat(this.paymentslist.reduce((sum: any, item: any) => sum + Number(item.ptotalcreditamount), 0)).toFixed(2));
+        let totaladebitmount = Number(parseFloat(this.paymentslist.
+          reduce((sum: any, item: any) => sum + Number(item.ptotaldebitamount), 0)).toFixed(2));
+        let totalacreditmount = Number(parseFloat(this.paymentslist.
+          reduce((sum: any, item: any) => sum + Number(item.ptotalcreditamount), 0)).toFixed(2));
         // added on 05-03-2025 by Uday for vijayanagar issue end
 
 
@@ -2175,95 +2019,24 @@ export class JournalVoucherComponent implements OnInit {
     }
     this.partyjournalentrylist.push(dataobject);
   }
-  // disableamounttype(Amounttype:any) {
+  
 
-
-  //   let debitamount = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pdebitamount').value;
-  //   let creditamount = this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pcreditamount').value;
-
-  //   if (!isNullOrEmptyString(debitamount)) {
-
-  //     this.amounttype = Amounttype;
-  //     this.readonlydebit = false;
-  //     this.readonlycredit = true;
-  //     let creditamountControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcreditamount'];
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptranstype'].setValue('Debit');
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pamount'].setValue(debitamount);
-  //     creditamountControl.clearValidators();
-  //     creditamountControl.updateValueAndValidity();
-  //     this.formValidationMessages['pcreditamount'] = '';
-  //     //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcreditamount'].clearValidators();
-  //     //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcreditamount'].updateValueAndValidity();
-
-  //   }
-  //   else if (!isNullOrEmptyString(creditamount)) {
-  //     this.amounttype = Amounttype;
-  //     this.readonlydebit = true;
-  //     this.readonlycredit = false;
-  //     let debitamountControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pdebitamount'];
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptranstype'].setValue('Credit');
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pamount'].setValue(creditamount);
-  //     debitamountControl.clearValidators();
-  //     debitamountControl.updateValueAndValidity();
-  //     this.formValidationMessages['pdebitamount'] = '';
-  //     //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pdebitamount'].clearValidators();
-  //     //this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pdebitamount'].updateValueAndValidity();
-
-  //   }
-  //   else {
-  //     //setValidators(Validators.required);
-  //     this.readonlydebit = false;
-  //     this.readonlycredit = false;
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptranstype'].setValue('');
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pamount'].setValue('');
-  //     <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pdebitamount'].setValidators(Validators.required);
-  //     <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcreditamount'].setValidators(Validators.required);
-
-  //   }
-  //   this.validateDebitCreditAmounts();
-  // }
-
-
-  disableamounttype(Amounttype: any) {
+  disableamounttype(amountType: string) {
     const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-    const debitControl = paymentControls.get('pdebitamount') as FormControl;
-    const creditControl = paymentControls.get('pcreditamount') as FormControl;
-    const transtypeControl = paymentControls.get('ptranstype');
-    const amountControl = paymentControls.get('pamount');
+    const debitControl = paymentControls.get('pdebitamount')!;
+    const creditControl = paymentControls.get('pcreditamount')!;
+    const transtypeControl = paymentControls.get('ptranstype')!;
+    const amountControl = paymentControls.get('pamount')!;
 
-    const debitamount = debitControl.value;
-    const creditamount = creditControl.value;
+    const debitValue = debitControl.value;
+    const creditValue = creditControl.value;
 
-    if (!isNullOrEmptyString(debitamount)) {
-      this.amounttype = Amounttype;
-      this.readonlydebit = false;
-      this.readonlycredit = true;
-
-      transtypeControl?.setValue('Debit');
-      amountControl?.setValue(debitamount);
-
-      creditControl.clearValidators();
-      creditControl.updateValueAndValidity();
-      this.formValidationMessages['pcreditamount'] = '';
-
-    } else if (!isNullOrEmptyString(creditamount)) {
-      this.amounttype = Amounttype;
-      this.readonlydebit = true;
-      this.readonlycredit = false;
-
-      transtypeControl?.setValue('Credit');
-      amountControl?.setValue(creditamount);
-
-      debitControl.clearValidators();
-      debitControl.updateValueAndValidity();
-      this.formValidationMessages['pdebitamount'] = '';
-
-    } else {
+    // Both empty → reset
+    if (!debitValue && !creditValue) {
       this.readonlydebit = false;
       this.readonlycredit = false;
-
-      transtypeControl?.setValue('');
-      amountControl?.setValue('');
+      transtypeControl.reset();
+      amountControl.reset();
 
       debitControl.setValidators([Validators.required]);
       debitControl.updateValueAndValidity();
@@ -2272,46 +2045,40 @@ export class JournalVoucherComponent implements OnInit {
       creditControl.updateValueAndValidity();
     }
 
-    this.validateDebitCreditAmounts();
+    // Debit has value
+    if (debitValue) {
+      this.readonlydebit = false;
+      this.readonlycredit = true;
+
+      transtypeControl.setValue('Debit');
+      amountControl.setValue(debitValue);
+
+      creditControl.reset();
+      creditControl.clearValidators();
+      creditControl.updateValueAndValidity();
+
+      debitControl.setValidators([Validators.required]);
+      debitControl.updateValueAndValidity();
+    }
+
+    // Credit has value
+    if (creditValue) {
+      this.readonlydebit = true;
+      this.readonlycredit = false;
+
+      transtypeControl.setValue('Credit');
+      amountControl.setValue(creditValue);
+
+      debitControl.reset();
+      debitControl.clearValidators();
+      debitControl.updateValueAndValidity();
+
+      creditControl.setValidators([Validators.required]);
+      creditControl.updateValueAndValidity();
+    }
   }
 
 
-  // validateDebitCreditAmounts() {
-
-  //   let isValid: boolean = true;
-  //   let debitamountcount = 0;
-  //   let creditamountcount = 0;
-  //   let griddata = this.paymentslist;
-  //   try {
-  //     for (let i = 0; i < griddata.length; i++) {
-  //       if (!isNullOrEmptyString(griddata[i].pdebitamount)) {
-  //         debitamountcount = debitamountcount + 1;
-  //       }
-  //       if (!isNullOrEmptyString(griddata[i].pcreditamount)) {
-  //         creditamountcount = creditamountcount + 1;
-  //       }
-  //     }
-  //     if (debitamountcount > 1 && creditamountcount == 1) {
-  //       this.readonlydebit = false;
-  //       this.readonlycredit = true;
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcreditamount'].clearValidators();
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pcreditamount'].updateValueAndValidity();
-
-
-  //     }
-  //     else if (creditamountcount > 1 && debitamountcount == 1) {
-  //       this.readonlydebit = true;
-  //       this.readonlycredit = false;
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pdebitamount'].clearValidators();
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pdebitamount'].updateValueAndValidity();
-
-  //     }
-
-  //   } catch (e) {
-  //     this._commonService.showErrorMessage(e);
-  //   }
-
-  // }
 
   validateDebitCreditAmounts() {
     try {

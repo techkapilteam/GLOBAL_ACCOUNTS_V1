@@ -442,7 +442,14 @@ if (ppartyid && ppartyid !== '') {
     getPartyDetailsbyid(ppartyid: any, pStateId: any) {
 
   this._Accountservice
-    .getPartyDetailsbyid(ppartyid, pStateId)
+    .getPartyDetailsbyid(ppartyid,
+         
+           this._commonService.getbranchname(),
+       this._commonService.getBranchCode(),
+       this._commonService.getCompanyCode(),
+       this._commonService.getschemaname(),
+       'texas'
+        )
     .subscribe(
       (json: any) => {
 
@@ -936,7 +943,14 @@ if (ppartyid && ppartyid !== '') {
             );
 
             this._SubscriberJVService
-                .GetdebitchitCheckbalance(accounthedadid, '', subcategoryid)
+                .GetdebitchitCheckbalance(
+
+                      this._commonService.getbranchname(),
+                    accounthedadid, '', subcategoryid,
+                    this._commonService.getschemaname(),this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+
+
+                )
                 .subscribe((result: any) => {
 
                     //   if (
