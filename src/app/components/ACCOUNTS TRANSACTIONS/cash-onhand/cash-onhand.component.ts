@@ -1379,19 +1379,16 @@ this._commonService._JvListdownloadReportsPdf(
       $("#todate").prop("disabled", true);
     }
   }
-getCashOnHandData() {
-  debugger;
-
-  if (!this._commonService.isNullOrEmpty(this.CashOnHandForm.controls['bankname'].value)) {
-    this.CashOnHandValidation = {};
-    this.gridData = [];
-    this.GetChequesOnHand(this.bankid);
+  getCashOnHandData() {
+    debugger
+    // if(this.checkValidations(this.CashOnHandForm,true)){
+    if (!this._commonService.isNullOrEmpty(this.CashOnHandForm.controls['bankname'].value)) {
+      this.CashOnHandValidation = {};
+      this.GetChequesOnHand(this.bankid);
+    } else {
+      this.CashOnHandValidation['bankname'] = "Bank Name Required";
+    }
   }
-   else {
-    this.CashOnHandValidation['bankname'] = "Bank Name Required";
-    this.gridData = [];
-  }
-}
   fromdateChange($event: any) {
     if ($event != undefined) {
       this.todate.minDate = new Date($event);
