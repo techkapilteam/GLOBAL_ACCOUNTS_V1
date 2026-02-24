@@ -1,11 +1,3 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class AccountingTransactionService {
-
-// }
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs'
@@ -28,10 +20,6 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/Accounts/GetPaymentVoucherExistingData', params, 'YES');
   }
 
-
-
-  
-
   deletePaymentVoucher(id: number) {
     const params = new HttpParams().set('id', id).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/AccountingTransactions/DeletePaymentVoucher', params, 'YES');
@@ -41,11 +29,17 @@ export class AccountingTransactionsService {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
   GetPettyCashExistingData(): Observable<any> {
-    const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', this._CommonService.getschemaname())
+    const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', this._CommonService.getbranchname())
       .set('CompanyCode', this._CommonService.getCompanyCode()).set('Branchcode', this._CommonService.getBranchCode());
     return this._CommonService.getAPI('/Accounts/GetPettyCashExistingData', params, 'YES');
   }
 
+  GetReceiptsandPaymentsLoadingDataPettyCash(): Observable<any> {
+
+  const params = new HttpParams().set('formname', 'PETTYCASH').set('BranchSchema', 'accounts').set('companyCode', 'KAPILCHITS')
+ .set('branchCode', 'KLC01').set('GlobalSchema', 'global').set('TaxesSchema', 'taxes');
+  return this._CommonService.getAPI('/Accounts/GetReceiptsandPaymentsLoadingDatapettycash',params,'YES');
+}
   GetGeneralReceiptExistingData(): Observable<any> {
     const params = new HttpParams().set('GlobalSchema', 'global')
       .set('BranchSchema', this._CommonService.getschemaname()).set('TaxSchema', 'taxes')
@@ -77,9 +71,6 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
   }
-
-
-
   GetLedgerData1(formname: any, BranchSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
@@ -97,16 +88,12 @@ export class AccountingTransactionsService {
     // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
     return this._CommonService.getAPI('/Accounts/GetIssuedChequeNumbers', params, 'YES');
   }
-
-
   GetBankNames(GlobalSchema: any, AccountsSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
     return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
   }
-
-
   GetBankDetailsbyId(pbankid: any): Observable<any> {
     const params = new HttpParams().set('pbankid', pbankid).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/accountingtransactions/GetBankDetailsbyId', params, 'YES');
@@ -115,12 +102,11 @@ export class AccountingTransactionsService {
     //const params = new HttpParams().set('GlobalSchema',GlobalSchema);
     return this._CommonService.getAPI('/Configuration/GlobalConfiguration/GetProductnamesandHSNcodes', "params", 'NO');
   }
-
-  GetReceiptsandPaymentsLoadingDatapettycash(formname: any, BranchSchema: any): Observable<any> {
-    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema);
-    return this._CommonService.getAPI('/accountingtransactions/GetReceiptsandPaymentsLoadingDatapettycash', params, 'YES');
+  GetReceiptsandPaymentsLoadingDatapettycash(formname: any, BranchSchema: any, companyCode : 'KAPILCHITS', branchCode: 'KLC01', GlobalSchema: 'global', TaxesSchema: 'taxes' ): Observable<any> {
+    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('companyCode', companyCode).set('branchCode', branchCode).set('GlobalSchema', GlobalSchema)
+    .set('TaxesSchema', TaxesSchema);
+    return this._CommonService.getAPI('/Accounts/GetReceiptsandPaymentsLoadingDatapettycash', params, 'YES');
   }
-
   getReceiptNumber() {
     debugger
     const params = new HttpParams().set("LocalSchema", this._CommonService.getschemaname());
@@ -174,7 +160,7 @@ export class AccountingTransactionsService {
 
   GetCashRestrictAmountpercontact(formname: any, branchschema: any, ppartyid: any, trans_date: any): Observable<any> {
     const params = new HttpParams().set('type', formname).set('contactid', ppartyid).set('BranchSchema', branchschema).set('checkdate', trans_date);
-    return this._CommonService.getAPI('/AccountingTransactions/GetCashRestrictAmountpercontact', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetCashRestrictAmountpercontact', params, 'YES');
   }
  GetCashRestrictAmountpercontact1(type: any, branchtype: any,BranchSchema:any,contactid:any,checkdate:any,CompanyCode:any,GlobalSchema:any,
   BranchCode:any): Observable<any> {
@@ -362,9 +348,13 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/GetJournalVoucherData', params, 'YES');
   }
-  UnusedhequeCancel(data: any) {
-    debugger
-    return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
+  // UnusedhequeCancel(data: any) {
+  //   debugger
+  //   return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
+  // }
+  UnusedhequeCancel(data: any,BranchCode:any,CompanyCode:any,branchSchema:any,GlobalSchema:any) {
+    const params = new HttpParams().set('data', data).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode).set('branchSchema', branchSchema).set('GlobalSchema', GlobalSchema);
+    return this._CommonService.postAPI('/Accounts/UnusedhequeCancel', params)
   }
 
   // GetChequeReturnDetails(strFromDate: any, strToDate: any, p0: string, p1: string, p2: string, p3: string) {
@@ -408,10 +398,11 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/ChitTransactions/getBranchType', params, 'YES');
   }
 
-  getChequeReturnCharges(): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/ChequesOnHand/GetChequeReturnCharges', params, 'YES')
-  }
+ getChequeReturnCharges(GlobalSchema: string,companyCode: string,branchCode: string): Observable<any> {
+  const params = new HttpParams().set('GlobalSchema', GlobalSchema) .set('companyCode', companyCode) 
+  .set('branchCode', branchCode);
+ return this._CommonService.getAPI('/Accounts/GetChequeReturnCharges', params,'YES');
+}
   saveGstVoucher(localschema: any, data: any) {
     debugger;
     return this._CommonService.postAPI('/ChitTransactions/savegstvocuher?localschema=' + localschema, data)
@@ -424,8 +415,11 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('Contactid', Contactid);
     return this._CommonService.getAPI('/Transactions/ChitTransations/AuctionController/gstvoucherdocuments', params, 'YES')
   }
+GetGlobalBanks(p0: string): Observable<any[]> {const params = new HttpParams().set('GlobalSchema', 'global');
+     return this._CommonService.getAPI('/Accounts/GetGlobalBanks', params, 'YES' );
+    }
 
-  // getpartywisestates(Contactid: any, BranchSchema: any): Observable<any> {
+  // getpettycashexistingdata(GlobalSchema: any, BranchSchema: any): Observable<any> {
   //   const params = new HttpParams().set('partyid', Contactid).set('BranchSchema', BranchSchema);
   //   return this._CommonService.getAPI('/AccountingTransactions/GetPartywiseStates', params, 'YES')
   // }
@@ -435,7 +429,13 @@ export class AccountingTransactionsService {
     );
   }
 
+GetPartyDetailsById(ppartyid: number): Observable<any> {
 
+  const params = new HttpParams()
+    .set('ppartyid', ppartyid.toString()).set('BranchSchema', this._CommonService.getbranchname()).
+    set('BranchCode', this._CommonService.getBranchCode()).set('CompanyCode', this._CommonService.getCompanyCode()).set('GlobalSchema', 'global').set('TaxSchema', 'taxes');
+    return this._CommonService.getAPI('/Accounts/getPartyDetailsbyid',params,'YES');
+}
   GetCashAmountAccountWise(formname: any, account_id: any, transaction_date: any): Observable<any> {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname()).set('account_id', account_id).set('transaction_date', transaction_date);
     return this._CommonService.getAPI('/AccountingTransactions/GetCashAmountAccountWise', params, 'YES')
@@ -452,6 +452,12 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
     return this._CommonService.getAPI('/Accounts/GetLedgerAccountList', params, 'YES');
   }
+  GetTdsSectionNo(GlobalSchema: 'taxes',CompanyCode: 'KAPILCHITS',BranchCode: 'KLC01'): Observable<any> {
+  debugger;
+  const params = new HttpParams()
+    .set('globalSchema', GlobalSchema).set('companyCode', CompanyCode).set('branchCode', BranchCode);
+  return this._CommonService.getAPI('/Accounts/GetTdsSectionNo', params,'YES');
+}
 
   GettdsJVDetails(creditledger: any, monthYear: any, debitledger: any): Observable<any> {
     const params = new HttpParams().set('Branchschema', this._CommonService.getschemaname()).set('creditledger', creditledger).set('MonthYear', monthYear).set('debitledger', debitledger);

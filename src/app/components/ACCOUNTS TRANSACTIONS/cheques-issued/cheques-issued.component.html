@@ -60,7 +60,7 @@
                     </label>
                   </span>
 
-                  <span class="text-end">
+                  <span class="mx-auto text-center">
                     <label class="balance-label">BRS Date: </label>
                     <label class="balance-value">{{ brsdate }}</label>
                   </span>
@@ -160,7 +160,8 @@
               <div class="form-group">
                 <label class="fw-bold">BRS From Date</label>
                 <input class="form-control w-auto" type="text" formControlName="pfrombrsdate" readonly
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker placement="bottom" />
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker
+                  placement="bottom" />
               </div>
             </div>
 
@@ -168,7 +169,8 @@
               <div class="form-group">
                 <label class="fw-bold">BRS To Date</label>
                 <input class="form-control w-auto" type="text" formControlName="ptobrsdate" readonly
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker placement="bottom" />
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" bsDatepicker
+                  placement="bottom" />
                 <div *ngIf="validatebrsdateclear" style="color:red">
                   Brs To Date Should Be Greater Than From Date
                 </div>
@@ -245,176 +247,171 @@
               <div class="row">
                 <div class="col-md-12 col-xl-12">
 
-                  <ngx-datatable class="material expandable table" [rows]="gridData" columnMode="force"
-                    [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="40"
-                    [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset" [scrollbarH]="true"
-                    [summaryRow]="true" [summaryHeight]="50" [summaryPosition]="'bottom'">
+                  <p-table [value]="gridData" [paginator]="true" [rows]="pageCriteria.pageSize"
+                    [rowsPerPageOptions]="[10,20,50]" [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
+                    *ngIf="showOrHideChequesIssuedGrid">
 
-                    <ngx-datatable-column name="Clear" prop="pdepositstatus" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" *ngIf="!showhidegridcolumns" [width]="60" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        <div class="w-100 text-center">
-                          <input type="checkbox" [checked]="row.pdepositstatus === true"
-                          (change)="checkedClear($event,row)" 
-                         
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th *ngIf="!showhidegridcolumns" style="width:60px;text-align:center">Clear</th>
+                        <th *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="width:60px;text-align:center">
+                          Return</th>
+                        <th *ngIf="!showhidegridcolumns">Reference No</th>
+                        <th *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="width:60px;text-align:center">
+                          Cancel</th>
+                        <th>Cheque / Reference No.</th>
+                        <th style="text-align:right">Amount</th>
+                        <th>Party</th>
+                        <th>Payment Id</th>
+                        <th>Payment Date</th>
+                        <th *ngIf="!hiddendate">{{ datetitle }}</th>
+                        <th>Transaction Mode</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                      <tr>
 
-                          [disabled]="status === 'autobrs'" />
-                        </div>                      
-                      </ng-template>
-                    </ngx-datatable-column>
+                        <td *ngIf="!showhidegridcolumns" style="text-align:center">
+                          <input type="checkbox" [checked]="row?.pdepositstatus === true"
+                            (change)="checkedClear($event,row)" [disabled]="status === 'autobrs'">
+                        </td>
+                        <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="text-align:center">
+                          <input type="checkbox" [checked]="row?.preturnstatus === true"
+                            (change)="checkedReturn($event,row)">
+                        </td>
 
-                    <ngx-datatable-column name="Return" prop="preturnstatus" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" *ngIf="!showhidegridcolumns && status !== 'autobrs'" [width]="60" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        <input type="checkbox" [checked]="row.preturnstatus === true"
-                          (change)="checkedReturn($event,row)"            />
-                      </ng-template>
-                    </ngx-datatable-column>
+                        <td *ngIf="!showhidegridcolumns">
+                          <input *ngIf="status !== 'autobrs'" class="form-control" type="text"
+                            [value]="row?.preferencetext" (keyup)="checkDuplicateValueslatest($event,rowIndex,row)"
+                            maxlength="15">
+                          <span *ngIf="status === 'autobrs'">
+                            {{ row?.preferencetext }}
+                          </span>
+                        </td>
 
-                    <ngx-datatable-column name="Reference no" prop="preferencetext" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" *ngIf="!showhidegridcolumns" sortable="false">
-                      <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                        <div *ngIf="status !== 'autobrs'">
-                          <input class="form-control" type="text"
-                            (keyup)="checkDuplicateValueslatest($event,rowIndex,row)" [value]="row.preferencetext"
-                            maxlength="15" />
-                        </div>
-                        <div *ngIf="status === 'autobrs'">
-                          {{ row.preferencetext }}
-                        </div>
-                      </ng-template>
-                    </ngx-datatable-column>
+                        <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="text-align:center">
+                          <input type="checkbox" [checked]="row?.pcancelstatus === true"
+                            (change)="checkedCancel($event,row)">
+                        </td>
 
-                    <ngx-datatable-column name="Cancel" prop="pcancelstatus" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" *ngIf="!showhidegridcolumns && status !== 'autobrs'" [width]="60" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        <input type="checkbox" [checked]="row.pcancelstatus === true"
-                          (change)="checkedCancel($event,row)"                   />
-                      </ng-template>
-                    </ngx-datatable-column>
+                        <td>{{ row?.pChequenumber }}</td>
 
-                    <ngx-datatable-column name="Cheque/ Reference No." prop="pChequenumber" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
+                        <td style="text-align:right">
+                          {{ currencySymbol }} {{ row?.ptotalreceivedamount || 0 | currency:'INR':'symbol':'1.2-2' }}
+                        </td>
 
-                    <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" [cellClass]="'cell-right'"
-                      [headerClass]="'header-right'" [summaryTemplate]="Amount" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ currencySymbol }} {{ row.ptotalreceivedamount | currency:'INR':'symbol':'1.2-2' }}
-                      </ng-template>
-                      <ng-template #Amount>
-                        {{ currencySymbol }} {{ amounttotal.toFixed(2) | currency:'INR':'symbol':'1.2-2'}}
-                      </ng-template>
-                    </ngx-datatable-column>
+                        <td>{{ row?.ppartyname }}</td>
+                        <td>{{ row?.preceiptid }}</td>
+                        <td>{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
 
-                    <ngx-datatable-column name="Party" prop="ppartyname" [cellClass]="'cell-left'"
-                      [headerClass]="'header-left'" sortable="false">
-                    </ngx-datatable-column>
+                        <td *ngIf="!hiddendate">
+                          {{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}
+                        </td>
 
-                    <ngx-datatable-column name="Payment Id" prop="preceiptid" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
+                        <td>{{ row?.ptypeofpayment }}</td>
 
-                    <ngx-datatable-column name="Payment Date" prop="preceiptdate" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span>{{ value ? (value | date:'dd-MMM-yyyy') : '' }}</span>
-                      </ng-template>
-                    </ngx-datatable-column>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                      <tr>
+                        <td colspan="5" style="text-align:right"><b>Total</b></td>
+                        <td style="text-align:right">
+                          <b>{{ currencySymbol }} {{ amounttotal || 0 | currency:'INR':'symbol':'1.2-2' }}</b>
+                        </td>
+                        <td colspan="5"></td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="11" style="text-align:center; padding:20px;">
+                          No Data Available
+                        </td>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="{{datetitle}}" prop="pdepositeddate" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" *ngIf="!hiddendate" sortable="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span>{{ value ? (value | date:'dd-MMM-yyyy') : '' }}</span>
-                      </ng-template>
-                    </ngx-datatable-column>
+                  </p-table>
 
-                    <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" [cellClass]="'cell-left'"
-                      [headerClass]="'header-left'" sortable="false">
-                    </ngx-datatable-column>
+                  <p-table [value]="displayAllChequesDataBasedOnForm" [paginator]="true" [rows]="pageCriteria.pageSize"
+                    [rowsPerPageOptions]="[10,20,50]" [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
+                    *ngIf="showOrHideAllChequesGrid">
 
-                  </ngx-datatable>
-                  <ngx-datatable class="material expandable table" [rows]="displayAllChequesDataBasedOnForm"
-                    columnMode="force" [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight"
-                    [rowHeight]="'auto'" [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset"
-                    [scrollbarH]="true" *ngIf="showOrHideAllChequesGrid">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Cheque Status</th>
+                        <th>Cheque / Reference No.</th>
+                        <th style="text-align:right">Amount</th>
+                        <th>Payment Id</th>
+                        <th>Payment Date</th>
+                        <th>Cleared/Returned/Cancelled Date</th>
+                        <th>Transaction Mode</th>
+                        <th>Party</th>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Cheque Status" prop="chequeStatus" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
+                    <ng-template pTemplate="body" let-row>
+                      <tr>
+                        <td>{{ row?.chequeStatus }}</td>
+                        <td>{{ row?.pChequenumber }}</td>
+                        <td style="text-align:right">
+                          {{ currencySymbol }} {{ row?.ptotalreceivedamount || 0 | currency:'INR':'symbol':'1.2-2' }}
+                        </td>
+                        <td>{{ row?.preceiptid }}</td>
+                        <td>{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
+                        <td>{{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
+                        <td>{{ row?.ptypeofpayment }}</td>
+                        <td>{{ row?.ppartyname }}</td>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Cheque/ Reference No." prop="pChequenumber" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="8" style="text-align:center; padding:20px;">
+                          No Data Available
+                        </td>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Amount" prop="ptotalreceivedamount" [cellClass]="'cell-right'"
-                      [headerClass]="'header-right'" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ currencySymbol }} {{ row.ptotalreceivedamount | currency:'INR':'symbol':'1.2-2' }}
-                      </ng-template>
-                    </ngx-datatable-column>
+                  </p-table>
 
-                    <ngx-datatable-column name="Payment Id" prop="preceiptid" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Payment Date" prop="preceiptdate" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Cleared/Returned/Cancelled Date" prop="pdepositeddate"
-                      [cellClass]="'cell-center'" [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Transaction Mode" prop="ptypeofpayment" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Party" prop="ppartyname" [cellClass]="'cell-left'"
-                      [headerClass]="'header-left'" sortable="false">
-                    </ngx-datatable-column>
-
-                  </ngx-datatable>
-
-                  <ngx-datatable class="material expandable table" [rows]="OtherChequesData" columnMode="force"
-                    [headerHeight]="50" [footerHeight]="pageCriteria.footerPageHeight" [rowHeight]="'auto'"
-                    [limit]="pageCriteria.pageSize" [offset]="pageCriteria.offset" [scrollbarH]="true"
+                  <p-table [value]="OtherChequesData" [paginator]="true" [rows]="pageCriteria.pageSize"
+                    [rowsPerPageOptions]="[10,20,50]" [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
                     *ngIf="showOrHideOtherChequesGrid">
 
-                    <ngx-datatable-column name="Transaction No." prop="ptransactionnumber" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Transaction No.</th>
+                        <th>Transaction Date</th>
+                        <th>Particulars</th>
+                        <th style="text-align:right">Debit Amount</th>
+                        <th style="text-align:right">Credit Amount</th>
+                        <th>Account Name</th>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Transaction Date" prop="ptransactiondate" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ row.ptransactiondate | date:'dd-MMM-yyyy' }}
-                      </ng-template>
-                    </ngx-datatable-column>
+                    <ng-template pTemplate="body" let-row>
+                      <tr>
+                        <td>{{ row?.ptransactionnumber }}</td>
+                        <td>{{ row?.ptransactiondate | date:'dd-MMM-yyyy' }}</td>
+                        <td>{{ row?.particulars }}</td>
+                        <td style="text-align:right">
+                          {{ currencySymbol }} {{ row?.debitamount || 0 | currency:'INR':'symbol':'1.2-2' }}
+                        </td>
+                        <td style="text-align:right">
+                          {{ currencySymbol }} {{ row?.creditamount || 0 | currency:'INR':'symbol':'1.2-2' }}
+                        </td>
+                        <td>{{ row?.accountname }}</td>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Particulars" prop="particulars" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="6" style="text-align:center; padding:20px;">
+                          No Data Available
+                        </td>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Debit Amount" prop="debitamount" [cellClass]="'cell-right'"
-                      [headerClass]="'header-right'" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ currencySymbol }} {{ row.debitamount | currency:'INR':'symbol':'1.2-2' }}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Credit Amount" prop="creditamount" [cellClass]="'cell-right'"
-                      [headerClass]="'header-right'" sortable="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ currencySymbol }} {{ row.debitamount | currency:'INR':'symbol':'1.2-2' }}
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column name="Account Name" prop="accountname" [cellClass]="'cell-center'"
-                      [headerClass]="'header-center'" sortable="false">
-                    </ngx-datatable-column>
-
-                  </ngx-datatable>
+                  </p-table>
 
                 </div>
               </div>
@@ -455,35 +452,65 @@
 
               <div class="row mt-2">
                 <div class="col-md-12 col-xl-12">
-                  <ngx-datatable class="material expandable" [rows]="PreDefinedAutoBrsArrayData" columnMode="force"
-                    [offset]="pageCriteria2.offset" [limit]="pageCriteria2.pageSize"
-                    [headerHeight]="pageCriteria2.headerHeight" [rowHeight]="pageCriteria2.rowHeight"
-                    [footerHeight]="pageCriteria2.footerPageHeight">
+                  <p-table [value]="PreDefinedAutoBrsArrayData" [paginator]="true" [rows]="pageCriteria2.pageSize"
+                    [rowsPerPageOptions]="[10,20,50]" [scrollable]="true" scrollHeight="450px"
+                    responsiveLayout="scroll">
 
-                    <ngx-datatable-column name="Action" *ngIf="auto_brs_type_name === 'Pending'">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        <input type="checkbox" [checked]="row.check" (click)="checkbox_pending_data(row,$event)">
-                      </ng-template>
-                    </ngx-datatable-column>
+                    <!-- ================= HEADER ================= -->
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th *ngIf="auto_brs_type_name === 'Pending'" style="width:80px;text-align:center">
+                          Action
+                        </th>
+                        <th>Date</th>
+                        <th>UTR Number</th>
+                        <th style="text-align:right">Amount</th>
+                        <th>Reference Text</th>
+                      </tr>
+                    </ng-template>
 
-                    <ngx-datatable-column name="Date" prop="transactiondate">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ row.transactiondate | date:'dd-MMM-yyyy' }}
-                      </ng-template>
-                    </ngx-datatable-column>
+                    <!-- ================= BODY ================= -->
+                    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                      <tr>
 
-                    <ngx-datatable-column name="UTR Number" prop="chqueno"></ngx-datatable-column>
+                        <!-- Action Checkbox -->
+                        <td *ngIf="auto_brs_type_name === 'Pending'" style="text-align:center">
+                          <input type="checkbox" [checked]="row?.check === true"
+                            (change)="checkbox_pending_data(row,$event)">
+                        </td>
 
-                    <ngx-datatable-column name="Amount" prop="chequeamount" [cellClass]="'cell-right'"
-                      [headerClass]="'header-right'">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        {{ row.chequeamount | currency:'INR':'symbol':'1.2-2' }}
-                      </ng-template>
-                    </ngx-datatable-column>
+                        <!-- Date -->
+                        <td>
+                          {{ row?.transactiondate | date:'dd-MMM-yyyy' }}
+                        </td>
 
-                    <ngx-datatable-column name="Reference Text" prop="preferencetext"></ngx-datatable-column>
+                        <!-- UTR Number -->
+                        <td>
+                          {{ row?.chqueno }}
+                        </td>
 
-                  </ngx-datatable>
+                        <!-- Amount -->
+                        <td style="text-align:right">
+                          {{ row?.chequeamount || 0 | currency:'INR':'symbol':'1.2-2' }}
+                        </td>
+
+                        <!-- Reference -->
+                        <td>
+                          {{ row?.preferencetext }}
+                        </td>
+
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td [attr.colspan]="auto_brs_type_name === 'Pending' ? 5 : 4"
+                          style="text-align:center; padding:20px; font-weight:500;">
+                          No Data Available
+                        </td>
+                      </tr>
+                    </ng-template>
+
+                  </p-table>
                 </div>
               </div>
 

@@ -28,7 +28,7 @@ export class BrStatementService {
   //   );
   // }
   GetBrStatementReportByDates(
-    fromDate: string,
+    fromdate: string,
     _pBankAccountId: number,
     BranchSchema:any,
     branchCode:any,
@@ -38,7 +38,7 @@ export class BrStatementService {
 
     const params = new HttpParams({
       fromObject: {
-        fromdate: fromDate,
+        fromdate: fromdate,
         _pBankAccountId: _pBankAccountId,
         BranchSchema: BranchSchema,
         branchCode:branchCode,
