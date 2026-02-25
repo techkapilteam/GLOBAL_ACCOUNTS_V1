@@ -304,7 +304,7 @@ export class BankBookComponent implements OnInit {
 
     if (this.expandedRows[key] && !row.details) {
       this.reportService
-        .GetTransTypeDetails(row.ptransactionno)
+        .GetTransTypeDetails(row.ptransactionno,'accounts','global','KAPILCHITS','KLC01')
         .subscribe((res: any) => {
           row.details = res;
         });
