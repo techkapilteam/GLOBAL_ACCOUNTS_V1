@@ -2,16 +2,19 @@
   <div class="section-content">
     <div class="row">
       <div class="col-md-12 col-xl-12">
-        <!-- <p class="bc-2">General Receipt</p> -->
+        <h2>General Receipt New</h2>
       </div>
-      <div class="col-md-6 col-xl-4">
-        <div class="form-group">
-          <label class="required-field">Date</label>
-          <fieldset [disabled]="!disabletransactiondate">
-            <input type="text" class="form-control w-auto" formControlName="preceiptdate" placeholder="Date picker here"
-              [bsConfig]="dpConfig1" #dp="bsDatepicker" bsDatepicker placement="bottom" readonly>
-          </fieldset>
-          <!-- [ngClass]="{ 'is-invalid': submitted &&  LoanConfiguration.controls.preceiptdate.errors }" -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">
+                Date <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" formControlName="preceiptdate" [bsConfig]="dpConfig1"
+                #dp="bsDatepicker" bsDatepicker placement="bottom" readonly>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -19,7 +22,7 @@
   <div class="section-content mt-2">
     <div class="row mt-2">
       <div class="col-12">
-        <p class="bc-2">Mode of Receipt</p>
+        <p class="bc-2"><b>Mode of Receipt</b></p>
         <div class="form-group mt-2  pl-0">
           <div class="form-check form-check-inline radio-btn">
             <input class="form-check-input" type="radio" name="pmodofreceipt" formControlName="pmodofreceipt" id="CASH"
@@ -71,17 +74,17 @@
               <input class="form-control" type="text" placeholder="Transaction Date">
             </div>
           </div>
-               <div class="col-md-12 col-xl-12 mb-2">
-  <div id="sbi-bal">
-    <span class="badge bg-info p-1 fw-light">
-      Bank Book - {{ bankbookBalance }}
-    </span>
+          <div class="col-md-12 col-xl-12 mb-2">
+            <div id="sbi-bal">
+              <span class="badge bg-info p-1 fw-light">
+                Bank Book - {{ bankbookBalance }}
+              </span>
 
-    <span class="badge bg-warning p-1 fw-light">
-      Pass Book - {{ bankpassbookBalance }}
-    </span>
-  </div>
-</div>
+              <span class="badge bg-warning p-1 fw-light">
+                Pass Book - {{ bankpassbookBalance }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="BANK" *ngIf="bankshowhide">
@@ -434,7 +437,7 @@
     </div>
   </div>
 
-  <hr class="party-section">
+
   <div class="section-content mt-2">
     <div class="row">
       <div class="col-md-6 col-xl-4">
@@ -485,12 +488,14 @@
           <app-validation-message [messgae]="formValidationMessages?.psubledgerid"></app-validation-message>
         </div>
         <div class="form-group">
-          <label class="pl-0 pr-0" id="pactualpaidamount" class="required-field" title="Amount Received">Amount
-            Received</label>
-          <input class="form-control border-warning sec-head-bold " style="text-align:right;" type="text" placeholder=""
-            formControlName="pactualpaidamount" appRoundecimal="12@2" (blur)="pamount_change()" appMycurrencyFormatter
+          <label class="required-field" id="pactualpaidamount" title="Amount Received">Amount Received</label>
+          <input class="form-control border-warning sec-head-bold text-end" type="text"
+            formControlName="pactualpaidamount" appRoundecimal="12@2" appMycurrencyFormatter (blur)="pamount_change()"
+            inputmode="decimal" (keypress)="allowIndianAmount($event)"
             [ngClass]="{ 'is-invalid': formValidationMessages.pactualpaidamount }">
-          <app-validation-message [messgae]="formValidationMessages?.pactualpaidamount"></app-validation-message>
+
+          <app-validation-message [messgae]="formValidationMessages?.pactualpaidamount">
+          </app-validation-message>
         </div>
       </div>
       <div class="col-md-6 col-xl-6 offset-2 pt-2">
@@ -524,19 +529,17 @@
                     <div class="col-md-12 col-xl-12">
                       <div class="row">
                         <div class="form-group col-md-4">
-                          <label id="pStateId" class="required-field" title="State">
-                            State
-                          </label>
+                          <label id="pStateId" class="required-field" title="State">State</label>
                           <ng-select class="form-control" id="pStateId" title="State" formControlName="pStateId"
-                            (change)="state_change($event)"
-                            [ngClass]="{ 'is-invalid': formValidationMessages.pStateId }">
+                            (change)="state_change($event)">
                             <ng-option value="">Select</ng-option>
                             <ng-option *ngFor="let state of statelist; trackBy: trackByFn" [value]="state.pStateId">
                               {{state.pState}}
                             </ng-option>
                           </ng-select>
-                          <app-validation-message [messgae]="formValidationMessages?.pStateId">
+                          <!-- <app-validation-message [messgae]="formValidationMessages?.pStateId">
                           </app-validation-message>
+                          [ngClass]="{ 'is-invalid': formValidationMessages.pStateId }" -->
                         </div>
                         <div class="form-group col-md-4" *ngIf="showgstno">
                           <label id="pgstno" title="GST No.">GST No.</label>
@@ -549,14 +552,14 @@
                           <label id="pgstpercentage" class="required-field" title="GST(%)">
                             GST(%)
                           </label>
-                          <ng-select class="form-control" id="pgstpercentage" title="GST(%)"
-                            formControlName="pgstpercentage" (change)="gst_Change($event)"
-                            [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage }">
-                            <ng-option value="">Select</ng-option>
-                            <ng-option *ngFor="let gst of gstlist; trackBy: trackByFn" [value]="gst.pgstpercentage">
-                              {{gst.pgstpercentage}}
-                            </ng-option>
+                          <ng-select class="form-control" id="pgstpercentage" title="GST(%)" [items]="gstlist"
+                            bindLabel="pgstpercentage" bindValue="pgstpercentage" formControlName="pgstpercentage"
+                            (change)="gst_Change($event)"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage }" placeholder="Select"
+                            [searchable]="true" [clearable]="false">
                           </ng-select>
+
+
                           <app-validation-message [messgae]="formValidationMessages?.pgstpercentage">
                           </app-validation-message>
                         </div>
@@ -565,7 +568,8 @@
                         <div class="form-group col-md-8" *ngIf="showgstamount">
                           <label>Amount</label>
                           <label class="form-control col-md-12 text-right pt-2">{{currencySymbol}}
-                            {{ (GeneralReceiptForm.get('preceiptslist.pgstamount')?.value || 0) | currency:currencyCode:'symbol':'1.2-2' }}</label>
+                            {{ (GeneralReceiptForm.get('preceiptslist.pgstamount')?.value || 0) |
+                            currency:currencyCode:'symbol':'1.2-2' }}</label>
                         </div>
                         <div class="form-group col-md-6" *ngIf="showigst">
                           <label>IGST({{GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.value}}%)</label>

@@ -296,7 +296,7 @@ export class GeneralReceiptNewComponent implements OnInit {
             pcgstpercentage: [''],
             psgstpercentage: [''],
             putgstpercentage: [''],
-            pactualpaidamount: [0],
+            pactualpaidamount: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]],
             ptotalamount: [0]
         })
     }
@@ -312,6 +312,23 @@ export class GeneralReceiptNewComponent implements OnInit {
         let data = this.partyjournalentrylist;
         this.partyjournalentrylist = [...this.partyjournalentrylist, data];
     }
+    allowNumbersOnly(event: KeyboardEvent) {
+        const charCode = event.which ? event.which : event.keyCode;
+
+        // Allow numbers (0-9)
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        }
+
+        // Allow decimal point
+        if (charCode === 46) {
+            return true;
+        }
+
+        event.preventDefault();
+        return false;
+    }
+
     gst_Change($event: any): void {
         const gstpercentage = $event.target.value;
         this.GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.setValue('');
@@ -328,7 +345,27 @@ export class GeneralReceiptNewComponent implements OnInit {
         }
 
     }
+    allowIndianAmount(event: KeyboardEvent) {
+        const charCode = event.which ? event.which : event.keyCode;
 
+        // Allow numbers
+        if (charCode >= 48 && charCode <= 57) {
+            return true;
+        }
+
+        // Allow comma
+        if (charCode === 44) {
+            return true;
+        }
+
+        // Allow decimal point
+        if (charCode === 46) {
+            return true;
+        }
+
+        event.preventDefault();
+        return false;
+    }
     getgstPercentage(gstpercentage: any) {
         let data = this.gstlist.filter(function (tds: { pgstpercentage: any; }) {
             return tds.pgstpercentage == gstpercentage;
@@ -390,20 +427,25 @@ export class GeneralReceiptNewComponent implements OnInit {
         trans_date = this._commonService.getFormatDateNormal(trans_date);
         let amt = 0;
 
-     this._Accountservice.GetCashRestrictAmountpercontact1(
-  'GENERAL RECEIPT',
-  'KGMS',
-  this._CommonService.getbranchname(),    
-  this._CommonService.getschemaname(),     
-  ppartyid,                                
-  trans_date,                              
-  this._CommonService.getCompanyCode(),    
-  
-  this._CommonService.getBranchCode()).subscribe((res: any) => {console.log(res);
-  const amt = Number(res) || 0;this.availableAmount =(Number(this.cashRestrictAmount) || 0) - amt;},
-  (error: any) => {console.error(error);this._commonService.showErrorMessage(error);
-  }
-);
+        this._Accountservice.GetCashRestrictAmountpercontact1(
+            'GENERAL RECEIPT',
+            'KGMS',
+            this._CommonService.getbranchname(),
+            ppartyid,
+            trans_date,
+            this._CommonService.getCompanyCode(),
+            this._CommonService.getschemaname(),
+
+
+
+            this._CommonService.getBranchCode()).subscribe((res: any) => {
+                console.log(res);
+                const amt = Number(res) || 0; this.availableAmount = (Number(this.cashRestrictAmount) || 0) - amt;
+            },
+                (error: any) => {
+                    console.error(error); this._commonService.showErrorMessage(error);
+                }
+            );
         if (ppartyid && ppartyid !== '') {
             const ledgername = $event.ppartyname;
             const pStateId = $event.pStateId; this.getPartyDetailsbyid(ppartyid, pStateId);
@@ -422,8 +464,8 @@ export class GeneralReceiptNewComponent implements OnInit {
 
     }
     getPartyDetailsbyid(ppartyid: any, pStateId: any) {
-        this._Accountservice.getPartyDetailsbyid(ppartyid,this._commonService.getbranchname(),
-        this._commonService.getBranchCode(),this._commonService.getCompanyCode(),this._commonService.getschemaname(),'taxes').subscribe(
+        this._Accountservice.getPartyDetailsbyid(ppartyid, this._commonService.getbranchname(),
+            this._commonService.getBranchCode(), this._commonService.getCompanyCode(), this._commonService.getschemaname(), 'taxes').subscribe(
                 (json: any) => {
                     if (json != null) {
                         this.tdssectionlist = [];
@@ -649,7 +691,7 @@ export class GeneralReceiptNewComponent implements OnInit {
                 DepositBankIDControl.updateValueAndValidity();
             }
         }
-       
+
         this.bankbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
         this.bankpassbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
 
@@ -1685,8 +1727,12 @@ export class GeneralReceiptNewComponent implements OnInit {
             this.GeneralReceiptForm.get('preceiptslist.pcgstamount')?.setValue((cgstamount));
             this.GeneralReceiptForm.get('preceiptslist.psgstamount')?.setValue((sgstamount));
             this.GeneralReceiptForm.get('preceiptslist.putgstamount')?.setValue((utgstamount));
-            this.GeneralReceiptForm.get('preceiptslist.ptotalamount')?.setValue((parseFloat(totalamount.toFixed(2))));
+            // this.GeneralReceiptForm.get('preceiptslist.ptotalamount')?.setValue((parseFloat(totalamount.toFixed(2))));
+            const amount = Number(totalamount) || 0;
 
+            this.GeneralReceiptForm
+                .get('preceiptslist.ptotalamount')
+                ?.setValue(parseFloat(amount.toFixed(2)));
         } catch (e) {
             this._commonService.showErrorMessage(e);
         }

@@ -49,8 +49,8 @@ export class AccountingTransactionsService {
   GetModeoftransactions(): Observable<any> {
     return this._CommonService.getAPI('/AccountingTransactions/GetModeoftransactions', '', 'NO');
   }
-  GetGeneralReceiptsData(GlobalSchema: string,BranchSchema: string,TaxSchema: string,CompanyCode: string,
-    BranchCode: string): Observable<any> {
+  GetGeneralReceiptsData(GlobalSchema: 'global',BranchSchema: 'accounts',TaxSchema: 'taxes',CompanyCode: 'KAPILCHITS',
+    BranchCode: 'KLC01'): Observable<any> {
 
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('TaxSchema', TaxSchema)
       .set('CompanyCode', CompanyCode).set('BranchCode', BranchCode); return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData',params,'YES');
