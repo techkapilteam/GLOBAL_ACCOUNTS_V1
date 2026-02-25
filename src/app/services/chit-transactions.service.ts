@@ -8,18 +8,18 @@ import { catchError, Observable, throwError } from 'rxjs';
 })
 export class ChitTransactionsService {
    constructor(private _commonService: CommonService,private http:HttpClient) {}
-  getBranchesByCAO(BranchSchema: string, Caoname: string) {
+  // getBranchesByCAO(BranchSchema: string, Caoname: string) {
 
-    const params = new HttpParams()
-      .set('BranchSchema', BranchSchema)
-      .set('Caoname', Caoname);
+  //   const params = new HttpParams()
+  //     .set('BranchSchema', BranchSchema)
+  //     .set('Caoname', Caoname);
 
-    return this._commonService.getAPI(
-      '/ChitTransactions/ChitReports/getBranchesByCAO',
-      params,
-      'YES'
-    );
-  }
+  //   return this._commonService.getAPI(
+  //     '/ChitTransactions/ChitReports/getBranchesByCAO',
+  //     params,
+  //     'YES'
+  //   );
+  // }
 
   getKGMSBranchList(LocalSchema: string) {
 
@@ -88,19 +88,42 @@ export class ChitTransactionsService {
       this._commonService.showErrorMessage(errormssg);
     }
   }
+  // getCAOpendingtrasferlist(
+  //   BranchSchema: string,
+  //   Caoschema: string,
+  //   ptypeofpayment: string
+  // ) {
+
+  //   const params = new HttpParams()
+  //     .set('BranchSchema', BranchSchema)
+  //     .set('Caoschema', Caoschema)
+  //     .set('ptypeofpayment', ptypeofpayment);
+
+  //   return this._commonService.getAPI(
+  //     '/ChitTransactions/ChitReports/GetPendingTransferDetails',
+  //     params,
+  //     'YES'
+  //   );
+  // }
   getCAOpendingtrasferlist(
     BranchSchema: string,
     Caoschema: string,
-    ptypeofpayment: string
+    ptypeofpayment: string,
+    CompanyCode:any,
+    BranchCode:any,
+    GlobalSchema:any
   ) {
 
     const params = new HttpParams()
       .set('BranchSchema', BranchSchema)
       .set('Caoschema', Caoschema)
-      .set('ptypeofpayment', ptypeofpayment);
+      .set('ptypeofpayment', ptypeofpayment)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
     return this._commonService.getAPI(
-      '/ChitTransactions/ChitReports/GetPendingTransferDetails',
+      '/Accounts/GetPendingTransferDetails',
       params,
       'YES'
     );

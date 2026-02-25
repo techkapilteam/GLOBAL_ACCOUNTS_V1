@@ -22,8 +22,8 @@
 
               <ng-select
                 [items]="tdssectiondata"
-                bindLabel="sectionid"
-                bindValue="tblmsttdsid"
+                bindLabel="section_name"
+                bindValue="tbl_mst_tds_id"
                 placeholder="Select"
                 [multiple]="false"
                 [searchable]="true"
@@ -31,6 +31,7 @@
                 dropdownPosition="bottom"
                 formControlName="sectionid"
                 (change)="onsectionidchange($event)"
+                appendTo="body"
                >
               </ng-select>
 

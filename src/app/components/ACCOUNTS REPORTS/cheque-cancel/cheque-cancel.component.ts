@@ -112,8 +112,8 @@ export class ChequeCancelComponent implements OnInit {
   }
 
   GetChequeCancelDetails() {
-    // if (this.validation) return;
-    debugger;
+    if (this.validation) return;
+    this.updateDates();
 
     const startdate = this.commonService.getFormatDateNormal(this.f.fromdate.value);
     const enddate = this.commonService.getFormatDateNormal(this.f.todate.value);

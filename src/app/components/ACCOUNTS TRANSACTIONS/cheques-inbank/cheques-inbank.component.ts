@@ -2557,12 +2557,24 @@ export class ChequesInbankComponent implements OnInit {
     }
   }
 
-  getChequeReturnCharges() {
-    this._accountingtransaction.getChequeReturnCharges().subscribe(res => {
-      console.log(res);
-      this.chequereturncharges = res[0].chequereturncharges;
-    })
-  }
+// chequereturncharges: any[] = [];
+
+getChequeReturnCharges() {
+  this._accountingtransaction
+    .getChequeReturnCharges('global', 'KAPILCHITS', 'KLC01')
+    .subscribe({
+      next: (res: any[]) => {
+        console.log('API Response:', res);
+
+        // Swagger returns array directly
+        this.chequereturncharges = Array.isArray(res) ? res : [];
+      },
+      error: (error: any) => {
+        console.error('Error fetching cheque return charges', error);
+        this.chequereturncharges = [];
+      }
+    });
+}
 
 
   // pdf content

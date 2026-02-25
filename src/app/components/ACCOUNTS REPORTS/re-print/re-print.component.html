@@ -3,27 +3,29 @@
     <div class="screen-header">
       <h2>Re Print</h2>
     </div>
-    <div class="screen-content">
+    <div class="section-content px-4 py-3">
       <form [formGroup]="ReprintRepotForm" autocomplete="off">
         <div class="row">
 
           <div class="col-md-3 mb-3">
-            <label class="required-field">Transaction Type</label>
-            <ng-select [items]="lstreporttype" formControlName="TransType" bindLabel="reporttype" bindValue="reporttype"
-              placeholder="Select" [searchable]="true" [clearable]="false" appendTo="body"
-              (change)="reportchange_Change($event)"
-              [ngClass]="{ 'is-invalid': ReprintRepotForm.get('TransType')?.touched && ReprintRepotForm.get('TransType')?.invalid }">
-            </ng-select>
-            <div class="text-danger mt-1"
-              *ngIf="ReprintRepotForm.get('TransType')?.touched && ReprintRepotForm.get('TransType')?.errors?.['required']">
-              Transaction Type is required
+            <div class="form-group">
+              <label>Transaction Type</label>
+              <ng-select [items]="lstreporttype" formControlName="TransType" bindLabel="reporttype"
+                bindValue="reporttypeid" [multiple]="false" placeholder="Select" [searchable]="true" [clearable]="false"
+                (change)="reportchange_Change($event)" appendTo="body">
+              </ng-select>
+              <div class="text-danger mt-1"
+                *ngIf="ReprintRepotForm.get('TransType')?.touched && ReprintRepotForm.get('TransType')?.errors?.['required']">
+                Transaction Type is required
+              </div>
             </div>
           </div>
 
           <div class="col-md-3 mb-3" *ngIf="userbranchtxtboxshowhide">
-            <label class="required-field">Transaction No.</label>
-            <input appUppercase class="form-control" type="text" formControlName="Transno"
-              [ngClass]="{ 'is-invalid': ReprintRepotForm.get('Transno')?.touched && ReprintRepotForm.get('Transno')?.invalid }" />
+            <div class="form-group">
+              <label>Transaction No.</label>
+              <input type="text" class="form-control" formControlName="Transno">
+            </div>
             <div class="text-danger mt-1"
               *ngIf="ReprintRepotForm.get('Transno')?.touched && ReprintRepotForm.get('Transno')?.errors?.['required']">
               Transaction No. is required
@@ -31,85 +33,132 @@
           </div>
 
           <div class="col-md-3 mb-3" *ngIf="form15UID">
-            <label class="required-field">PAN No.</label>
-            <input appUppercase class="form-control" type="text" formControlName="panno"
-              [ngClass]="{ 'is-invalid': ReprintRepotForm.get('panno')?.touched && ReprintRepotForm.get('panno')?.invalid }" />
+            <div class="form-group">
+              <label>PAN No.</label>
+              <input type="text" class="form-control" formControlName="panno">
+            </div>
             <div class="text-danger mt-1" *ngIf="ReprintRepotForm.get('panno')?.errors?.['pattern']">
               Invalid PAN format (ABCDE1234F)
             </div>
           </div>
 
-          <div class="col-md-3 mb-3" *ngIf="userbranchngselectshowhide">
-            <label class="required-field">CAO</label>
-            <ng-select [items]="caolist" formControlName="branch_name" bindLabel="branch_name" bindValue="branch_code"
-              placeholder="Select" [searchable]="true" [clearable]="false"
-              [ngClass]="{ 'is-invalid': ReprintRepotForm.get('branch_name')?.touched && ReprintRepotForm.get('branch_name')?.invalid }">
-            </ng-select>
+          <div class="col-md-3" *ngIf="userbranchngselectshowhide">
+            <div class="form-group">
+              <label>CAO</label>
+              <ng-select [items]="caolist" formControlName="branch_name" bindLabel="branch_name" bindValue="branch_code"
+                [multiple]="false" placeholder="Select" [searchable]="true" [clearable]="false"
+                (change)="Branchchange($event)">
+              </ng-select>
+            </div>
             <div class="text-danger mt-1"
               *ngIf="ReprintRepotForm.get('branch_name')?.touched && ReprintRepotForm.get('branch_name')?.errors?.['required']">
               Branch selection is required
             </div>
           </div>
 
-          <div class="col-md-3 d-flex align-items-end mb-3">
-            <button type="button" class="btn btn-primary w-100" (click)="getduplicateReport()">
-              Generate Report
-            </button>
+          <div class="col-md-3">
+            <div class="d-flex justify-content-end mt-3 pt-2">
+              <button type="button" class="btn btn-primary" (click)="getduplicateReport()">
+                Generate Report
+              </button>
+            </div>
           </div>
 
         </div>
       </form>
     </div>
-  </div>
 
-  <div class="card shadow-sm" *ngIf="Showhide">
-    <div class="card-body">
+    <div class="section-content mt-2" *ngIf="Showhide">
+      <div class="row">
 
-      <div class="row mb-3">
         <div class="col-md-4">
-          <div class="input-group">
-            <input type="text" class="form-control" (keyup)="ReprintdataFilter($event.target.value)" />
-            <button class="btn btn-outline-secondary">
-              <i class="fa fa-search">Search</i>
-            </button>
-          </div>
+          <input type="text" class="form-control" placeholder="Search" (keyup)="ReprintdataFilter($event.target.value)">
         </div>
-      </div>
 
-      <p-table [value]="griddata" [paginator]="true" [rows]="pageCriteria.pageSize"
-        [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
-        responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+        <div class="col-md-12 mt-4">
+          <p-table [value]="griddata" [paginator]="true" [rows]="pageCriteria.pageSize"
+            [rowsPerPageOptions]="[10,20,50]" responsiveLayout="scroll">
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th>T/R Receipt No.</th>
+                <th>Receipt Date</th>
+                <th>Receipt No.</th>
+                <th>Chit No.</th>
+                <th class="text-end">Receipt Amount</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr>
+
+                <td>
+                  <a *ngIf="ReceiptColunmForLegal" (click)="clickForLegalReceipt(row)" class="bc-2">
+                    {{ row.general_receipt_number }}
+                  </a>
+                  <span *ngIf="!ReceiptColunmForLegal">
+                    {{ row.general_receipt_number }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ row.receipt_date | date:'dd-MMM-yyyy' }}
+                </td>
+
+                <td>
+                  <a *ngIf="row.receipt_number" (click)="click(row)" class="bc-2">
+                    {{ row.receipt_number }}
+                  </a>
+                </td>
+
+                <td>
+                  {{ row.chit_no }}
+                </td>
+
+                <td class="text-end">
+                  {{ currencysymbol }}
+                  {{ row.total_received_amount | number:'1.2-2' }}
+                </td>
+
+              </tr>
+            </ng-template>
+
+          </p-table>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section-content mt-2" *ngIf="showForm15HGrid">
+      <p-table [value]="form15HGridData" [paginator]="true" [rows]="pageCriteria.pageSize"
+        [rowsPerPageOptions]="[10,20,50]" responsiveLayout="scroll">
 
         <ng-template pTemplate="header">
           <tr>
-            <th>T/R Receipt No.</th>
-            <th>Receipt Date</th>
-            <th>Receipt No.</th>
-            <th>Chit No.</th>
-            <th class="text-end">Receipt Amount</th>
+            <th>Contact Name</th>
+            <th>Pan No</th>
+            <th>UID No.</th>
+            <th>Tan No</th>
+            <th>Company Name</th>
+            <th>Assessment Year</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-row>
           <tr>
-            <td>{{ row.general_receipt_number }}</td>
-
+            <td>{{ row.contactname }}</td>
+            <td>{{ row.subscriberpanno }}</td>
             <td>
-              {{ row.receipt_date ? (row.receipt_date | date:'dd/MM/yyyy') : '--NA--' }}
+              <a style="cursor:pointer" class="bc-2" (click)="onUIDClick(row.uid)">
+                {{ row.uid }}
+              </a>
             </td>
-
-            <td>{{ row.receipt_number }}</td>
-
-            <td>{{ row.ticketno }}</td>
-
-            <td class="text-end">
-              {{ currencysymbol }} {{ row.total_received_amount | number:'1.2-2' }}
-            </td>
+            <td>{{ row.tanno }}</td>
+            <td>{{ row.companyname }}</td>
+            <td>{{ row.assessmentyear }}</td>
           </tr>
         </ng-template>
 
       </p-table>
-
     </div>
   </div>
-</div>

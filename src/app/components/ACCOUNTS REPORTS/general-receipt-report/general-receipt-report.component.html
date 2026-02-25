@@ -1,0 +1,195 @@
+<div class="shadow-bg-view">
+
+  <div class="my-container">
+    <ng-template #customLoadingTemplate>
+      <div class="custom-class"></div>
+    </ng-template>
+
+    <!-- <ngx-loading
+      [show]="loading"
+      [config]="{ backdropBorderRadius: '3px' }"
+      [template]="customLoadingTemplate">
+    </ngx-loading> -->
+  </div>
+
+  <div class="col-md-12 mt-5 mb-4">
+    <div id="template">
+
+      <div class="d-flex justify-content-end mr-3" *ngIf="!cancelled">
+        <ul class="temp-ul">
+          <li class="temp-ico ml-2">
+            <a (click)="pdfOrprint('Pdf')" class="export-icons">
+              <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF">
+            </a>
+          </li>
+          <li class="temp-ico ml-2">
+            <a (click)="pdfOrprint('Print')" class="export-icons">
+              <img src="assets/images/print-icon-blue.svg" width="18" title="Print">
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="container" id="temp-box">
+
+        <div *ngFor="let receiptdata of GeneralReceiptServiceData; let i = index">
+
+          <div class="row">
+            <div class="col-md-8 offset-md-2">
+
+              <div class="p-3 receipt-wrapper">
+
+                <div class="text-center mb-3">
+                  <img src="assets/images/kapillogo.png" class="img-fluid mb-2" width="120">
+                  <h4 class="font-weight-bold m-0">{{ pCompanyName }}</h4>
+                  <p class="m-0">{{ pAddress1 }}</p>
+                  <p class="m-0">CIN : {{ pCinNo }}</p>
+                </div>
+
+                <div class="row mb-2">
+                  <div class="col-md-6">
+                    <strong>Printed On :</strong> {{ printedon }}
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <strong>Branch :</strong> {{ pBranchname | titlecase }}
+                  </div>
+                </div>
+
+                <div class="text-center mb-3">
+                  <h5 class="font-weight-bold">
+                    {{ receiptName }}
+                    <span *ngIf="receiptdata.gstno">
+                      (GST No. : {{ receiptdata.gstno }})
+                    </span>
+                    <span *ngIf="duplicate === 'Reprint'">
+                      (Duplicate)
+                    </span>
+                  </h5>
+                </div>
+
+                <div *ngIf="cancelled" class="cancel-watermark">
+                  Cancelled
+                </div>
+
+                <div class="border rounded p-3 bg-white">
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <strong>Receipt No :</strong>
+                      {{ receiptdata.receiptid }}
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <strong>Date :</strong>
+                      {{ receiptdata.receipt_date | date }}
+                    </div>
+                  </div>
+
+                  <p class="font-weight-bold">
+                    Received With Thanks From
+                    {{ receiptdata.account_name }}
+                  </p>
+
+                  <p>Towards</p>
+
+                  <table class="table table-bordered receipt-table">
+                    <thead>
+                      <tr>
+                        <th style="width:10%">S.No.</th>
+                        <th>Particulars</th>
+                        <th class="text-right" style="width:25%">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let GrData of receiptdata.pGeneralReceiptSubDetailsList; let x = index">
+                        <td class="text-center">{{ x + 1 }}</td>
+                        <td>{{ GrData.account_name }}</td>
+                        <td class="text-right">
+                          {{ currencySymbol }}
+                          {{ GrData.ledger_amount | number:'1.2-2' }}
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td></td>
+                        <td><strong>Total</strong></td>
+                        <td class="text-right">
+                          <strong>
+                            {{ currencySymbol }}
+                            {{ getTotalAmount(receiptdata.pGeneralReceiptSubDetailsList) | number:'1.2-2' }}
+                          </strong>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+
+                  <p>
+                    <strong>Amount In Words :</strong>
+                    Rupees
+                    {{ getTotalAmount(receiptdata.pGeneralReceiptSubDetailsList) | numberToWords | titlecase }}
+                    Only.
+                  </p>
+
+                  <p>
+                    <strong>Narration :</strong>
+                    {{ receiptdata.narration }}
+                  </p>
+
+                  <p>
+                    <strong>Mode of Payment :</strong>
+                    <span *ngIf="receiptdata.modeof_receipt === 'CASH'">
+                      {{ receiptdata.modeof_receipt }}
+                    </span>
+
+                    <span *ngIf="receiptdata.modeof_receipt !== 'CASH'">
+                      {{ receiptdata.typeofpayment }}
+                    </span>
+
+                    <span *ngIf="receiptdata.reference_number">
+                      (Ref No :
+                      {{ receiptdata.reference_number }},
+                      Bank :
+                      {{ receiptdata.cheque_bank }})
+                    </span>
+                  </p>
+
+                  <p *ngIf="receiptdata.pGeneralReceiptSubDetailsList[0]?.pcgstamount">
+                    <strong>GST (Include) :</strong>
+                    {{ currencySymbol }}
+                    {{ receiptdata.pGeneralReceiptSubDetailsList[0]?.pcgstamount | number:'1.2-2' }}
+                  </p>
+
+                  <p *ngIf="receiptdata.pGeneralReceiptSubDetailsList[0]?.ptdsamount">
+                    <strong>TDS :</strong>
+                    {{ currencySymbol }}
+                    {{ receiptdata.pGeneralReceiptSubDetailsList[0]?.ptdsamount | number:'1.2-2' }}
+                  </p>
+
+                  <div class="row mt-5 text-center">
+                    <div class="col-md-4">
+                      <p class="font-weight-bold">(Approved By)</p>
+                    </div>
+                    <div class="col-md-4">
+                      <p class="font-weight-bold">(Verified By)</p>
+                    </div>
+                    <div class="col-md-4">
+                      <p>{{ receiptdata.pPostedby }}</p>
+                      <p class="font-weight-bold">(Posted By)</p>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

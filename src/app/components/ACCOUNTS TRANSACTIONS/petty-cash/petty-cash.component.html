@@ -388,10 +388,7 @@
                         </label>
                       </div>
                     </div>
-
-
                   </div>
-
                 </div>
               </div>
             </div>
@@ -475,15 +472,14 @@
         <div class=" d-flex justify-content-end mt-4">
 
           <a data-toggle="tab" class="btn btn-g-icon mr-4 px-3 border-0" role="tab" aria-controls="hot"
-            aria-selected="false" appButtonDoubleClick
-            (debounceClick)="clearPaymentDetails()"><img src="assets/images/icon-cancel-white.svg" width="20px"
-              height="20px" class="mr-3">Clear</a>
+            aria-selected="false" appButtonDoubleClick (debounceClick)="clearPaymentDetails()"><img
+              src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3">Clear</a>
 
 
 
 
-          <button appButtonDoubleClick(debounceClick)="addPaymentDetails()"
-            class="btn btn-b-icon px-3 border-0" [disabled]="disableaddbutton">
+          <button appButtonDoubleClick(debounceClick)="addPaymentDetails()" class="btn btn-b-icon px-3 border-0"
+            [disabled]="disableaddbutton">
             <i class="fa" [ngClass]="{'fa-spin fa-spinner': disableaddbutton, 'fa-plus': !disableaddbutton}"></i>
             {{addbutton}}
           </button>

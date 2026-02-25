@@ -5,7 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ScreenViewComponent } from './components/screen-view/screen-view.component';
 import { CreateAccountComponent } from './components/create-account/create-account.component';
 import { authGuard } from './guards/auth.guard';
- import { BankConfigComponent } from './components/ACCOUNTS CONFIG/bank-config/bank-config.component';
+import { BankConfigComponent } from './components/ACCOUNTS CONFIG/bank-config/bank-config.component';
 import { ChequeManagementComponent } from './components/ACCOUNTS CONFIG/cheque-management/cheque-management.component';
 import { BankConfigViewComponent } from './components/ACCOUNTS CONFIG/bank-config-view/bank-config-view.component';
 import { GeneralReceiptCancelComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-cancel/general-receipt-cancel.component';
@@ -49,6 +49,9 @@ import { PettyCashViewComponent } from './components/ACCOUNTS TRANSACTIONS/petty
 import { GeneralReceiptNewComponent } from './components/ACCOUNTS TRANSACTIONS/general-receipt-new/general-receipt-new.component';
 import { ScheduleTbComponent } from './components/ACCOUNTS REPORTS/schedule-tb/schedule-tb.component';
 import { ChequeManagementnewComponent } from './components/ACCOUNTS CONFIG/cheque-managementnew/cheque-managementnew.component';
+import { GeneralReceiptReportComponent } from './components/ACCOUNTS REPORTS/general-receipt-report/general-receipt-report.component';
+import { JournalVoucherReportComponent } from './components/ACCOUNTS REPORTS/journal-voucher-report/journal-voucher-report.component';
+import { PaymentVoucherReportComponent } from './components/ACCOUNTS REPORTS/payment-voucher-report/payment-voucher-report.component';
 
 export const routes: Routes = [
   {
@@ -296,6 +299,18 @@ export const routes: Routes = [
         component: ScreenViewComponent
       }
     ]
+  },
+  {
+    path: 'GeneralReceiptReport/:id',
+    component: GeneralReceiptReportComponent
+  },
+  {
+    path: 'JournalVoucherReport/:id',
+    component: JournalVoucherReportComponent
+  },
+  {
+    path: 'PaymentVoucherReport/:id',
+    component: PaymentVoucherReportComponent
   },
   {
     path: '',

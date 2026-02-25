@@ -148,6 +148,7 @@ export class PettyCashComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.getLoadData()
     this.currencySymbol = this._commonService.currencysymbol || '';
 
     if (this._commonService.comapnydetails != null)
@@ -335,6 +336,7 @@ export class PettyCashComponent implements OnInit {
     this.getpartyJournalEntryData();
 
   }
+  
   addModeofpaymentValidations() {
 
     let modeofpaymentControl = <FormGroup>this.paymentVoucherForm['controls']['pmodofpayment'];
@@ -606,34 +608,34 @@ export class PettyCashComponent implements OnInit {
   }
 
   getLoadData() {
+debugger
+  this._AccountingTransactionsService
+    .GetReceiptsandPaymentsLoadingDatapettycash(
+      'PETTYCASH','accounts','KAPILCHITS','KLC01','global','taxes'
+     
+    )
+    .subscribe(
+      (json) => {
 
-    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingDatapettycash('PAYMENT VOUCHER', this._commonService.getschemaname()).subscribe(json => {
-      debugger;
-      //console.log(json)
-      if (json != null) {
+        if (json) {
 
-        this.banklist = json.banklist;
-        this.modeoftransactionslist = json.modeofTransactionslist;
-        this.typeofpaymentlist = this.gettypeofpaymentdata();
-        this.ledgeraccountslist = json.accountslist;
-        this.partylist = json.partylist;
-        this.gstlist = json.gstlist;
+          this.banklist = json.banklist;
+          this.modeoftransactionslist = json.modeofTransactionslist;
+          this.typeofpaymentlist = this.gettypeofpaymentdata();
+          this.ledgeraccountslist = json.accountslist;
+          this.partylist = json.partylist;
+          this.gstlist = json.gstlist;
+          this.debitcardlist = json.bankdebitcardslist;
 
-        this.debitcardlist = json.bankdebitcardslist;
-        // console.log(this.debitcardlist);
-        this.setBalances('CASH', json.cashbalance);
-        this.setBalances('BANK', json.bankbalance);
-        //this.lstLoanTypes = json
-        //this.titleDetails = json as string
-        //this.titleDetails = eval("(" + this.titleDetails + ')');
-        //this.titleDetails = this.titleDetails.FT;
-      }
-    },
+          this.setBalances('CASH', json.cashbalance);
+          this.setBalances('BANK', json.bankbalance);
+        }
+      },
       (error) => {
-
         this._commonService.showErrorMessage(error);
-      });
-  }
+      }
+    );
+}
 
   gettypeofpaymentdata(): any {
 
@@ -824,13 +826,14 @@ export class PettyCashComponent implements OnInit {
     this.GetValidationByControl(this.paymentVoucherForm, 'pUpiid');
   }
 
-  GetBankDetailsbyId(pbankid: any): void {
+ GetBankDetailsbyId(pbankid: any): void {
 
-    this._AccountingTransactionsService.GetBankDetailsbyId(pbankid).subscribe(
+  this._AccountingTransactionsService
+    .GetBankDetailsbyId(pbankid)
+    .subscribe(
       (json: any) => {
 
-        if (json != null) {
-
+        if (json) {
           this.upinameslist = json.bankupilist || [];
           this.chequenumberslist = json.chequeslist || [];
         }
@@ -839,8 +842,7 @@ export class PettyCashComponent implements OnInit {
         this._commonService.showErrorMessage(error);
       }
     );
-  }
-
+}
 
   getBankBranchName(pbankid: any): void {
 
@@ -1011,7 +1013,14 @@ export class PettyCashComponent implements OnInit {
 
 
   getPartyDetailsbyid(ppartyid: any, pStateId: any): void {
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid, pStateId).subscribe(
+    this._AccountingTransactionsService.getPartyDetailsbyid(
+      ppartyid, 
+         this._commonService.getbranchname(),
+       this._commonService.getBranchCode(),
+       this._commonService.getCompanyCode(),
+       this._commonService.getschemaname(),
+       'texas'
+    ).subscribe(
         (json: any) => {
           if (!json) return;
           this.tdslist = json.lstTdsSectionDetails || [];

@@ -10,10 +10,12 @@ import * as XLSX from 'xlsx';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-cheques-issued',
-  imports: [NgxDatatableModule,CommonModule,CurrencyPipe,FormsModule,ReactiveFormsModule,BsDatepickerModule],
+  imports: [CommonModule,CurrencyPipe,TableModule,CheckboxModule,FormsModule,ReactiveFormsModule,BsDatepickerModule],
   templateUrl: './cheques-issued.component.html',
   styleUrl: './cheques-issued.component.css'
 })
@@ -186,6 +188,7 @@ constructor(
   this.brstoConfig = { ...this.dpConfig };
 }
 ngOnInit(): void {
+
   this.pageSetUp();
 
   this.companydetails = JSON.parse(sessionStorage.getItem('companydetails') || '{}');
@@ -214,13 +217,14 @@ ngOnInit(): void {
     tobrsdate: ['']
   });
 
-  // this._accountingtransaction.GetBanksList(this._commonService.getschemaname())
-  //   .subscribe(banks => this.BanksList = banks);
-  of([
-  { pdepositbankname: 'HDFC Bank' },
-  { pdepositbankname: 'State Bank of India' },
-  { pdepositbankname: 'ICICI Bank' }
-]).subscribe(banks => this.BanksList = banks);
+  this._accountingtransaction
+    .GetBanksList(this._commonService.getschemaname())
+    .subscribe({
+      next: (banks: any) => {
+        this.BanksList = banks || [];
+      },
+      error: (err) => this._commonService.showErrorMessage(err)
+    });
 
   this.setPageModel();
   this.setPageModel2();
@@ -230,7 +234,6 @@ ngOnInit(): void {
 
   this.boolforAutoBrs = this.companydetails?.pisautobrsimpsapplicable;
 
-  // Replaced jQuery tab activation with booleans only
   if (this.fromFormName === 'fromChequesStatusInformationForm') {
     this.tabsShowOrHideBasedOnfromFormName = false;
     this.showOrHideOtherChequesGrid = true;
@@ -267,315 +270,126 @@ pageSetUp() {
   this.pageCriteria.pageNumber = 1;
 }
 
-// GetBankBalance(bankid: number) {
-//   this._accountingtransaction.GetBankBalance(bankid).subscribe(bankdetails => {
-//     this.bankbalancedetails = bankdetails;
-
-//     const balance = bankdetails._BankBalance;
-
-//     if (balance < 0) {
-//       this.bankbalance = Math.abs(balance);
-//       this.bankbalancetype = 'Cr';
-//     } else if (balance === 0) {
-//       this.bankbalance = 0;
-//       this.bankbalancetype = '';
-//     } else {
-//       this.bankbalance = balance;
-//       this.bankbalancetype = 'Dr';
-//     }
-
-//     this.brsdate = this._commonService.getFormatDateGlobal(bankdetails.ptobrsdate);
-
-//     const from = this._commonService.getDateObjectFromDataBase(bankdetails.pfrombrsdate);
-//     const to = this._commonService.getDateObjectFromDataBase(bankdetails.ptobrsdate);
-
-//     this.ChequesIssuedForm.patchValue({ pfrombrsdate: from, ptobrsdate: to });
-//     this.BrsReturnForm.patchValue({ frombrsdate: from, tobrsdate: to });
-//     this.BrsCancelForm.patchValue({ frombrsdate: from, tobrsdate: to });
-//   });
-// }
 GetBankBalance(bankid: number) {
-  of({
-    _BankBalance: 75000,
-    pfrombrsdate: new Date(),
-    ptobrsdate: new Date()
-  }).subscribe(bankdetails => {
-    this.bankbalancedetails = bankdetails;
+  this._accountingtransaction
+    .GetBankBalance(bankid)
+    .subscribe({
+      next: (bankdetails: any) => {
 
-    const balance = bankdetails._BankBalance;
+        this.bankbalancedetails = bankdetails;
 
-    if (balance < 0) {
-      this.bankbalance = Math.abs(balance);
-      this.bankbalancetype = 'Cr';
-    } else if (balance === 0) {
-      this.bankbalance = 0;
-      this.bankbalancetype = '';
-    } else {
-      this.bankbalance = balance;
-      this.bankbalancetype = 'Dr';
-    }
+        const balance = bankdetails._BankBalance || 0;
 
-    this.brsdate = new Date(bankdetails.ptobrsdate).toLocaleDateString('en-GB');
+        if (balance < 0) {
+          this.bankbalance = Math.abs(balance);
+          this.bankbalancetype = 'Cr';
+        } else if (balance === 0) {
+          this.bankbalance = 0;
+          this.bankbalancetype = '';
+        } else {
+          this.bankbalance = balance;
+          this.bankbalancetype = 'Dr';
+        }
 
-    const from = new Date(bankdetails.pfrombrsdate);
-    const to = new Date(bankdetails.ptobrsdate);
+        const from = this._commonService.getDateObjectFromDataBase(bankdetails.pfrombrsdate);
+        const to = this._commonService.getDateObjectFromDataBase(bankdetails.ptobrsdate);
 
-    this.ChequesIssuedForm?.patchValue({ pfrombrsdate: from, ptobrsdate: to });
-    this.BrsReturnForm?.patchValue({ frombrsdate: from, tobrsdate: to });
-    this.BrsCancelForm?.patchValue({ frombrsdate: from, tobrsdate: to });
-  });
+        this.ChequesIssuedForm.patchValue({ pfrombrsdate: from, ptobrsdate: to });
+        this.BrsReturnForm.patchValue({ frombrsdate: from, tobrsdate: to });
+        this.BrsCancelForm.patchValue({ frombrsdate: from, tobrsdate: to });
+      },
+      error: (err) => this._commonService.showErrorMessage(err)
+    });
 }
 
-// GetChequesIssued_Load(bankid: number) {
-//   this.gridLoading = true;
-
-//   forkJoin([
-//     this._accountingtransaction.GetChequesIssuedData(bankid, this.startindex, this.endindex, this.modeofreceipt, this._searchText, ''),
-//     this._accountingtransaction.GetChequesRowCount(bankid, this._searchText, '', '', 'CHEQUESISSUED', this.modeofreceipt)
-//   ]).subscribe({
-//     next: ([data, count]) => {
-//       this.gridLoading = false;
-
-//       this.ChequesIssuedData = data.pchequesOnHandlist || [];
-//       this.ChequesClearReturnData = data.pchequesclearreturnlist || [];
-//       this.OtherChequesData = data.pchequesotherslist || [];
-//       this.otherChequesCount = this.OtherChequesData.length;
-
-//       this._countData = count;
-//       this.CountOfRecords();
-
-//       if (this.status === 'all') this.All();
-//       if (this.status === 'autobrs') this.autoBrs();
-
-//       this.totalElements = +count['total_count'];
-//       this.page.totalElements = this.totalElements;
-//     },
-//     error: err => {
-//       this.gridLoading = false;
-//       this._commonService.showErrorMessage(err);
-//     }
-//   });
-// }
 GetChequesIssued_Load(bankid: number) {
+
   this.gridLoading = true;
 
-  const mockData = {
-    pchequesOnHandlist: [],
-    pchequesclearreturnlist: [],
-    pchequesotherslist: []
-  };
-
-  const mockCount = { total_count: 0 };
-
   forkJoin([
-    of(mockData),
-    of(mockCount)
+    this._accountingtransaction.GetChequesIssuedData(
+      bankid,
+      this.startindex,
+      this.endindex,
+      this.modeofreceipt,
+      this._searchText,
+      ''
+    ),
+    this._accountingtransaction.GetChequesRowCount(
+      bankid,
+      this._searchText,
+      '',
+      '',
+      'CHEQUESISSUED',
+      this.modeofreceipt
+    )
   ]).subscribe({
-    next: ([data, count]) => {
+    next: ([data, count]: any) => {
+
       this.gridLoading = false;
 
-      this.ChequesIssuedData = data.pchequesOnHandlist || [];
-      this.ChequesClearReturnData = data.pchequesclearreturnlist || [];
-      this.OtherChequesData = data.pchequesotherslist || [];
+      this.ChequesIssuedData = data?.pchequesOnHandlist || [];
+      this.ChequesClearReturnData = data?.pchequesclearreturnlist || [];
+      this.OtherChequesData = data?.pchequesotherslist || [];
       this.otherChequesCount = this.OtherChequesData.length;
 
-      this._countData = count;
+      this._countData = count || {};
       this.CountOfRecords();
 
       if (this.status === 'all') this.All();
       if (this.status === 'autobrs') this.autoBrs();
 
-      this.totalElements = +count['total_count'];
+      this.totalElements = +count?.total_count || 0;
       this.page.totalElements = this.totalElements;
     },
-    error: err => {
+    error: (err) => {
       this.gridLoading = false;
-      console.error(err);
+      this._commonService.showErrorMessage(err);
     }
   });
 }
 
-// GetChequesIssued(bankid: any, startindex: number, endindex: number, searchText: string) {
-
-//   this.gridLoading = true;
-
-//   this._accountingtransaction
-//     .GetChequesIssuedData(bankid, startindex, endindex, this.modeofreceipt, this._searchText, '')
-//     .subscribe({
-//       next: (data: any) => {
-//         this.gridLoading = false;
-
-//         const data1 = data?.pchequesOnHandlist || [];
-//         this.ChequesIssuedData = data1;
-
-//         this.ChequesClearReturnData = data?.pchequesclearreturnlist || [];
-
-//         const otherchequesdetails = data?.pchequesotherslist || [];
-//         this.OtherChequesData = otherchequesdetails;
-//         this.otherChequesCount = this.OtherChequesData.length;
-
-//         // Maintain original status-based routing
-//         if (this.status === 'all') {
-//           this.All1();
-//         }
-//         if (this.status === 'chequesissued') {
-//           this.ChequesIssued1();
-//         }
-//         if (this.status === 'onlinepayment') {
-//           this.OnlinePayments1();
-//         }
-//         if (this.status === 'cleared') {
-//           this.Cleared1();
-//         }
-//         if (this.status === 'returned') {
-//           this.Returned1();
-//         }
-//         if (this.status === 'cancelled') {
-//           this.Cancelled1();
-//         }
-
-//         // Auto BRS UI state handling
-//         if (this.status === 'autobrs') {
-//           this.showhidegridcolumns = false;
-//           this.showhidegridcolumns2 = true;
-//           this.saveshowhide = true;
-//           this.hiddendate = false;
-//         }
-
-//         if (this.status === 'autobrsupload') {
-//           this.showhidegridcolumns = false;
-//           this.showhidegridcolumns2 = true;
-//           this.saveshowhide = false;
-//         }
-
-//         if (this.fromFormName === 'fromChequesStatusInformationForm') {
-//           this.chequesStatusInfoGridForChequesIssued();
-//         }
-//       },
-//       error: (error) => {
-//         this.gridLoading = false;
-//         this._commonService.showErrorMessage(error);
-//       }
-//     });
-// }
 GetChequesIssued(bankid: any, startindex: number, endindex: number, searchText: string) {
+
   this.gridLoading = true;
 
-  const mockResponse = {
-    
-    pchequesOnHandlist: [
-      {
-        pdepositstatus: false,
-        preturnstatus: false,
-        pcancelstatus: false,
-        pChequenumber: 'CHQ1001',
-        ptotalreceivedamount: 5000,
-        ppartyname: 'Demo Party A',
-        preceiptid: 'RCPT001',
-        preceiptdate: new Date(),
-        pdepositeddate: new Date(),
-        ptypeofpayment: 'Cheque',
-        preferencetext: ''
-      },
-      {
-        pdepositstatus: false,
-        preturnstatus: false,
-        pcancelstatus: false,
-        pChequenumber: 'CHQ1002',
-        ptotalreceivedamount: 12000,
-        ppartyname: 'Demo Party B',
-        preceiptid: 'RCPT002',
-        preceiptdate: new Date(),
-        pdepositeddate: new Date(),
-        ptypeofpayment: 'Online',
-        preferencetext: ''
-      },
-    ],
-    pchequesclearreturnlist: [{
-        pdepositstatus: true,
-        preturnstatus: false,
-        pcancelstatus: false,
-        clearstatus: 'YES',
-        returnstatus: 'NO',
-        cancelstatus: 'NO',
-        pChequenumber: 'CHQ0998',
-        ptotalreceivedamount: 7500,
-        ppartyname: 'Cleared Party 1',
-        preceiptid: 'RCPT098',
-        preceiptdate: new Date(2025, 11, 28),
-        pdepositeddate: new Date(2026, 0, 3),
-        ptypeofpayment: 'Cheque',
-        preferencetext: 'REF123'
-      },
-      {
-        pdepositstatus: true,
-        preturnstatus: false,
-        pcancelstatus: false,
-        clearstatus: 'YES',
-        returnstatus: 'NO',
-        cancelstatus: 'NO',
-        pChequenumber: 'CHQ0999',
-        ptotalreceivedamount: 9800,
-        ppartyname: 'Cleared Party 2',
-        preceiptid: 'RCPT099',
-        preceiptdate: new Date(2025, 11, 29),
-        pdepositeddate: new Date(2026, 0, 4),
-        ptypeofpayment: 'Cheque',
-        preferencetext: 'REF124'
-      }],
-    pchequesotherslist: []
-  };
+  this._accountingtransaction
+    .GetChequesIssuedData(
+      bankid,
+      startindex,
+      endindex,
+      this.modeofreceipt,
+      this._searchText,
+      ''
+    )
+    .subscribe({
+      next: (data: any) => {
 
-  of(mockResponse).subscribe({
-    next: (data: any) => {
-      this.gridLoading = false;
+        this.gridLoading = false;
 
-      this.ChequesIssuedData = data.pchequesOnHandlist;
-      this.ChequesClearReturnData = data.pchequesclearreturnlist;
-      this.OtherChequesData = data.pchequesotherslist;
-      this.otherChequesCount = this.OtherChequesData.length;
-      this.gridData = [...this.ChequesIssuedData];
-      this.amounttotal = this.gridData.reduce(
-        (sum, x) => sum + (x.ptotalreceivedamount || 0),
-        0
-      );
-      switch (this.status) {
-        case 'all':
-          this.All1();
-          break;
-        case 'chequesissued':
-          this.ChequesIssued1();
-          break;
-        case 'onlinepayment':
-          this.OnlinePayments1();
-          break;
-        case 'cleared':
-          this.Cleared1();
-          break;
-        case 'returned':
-          this.Returned1();
-          break;
-        case 'cancelled':
-          this.Cancelled1();
-          break;
-        case 'autobrs':
-          this.showhidegridcolumns = false;
-          this.showhidegridcolumns2 = true;
-          this.saveshowhide = true;
-          this.hiddendate = false;
-          break;
-        case 'autobrsupload':
-          this.showhidegridcolumns = false;
-          this.showhidegridcolumns2 = true;
-          this.saveshowhide = false;
-          break;
+        this.ChequesIssuedData = data?.pchequesOnHandlist || [];
+        this.ChequesClearReturnData = data?.pchequesclearreturnlist || [];
+        this.OtherChequesData = data?.pchequesotherslist || [];
+        this.otherChequesCount = this.OtherChequesData.length;
+
+        switch (this.status) {
+          case 'all': this.All1(); break;
+          case 'chequesissued': this.ChequesIssued1(); break;
+          case 'onlinepayment': this.OnlinePayments1(); break;
+          case 'cleared': this.Cleared1(); break;
+          case 'returned': this.Returned1(); break;
+          case 'cancelled': this.Cancelled1(); break;
+        }
+
+        if (this.fromFormName === 'fromChequesStatusInformationForm') {
+          this.chequesStatusInfoGridForChequesIssued();
+        }
+      },
+      error: (err) => {
+        this.gridLoading = false;
+        this._commonService.showErrorMessage(err);
       }
-
-      if (this.fromFormName === 'fromChequesStatusInformationForm') {
-        this.chequesStatusInfoGridForChequesIssued();
-      }
-    }
-  });
+    });
 }
 
 onSearch(event: any) {

@@ -53,10 +53,12 @@ export class TDSReportService {
   //   });
   //   FileSaver.saveAs(data, fileName + '_Excel'+ EXCEL_EXTENSION);
   // }
-  Getgstreport(Branchschema:any,fromdate:any, todate:any):any {
+  Getgstreport(accountsSchema:any,fromdate:any, todate:any,globalSchema:any,CompanyName:any,BranchCode:any):any {
     try {
-      const params = new HttpParams().set('Branchschema',Branchschema).set('fromdate', fromdate).set('todate', todate);
-      return this._commonservice.getAPI('/ChitTransactions/Getgstreport', params, 'YES');
+      // const params = new HttpParams().set('Branchschema',Branchschema).set('fromdate', fromdate).set('todate', todate);
+      // return this._commonservice.getAPI('/ChitTransactions/Getgstreport', params, 'YES');
+      const params = new HttpParams().set('accountsSchema',accountsSchema).set('fromdate', fromdate).set('todate', todate).set('globalSchema',globalSchema).set('CompanyName',CompanyName).set('BranchCode',BranchCode);
+      return this._commonservice.getAPI('/Accounts/Getgstreport', params, 'YES');
     }
     catch (errormssg:any) {
       this._commonservice.showErrorMessage(errormssg);

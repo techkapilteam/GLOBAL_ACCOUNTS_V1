@@ -137,9 +137,9 @@
                                         <!-- [debounceTime]="500" -->
                                 <a data-toggle="tab" class="btn btn-secondary px-3 border-0" role="tab" aria-controls="hot"
                                     aria-selected="false" appButtonDoubleClick 
-                                    (debounceClick)="addPaymentDetails()"><img src="assets/images/icon-add-blue.svg"
+                                    (click)="addPaymentDetails()"><img src="assets/images/icon-add-blue.svg"
                                         width="20px" height="20px" class="mr-3">Add</a>
-                                        <!-- [debounceTime]="500" -->
+                                <!-- [debounceTime]="500" -->
                             </div>
                         </div>
 
@@ -239,10 +239,9 @@
                                                         <div class="d-flex">
                                                             <div class="form-group mr-1 col-md-4" *ngIf="showgstamount">
                                                                 <label>Amount</label>
-                                                                <label
-                                                                    class="form-control col-md-12">
+                                                                <label class="form-control col-md-12">
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pgstamount.value}} -->
-                                                                     {{paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pgstamount')?.value
+                                                                    {{paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pgstamount')?.value
                                                                     ?? 0}}
                                                                 </label>
                                                             </div>
@@ -250,15 +249,16 @@
                                                                 <label>
                                                                     <!-- IGST({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pigstpercentage.value}}) -->
                                                                     IGST({{
-    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstpercentage')?.value ?? 0
-  }}%)
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstpercentage')?.value
+                                                                    ?? 0
+                                                                    }}%)
 
                                                                 </label>
-                                                                <label
-                                                                    class="col-md-12">
+                                                                <label class="col-md-12">
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pigstamount.value}} -->
 
-                                                                   {{  paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstamount')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstamount')?.value
                                                                     ?? 0}}
                                                                 </label>
                                                             </div>
@@ -266,16 +266,17 @@
                                                                 <label>
                                                                     <!-- CGST
                                                                     ({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pcgstpercentage.value}}) -->
-                                                                
-                                                                CGST({{
-    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstpercentage')?.value ?? 0
-  }}%)
-                                                                
+
+                                                                    CGST({{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstpercentage')?.value
+                                                                    ?? 0
+                                                                    }}%)
+
                                                                 </label>
-                                                                <label
-                                                                    class="col-md-12">
+                                                                <label class="col-md-12">
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].pcgstamount.value}} -->
-                                                                    {{ paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstamount')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstamount')?.value
                                                                     ?? 0}}
                                                                 </label>
                                                                 <!--<input type="text" formControlName="pcgstpercentage" class="form-control col-md-12" />-->
@@ -283,12 +284,14 @@
                                                             <div class="form-group  mr-1 col-md-4" *ngIf="showsgst">
                                                                 <label>SGST
                                                                     <!-- ({{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].psgstpercentage.value}}) -->
-                                                                    {{ paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstpercentage')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstpercentage')?.value
                                                                     ?? 0}}
 
                                                                 </label>
                                                                 <label class="col-md-12">
-                                                                   {{ paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstamount')?.value
+                                                                    {{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('psgstamount')?.value
                                                                     ?? 0}}
 
                                                                     <!-- {{paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].psgstamount.value}} -->
@@ -303,12 +306,13 @@
                                                                 }}) -->
 
 
-                                                                UTGST({{
-    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('putgstpercentage')?.value ?? 0
-  }}%)
+                                                                    UTGST({{
+                                                                    paymentVoucherForm.get('ppaymentsslistcontrols')?.get('putgstpercentage')?.value
+                                                                    ?? 0
+                                                                    }}%)
 
                                                                     <!-- paymentVoucherForm['controls'].ppaymentsslistcontrols['controls'].putgstpercentage.value -->
-                                                                  
+
                                                                 </label>
                                                                 <label class="col-md-12">
                                                                     {{
@@ -436,91 +440,11 @@
                 <div class="section-content mt-2">
                     <div class="row">
                         <div class="col-md-12 col-xl-12 pt-4">
-                            <ngx-datatable class="material expandable table" [rows]="paymentslist" columnMode="force"
-                                [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [limit]="10" [offset]="1"
-                                [count]="10" [summaryRow]="true" [summaryHeight]="50" [summaryPosition]="'bottom'">
-                                <ngx-datatable-column name="Actions" prop="" editable="true"
-                                    [summaryTemplate]="Total11">
-                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
-                                        let-row="row" let-group="group">
-                                        <label for="delete{{ rowIndex }}">
-                                            <div id="icon-delete" (click)="removeHandler(row, rowIndex)"></div>
-                                        </label>
-                                    </ng-template>
-                                    <ng-template #Total11>
-                                    </ng-template>
-                                </ngx-datatable-column>
-
-                                <ngx-datatable-column name="Party Name" prop="ppartyname" [cellClass]="'cell-left'"
-                                    [headerClass]="'header-left'">
-                                </ngx-datatable-column>
-
-                                <ngx-datatable-column name="Ledger Name" prop="pledgername" [cellClass]="'cell-left'"
-                                    [headerClass]="'header-left'">
-                                </ngx-datatable-column>
-
-                                <ngx-datatable-column name="Sub Ledger Name" prop="psubledgername"
-                                    [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                                </ngx-datatable-column>
-
-                                <ngx-datatable-column prop="ptotaldebitamount" name="Debit" [summaryTemplate]="Total"
-                                    [headerClass]="'header-left'" [cellClass]="'cell-left'">
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <div *ngIf="row.ptotaldebitamount==0"></div>
-                                        <div *ngIf="row.ptotaldebitamount!=0"
-                                            title="{{currencySymbol}} {{row.ptotaldebitamount}}">
-                                            {{currencySymbol}} {{row.ptotaldebitamount | currency:
-                                            currencyCode:'symbol':'1.2-2'}}
+                          
 
 
 
-
-                                        </div>
-
-
-
-
-                                    </ng-template>
-                                    <ng-template #Total>
-                                        <span>Total: </span>
-                                        {{currencySymbol}} {{debittotalamount.toFixed(2) | currency:
-                                        currencyCode:'symbol':'1.2-2'}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-
-                                <!-- <ngx-datatable-column name="Debit" prop="ptotaldebitamount" [cellClass]="'cell-left'"
-                            [headerClass]="'header-left'">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                <div *ngIf="row.ptotaldebitamount==0"></div>
-                                <div *ngIf="row.ptotaldebitamount!=0">
-                                <span title="{{currencysymbol}} {{row.ptotaldebitamount | currencypipe}}">{{currencySymbol}} {{row.ptotaldebitamount | currencypipe}}</span>
-                            </div>
-                            </ng-template>
-                        </ngx-datatable-column> -->
-
-                                <ngx-datatable-column name="Credit" prop="ptotalcreditamount" [cellClass]="'cell-left'"
-                                    [headerClass]="'header-left'" [summaryTemplate]="Total1">
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        <div *ngIf="row.ptotalcreditamount==0"></div>
-                                        <div *ngIf="row.ptotalcreditamount!=0">
-                                            <span
-                                                title="{{currencySymbol}} {{row.ptotalcreditamount |  currency: currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}}
-                                                {{row.ptotalcreditamount | currency:
-                                                currencyCode:'symbol':'1.2-2'}}</span>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template #Total1>
-                                        <span>Total: </span>
-                                        <span> {{currencySymbol}} {{credittotalamount.toFixed(2) | currency:
-                                            currencyCode:'symbol':'1.2-2'}} </span>
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                
-                            </ngx-datatable>
-
-
-
-                              <p-table [value]="paymentslist" dataKey="ppartyname" [paginator]="false" [rows]="10"
+                            <p-table [value]="paymentslist" dataKey="ppartyname" [paginator]="false" [rows]="10"
                                 [showCurrentPageReport]="false" [resizableColumns]="true" columnResizeMode="fit"
                                 scrollable="true" scrollHeight="400px"
                                 styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
@@ -548,16 +472,16 @@
                                         <td>{{ row.ppartyname }}</td>
                                         <td>{{ row.pledgername }}</td>
                                         <td>{{ row.psubledgername }}</td>
-
-                                        <td class="text-right" *ngIf="row.ptotaldebitamount != 0">
-                                            {{ row.ptotaldebitamount | currency:'INR':'symbol':'1.2-2' }}
+                                            <!-- ptotaldebitamount -->
+                                        <td class="text-right" *ngIf="row.pdebitamount != 0">
+                                            {{ row.pdebitamount | currency:'INR':'symbol':'1.2-2' }}
                                         </td>
-                                        <td class="text-right" *ngIf="row.ptotaldebitamount == 0"></td>
-
-                                        <td class="text-right" *ngIf="row.ptotalcreditamount != 0">
-                                            {{ row.ptotalcreditamount | currency:'INR':'symbol':'1.2-2' }}
+                                        <td class="text-right" *ngIf="row.pdebitamount == 0"></td>
+                                    <!-- ptotalcreditamount -->
+                                        <td class="text-right" *ngIf="row.pcreditamount != 0">
+                                            {{ row.pcreditamount | currency:'INR':'symbol':'1.2-2' }}
                                         </td>
-                                        <td class="text-right" *ngIf="row.ptotalcreditamount == 0"></td>
+                                        <td class="text-right" *ngIf="row.pcreditamount == 0"></td>
                                     </tr>
                                 </ng-template>
 
@@ -589,47 +513,11 @@
                     <div class="row">
                         <div class="col-md-6 col-xl-6">
                             <div class="mt-2">
-                                <ngx-datatable class="material expandable table" [rows]="paymentslist"
-                                    columnMode="force" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50"
-                                    [limit]="10">
-                                    <ngx-datatable-column name="Journal Entry" prop="pledgername"
-                                        [cellClass]="'cell-left'" [headerClass]="'header-left'">
-                                    </ngx-datatable-column>
-                                    <ngx-datatable-column appMycurrencyFormatter name="Dr" prop="ptotaldebitamount"
-                                        [cellClass]="'cell-right'" [headerClass]="'header-right'">
-                                        <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <div *ngIf="row.ptotaldebitamount==0"></div>
-                                            <div *ngIf="row.ptotaldebitamount!=0">
-                                                <!-- <span title="{{currencysymbol}} {{row.ptotaldebitamount |  currency: currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}} {{row.ptotaldebitamount |  currency: currencyCode:'symbol':'1.2-2'}}</span> -->
-                                                <span title="{{currencySymbol}} {{row.ptotalcreditamount}}">
-                                                    {{currencySymbol}} {{row.ptotalcreditamount | currency:
-                                                    currencyCode:'symbol':'1.2-2'}}
-                                                </span>
-
-                                            </div>
-                                        </ng-template>
-                                    </ngx-datatable-column>
-                                    <ngx-datatable-column name="Cr" prop="ptotalcreditamount"
-                                        [cellClass]="'cell-center'" [headerClass]="'header-center'">
-                                        <ng-template let-row="row" ngx-datatable-cell-template>
-                                            <div *ngIf="row.ptotalcreditamount==0"></div>
-                                            <div *ngIf="row.ptotalcreditamount!=0">
-                                                <!-- <span title="{{currencysymbol}} {{row.ptotalcreditamount |  currency: currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}} {{row.ptotalcreditamount |  currency: currencyCode:'symbol':'1.2-2'}}</span> -->
-
-
-                                                <span title="{{currencySymbol}} {{row.ptotalcreditamount}}">
-                                                    {{currencySymbol}} {{row.ptotalcreditamount | currency:
-                                                    currencyCode:'symbol':'1.2-2'}}
-                                                </span>
-
-                                            </div>
-                                        </ng-template>
-                                    </ngx-datatable-column>
-                                </ngx-datatable>
+                              
 
 
 
-                                  <p-table [value]="paymentslist" dataKey="pledgername" [rows]="10" [paginator]="false"
+                                <p-table [value]="paymentslist" dataKey="pledgername" [rows]="10" [paginator]="false"
                                     [resizableColumns]="true" columnResizeMode="fit" scrollable="true"
                                     scrollHeight="400px"
                                     styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
@@ -645,15 +533,15 @@
                                         <tr>
                                             <td>{{ row.pledgername }}</td>
                                             <td class="text-right">
-                                                <ng-container *ngIf="row.ptotaldebitamount != 0; else emptyDr">
-                                                    {{ currencySymbol }} {{ row.ptotaldebitamount |
+                                                <ng-container *ngIf="row.pdebitamount != 0; else emptyDr">
+                                                    {{ currencySymbol }} {{ row.pdebitamount |
                                                     currency:'INR':'symbol':'1.2-2' }}
                                                 </ng-container>
                                                 <ng-template #emptyDr></ng-template>
                                             </td>
                                             <td class="text-right">
-                                                <ng-container *ngIf="row.ptotalcreditamount != 0; else emptyCr">
-                                                    {{ currencySymbol }} {{ row.ptotalcreditamount |
+                                                <ng-container *ngIf="row.pcreditamount != 0; else emptyCr">
+                                                    {{ currencySymbol }} {{ row.pcreditamount |
                                                     currency:'INR':'symbol':'1.2-2' }}
                                                 </ng-container>
                                                 <ng-template #emptyCr></ng-template>
@@ -729,7 +617,7 @@
                         <button (click)="saveJournalVoucher()" class="btn btn-secondary px-3 border-0"
                             [disabled]="disablesavebutton">
                             <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                                *ngIf="!disablesavebutton">
+                                *ngIf="disablesavebutton">
                             <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
                         </button>
 

@@ -51,17 +51,17 @@
     </div>
     <div class="col-md-6 col-xl-4">
       <div class="form-group">
-        <label class="required-field" id="pBankname" title="Bank">Bank</label>
-        <select class="form-control" formControlName="pBankname" (change)="onChange($event)" maxlength="50"
-          [ngClass]="{ 'is-invalid':bankmastervalidations.pBankname}">
+        <label class="required-field" id="bankName" title="Bank">Bank</label>
+        <select class="form-control" formControlName="bankName" (change)="onChange($event)" maxlength="50"
+          [ngClass]="{ 'is-invalid':bankmastervalidations.bankName}">
           <option value="" disabled>Select</option>
-          <option *ngFor="let i of banksList" [value]="i.pBankName">
-            {{i.bank_name}}
+          <option *ngFor="let i of banksList" [value]="i.bankName">
+            {{i.bankName}}
           </option>
         </select>
         <!-- <input class="form-control" type="text"  [attr.disabled]="disable ? '' : null" title="Bank" value=""formControlName="pBankname" appCharactersonly  appUppercase  [ngClass]="{ 'is-invalid': bankmastervalidations.pBankname }"> -->
         <div class="invalid-feedback">
-          <span *ngIf="bankmastervalidations.pBankname">{{bankmastervalidations?.pBankname}}</span>
+          <span *ngIf="bankmastervalidations.bankName">{{bankmastervalidations?.bankName}}</span>
         </div>
       </div>
       <!-- <div class="form-group">
@@ -318,10 +318,7 @@
               <h6 class="lc-title text-left">UPI Setup </h6>
             </div>
             <div class="col-md-6 col-xl-6">
-              <!-- <div class="material-switch"> <span class="mr-2"> Status </span>
-                <input id="upi" name="Employment" type="checkbox" formControlName="pIsupiapplicable"
-                  [ngClass]="{ 'is-invalid': bankmastervalidations.pIsupiapplicable}" (change)="bankupichecked($event)"
-                  data-toggle="collapse" data-target="#upi-switch"> -->
+             
 
 
               <div class="material-switch"> <span class="mr-2"> Status </span>

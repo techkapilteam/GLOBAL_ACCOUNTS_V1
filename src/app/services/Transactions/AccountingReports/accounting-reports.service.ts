@@ -151,15 +151,28 @@ export class AccountingReportsService {
     );
   }
 
-  GetDayBook(fromdate: string, todate: string, Ason: string): Observable<any> {
+  // GetDayBook(fromdate: string, todate: string, Ason: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromdate', fromdate)
+  //     .set('todate', todate)
+  //     .set('Ason', Ason)
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/AccountingReports/getDaybook',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  GetDayBook(fromdate: string, todate: string, Ason: string,BranchSchema:any,branchCode:any,companyCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('fromdate', fromdate)
       .set('todate', todate)
       .set('Ason', Ason)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema).set('branchCode', branchCode).set('companyCode', companyCode).set('GlobalSchema', GlobalSchema);
 
     return this._CommonService.getAPI(
-      '/Accounting/AccountingReports/getDaybook',
+      '/Accounts/getDaybook',
       params,
       'YES'
     );
@@ -214,12 +227,22 @@ export class AccountingReportsService {
     return this._CommonService.getAPI('/Accounts/GetLedgerSummaryAccountList', params, 'YES');
   }
 
-  GetGeneralReceiptbyId(ReceiptId: string | number, branchSchema: string): Observable<any> {
+  // GetGeneralReceiptbyId(ReceiptId: string | number, branchSchema: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('ReceiptId', ReceiptId.toString())
+  //     .set('BranchSchema', branchSchema);
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetgeneralreceiptReportData', params, 'YES');
+  // }
+  GetGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('ReceiptId', ReceiptId.toString())
-      .set('BranchSchema', branchSchema);
+      .set('BranchSchema', BranchSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetgeneralreceiptReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptReportData', params, 'YES');
   }
 
   GetInterBranchGeneralReceiptbyId(ReceiptId: string | number): Observable<any> {
@@ -252,52 +275,110 @@ export class AccountingReportsService {
     return this._CommonService.getAPI('/ChitTransactions/GetChitReceiptslist', params, 'YES');
   }
 
-  GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, branchschema: string): Observable<any> {
+  // GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, branchschema: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('ReceiptId', ReceiptId.toString())
+  //     .set('BranchSchema', branchschema);
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
+  // }
+  GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('ReceiptId', ReceiptId.toString())
-      .set('BranchSchema', branchschema);
+      .set('BranchSchema', BranchSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
   }
-  GetPaymentVoucherbyId(paymentId: string | number): Observable<any> {
+  // GetPaymentVoucherbyId(paymentId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('paymentId', paymentId.toString())
+  //     .set('LocalSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetPaymentVoucherReportData', params, 'YES');
+  // }
+  GetPaymentVoucherbyId(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
-      .set('LocalSchema', this._CommonService.getschemaname());
+      .set('LocalSchema', LocalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetPaymentVoucherReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetPaymentVoucherReportData', params, 'YES');
   }
 
-  GetChitPaymentReportData(paymentId: string | number): Observable<any> {
+  // GetChitPaymentReportData(paymentId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('paymentId', paymentId.toString())
+  //     .set('LocalSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetChitPaymentReportData', params, 'YES');
+  // }
+  GetChitPaymentReportData(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
-      .set('LocalSchema', this._CommonService.getschemaname());
+      .set('LocalSchema', LocalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);;
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetChitPaymentReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetChitPaymentReportData', params, 'YES');
   }
 
-  GetPettyCashbyId(paymentId: string | number): Observable<any> {
+  // GetPettyCashbyId(paymentId: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('paymentId', paymentId.toString())
+  //     .set('LocalSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetPettyCashReportData', params, 'YES');
+  // }
+  GetPettyCashbyId(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
-      .set('LocalSchema', this._CommonService.getschemaname());
+      .set('LocalSchema', LocalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/AccountingTransactions/GetPettyCashReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetPettyCashReportData', params, 'YES');
   }
 
-  GetJvReport(Jvnumber: string | number): Observable<any> {
+  // GetJvReport(Jvnumber: string | number): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('Jvnumber', Jvnumber.toString())
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherReportData', params, 'YES');
+  // }
+  GetJvReport(Jvnumber: string | number,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('Jvnumber', Jvnumber.toString())
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
-    return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherReportData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetJournalVoucherReportData', params, 'YES');
   }
 
-  GetComparisionTB(fromdate: string, todate: string): Observable<any> {
+  // GetComparisionTB(fromdate: string, todate: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromDate', fromdate)
+  //     .set('todate', todate)
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetComparisionTB', params, 'YES');
+  // }
+  GetComparisionTB(fromdate: string, todate: string,BranchSchema:any,GlobalSchema:any,company_code:any,branch_code:any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromdate)
       .set('todate', todate)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema).set('company_code', company_code).set('branch_code', branch_code);
 
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetComparisionTB', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetComparisionTB', params, 'YES');
   }
 
   // GetTrialBalanceData(fromdate: string, todate: string, grouptype: string): Observable<any> {
@@ -1112,86 +1193,192 @@ export class AccountingReportsService {
     if (printorpdf === 'Print') this.setiFrameForPrint(doc);
   }
 
+  // _ComparisionTBReportsPdf(
+  //   reportName: string,
+  //   gridData: any[],
+  //   gridheaders: any[],
+  //   colWidthHeight: any,
+  //   pagetype: any,
+  //   betweenorason: string,
+  //   fromdate: string,
+  //   todate: string,
+  //   printorpdf: string
+  // ) {
+  //   const Companyreportdetails = this._CommonService._getCompanyDetails();
+  //   const doc = new jsPDF({
+  //     orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
+  //     format: 'a4'
+  //   });
+
+  //   const today = this._CommonService.pdfProperties('Date');
+  //   const kapil_logo = this._CommonService.getKapilGroupLogo();
+  //   const currencyformat = this._CommonService.currencysymbol;
+  //   const totalPagesExp = '{total_pages_count_string}';
+
+  //   autoTable(doc, {
+  //     head: [gridheaders],
+  //     body: gridData,
+  //     startY: 55,
+  //     theme: 'grid',
+  //     columnStyles: colWidthHeight,
+  //     didDrawPage: () => {
+  //       const pageHeight = doc.internal.pageSize.getHeight();
+  //       const pageWidth = doc.internal.pageSize.getWidth();
+
+  //       doc.setFont('helvetica', 'normal');
+  //       if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
+
+  //       doc.setFontSize(15);
+  //       doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
+
+  //       doc.setFontSize(14);
+  //       doc.text(String(reportName ?? ''), 90, 30);
+
+  //       if (betweenorason === 'Between') {
+  //         doc.text(String(`Between : ${fromdate ?? ''} And ${todate ?? ''}`), 15, 40);
+  //       }
+
+  //       const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
+  //       let page = 'Page ' + String(pageNo);
+
+  //       if (typeof (doc as any).putTotalPages === 'function') {
+  //         page += ' of ' + totalPagesExp;
+  //       }
+
+  //       doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+  //       doc.setFontSize(10);
+  //       doc.text(String('Printed on : ' + today), 15, pageHeight - 5);
+  //       doc.text(String(page), pageWidth - 30, pageHeight - 5);
+  //     },
+  //     didDrawCell: (data: any) => {
+  //       if (data.cell.section === 'body' && data.column.index > 0 && data.cell.raw !== 0 && currencyformat === '₹') {
+  //         const rupeeImg = this._CommonService._getRupeeSymbol();
+  //         const textPos = data.cell.textPos;
+  //         doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+  //       }
+  //     }
+      
+  //   });
+
+  //   if (typeof (doc as any).putTotalPages === 'function') {
+  //     (doc as any).putTotalPages(totalPagesExp);
+  //   }
+
+  //   if (printorpdf === 'Pdf') {
+  //     doc.save(`${reportName ?? 'report'}.pdf`);
+  //   }
+
+  //   if (printorpdf === 'Print') {
+  //     this.setiFrameForPrint(doc);
+  //   }
+  // }
   _ComparisionTBReportsPdf(
-    reportName: string,
-    gridData: any[],
-    gridheaders: any[],
-    colWidthHeight: any,
-    pagetype: any,
-    betweenorason: string,
-    fromdate: string,
-    todate: string,
-    printorpdf: string
-  ) {
-    const Companyreportdetails = this._CommonService._getCompanyDetails();
-    const doc = new jsPDF({
-      orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
-      format: 'a4'
-    });
+  reportName: string,
+  gridData: any[],
+  gridheaders: any[],
+  colWidthHeight: any,
+  pagetype: any,
+  betweenorason: string,
+  fromdate: string,
+  todate: string,
+  printorpdf: string
+) {
+  const Companyreportdetails = this._CommonService._getCompanyDetails();
+  const doc = new jsPDF({
+    orientation: 'landscape',
+    format: 'a4'
+  });
 
-    const today = this._CommonService.pdfProperties('Date');
-    const kapil_logo = this._CommonService.getKapilGroupLogo();
-    const currencyformat = this._CommonService.currencysymbol;
-    const totalPagesExp = '{total_pages_count_string}';
+  const today = this._CommonService.pdfProperties('Date');
+  const kapil_logo = this._CommonService.getKapilGroupLogo();
+  const currencyformat = this._CommonService.currencysymbol;
+  const totalPagesExp = '{total_pages_count_string}';
 
-    (doc as any).autoTable({
-      head: [gridheaders],
-      body: gridData,
-      startY: 55,
-      theme: 'grid',
-      columnStyles: colWidthHeight,
-      didDrawPage: () => {
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const pageWidth = doc.internal.pageSize.getWidth();
+  const columnStyles: any = {
+    0: { cellWidth: 82 },             
+    1: { cellWidth: 28, halign: 'right' }, 
+    2: { cellWidth: 28, halign: 'right' }, 
+    3: { cellWidth: 28, halign: 'right' }, 
+    4: { cellWidth: 28, halign: 'right' }, 
+    5: { cellWidth: 28, halign: 'right' }, 
+    6: { cellWidth: 28, halign: 'right' }, 
+  };
 
-        doc.setFont('helvetica', 'normal');
-        if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
+  autoTable(doc, {
+    head: [gridheaders],
+    body: gridData,
+    startY: 55,
+    theme: 'grid',
+    columnStyles: columnStyles,  
+    tableWidth: 250,
+    margin: { left: 10, right: 10 },
+    styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
+    headStyles: { fillColor: [0, 168, 168], textColor: 255, fontSize: 8 },
+    didParseCell: (data: any) => {
+    if (data.row.raw?.isSubtotal === true) {
+      data.cell.styles.fillColor = '#ffffb3';
+      data.cell.styles.halign = data.column.index === 0 ? 'left' : 'right';
+      data.cell.styles.fontStyle = 'bold';
+    }
+  },
+    didDrawPage: () => {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const pageWidth = doc.internal.pageSize.getWidth();
 
-        doc.setFontSize(15);
-        doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
+      doc.setFont('helvetica', 'normal');
+      if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
 
-        doc.setFontSize(14);
-        doc.text(String(reportName ?? ''), 90, 30);
+      doc.setFontSize(15);
+      doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
 
-        if (betweenorason === 'Between') {
-          doc.text(String(`Between : ${fromdate ?? ''} And ${todate ?? ''}`), 15, 40);
-        }
+      doc.setFontSize(14);
+      doc.text(String(reportName ?? ''), pageWidth / 2, 30, { align: 'center' });
 
-        const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
-        let page = 'Page ' + String(pageNo);
-
-        if (typeof (doc as any).putTotalPages === 'function') {
-          page += ' of ' + totalPagesExp;
-        }
-
-        doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
-        doc.setFontSize(10);
-        doc.text(String('Printed on : ' + today), 15, pageHeight - 5);
-        doc.text(String(page), pageWidth - 30, pageHeight - 5);
-      },
-      didDrawCell: (data: any) => {
-        if (data.cell.section === 'body' && data.column.index > 0 && data.cell.raw !== 0 && currencyformat === '₹') {
-          const rupeeImg = this._CommonService._getRupeeSymbol();
-          const textPos = data.cell.textPos;
-          doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
-        }
+      if (betweenorason === 'Between') {
+        doc.setFontSize(11);
+        doc.text(`Between : ${fromdate ?? ''} And ${todate ?? ''}`, 15, 42);
       }
-    });
 
-    if (typeof (doc as any).putTotalPages === 'function') {
-      (doc as any).putTotalPages(totalPagesExp);
-    }
+      const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
+      let page = 'Page ' + String(pageNo);
+      if (typeof (doc as any).putTotalPages === 'function') {
+        page += ' of ' + totalPagesExp;
+      }
 
-    if (printorpdf === 'Pdf') {
-      doc.save(`${reportName ?? 'report'}.pdf`);
+      doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+      doc.setFontSize(10);
+      doc.text('Printed on : ' + today, 15, pageHeight - 5);
+      doc.text(page, pageWidth - 30, pageHeight - 5);
+    },
+    didDrawCell: (data: any) => {
+      if (
+        data.cell.section === 'body' &&
+        data.column.index > 0 &&
+        data.cell.raw !== 0 &&
+        data.cell.raw !== '' &&
+        currencyformat === '₹'
+      ) {
+        const rupeeImg = this._CommonService._getRupeeSymbol();
+        const textPos = data.cell.textPos;
+        doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+      }
     }
+  });
 
-    if (printorpdf === 'Print') {
-      this.setiFrameForPrint(doc);
-    }
+  if (typeof (doc as any).putTotalPages === 'function') {
+    (doc as any).putTotalPages(totalPagesExp);
   }
 
+  if (printorpdf === 'Pdf') {
+    doc.save(`${reportName ?? 'report'}.pdf`);
+  }
 
+  if (printorpdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
+  
+  
   setiFrameForPrint(doc: any) {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
