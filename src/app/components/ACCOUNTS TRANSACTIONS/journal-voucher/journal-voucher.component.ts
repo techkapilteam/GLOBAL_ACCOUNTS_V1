@@ -688,7 +688,16 @@ export class JournalVoucherComponent implements OnInit {
   getLoadData() {
 
     // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('JOURNAL VOUCHER', this._commonService.getschemaname()).subscribe((json:any) => {
-    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('JOURNAL VOUCHER', this._commonService.getschemaname()).subscribe((json: any) => {
+    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData2(
+      'JOURNAL VOUCHER',
+      this._commonService.getbranchname(),
+      this._commonService.getschemaname(),
+    this._commonService.getCompanyCode(),
+  this._commonService.getBranchCode(),
+'taxes')
+.subscribe(
+  {
+    next:(json: any) => {
 
       //console.log(json)
       if (json != null) {
@@ -710,10 +719,11 @@ export class JournalVoucherComponent implements OnInit {
         //this.titleDetails = this.titleDetails.FT;
       }
     },
-      (error: any) => {
+      error:(error: any) => {
 
         this._commonService.showErrorMessage(error);
-      });
+     
+   } });
   }
 
   gettypeofpaymentdata(): any {
@@ -814,13 +824,16 @@ export class JournalVoucherComponent implements OnInit {
 
   GetSubLedgerData(pledgerid: any) {
     debugger
-    this._AccountingTransactionsService.GetSubLedgerDataACCOUNTS(pledgerid,
+    this._AccountingTransactionsService.GetSubLedgerData3(pledgerid,
 
       this._commonService.getbranchname(),
         this._commonService.getCompanyCode(),
+        this._commonService.getbranchname(),
         this._commonService.getBranchCode(),
         this._commonService.getschemaname()
-    ).subscribe((json: any) => {
+    ).subscribe(
+      {
+      next:(json: any) => {
 
       //console.log(json)
       if (json != null) {
@@ -857,10 +870,12 @@ export class JournalVoucherComponent implements OnInit {
         //this.titleDetails = this.titleDetails.FT;
       }
     },
-      (error: any) => {
+     error: (error: any) => {
 
         this._commonService.showErrorMessage(error);
-      });
+     
+   }
+   });
   }
   subledger_Change($event: any) {
 
@@ -1209,25 +1224,37 @@ export class JournalVoucherComponent implements OnInit {
   //       this._commonService.showErrorMessage(error);
   //     });
   // }
-  getPartyDetailsbyid(ppartyid: string, partynamename: string): void {
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid).subscribe(
+ getPartyDetailsbyid(
+  ppartyid: string,
+  pStateId: any
+): void {
+
+  this._AccountingTransactionsService
+    .getPartyDetailsbyid(ppartyid, pStateId)
+    .subscribe(
       (json: any) => {
+
         if (!json) return;
 
-        // Reset lists
+        // Reset lists safely
         this.tdslist = json.lstTdsSectionDetails || [];
         this.tdssectionlist = [];
         this.statelist = json.statelist || [];
 
         // Get unique TDS sections
         const uniqueTdsSections = Array.from(
-          new Set(this.tdslist.map((item: any) => item.pTdsSection))
+          new Set(
+            this.tdslist.map((item: any) => item.pTdsSection)
+          )
         );
 
-        // Push unique sections to tdssectionlist
-        this.tdssectionlist = uniqueTdsSections.map(section => ({ pTdsSection: section }));
+        // Assign unique sections
+        this.tdssectionlist =
+          uniqueTdsSections.map(section => ({
+            pTdsSection: section
+          }));
 
-        // Update balances and recalculate GST/TDS
+        // Update balances and recalc GST/TDS
         this.setBalances('PARTY', json.accountbalance ?? 0);
         this.claculategsttdsamounts();
       },
@@ -1235,7 +1262,8 @@ export class JournalVoucherComponent implements OnInit {
         this._commonService.showErrorMessage(error);
       }
     );
-  }
+}
+
 
   gsno_change() {
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstno', true);

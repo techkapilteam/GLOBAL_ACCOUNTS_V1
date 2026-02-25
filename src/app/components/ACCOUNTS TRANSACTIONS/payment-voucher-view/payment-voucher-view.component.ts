@@ -53,7 +53,7 @@ export class PaymentVoucherViewComponent implements OnInit {
   displaychequeno = 'Cheque No';
 
   banklist: any;
-  modeoftransactionslist: any[] = [];
+  modeoftransactionslist: any[]=[];
   typeofpaymentlist: any;
   ledgeraccountslist: any;
   subledgeraccountslist: any;
@@ -64,7 +64,7 @@ export class PaymentVoucherViewComponent implements OnInit {
   tdspercentagelist: any;
   debitcardlist: any;
   statelist: any;
-  chequenumberslist: any[] = [];
+  chequenumberslist: any;
   upinameslist: any;
   upiidlist: any;
   paymentslist: any;
@@ -108,7 +108,6 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
     this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.ppaymentdateConfig.showWeekNumbers = false;
-    
 }
   paymentVoucherForm!: FormGroup;
    ngOnInit(): void {
@@ -135,6 +134,7 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
       pCardNumber: [''],
       pUpiname: [''],
       pUpiid: [''],
+
 
       ptypeofpayment: [''],
       pChequenumber: [''],
@@ -730,6 +730,13 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
   }
 
 
+
+
+
+
+
+  
+
   // getledgerdata(){
   //   this.getLoadData()
   // }
@@ -739,105 +746,113 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
 
 
     debugger;
-    // GetReceiptsandPaymentsLoadingData1
-    this._AccountingTransactionsService.GetBankNames(
+    
+    // this._AccountingTransactionsService.GetBankNames(
 
+    //   this._commonService.getschemaname(),
+    //   this._commonService.getbranchname(),
+    //   this._commonService.getCompanyCode(),
+    //   this._commonService.getBranchCode()
+
+    // ).subscribe({
+    //   next: (res: any) => {
+        
+    //     this.banklist = res;
+        
+
+    //     this.typeofpaymentlist = this.gettypeofpaymentdata();
+    //     console.log('SUCCESS:', res);
+    //     alert('hello');
+    //   },
+    //   error: (err: any) => {
+    //     console.log('ERROR:', err);
+    //     alert('API Error');
+    //   }
+    // });
+
+    //GetReceiptsandPaymentsLoadingData
+
+    this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData2
+    ('PAYMENT VOUCHER',
+       this._commonService.getbranchname(),
       this._commonService.getschemaname(),
-      this._commonService.getbranchname(),
-      this._commonService.getCompanyCode(),
-      this._commonService.getBranchCode()
+    this._commonService.getCompanyCode(),
+  this._commonService.getBranchCode(),
+'taxes')
+    .subscribe({
+      next:(json:any) => {
+                debugger;
+                //console.log(json)
+                if (json != null) {
 
-    ).subscribe({
-      next: (res: any) => {
-        // bankName
-        // this.accountid = res[0].bankAccountId
-        this.banklist = res;
-        // bank_branch
-        // this.paymentVoucherForm.controls['pbranchname'].setValue('res.bank_branch')
+                    this.banklist = json.banklist;
+                    this.modeoftransactionslist = json.modeofTransactionslist;
+                    this.typeofpaymentlist = this.gettypeofpaymentdata();
+                    this.ledgeraccountslist = json.accountslist;
+                    this.partylist = json.partylist;
+                    this.gstlist = json.gstlist;
 
-        this.typeofpaymentlist = this.gettypeofpaymentdata();
-        console.log('SUCCESS:', res);
-        alert('hello');
-      },
-      error: (err: any) => {
-        console.log('ERROR:', err);
-        alert('API Error');
-      }
-    });
+                    this.debitcardlist = json.bankdebitcardslist;
+                    // console.log(this.debitcardlist);
+                    this.setBalances('CASH', json.cashbalance);
+                    this.setBalances('BANK', json.bankbalance);
+                    console.log(json);
+                    this.cashRestrictAmount = json.cashRestrictAmount;
+                    //this.lstLoanTypes = json
+                    //this.titleDetails = json as string
+                    //this.titleDetails = eval("(" + this.titleDetails + ')');
+                    //this.titleDetails = this.titleDetails.FT;
+                }
+            },
+                error: (error) => {
 
-
-    // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData('PAYMENT VOUCHER', this._commonService.getschemaname()).subscribe(json => {
-    //             debugger;
-    //             //console.log(json)
-    //             if (json != null) {
-
-    //                 this.banklist = json.banklist;
-    //                 this.modeoftransactionslist = json.modeofTransactionslist;
-    //                 this.typeofpaymentlist = this.gettypeofpaymentdata();
-    //                 this.ledgeraccountslist = json.accountslist;
-    //                 this.partylist = json.partylist;
-    //                 this.gstlist = json.gstlist;
-
-    //                 this.debitcardlist = json.bankdebitcardslist;
-    //                 // console.log(this.debitcardlist);
-    //                 this.setBalances('CASH', json.cashbalance);
-    //                 this.setBalances('BANK', json.bankbalance);
-    //                 console.log(json);
-    //                 this.cashRestrictAmount = json.cashRestrictAmount;
-    //                 //this.lstLoanTypes = json
-    //                 //this.titleDetails = json as string
-    //                 //this.titleDetails = eval("(" + this.titleDetails + ')');
-    //                 //this.titleDetails = this.titleDetails.FT;
-    //             }
-    //         },
-    //             (error) => {
-
-    //                 this._commonService.showErrorMessage(error);
-    //             });
+                    this._commonService.showErrorMessage(error);
+                }
+                  });
+                
+              
 
 
-    this._AccountingTransactionsService
-      .GetLedgerData1(
-        'PAYMENT VOUCHER',
-        this._commonService.getbranchname(),
-        this._commonService.getCompanyCode(),
-        this._commonService.getBranchCode(),
-        this._commonService.getschemaname()
+    // this._AccountingTransactionsService
+    //   .GetLedgerData1(
+    //     'PAYMENT VOUCHER',
+    //     this._commonService.getbranchname(),
+    //     this._commonService.getCompanyCode(),
+    //     this._commonService.getBranchCode(),
+    //     this._commonService.getschemaname()
 
 
 
-      )
-      .subscribe({
-        next: (json: any) => {
-          debugger;
+    //   )
+    //   .subscribe({
+    //     next: (json: any) => {
+    //       debugger;
 
-          if (json) {
-            console.log('Full Response:', json);
+    //       if (json) {
+    //         console.log('Full Response:', json);
 
-            this.ledgeraccountslist = json.map((item: any) => item.pledgername)
-            console.log('ledgeraccountslist :', this.ledgeraccountslist);
+    //         this.ledgeraccountslist = json.map((item: any) => item.pledgername)
+    //         console.log('ledgeraccountslist :', this.ledgeraccountslist);
 
-            // this.banklist = json.banklist;
-            // this.modeoftransactionslist = json.modeofTransactionslist;
-            this.typeofpaymentlist = this.gettypeofpaymentdata();
-            // this.ledgeraccountslist = json.accountslist;
-            this.partylist = json.partylist;
-            this.gstlist = json.gstlist;
-            this.debitcardlist = json.bankdebitcardslist;
+           
+    //         this.typeofpaymentlist = this.gettypeofpaymentdata();
+    //         this.partylist = json.partylist;
+    //         this.gstlist = json.gstlist;
+    //         this.debitcardlist = json.bankdebitcardslist;
 
-            this.setBalances('CASH', json.cashbalance);
-            this.setBalances('BANK', json.bankbalance);
+    //         this.setBalances('CASH', json.cashbalance);
+    //         this.setBalances('BANK', json.bankbalance);
 
-            this.cashRestrictAmount = json.cashRestrictAmount;
-          }
-        },
-        error: (error: any) => {
-          this._commonService.showErrorMessage(error);
-        }
-      });
+    //         this.cashRestrictAmount = json.cashRestrictAmount;
+    //       }
+    //     },
+    //     error: (error: any) => {
+    //       this._commonService.showErrorMessage(error);
+    //     }
+    //   });
 
-  }
-
+  
+              }
 
 
   gettypeofpaymentdata(): any[] {
@@ -852,10 +867,11 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
   // }
   bankName_Change($event: any): void {
     debugger;
-    // const pbankid = $event.target.value;
-    const pbankid = $event.bankAccountId;
+    const pbankid = $event.pbankid;
+    const bankname = $event.pbankname;
+    
 
-
+  this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
 
     this.upinameslist = [];
     this.chequenumberslist = [];
@@ -865,9 +881,8 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     if (pbankid && pbankid != '') {
       // const bankname = $event.target.options[$event.target.selectedIndex].text;
       this.GetBankDetailsbyId(pbankid);
-      // this.getchaquenumber(pbankid);
-      //  this.getBankBranchName(pbankid);
-      // this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
+        this.getBankBranchName(pbankid);
+       this.paymentVoucherForm['controls']['pbankname'].setValue(bankname);
 
     }
     else {
@@ -999,9 +1014,10 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     this._AccountingTransactionsService
-      .GetSubLedgerDataACCOUNTS(pledgerid,
+      .GetSubLedgerData3(pledgerid,
         this._commonService.getbranchname(),
         this._commonService.getCompanyCode(),
+        this._commonService.getbranchname(),
         this._commonService.getBranchCode(),
         this._commonService.getschemaname()
 
@@ -1016,7 +1032,7 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
 
             // this.subledgeraccountslist = json;
 
-            this.subledgeraccountslist = json.map((item: any) => item.psubledgername)
+          this.subledgeraccountslist = json.map((item: any) => item.psubledgername)
             console.log('subledgeraccountslist :', this.subledgeraccountslist);
             const subLedgerControl = group?.get('psubledgername');
 
@@ -1133,12 +1149,16 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     this.GetValidationByControl(this.paymentVoucherForm, 'pUpiid', true);
 
   }
-  GetBankDetailsbyId(pbankid: any) {
-    debugger;
-    // this._AccountingTransactionsService.GetBankDetailsbyId(pbankid).subscribe(json => {
-    this._AccountingTransactionsService.GetViewBankInformation(pbankid,
+ GetBankDetailsbyId(pbankid:any) {
+
+
+debugger
+
+
+   this._AccountingTransactionsService.GetBankDetailsbyId1(pbankid,
+    this._commonService.getbranchname(),
       this._commonService.getschemaname(),
-      this._commonService.getbranchname(),
+      
       this._commonService.getCompanyCode(),
       this._commonService.getBranchCode()
     ).
@@ -1146,6 +1166,10 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
         next: (json: any) => {
           //console.log(json)
           if (json != null) {
+
+
+             this.upinameslist = json.bankupilist;
+                this.chequenumberslist = json.chequeslist;
             this.bankbarnchdummy = json[0].bank_branch
             this.paymentVoucherForm['controls']['pbranchname'].setValue(this.bankbarnchdummy);
             this.upinameslist = json.bankupilist;
@@ -1159,56 +1183,24 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
         }
       });
 
+      
+    }
 
+getBankBranchName(pbankid: any) {
+  const bank = this.banklist.find(
+    (res: { pbankid: any }) => res.pbankid == pbankid
+  );
 
-
-
-
-    this._AccountingTransactionsService.GetIssuedChequeNumbers(pbankid,
-
-      this._commonService.getbranchname(),
-      this._commonService.getCompanyCode(),
-      this._commonService.getBranchCode()
-    ).
-      subscribe({
-        next: (json: any) => {
-          //console.log(json)
-          if (json != null) {
-
-
-            console.log('Full Response:', json);
-
-            this.chequenumberslist = json.map((item: any) => item.pchqfromto)
-            console.log('chequenumberslist :', this.chequenumberslist);
-
-            // this.bankbarnchdummy = json[0].bank_branch
-            // this.paymentVoucherForm['controls']['pbranchname'].setValue(this.bankbarnchdummy);
-            // this.upinameslist = json.bankupilist;
-            // this.chequenumberslist = json.chequeslist;
-
-          }
-        },
-        error: (err: any) => {
-          console.log('ERROR:', err);
-          alert('API Error');
-        }
-      });
+  if (!bank) {
+    console.warn('Bank not found for id:', pbankid);
+    return;
   }
 
+  this.paymentVoucherForm.controls['pbranchname'].setValue(bank.pbranchname);
+  this.setBalances('BANKBOOK', bank.pbankbalance);
+  this.setBalances('PASSBOOK', bank.pbankpassbookbalance);
+}
 
-
-  getBankBranchName(pbankid: any) {
-    debugger
-    let data = this.banklist.filter(
-      (res: { pbankid: any }) =>
-        res.pbankid == pbankid
-    );
-
-
-    this.paymentVoucherForm['controls']['pbranchname'].setValue(data[0].pbranchname);
-    this.setBalances('BANKBOOK', data[0].pbankbalance);
-    this.setBalances('PASSBOOK', data[0].pbankpassbookbalance);
-  }
   // setenableordisabletdsgst(ppartyname, changetype) {
 
 
@@ -1241,8 +1233,8 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
   //   }
   // }
 
-  setenableordisabletdsgst(ppartyname: any, changetype: string): void {
-
+  setenableordisabletdsgst(ppartyname: any, changetype: string) {
+debugger
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     // reset GST/TDS
@@ -1435,7 +1427,7 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
 
 
   partyName_Change($event: any): void {
-
+debugger
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
     const ppartyid = $event?.ppartyid;
 
@@ -1464,11 +1456,15 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
 
     // get restricted cash amount
     this._AccountingTransactionsService
-      .GetCashRestrictAmountpercontact(
+      .GetCashRestrictAmountpercontact1(
         'PAYMENT VOUCHER',
-        this._commonService.getschemaname(),
+        'KGMS',
+        this._commonService.getbranchname(),
         ppartyid,
-        trans_date
+        trans_date,
+        this._commonService.getCompanyCode(),
+        this._commonService.getschemaname(),
+        this._commonService.getBranchCode()
       )
       .subscribe((amt: number) => {
         this.availableAmount = this.cashRestrictAmount - amt;
@@ -1533,32 +1529,47 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
 
 
 
-  getPartyDetailsbyid(ppartyid: any, partynamename: string): void {
+ getPartyDetailsbyid(
+  ppartyid: any,
+  pStateId: any
+): void {
 
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid)
-      .subscribe(
-        (json: any) => {
+  this._AccountingTransactionsService
+    .getPartyDetailsbyid(ppartyid, pStateId)
+    .subscribe(
+      (json: any) => {
 
-          if (!json) return;
+        if (!json) return;
 
-          this.tdslist = json.lstTdsSectionDetails;
+        // Clear previous data
+        this.tdssectionlist = [];
 
-          // extract unique TDS sections
-          const newdata = json.lstTdsSectionDetails
-            .map((item: { pTdsSection: any }) => item.pTdsSection)
-            .filter((value: any, index: number, self: any[]) => self.indexOf(value) === index);
+        this.tdslist = json.lstTdsSectionDetails || [];
 
-          this.tdssectionlist = newdata.map((section: any) => ({ pTdsSection: section }));
+        // Extract unique TDS sections
+        const uniqueSections =
+          this.tdslist
+            .map((item: any) => item.pTdsSection)
+            .filter((value: any, index: number, self: any[]) =>
+              self.indexOf(value) === index
+            );
 
-          this.statelist = json.statelist;
-          this.claculategsttdsamounts();
-          this.setBalances('PARTY', json.accountbalance);
-        },
-        (error: any) => {
-          this._commonService.showErrorMessage(error);
-        }
-      );
-  }
+        this.tdssectionlist =
+          uniqueSections.map((section: any) => ({
+            pTdsSection: section
+          }));
+
+        this.statelist = json.statelist || [];
+
+        this.claculategsttdsamounts();
+        this.setBalances('PARTY', json.accountbalance);
+      },
+      (error: any) => {
+        this._commonService.showErrorMessage(error);
+      }
+    );
+}
+
 
   gsno_change() {
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstno', true);

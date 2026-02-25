@@ -53,7 +53,7 @@
                                     <hr class="mt-0 mb-0">
                                 </span>
                                 <div class="form-group mb-0">
-                                    <h4 style="color: #26408A;"><u>Cheques on Hand</u></h4>
+                                    <h4 style="color: #26408A;"><u>Cheques On Hand</u></h4>
                                 </div>
                                 <div class="form-group mb-0">
                                     <label>Balance: </label>
@@ -387,7 +387,7 @@
                                 [scrollable]="true" scrollHeight="500px" [resizableColumns]="true"
                                 columnResizeMode="fit" sortField="preceiptdate" [sortOrder]="1">
 
-                                <!-- HEADER -->
+
                                 <ng-template pTemplate="header">
                                     <tr>
 
@@ -422,14 +422,14 @@
                                     </tr>
                                 </ng-template>
 
-                                <!-- BODY -->
+
                                 <ng-template pTemplate="body" let-row>
                                     <tr>
 
-                                        <!-- Select All Column -->
+
                                         <td *ngIf="chequeboxshoworhide" pFrozenColumn></td>
 
-                                        <!-- Deposit -->
+
                                         <td *ngIf="!showhidegridcolumns" pFrozenColumn>
                                             <p-checkbox *ngIf="row.clearstatus === 'YES'"
                                                 [(ngModel)]="row.pdepositstatus" binary="true"
@@ -437,7 +437,7 @@
                                             </p-checkbox>
                                         </td>
 
-                                        <!-- Cancel -->
+
                                         <td *ngIf="!showhidegridcolumns" pFrozenColumn>
                                             <p-checkbox *ngIf="row.cancelstatus === 'YES'"
                                                 [(ngModel)]="row.pcancelstatus" binary="true"
@@ -469,7 +469,7 @@
                                         <td colspan="5"></td>
                                         <td class="text-right font-bold">
                                             {{ amounttotal | currency:currencySymbol:'1.2-2' }}
-                                        </td> 
+                                        </td>
 
                                         <td colspan="10"></td>
                                     </tr>

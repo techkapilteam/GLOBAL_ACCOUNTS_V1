@@ -132,7 +132,7 @@ export class TrialBalanceComponent {
   }
 
   GetTrialBalance(fromdate: Date, todate: Date, grouptype: string) {
-
+debugger;
     const fdate = this.commonService.getFormatDateNormal(fromdate)??'';
     const tdate = this.commonService.getFormatDateNormal(todate)??'';
 

@@ -17,21 +17,29 @@ export class AccountingMasterService {
     private _CommonService: CommonService
   ) { }
 
-  ViewChequeManagementDetails(): Observable<any> {
+  ViewChequeManagementDetails(
+
+    BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any,PageSize:any,PageNo:any
+  ): Observable<any> {
     const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema',BranchSchema)
+       .set('GlobalSchema',GlobalSchema) .set('CompanyCode',CompanyCode) .set('BranchCode',BranchCode) 
+       .set('PageSize',PageSize) .set('PageNo',PageNo);
 
     return this._CommonService.getAPI(
-      '/Accounting/Configuration/ViewChequeManagementDetails',
+      '/Accounts/GetViewChequeManagementDetails',
       params,
       'YES'
     );
   }
 
-  GetBankDetails1(recordid: any, data: any): void {
+  GetBankDetails1(recordid: any, data: any) {
     this.recordid = recordid;
     this.bankdetails = data;
   }
+
+
+
 
   // GetBankDetails(): Observable<any> {
   //   const params = new HttpParams()
@@ -71,19 +79,47 @@ export class AccountingMasterService {
     return this._CommonService.getAPI('/Accounts/GetBankUPIDetails', params, 'YES');
   }
 
+  // GetExistingChequeCount(
+  //   BankId: any,
+  //   ChqFromNo: any,
+  //   ChqToNo: any
+  // ): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('BranchSchema', this._CommonService.getschemaname())
+  //     .set('BankId', BankId)
+  //     .set('ChqFromNo', ChqFromNo)
+  //     .set('ChqToNo', ChqToNo);
+
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/Configuration/GetExistingChequeCount',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+
+
+
+
   GetExistingChequeCount(
-    BankId: any,
-    ChqFromNo: any,
-    ChqToNo: any
+    bankId: any,
+    chqFromNo: any,
+    chqToNo: any,
+    BranchSchema: any,
+    CompanyCode: any,
+    BranchCode: any,
   ): Observable<any> {
     const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname())
-      .set('BankId', BankId)
-      .set('ChqFromNo', ChqFromNo)
-      .set('ChqToNo', ChqToNo);
+
+      .set('bankId', bankId)
+      .set('chqFromNo', chqFromNo)
+      .set('chqToNo', chqToNo)
+      .set('BranchSchema', BranchSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode)
+      ;
 
     return this._CommonService.getAPI(
-      '/Accounting/Configuration/GetExistingChequeCount',
+      '/Accounts/GetExistingChequeCount',
       params,
       'YES'
     );
@@ -114,12 +150,16 @@ export class AccountingMasterService {
     );
   }
 
-  viewbankinformation(): Observable<any> {
-    const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname());
+  viewbankinformation(
+    GlobalSchema:any,BranchSchema:any,BranchCode:any,CompanyCode:any
+
+  ): Observable<any> {
+    const params = new HttpParams().set('GlobalSchema',GlobalSchema).set('BranchSchema',BranchSchema)
+    .set('BranchCode',BranchCode).set('CompanyCode',CompanyCode)
+      ;
 
     return this._CommonService.getAPI(
-      '/BankInformation/ViewBankInformationDetails',
+      '/Accounts/GetViewBankInformationDetails',
       params,
       'Yes'
     );

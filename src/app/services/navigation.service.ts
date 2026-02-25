@@ -87,7 +87,7 @@ export class NavigationService {
             { id: 'day-book', name: 'Day Book', route: '/dashboard/accounts/accounts-reports/day-book' },
             { id: 'jv-list', name: 'JV List', route: '/dashboard/accounts/accounts-reports/jv-list' },
             { id: 'brs', name: 'BRS', route: '/dashboard/accounts/accounts-reports/brs' },
-             { id: 'schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
+            { id: 'schedule-tb', name: 'Schedule TB', route: '/dashboard/accounts/accounts-reports/schedule-tb' },
             { id: 'brs-statements', name: 'BRS Statements', route: '/dashboard/accounts/accounts-reports/brs-statements' },
             { id: 'account-summary', name: 'Account Summary', route: '/dashboard/accounts/accounts-reports/account-summary' },
             { id: 'trial-balance', name: 'Trial Balance', route: '/dashboard/accounts/accounts-reports/trial-balance' },

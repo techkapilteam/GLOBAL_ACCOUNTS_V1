@@ -10,7 +10,7 @@ export class TdsService {
   constructor(
     private http: HttpClient,
     private commonService: CommonService
-  ) {}
+  ) { }
 
   getTdsReport(
     fromDate: string,
@@ -25,15 +25,14 @@ export class TdsService {
 
     return this.commonService.getAPI('/TDS/GetTdsReportDetails', params, 'YES');
   }
-  getTdsSectionDetails(): Observable<any> {
-  return this.commonService
-    .getAPI('/Tds/getTdsSectionNo', '', 'NO')
-    .pipe(
-      catchError((error: any) => {
-        this.commonService.showErrorMessage(error);
-        return of(null);
-      })
-    );
-}
-  
+  getTdsSectionDetails(): Observable<any> {const params = new HttpParams().set('globalSchema', 'taxes')
+  .set('companyCode', this.commonService.getCompanyCode()).set('branchCode', this.commonService.getBranchCode());
+  return this.commonService.getAPI('/Accounts/GetTdsSectionNo', params, 'YES').pipe(
+        catchError((error: any) => {
+          this.commonService.showErrorMessage(error);
+          return of(null);
+        })
+      );
+  }
+
 }

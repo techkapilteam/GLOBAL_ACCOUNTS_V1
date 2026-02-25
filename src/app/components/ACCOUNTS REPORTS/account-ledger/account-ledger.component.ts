@@ -137,11 +137,13 @@ today = new Date();
   onLedgerChange(event: any): void {
     const ledgerId = event?.pledgerid;
 
+    this.accountLedgerForm.get('psubledgerid')?.reset();
+
     this.subledgeraccountslist = [];
 
     if (!ledgerId) return;
 
-    this.transactionService.GetSubLedgerData(ledgerId)
+    this.transactionService.GetSubLedgerData(ledgerId,'accounts','KAPILCHITS','accounts','KLC01','global')
       .subscribe({
         next: (res) => this.subledgeraccountslist = res ?? [],
         error: (err) => this.commonService.showErrorMessage(err)
@@ -193,7 +195,11 @@ today = new Date();
       formattedFrom,
       formattedTo,
       pledgerid,
-      psubledgerid || 0
+      psubledgerid || 0,
+      'accounts',
+      'global',
+      'KLC01',
+      'KAPILCHITS'
     ).subscribe({
       next: (res) => {
         this.gridView = res ?? [];

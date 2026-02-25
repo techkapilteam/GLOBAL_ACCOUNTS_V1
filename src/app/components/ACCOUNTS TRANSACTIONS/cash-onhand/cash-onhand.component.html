@@ -61,7 +61,7 @@
                     <select class="form-control" (change)="SelectBank($event)" id="bankname" formControlName="bankname"
                         title="Bank" [ngClass]="{ 'is-invalid': CashOnHandValidation.bankname }">
                         <option value="">Select</option>
-                        <option *ngFor="let bank of BanksList" [value]="bank.branch_name">{{bank.branch_name}}</option>
+                        <option *ngFor="let bank of BanksList" [value]="bank.branchName">{{bank.branchName}}</option>
 
                     </select>
                     <!--

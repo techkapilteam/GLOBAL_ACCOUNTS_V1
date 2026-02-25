@@ -5,14 +5,14 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { CommonService } from '../../../services/common.service';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PageCriteria } from '../../../Models/pageCriteria';
-import { DateformatPipe } from './dateformat.pipe';
+
 import { TableModule } from 'primeng/table';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-comparison-tb',
-  imports: [FormsModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,DateformatPipe,TableModule],
+  imports: [FormsModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,TableModule],
   templateUrl: './comparison-tb.component.html',
   styleUrl: './comparison-tb.component.css',
 })
@@ -31,8 +31,8 @@ export class ComparisonTbComponent {
   ComparisionTBForm!: FormGroup;
 
   today = new Date();
-  from!: Date;
-  to!: Date;
+  fromdate!: string|null;
+  todate!: string|null;
 
   gridData: any[] = [];
   loading = false;
@@ -101,6 +101,14 @@ export class ComparisonTbComponent {
         ? { dateRangeInvalid: true }
         : null;
     };
+  }
+  get f() {
+    return this.ComparisionTBForm.controls;
+  }
+
+  updateFormattedDates() {
+    this.fromdate = this.datePipe.transform(this.f['fromDate'].value, 'dd-MMM-yyyy');
+    this.todate = this.datePipe.transform(this.f['toDate'].value, 'dd-MMM-yyyy');
   }
 
 
@@ -178,6 +186,7 @@ export class ComparisonTbComponent {
   // }
 
   GetComparisionTBReports() {
+
     this.ComparisionTBForm.markAllAsTouched();
 
     if (this.ComparisionTBForm.errors?.['dateRangeInvalid']) {
@@ -188,6 +197,7 @@ export class ComparisonTbComponent {
     if (this.ComparisionTBForm.invalid) return;
     this.loading = this.isLoading = true;
     this.savebutton = 'Processing';
+    this.updateFormattedDates();
 
     // this.from = this.ComparisionTBForm.value.fromDate;
     // this.to = this.ComparisionTBForm.value.toDate;
@@ -198,7 +208,7 @@ export class ComparisonTbComponent {
     const fromdate = this.commonService.getFormatDateNormal(this.ComparisionTBForm.value.fromDate)??'';
     const todate = this.commonService.getFormatDateNormal(this.ComparisionTBForm.value.toDate)??'';
 
-    this.reportService.GetComparisionTB(fromdate, todate)
+    this.reportService.GetComparisionTB(fromdate, todate,'accounts','global','KAPILCHITS','KLC01')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(res => {
         this.gridData = res || [];
@@ -209,14 +219,129 @@ export class ComparisonTbComponent {
       });
   }
 
-  // pdfOrprint(type: 'Pdf' | 'Print') {
-  //   if (type === 'Print') {
-  //     window.print();
-  //   } else {
-  //     alert('PDF export not implemented in demo mode');
-  //   }
-  // }
-  pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
+//   pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
+//   if (this.gridData.length === 0) {
+//     this.commonService.showInfoMessage('No Data');
+//     return;
+//   }
+
+//   const rows: any[] = [];
+//   const reportname = 'Comparison Trial Balance';
+//   const gridheaders = ['Particulars', 'Debit', 'Credit', 'Debit', 'Credit', 'Debit', 'Credit'];
+
+//   const fromDate = this.commonService.getFormatDateGlobal(
+//     this.ComparisionTBForm.controls['fromDate'].value
+//   );
+
+//   const toDate = this.commonService.getFormatDateGlobal(
+//     this.ComparisionTBForm.controls['toDate'].value
+//   );
+
+//   const colWidthHeight = {
+//     parentaccountname: { cellWidth: 'auto' },
+//     accountname: { cellWidth: 'auto' },
+//     debitamount1: { cellWidth: 'auto' },
+//     creditamount1: { cellWidth: 'auto' },
+//     debitamount2: { cellWidth: 'auto' },
+//     creditamount2: { cellWidth: 'auto' },
+//     debittotal: { cellWidth: 'auto' },
+//     credittotal: { cellWidth: 'auto' }
+//   };
+  
+
+//   const retungridData = this.commonService._groupwiseSummaryExportDataTB(
+//     this.gridData,
+//     'parentaccountname',
+//     'debitamount1',
+//     'creditamount1',
+//     'debitamount2',
+//     'creditamount2',
+//     'debittotal',
+//     'credittotal',
+//     'Total',
+//     false
+//   );
+
+//   retungridData.forEach((element: any) => {
+//     let debitamt = '';
+//     let creditamt = '';
+//     let debitamt1 = '';
+//     let creditamt1 = '';
+//     let debitamt2 = '';
+//     let creditamt2 = '';
+
+//     if (element.debitamount1) {
+//       debitamt = this.commonService.currencyFormat(parseFloat(element.debitamount1).toFixed(2));
+//     }
+//     if (element.creditamount1) {
+//       creditamt = this.commonService.currencyFormat(parseFloat(element.creditamount1).toFixed(2));
+//     }
+//     if (element.debitamount2) {
+//       debitamt1 = this.commonService.currencyFormat(parseFloat(element.debitamount2).toFixed(2));
+//     }
+//     if (element.creditamount2) {
+//       creditamt1 = this.commonService.currencyFormat(parseFloat(element.creditamount2).toFixed(2));
+//     }
+//     if (element.debittotal) {
+//       debitamt2 = this.commonService.currencyFormat(parseFloat(element.debittotal).toFixed(2));
+//     }
+//     if (element.credittotal) {
+//       creditamt2 = this.commonService.currencyFormat(parseFloat(element.credittotal).toFixed(2));
+//     }
+
+//     const temp = element.group
+//       ? [element.group, element.accountname, debitamt, creditamt, debitamt1, creditamt1, debitamt2, creditamt2]
+//       : [element.accountname, debitamt, creditamt, debitamt1, creditamt1, debitamt2, creditamt2];
+
+//     rows.push(temp);
+//   });
+
+//   const gridtotals: any = {
+//     grandtotal1: this.commonService.convertAmountToPdfFormat(
+//       this.commonService.currencyFormat(this.totaldebitamount1)
+//     ),
+//     grandtotal2: this.commonService.convertAmountToPdfFormat(
+//       this.commonService.currencyFormat(this.totalcreditamount1)
+//     ),
+//     grandtotal3: this.commonService.convertAmountToPdfFormat(
+//       this.commonService.currencyFormat(this.totaldebitamount2)
+//     ),
+//     grandtotal4: this.commonService.convertAmountToPdfFormat(
+//       this.commonService.currencyFormat(this.totalcreditamount2)
+//     ),
+//     grandtotal5: this.commonService.convertAmountToPdfFormat(
+//       this.commonService.currencyFormat(this.totaldebitamount3)
+//     ),
+//     grandtotal6: this.commonService.convertAmountToPdfFormat(
+//       this.commonService.currencyFormat(this.totalcreditamount3)
+//     )
+//   };
+
+//   const total = [
+//     ' Grand Total ',
+//     gridtotals.grandtotal1,
+//     gridtotals.grandtotal2,
+//     gridtotals.grandtotal3,
+//     gridtotals.grandtotal4,
+//     gridtotals.grandtotal5,
+//     gridtotals.grandtotal6
+//   ];
+
+//   rows.push(total);
+
+//   this.reportService._ComparisionTBReportsPdf(
+//     reportname,
+//     rows,
+//     gridheaders,
+//     colWidthHeight,
+//     'landscape',
+//     'Between',
+//     fromDate,
+//     toDate,
+//     printorpdf
+//   );
+// }
+pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
   if (this.gridData.length === 0) {
     this.commonService.showInfoMessage('No Data');
     return;
@@ -229,101 +354,81 @@ export class ComparisonTbComponent {
   const fromDate = this.commonService.getFormatDateGlobal(
     this.ComparisionTBForm.controls['fromDate'].value
   );
-
   const toDate = this.commonService.getFormatDateGlobal(
     this.ComparisionTBForm.controls['toDate'].value
   );
 
   const colWidthHeight = {
-    pparentaccountName: { cellWidth: 'auto' },
-    paccountName: { cellWidth: 'auto' },
-    pdebitamount1: { cellWidth: 'auto' },
-    pcreditamount1: { cellWidth: 'auto' },
-    pdebitamount2: { cellWidth: 'auto' },
-    pcreditamount2: { cellWidth: 'auto' },
-    pdebittotal: { cellWidth: 'auto' },
-    pcredittotal: { cellWidth: 'auto' }
+    parentaccountname: { cellWidth: 'auto' },
+    accountname: { cellWidth: 'auto' },
+    debitamount1: { cellWidth: 'auto' },
+    creditamount1: { cellWidth: 'auto' },
+    debitamount2: { cellWidth: 'auto' },
+    creditamount2: { cellWidth: 'auto' },
+    debittotal: { cellWidth: 'auto' },
+    credittotal: { cellWidth: 'auto' }
   };
 
   const retungridData = this.commonService._groupwiseSummaryExportDataTB(
     this.gridData,
-    'pparentaccountName',
-    'pdebitamount1',
-    'pcreditamount1',
-    'pdebitamount2',
-    'pcreditamount2',
-    'pdebittotal',
-    'pcredittotal',
+    'parentaccountname',
+    'debitamount1',
+    'creditamount1',
+    'debitamount2',
+    'creditamount2',
+    'debittotal',
+    'credittotal',
     'Total',
     false
   );
 
-  retungridData.forEach((element: any) => {
-    let debitamt = '';
-    let creditamt = '';
-    let debitamt1 = '';
-    let creditamt1 = '';
-    let debitamt2 = '';
-    let creditamt2 = '';
-
-    if (element.pdebitamount1) {
-      debitamt = this.commonService.currencyFormat(parseFloat(element.pdebitamount1).toFixed(2));
-    }
-    if (element.pcreditamount1) {
-      creditamt = this.commonService.currencyFormat(parseFloat(element.pcreditamount1).toFixed(2));
-    }
-    if (element.pdebitamount2) {
-      debitamt1 = this.commonService.currencyFormat(parseFloat(element.pdebitamount2).toFixed(2));
-    }
-    if (element.pcreditamount2) {
-      creditamt1 = this.commonService.currencyFormat(parseFloat(element.pcreditamount2).toFixed(2));
-    }
-    if (element.pdebittotal) {
-      debitamt2 = this.commonService.currencyFormat(parseFloat(element.pdebittotal).toFixed(2));
-    }
-    if (element.pcredittotal) {
-      creditamt2 = this.commonService.currencyFormat(parseFloat(element.pcredittotal).toFixed(2));
-    }
-
-    const temp = element.group
-      ? [element.group, element.paccountName, debitamt, creditamt, debitamt1, creditamt1, debitamt2, creditamt2]
-      : [element.paccountName, debitamt, creditamt, debitamt1, creditamt1, debitamt2, creditamt2];
-
-    rows.push(temp);
-  });
-
-  const gridtotals: any = {
-    grandtotal1: this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyFormat(this.totaldebitamount1)
-    ),
-    grandtotal2: this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyFormat(this.totalcreditamount1)
-    ),
-    grandtotal3: this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyFormat(this.totaldebitamount2)
-    ),
-    grandtotal4: this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyFormat(this.totalcreditamount2)
-    ),
-    grandtotal5: this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyFormat(this.totaldebitamount3)
-    ),
-    grandtotal6: this.commonService.convertAmountToPdfFormat(
-      this.commonService.currencyFormat(this.totalcreditamount3)
-    )
+  const fmt = (val: any): string => {
+    if (val === undefined || val === null || val === '' || val === 0) return '';
+    return this.commonService.currencyFormat(parseFloat(val).toFixed(2));
   };
 
-  const total = [
-    ' Grand Total ',
-    gridtotals.grandtotal1,
-    gridtotals.grandtotal2,
-    gridtotals.grandtotal3,
-    gridtotals.grandtotal4,
-    gridtotals.grandtotal5,
-    gridtotals.grandtotal6
-  ];
+  retungridData.forEach((element: any) => {
+    if (element.isGroupHeader) {
+      rows.push([element.group]);
+      return;
+    }
 
-  rows.push(total);
+    if (element.isSubtotal) {
+
+      const subtotalRow: any[] = [
+        { content: element.accountname,                    styles: { fontStyle: 'bold', halign: 'left',  fillColor: '#ffffb3' } },
+        { content: fmt(element.debitamount1),              styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffffb3' } },
+        { content: fmt(element.creditamount1),             styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffffb3' } },
+        { content: fmt(element.debitamount2),              styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffffb3' } },
+        { content: fmt(element.creditamount2),             styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffffb3' } },
+        { content: fmt(element.debittotal),                styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffffb3' } },
+        { content: fmt(element.credittotal),               styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffffb3' } },
+      ];
+      rows.push(subtotalRow);
+      return;
+    }
+
+    rows.push([
+      element.accountname  ?? '',
+      fmt(element.debitamount1),
+      fmt(element.creditamount1),
+      fmt(element.debitamount2),
+      fmt(element.creditamount2),
+      fmt(element.debittotal),
+      fmt(element.credittotal),
+    ]);
+  });
+
+  const grandRow: any[] = [
+    { content: 'Grand Total', styles: { fontStyle: 'bold', halign: 'left',  fillColor: '#ffd700' } },
+    { content: this.commonService.currencyFormat(this.totaldebitamount1),  styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffd700' } },
+    { content: this.commonService.currencyFormat(this.totalcreditamount1), styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffd700' } },
+    { content: this.commonService.currencyFormat(this.totaldebitamount2),  styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffd700' } },
+    { content: this.commonService.currencyFormat(this.totalcreditamount2), styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffd700' } },
+    { content: this.commonService.currencyFormat(this.totaldebitamount3),  styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffd700' } },
+    { content: this.commonService.currencyFormat(this.totalcreditamount3), styles: { fontStyle: 'bold', halign: 'right', fillColor: '#ffd700' } },
+  ];
+  rows.push(grandRow);
 
   this.reportService._ComparisionTBReportsPdf(
     reportname,
