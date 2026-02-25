@@ -53,23 +53,52 @@ export class BrStatementService {
       'YES'
     );
   }
+  // GetBrStatementReportByDatesChequesInfo(
+  //   fromDate: string,
+  //   toDate: string,
+  //   bankAccountId: number
+  // ): Observable<any> {
+
+  //   const params = new HttpParams({
+  //     fromObject: {
+  //       fromdate: fromDate,
+  //       todate: toDate,
+  //       _pBankAccountId: bankAccountId.toString(),
+  //       BranchSchema: this._commonService.getschemaname()
+  //     }
+  //   });
+
+  //   return this._commonService.getAPI(
+  //     '/Accounting/AccountingReports/GetBrStatementReportbyDatesChequesInfo',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  
   GetBrStatementReportByDatesChequesInfo(
     fromDate: string,
     toDate: string,
-    bankAccountId: number
+    bankAccountId: number,
+    BranchSchema:any,
+    GlobalSchema:any,
+    BranchCode:any,
+CompanyCode:any
   ): Observable<any> {
 
     const params = new HttpParams({
       fromObject: {
         fromdate: fromDate,
         todate: toDate,
-        _pBankAccountId: bankAccountId.toString(),
-        BranchSchema: this._commonService.getschemaname()
+        pBankAccountId: bankAccountId.toString(),
+        BranchSchema: BranchSchema,
+        GlobalSchema:GlobalSchema,
+        BranchCode:BranchCode,
+        CompanyCode:CompanyCode
       }
     });
 
     return this._commonService.getAPI(
-      '/Accounting/AccountingReports/GetBrStatementReportbyDatesChequesInfo',
+      '/Accounts/GetBrStatementReportbyDatesChequesInfo',
       params,
       'YES'
     );

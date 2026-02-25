@@ -464,19 +464,34 @@ export class GeneralReceiptNewComponent implements OnInit {
 
     }
     getPartyDetailsbyid(ppartyid: any, pStateId: any) {
-        this._Accountservice.getPartyDetailsbyid(ppartyid, this._commonService.getbranchname(),
-            this._commonService.getBranchCode(), this._commonService.getCompanyCode(), this._commonService.getschemaname(), 'taxes').subscribe(
+        debugger;
+        this._Accountservice.getPartyDetailsbyid(ppartyid,
+            this._commonService.getbranchname(),
+            this._commonService.getBranchCode(),
+            this._commonService.getCompanyCode(), this._commonService.getschemaname(), 'taxes').subscribe(
                 (json: any) => {
-                    if (json != null) {
-                        this.tdssectionlist = [];
-                        this.setBalances('PARTY', json.accountbalance);
-                    }
+                       if (json != null) {
+                this.tdslist = json.lstTdsSectionDetails;
+                let newdata = json.lstTdsSectionDetails.map((item:any) => item.pTdsSection)
+                    .filter((value:any, index:any, self:any) => self.indexOf(value) === index)
+                for (let i = 0; i < newdata.length; i++) {
+                    let object = { pTdsSection: newdata[i] }
+                    this.tdssectionlist.push(object);
+                }
+                this.statelist = json.statelist;
+                this.claculategsttdsamounts();
+                this.claculateTDSamount();
+                this.setBalances('PARTY', json.accountbalance);
+            }
                 },
                 (error) => {
                     this._commonService.showErrorMessage(error);
                 }
             );
     }
+
+
+
 
     setBalances(
         balancetype: string,
@@ -1531,6 +1546,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         return data;
     }
     tdsSection_Change($event: any): void {
+        debugger
         const pTdsSection = $event.target.value;
         this.tdspercentagelist = [];
         //this.GeneralReceiptForm['controls']['pTdsPercentage'].setValue('');
@@ -1544,8 +1560,10 @@ export class GeneralReceiptNewComponent implements OnInit {
     }
     gettdsPercentage(pTdsSection: any) {
 
-        this.tdspercentagelist = this.tdslist.filter(function (tds: { pTdsSection: any; }) {
-            return tds.pTdsSection == pTdsSection;
+        console.log('..........',this.tdslist);
+        
+        this.tdspercentagelist = this.tdslist.filter((tds: any) => {
+            return tds.pTdsSection === pTdsSection;
         });
         this.claculategsttdsamounts();
         this.claculateTDSamount();
@@ -2325,7 +2343,6 @@ export class GeneralReceiptNewComponent implements OnInit {
             if (!fileName) {
                 return true;
             }
-
             const ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
             return ext === 'jpg' || ext === 'png' || ext === 'pdf';

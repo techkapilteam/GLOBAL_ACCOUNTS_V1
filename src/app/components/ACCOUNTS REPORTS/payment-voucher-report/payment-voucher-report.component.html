@@ -1,0 +1,323 @@
+<div class="shadow-bg-view">
+
+  <div class="col-md-12 mt-5 mb-4">
+
+    <div id="template">
+
+      <div class="d-flex justify-content-end me-3">
+
+        <ul class="temp-ul">
+
+          <li class="temp-ico ms-2">
+            <a (click)="pdfOrprint('Pdf')" class="export-icons">
+              <img
+                src="assets/images/pdf-icon-blue.svg"
+                width="18"
+                title="Pdf">
+            </a>
+          </li>
+
+          <li class="temp-ico ms-2">
+            <a (click)="pdfOrprint('Print')" class="export-icons">
+              <img
+                src="assets/images/print-icon-blue.svg"
+                width="18"
+                title="Print">
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+
+
+      <div class="container" id="temp-box">
+
+        <div class="row">
+
+          <div class="col-md-8 offset-md-2">
+
+            <div class="p-3">
+
+              <div class="temp-img float-md-start mt-3">
+                <img
+                  class="img-fluid"
+                  src="assets/images/kapillogo.png">
+              </div>
+
+              <div class="col-md-12">
+
+                <div class="temp-head text-center pt-3">
+
+                  <h2 class="font-18 text-dark fw-bold m-0">
+                    {{ pCompanyName }}
+                  </h2>
+
+                  <p class="font-16 text-dark m-0">
+                    {{ pAddress1 }}
+                  </p>
+
+                  <p
+                    *ngIf="pCinNo"
+                    class="font-14 text-dark text-center">
+                    CIN : {{ pCinNo }}
+                  </p>
+
+                </div>
+
+              </div>
+
+
+
+              <div class="row mt-2">
+
+                <div class="col-md-6">
+                  <p class="font-14 fw-bold m-0">
+                    Printed On :
+                    {{ todaydate | date:'dd-MMM-yyyy h:mm:ss a' }}
+                  </p>
+                </div>
+
+                <div class="col-md-6 text-end">
+                  <p class="font-14 fw-bold m-0">
+                    Branch :
+                    {{ pBranchname | titlecase }}
+                  </p>
+                </div>
+
+              </div>
+
+              <div *ngFor="let PaymentData of tempPaymentData">
+
+                <div class="row">
+
+                  <div class="col-md-12">
+
+                    <!-- <app-company-details
+                      [PrintedDateShowhide]="printedDate">
+                    </app-company-details> -->
+
+                    <div class="report-head">
+
+                      <p class="font-18 text-dark text-center m-0">
+
+                        {{ receiptName }}
+
+                        <span
+                          *ngIf="duplicate === 'Reprint'"
+                          class="font-16">
+                          (Duplicate)
+                        </span>
+
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+
+                <div
+                  class="temp-box-inner border rounded shadow-sm bg-white p-3">
+
+                  <div class="text-end fw-bold">
+
+                    Date :
+                    {{ PaymentData?.ppaymentdate | date }}
+
+                  </div>
+
+
+                  <p class="fw-bold">
+                    Voucher No :
+                    {{ PaymentData?.ppaymentid }}
+                  </p>
+
+                  <p class="fw-bold">
+                    Paid To :
+                    {{ PaymentData?.pcontactname }}
+                  </p>
+
+
+                  <p class="fw-bold">
+                    Towards :
+                    <span *ngIf="!showgrid">
+                      {{ PaymentData?.parentaccountname }}
+                    </span>
+                  </p>
+
+
+                  <p
+                    class="fw-bold"
+                    *ngIf="!showgrid">
+
+                    Amount :
+                    {{ currencysymbol }}
+
+                    {{
+                      PaymentData?.transaction_amount
+                      | number:'1.2-2'
+                    }}
+
+                  </p>
+
+                  <div *ngIf="showgrid">
+
+                    <table
+                      class="table table-bordered receipt-table">
+
+                      <thead>
+                        <tr>
+                          <th>S.No</th>
+                          <th>Particulars</th>
+                          <th class="text-end">
+                            Amount
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                        <ng-container
+                          *ngFor="let subPaymentData of PaymentData?.ppaymentslist; let i = index">
+
+                          <tr>
+
+                            <td class="text-center">
+                              {{ i + 1 }}
+                            </td>
+
+                            <td>
+                              {{ subPaymentData?.accountname }}
+                            </td>
+
+                            <td class="text-end">
+
+                              {{ currencysymbol }}
+
+                              {{
+                                subPaymentData?.pLedgeramount
+                                | number:'1.2-2'
+                              }}
+
+                            </td>
+
+                          </tr>
+
+                        </ng-container>
+
+                      </tbody>
+
+
+                      <tfoot>
+
+                        <tr>
+
+                          <td></td>
+
+                          <td class="text-end fw-bold">
+                            Total
+                          </td>
+
+                          <td class="text-end fw-bold">
+
+                            {{ currencysymbol }}
+
+                            {{
+                              PaymentData?.totvalue
+                              | number:'1.2-2'
+                            }}
+
+                          </td>
+
+                        </tr>
+
+                      </tfoot>
+
+                    </table>
+
+                  </div>
+
+
+
+                  <p>
+
+                    <strong>
+                      Amount In Words :
+                    </strong>
+
+                    Rupees
+                    {{
+                      PaymentData?.totvalue
+                      | numberToWords
+                      | titlecase
+                    }}
+                    Only.
+
+                  </p>
+
+
+
+                  <p *ngIf="PaymentData?.pnarration">
+
+                    <strong>Narration :</strong>
+
+                    {{ PaymentData?.pnarration }}
+
+                  </p>
+
+                  <div class="row mt-5">
+
+                    <div class="col-md-3">
+                      <input
+                        readonly
+                        class="form-control"
+                        style="border-style:dashed">
+                    </div>
+
+                    <div class="col-md-3 text-center mt-4">
+                      <p class="fw-bold">
+                        (Approved By)
+                      </p>
+                    </div>
+
+                    <div class="col-md-3 text-center mt-4">
+                      <p class="fw-bold">
+                        (Verified By)
+                      </p>
+                    </div>
+
+                    <div class="col-md-3 text-center">
+
+                      <label>
+                        {{ PaymentData?.pemployeename }}
+                      </label>
+
+                      <p class="fw-bold">
+                        (Posted By)
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

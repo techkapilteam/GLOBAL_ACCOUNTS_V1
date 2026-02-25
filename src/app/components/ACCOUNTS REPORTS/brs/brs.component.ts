@@ -320,7 +320,7 @@ setPageModel(): void {
 
     } else {
 
-      this.brstatement.GetBrStatementReportByDatesChequesInfo(fromDate, toDate, _pBankAccountId)
+      this.brstatement.GetBrStatementReportByDatesChequesInfo(fromDate, toDate, _pBankAccountId,'accounts','global','KAPILCHITS','KLC01')
         .subscribe({
           next: (res: never[]) => {
             this.ChequesInfoDetails = res || [];

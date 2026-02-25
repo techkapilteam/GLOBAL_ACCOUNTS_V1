@@ -1,0 +1,310 @@
+<div class="shadow-bg-view">
+
+  <div class="col-md-12 mt-5 mb-4">
+
+    <div id="template">
+
+      <div class="d-flex justify-content-end me-3">
+
+        <ul class="temp-ul">
+
+          <li class="temp-ico ms-2">
+            <a
+              (click)="pdfOrprint('Pdf')"
+              class="export-icons">
+
+              <img
+                src="assets/images/pdf-icon-blue.svg"
+                width="18"
+                title="Pdf">
+            </a>
+          </li>
+
+          <li class="temp-ico ms-2">
+            <a
+              (click)="pdfOrprint('Print')"
+              class="export-icons">
+
+              <img
+                src="assets/images/print-icon-blue.svg"
+                width="18"
+                title="Print">
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+      <div class="container" id="temp-box">
+
+        <div class="row">
+
+          <div class="col-md-8 offset-md-2">
+
+            <div class="p-3">
+
+              <div class="temp-img float-md-start mt-3">
+                <img
+                  class="img-fluid"
+                  src="assets/images/kapillogo.png" />
+              </div>
+
+              <div class="temp-head text-center pt-3">
+
+                <h2 class="fw-bold m-0">
+                  {{ pCompanyName }}
+                </h2>
+
+                <p class="m-0">
+                  {{ pAddress1 }}, {{ pAddress2 }}
+                </p>
+
+                <p>
+                  CIN : {{ pCinNo }}
+                </p>
+
+              </div>
+
+              <div class="row mt-2">
+
+                <div class="col-md-6">
+
+                  <p class="fw-bold m-0">
+                    Printed On :
+                    {{ todaydate | date:'dd-MMM-yyyy h:mm:ss a' }}
+                  </p>
+
+                </div>
+
+                <div class="col-md-6 text-end">
+
+                  <p class="fw-bold m-0">
+                    Branch :
+                    {{ pBranchname | titlecase }}
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div class="mt-2 border rounded shadow-sm bg-white">
+
+                <!-- <app-company-details
+                  [PrintedDateShowhide]="printedDate">
+                </app-company-details> -->
+
+                <div class="report-head text-center">
+
+                  <p class="m-0">
+
+                    {{ receiptName }}
+
+                    <span *ngIf="duplicate === 'Reprint'">
+                      (Duplicate)
+                    </span>
+
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div
+                class="temp-box-inner border rounded shadow-sm bg-white p-3">
+
+                <div class="row">
+
+                  <div class="col-md-6">
+                    JV No. : {{ pJvnumber }}
+                  </div>
+
+                  <div class="col-md-6 text-end fw-bold">
+                    Date : {{ pJvDate }}
+                  </div>
+
+                </div>
+
+                <div class="row pt-2">
+
+                  <div class="col-12">
+
+                    <table
+                      class="table table-bordered receipt-table">
+
+                      <thead>
+
+                        <tr>
+                          <th style="width:10px">
+                            S.No.
+                          </th>
+
+                          <th>
+                            Particulars
+                          </th>
+
+                          <th class="text-end">
+                            Debit Amount
+                          </th>
+
+                          <th class="text-end">
+                            Credit Amount
+                          </th>
+                        </tr>
+
+                      </thead>
+
+                      <tbody>
+
+                        <tr
+                          *ngFor="
+                          let JvData of JournalVoucherData;
+                          let i = index">
+
+                          <td class="text-center">
+                            {{ i + 1 }}
+                          </td>
+
+                          <td>
+                            {{ JvData.pParticulars }}
+                          </td>
+
+                          <td class="text-end fw-bold">
+
+                            <ng-container
+                              *ngIf="JvData.pDebitamount !== 0">
+
+                              {{ currencySymbol }}
+                              {{
+                                JvData.pDebitamount
+                                .toFixed(2)
+                                |  number:'1.2-2'
+                              }}
+
+                            </ng-container>
+
+                          </td>
+
+                          <td class="text-end fw-bold">
+
+                            <ng-container
+                              *ngIf="JvData.pCreditAmount !== 0">
+
+                              {{ currencySymbol }}
+                              {{
+                                JvData.pCreditAmount
+                                .toFixed(2)
+                                |  number:'1.2-2'
+                              }}
+
+                            </ng-container>
+
+                          </td>
+
+                        </tr>
+
+                        <tr>
+
+                          <td></td>
+
+                          <td class="text-end fw-bold">
+                            Total
+                          </td>
+
+                          <td class="text-end fw-bold">
+
+                            {{ currencySymbol }}
+                            {{
+                              pDebitamount
+                              .toFixed(2)
+                              |  number:'1.2-2'
+                            }}
+
+                          </td>
+
+                          <td class="text-end fw-bold">
+
+                            {{ currencySymbol }}
+                            {{
+                              pCreditAmount
+                              .toFixed(2)
+                              |  number:'1.2-2'
+                            }}
+
+                          </td>
+
+                        </tr>
+
+                      </tbody>
+
+                    </table>
+
+                  </div>
+
+                </div>
+
+                <div class="row">
+
+                  <div class="col-12">
+
+                    <p class="m-0">
+
+                      <strong>
+                        Narration :
+                      </strong>
+
+                      {{ pNarration }}
+
+                      <span *ngIf="pNarration">
+                        .
+                      </span>
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div class="row mt-5">
+
+                  <div class="col-md-4 text-center">
+                    <p class="fw-bold">
+                      (Approved By)
+                    </p>
+                  </div>
+
+                  <div class="col-md-4 text-center">
+                    <p class="fw-bold">
+                      (Verified By)
+                    </p>
+                  </div>
+
+                  <div class="col-md-4 text-center">
+
+                    <label>
+                      {{ PostedBY }}
+                    </label>
+
+                    <p class="fw-bold">
+                      (Posted By)
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
