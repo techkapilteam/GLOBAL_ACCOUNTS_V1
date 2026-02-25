@@ -131,6 +131,7 @@ export class JournalVoucherComponent implements OnInit {
   ngOnInit() {
     debugger;
     console.log(this.paymentlistcolumnwiselist)
+    // this.currencySymbol = this._commonService.currencysymbol;
     this.currencySymbol = this._commonService.currencysymbol;
     if (this._commonService.comapnydetails != null)
       if (this._commonService.comapnydetails.pdatepickerenablestatus || this._commonService.comapnydetails.pfinclosingjvallowstatus) {
@@ -1614,113 +1615,210 @@ pamount:[''],
 
     return isValid;
   }
+addPaymentDetails() {
 
+  const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
-  addPaymentDetails() {
-    debugger;
-    const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+  const safeNumber = (val: any): number =>
+    parseFloat((val ?? '0').toString().replace(/,/g, '')) || 0;
 
-    // if (!this.validateaddPaymentDetails()) {
-    //   this.showhidegrid = false;
-    //   return;
-    // }
+  const ledgerId = paymentControls.get('pledgerid')?.value;
+  const subledgerId = paymentControls.get('psubledgerid')?.value;
 
-    const ledgerId = paymentControls.get('pledgerid')?.value;
-    const subledgerId = paymentControls.get('psubledgerid')?.value;
+  const debitAmount = safeNumber(paymentControls.get('pdebitamount')?.value);
+  const creditAmount = safeNumber(paymentControls.get('pcreditamount')?.value);
+  const numericAmount = debitAmount > 0 ? debitAmount : creditAmount;
 
-    // Clean amount
-    let amount = this._commonService.removeCommasInAmount(paymentControls.get('pamount')?.value) || 0;
+  // Check Subledger Restriction
+  this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(
+    subledgerId,
+    this._commonService.getbranchname(),
+    this._commonService.getschemaname(),
+    this._commonService.getBranchCode(),
+    this._commonService.getCompanyCode()
+  ).subscribe(res => {
 
-    // Ensure numeric fields have defaults
-    const numericFields: string[] = ['pStateId', 'pTdsPercentage', 'pgstpercentage'];
-    numericFields.forEach(field => {
-      const val = paymentControls.get(field)?.value;
-      if (val === '' || val == null) paymentControls.get(field)?.setValue(0);
-    });
+    const { credit_restriction_status, debit_restriction_status } = res[0];
 
-    ['ptotaldebitamount', 'ptotalcreditamount'].forEach(field => {
-      const val = paymentControls.get(field)?.value;
-      if (val === '' || val == null || val === 0) paymentControls.get(field)?.setValue('');
-    });
+    if (
+      (debitAmount > 0 && debit_restriction_status) ||
+      (creditAmount > 0 && credit_restriction_status)
+    ) {
+      this._commonService.showWarningMessage("Transaction Not Allowed");
+      return;
+    }
 
-    // const debitAmount = parseFloat(paymentControls.get('ptotaldebitamount')?.value || '0');
-    // const creditAmount = parseFloat(paymentControls.get('ptotalcreditamount')?.value || '0');
-    const debitAmount = parseFloat(paymentControls.get('pdebitamount')?.value || '0');
-    const creditAmount = parseFloat(paymentControls.get('pcreditamount')?.value || '0');
-    // Check subledger restrictions
-    this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subledgerId,
-
+    // Balance Check
+    this._SubscriberJVService.GetdebitchitCheckbalance(
       this._commonService.getbranchname(),
+      ledgerId,
+      36,
+      subledgerId,
       this._commonService.getschemaname(),
-      this._commonService.getBranchCode(),
       this._commonService.getCompanyCode(),
-    ).subscribe(res => {
-      const { credit_restriction_status, debit_restriction_status } = res[0];
+      this._commonService.getBranchCode()
+    ).subscribe(result => {
 
-      if ((debitAmount > 0 && !debit_restriction_status) || (creditAmount > 0 && !credit_restriction_status)) {
-        // this._SubscriberJVService.GetdebitchitCheckbalance(ledgerId, '', subledgerId).subscribe(result => {
-        this._SubscriberJVService.GetdebitchitCheckbalance(
-          this._commonService.getbranchname(),
-          
-          ledgerId, 36, subledgerId,this._commonService.getschemaname(),this._commonService.getCompanyCode(),this._commonService.getBranchCode()
-        
-        
-        
-        ).subscribe(result => {
-          debugger;
+      const balanceAmount = safeNumber(result.balanceamount);
+      const balanceCheckStatus = result.balancecheckstatus !== false;
 
-          this.debittotalamount = 0;
-          this.credittotalamount = 0;
+      console.log("Balance:", balanceAmount);
+      console.log("Entered:", numericAmount);
+      console.log("CheckStatus:", balanceCheckStatus);
 
-          const balanceAmount = parseFloat(result.balanceamount?.toString() || '0');
-          const balanceCheckStatus = result.balancecheckstatus?.toString() !== 'false';
-          const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/,/g, '')) : amount;
+      // Allow if:
+      // 1. Balance check disabled OR
+      // 2. Amount <= balance
 
-          // if (numericAmount <= balanceAmount && balanceCheckStatus) {
-if (
-  (numericAmount <= balanceAmount && balanceCheckStatus) ||
-  numericAmount <= balanceAmount ||
-  balanceCheckStatus === false
-){
+      if (!balanceCheckStatus || numericAmount <= balanceAmount) {
 
+        const data = paymentControls.value;
 
-            // if (amount <= balanceAmount && balanceCheckStatus) {
-            // Add payment
-            const data = paymentControls.value;
-            this.paymentslist = [...this.paymentslist, data];
-console.log('........',this.paymentslist);
+        this.paymentslist = [...this.paymentslist, data];
 
-            // Calculate totals
-            this.debittotalamount = this.paymentslist
-              // .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotaldebitamount) || '0'), 0);
-              .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.pdebitamount) || '0'), 0);
+        // Recalculate totals
+        this.calculateTotals();
 
-            this.credittotalamount = this.paymentslist
-              // .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotalcreditamount) || '0'), 0);
-              .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.pcreditamount) || '0'), 0);
+        this.getpartyJournalEntryData();
+        this.clearPaymentDetails1();
+        this.getPaymentListColumnWisetotals();
+        this.disableamounttype('');
+        this.validateDebitCreditAmounts();
+        this.showhidegrid = true;
 
-            console.log("Total Debit amount:", this.debittotalamount);
-            console.log("Total Credit amount:", this.credittotalamount);
-
-            this.getpartyJournalEntryData();
-            this.clearPaymentDetails1();
-            this.getPaymentListColumnWisetotals();
-            this.disableamounttype('');
-            this.validateDebitCreditAmounts();
-            this.showhidegrid = true;
-
-          }
-         else {
-            this._commonService.showWarningMessage("Insufficient balance");
-          }
-        });
+      } else {
+        this._commonService.showWarningMessage("Insufficient Balance");
       }
-       else {
-        if (debitAmount > 0) this._commonService.showWarningMessage("Debit Transaction Not Allowed");
-        if (creditAmount > 0) this._commonService.showWarningMessage("Credit Transaction Not Allowed");
-      }
+
     });
-  }
+
+  });
+}
+
+
+
+calculateTotals() {
+
+  const safeNumber = (val: any): number =>
+    parseFloat((val ?? '0').toString().replace(/,/g, '')) || 0;
+
+  this.debittotalamount = this.paymentslist.reduce(
+    (sum: number, item: any) => sum + safeNumber(item.pdebitamount),
+    0
+  );
+
+  this.credittotalamount = this.paymentslist.reduce(
+    (sum: number, item: any) => sum + safeNumber(item.pcreditamount),
+    0
+  );
+
+}
+
+//   addPaymentDetails() {
+//     debugger;
+//     const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+
+//     // if (!this.validateaddPaymentDetails()) {
+//     //   this.showhidegrid = false;
+//     //   return;
+//     // }
+
+//     const ledgerId = paymentControls.get('pledgerid')?.value;
+//     const subledgerId = paymentControls.get('psubledgerid')?.value;
+
+//     // Clean amount
+//     let amount = this._commonService.removeCommasInAmount(paymentControls.get('pamount')?.value) || 0;
+
+//     // Ensure numeric fields have defaults
+//     const numericFields: string[] = ['pStateId', 'pTdsPercentage', 'pgstpercentage'];
+//     numericFields.forEach(field => {
+//       const val = paymentControls.get(field)?.value;
+//       if (val === '' || val == null) paymentControls.get(field)?.setValue(0);
+//     });
+
+//     ['ptotaldebitamount', 'ptotalcreditamount'].forEach(field => {
+//       const val = paymentControls.get(field)?.value;
+//       if (val === '' || val == null || val === 0) paymentControls.get(field)?.setValue('');
+//     });
+
+//     // const debitAmount = parseFloat(paymentControls.get('ptotaldebitamount')?.value || '0');
+//     // const creditAmount = parseFloat(paymentControls.get('ptotalcreditamount')?.value || '0');
+//     const debitAmount = parseFloat(paymentControls.get('pdebitamount')?.value || '0');
+//     const creditAmount = parseFloat(paymentControls.get('pcreditamount')?.value || '0');
+//     // Check subledger restrictions
+//     this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(subledgerId,
+
+//       this._commonService.getbranchname(),
+//       this._commonService.getschemaname(),
+//       this._commonService.getBranchCode(),
+//       this._commonService.getCompanyCode(),
+//     ).subscribe(res => {
+//       const { credit_restriction_status, debit_restriction_status } = res[0];
+
+//       if ((debitAmount > 0 && !debit_restriction_status) || (creditAmount > 0 && !credit_restriction_status)) {
+//         // this._SubscriberJVService.GetdebitchitCheckbalance(ledgerId, '', subledgerId).subscribe(result => {
+//         this._SubscriberJVService.GetdebitchitCheckbalance(
+//           this._commonService.getbranchname(),
+          
+//           ledgerId, 36, subledgerId,this._commonService.getschemaname(),this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+        
+        
+        
+//         ).subscribe(result => {
+//           debugger;
+
+//           this.debittotalamount = 0;
+//           this.credittotalamount = 0;
+
+//           const balanceAmount = parseFloat(result.balanceamount?.toString() || '0');
+//           const balanceCheckStatus = result.balancecheckstatus?.toString() !== 'false';
+//           const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/,/g, '')) : amount;
+
+//           // if (numericAmount <= balanceAmount && balanceCheckStatus) {
+// if (
+//   (numericAmount <= balanceAmount && balanceCheckStatus) ||
+//   numericAmount <= balanceAmount ||
+//   balanceCheckStatus === false
+// ){
+
+
+//             // if (amount <= balanceAmount && balanceCheckStatus) {
+//             // Add payment
+//             const data = paymentControls.value;
+//             this.paymentslist = [...this.paymentslist, data];
+// console.log('........',this.paymentslist);
+
+//             // Calculate totals
+//             this.debittotalamount = this.paymentslist
+//               // .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotalcreditamount) || '0'), 0);
+//               .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.pdebitamount) || '0'), 0);
+
+//             this.credittotalamount = this.paymentslist
+//               // .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.ptotaldebitamount) || '0'), 0);
+//               .reduce((sum: any, item: any) => sum + parseFloat(this._commonService.removeCommasForEntredNumber(item.pcreditamount) || '0'), 0);
+
+//             console.log("Total Debit amount:", this.debittotalamount);
+//             console.log("Total Credit amount:", this.credittotalamount);
+
+//             this.getpartyJournalEntryData();
+//             this.clearPaymentDetails1();
+//             this.getPaymentListColumnWisetotals();
+//             this.disableamounttype('');
+//             this.validateDebitCreditAmounts();
+//             this.showhidegrid = true;
+
+//           }
+//          else {
+//             this._commonService.showWarningMessage("Insufficient balance");
+//           }
+//         });
+//       }
+//        else {
+//         if (debitAmount > 0) this._commonService.showWarningMessage("Debit Transaction Not Allowed");
+//         if (creditAmount > 0) this._commonService.showWarningMessage("Credit Transaction Not Allowed");
+//       }
+//     });
+//   }
 
   getPaymentListColumnWisetotals() {
 
@@ -2118,40 +2216,64 @@ console.log('........',this.paymentslist);
 
 
 
-  public removeHandler(row: any, rowIndex: any) {
-    debugger;
-    this.credittotalamount = 0;
-    this.debittotalamount = 0;
-    //const index: number = this.paymentslist.indexOf(dataItem);
-    const index: number = rowIndex;
-    if (index !== -1) {
-      this.paymentslist.splice(index, 1);
-      this.paymentslist = [...this.paymentslist];
-      this.paymentslist.filter((data: any) => {
-        if (data.ptotalcreditamount != "") {
-          data.ptotalcreditamount = this._commonService.removeCommasForEntredNumber(data.ptotalcreditamount);
-          data.ptotalcreditamount = parseFloat(data.ptotalcreditamount);
-          this.credittotalamount = this.credittotalamount + data.ptotalcreditamount;
-          //this.credittotalamount = parseFloat(this.paymentslist.reduce((sub, c) => sub + c.ptotalcreditamount, 0));
-        }
-        if (data.ptotaldebitamount != "") {
-          data.ptotaldebitamount = this._commonService.removeCommasForEntredNumber(data.ptotaldebitamount);
-          data.ptotaldebitamount = parseFloat(data.ptotaldebitamount);
-          //this.debittotalamount = parseFloat(this.paymentslist.reduce((sub, c) => sub + c.ptotaldebitamount, 0));
-          this.debittotalamount = this.debittotalamount + data.ptotaldebitamount;
-        }
-      })
-    }
-    if (this.paymentslist.length == 0) {
-      this.showhidegrid = false;
-    }
-    else {
-      this.showhidegrid = true;
-    }
-    this.disableamounttype('');
-    this.getPaymentListColumnWisetotals();
+  // public removeHandler(row: any, rowIndex: any) {
+  //   debugger;
+  //   this.credittotalamount = 0;
+  //   this.debittotalamount = 0;
+  //   //const index: number = this.paymentslist.indexOf(dataItem);
+  //   const index: number = rowIndex;
+  //   if (index !== -1) {
+  //     this.paymentslist.splice(index, 1);
+  //     this.paymentslist = [...this.paymentslist];
+  //     this.paymentslist.filter((data: any) => {
+  //       if (data.ptotalcreditamount != "") {
+  //         data.ptotalcreditamount = this._commonService.removeCommasForEntredNumber(data.ptotalcreditamount);
+  //         data.ptotalcreditamount = parseFloat(data.ptotalcreditamount);
+  //         this.credittotalamount = this.credittotalamount + data.ptotalcreditamount;
+  //         //this.credittotalamount = parseFloat(this.paymentslist.reduce((sub, c) => sub + c.ptotalcreditamount, 0));
+  //       }
+  //       if (data.ptotaldebitamount != "") {
+  //         data.ptotaldebitamount = this._commonService.removeCommasForEntredNumber(data.ptotaldebitamount);
+  //         data.ptotaldebitamount = parseFloat(data.ptotaldebitamount);
+  //         //this.debittotalamount = parseFloat(this.paymentslist.reduce((sub, c) => sub + c.ptotaldebitamount, 0));
+  //         this.debittotalamount = this.debittotalamount + data.ptotaldebitamount;
+  //       }
+  //     })
+  //   }
+  //   if (this.paymentslist.length == 0) {
+  //     this.showhidegrid = false;
+  //   }
+  //   else {
+  //     this.showhidegrid = true;
+  //   }
+  //   this.disableamounttype('');
+  //   this.getPaymentListColumnWisetotals();
 
-  }
+  // }
+
+
+
+  public removeHandler(row: any, rowIndex: number) {
+
+  // Remove row
+  this.paymentslist.splice(rowIndex, 1);
+
+  // Refresh reference (important for PrimeNG)
+  this.paymentslist = [...this.paymentslist];
+
+  // Recalculate totals properly
+  this.calculateTotals();
+
+  // Show / Hide grid
+  this.showhidegrid = this.paymentslist.length > 0;
+
+  // Rebuild journal entries
+  this.getpartyJournalEntryData();
+
+  this.disableamounttype('');
+  this.getPaymentListColumnWisetotals();
+  this.validateDebitCreditAmounts();
+}
   uploadAndProgress(event: any, files: any) {
     var extention = event.target.value.substring(event.target.value.lastIndexOf('.') + 1);
     if (!this.validateFile(event.target.value)) {

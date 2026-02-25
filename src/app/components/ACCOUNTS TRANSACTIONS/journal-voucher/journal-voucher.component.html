@@ -51,7 +51,7 @@
 
 
                                     <span class=" position-absolute font-italic"
-                                        style="right:-160px; top:35px;">{{ledgerBalance }}</span>
+                                        style="right:-160px; top:35px;">{{ ledgerBalance || '0 Dr' }}</span>
                                 </div>
                                 <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pledgername }"
                     <app-validation-message [messgae]="formValidationMessages?.pledgername"></app-validation-message> -->
@@ -72,7 +72,7 @@
           <button class="btn btn-lg-icon rounded-right px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
         </div>-->
                                     <span class=" position-absolute font-italic"
-                                        style="right:-160px; top:30px;">{{subledgerBalance }}</span>
+                                        style="right:-160px; top:30px;">{{subledgerBalance || '0 Dr' }}</span>
                                 </div>
                                 <!-- [ngClass]="{ 'is-invalid': formValidationMessages.psubledgername }"
                      <app-validation-message [messgae]="formValidationMessages?.psubledgername"></app-validation-message> -->
@@ -93,7 +93,7 @@
                                     <!-- <app-validation-message [messgae]="formValidationMessages?.ppartyname"></app-validation-message>
                          [ngClass]="{ 'is-invalid': formValidationMessages.ppartyname }" -->
                                     <span class=" position-absolute font-italic"
-                                        style="right:-160px; top:30px;">{{partyBalance }}</span>
+                                        style="right:-160px; top:30px;">{{partyBalance  || '0 Dr'}}</span>
                                 </div>
 
                             </div>
@@ -613,7 +613,7 @@
                         <button (click)="saveJournalVoucher()" class="btn btn-secondary px-3 border-0"
                             [disabled]="disablesavebutton">
                             <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                                *ngIf="disablesavebutton">
+                                *ngIf="!disablesavebutton">
                             <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
                         </button>
 

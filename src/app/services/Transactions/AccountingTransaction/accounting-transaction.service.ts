@@ -14,11 +14,16 @@ export class AccountingTransactionsService {
   });
   constructor(private http: HttpClient, private _CommonService: CommonService) { }
 
+
+
   GetPaymentVoucherExistingData(GlobalSchema:any,BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema)
     .set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/GetPaymentVoucherExistingData', params, 'YES');
   }
+
+
+
 
   deletePaymentVoucher(id: number) {
     const params = new HttpParams().set('id', id).set('BranchSchema', this._CommonService.getschemaname());
@@ -459,10 +464,14 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
   return this._CommonService.getAPI('/Accounts/GetTdsSectionNo', params,'YES');
 }
 
-  GettdsJVDetails(creditledger: any, monthYear: any, debitledger: any): Observable<any> {
-    const params = new HttpParams().set('Branchschema', this._CommonService.getschemaname()).set('creditledger', creditledger).set('MonthYear', monthYear).set('debitledger', debitledger);
-    return this._CommonService.getAPI('/AccountingTransactions/GetTDSJVDetails', params, 'YES');
+  GettdsJVDetails(Branchschema:any,creditledger: any, monthYear: any, debitledger: any,GlobalSchema:any,branchCode:any,companyCode:any): Observable<any> {
+    const params = new HttpParams().set('Branchschema',Branchschema).set('creditledger', creditledger).set('MonthYear', monthYear)
+    .set('debitledger', debitledger).set('GlobalSchema',GlobalSchema).set('branchCode',branchCode).set('companyCode',companyCode);
+    return this._CommonService.getAPI('/Accounts/GetTDSJVDetails', params, 'YES');
   }
+
+
+
   GetInterBranchJVDetails(creditledger: any, transactiondate: any, debitledger: any): Observable<any> {
     const params = new HttpParams().set('Branchschema', this._CommonService.getschemaname()).set('creditledger', creditledger).set('todate', transactiondate).set('debitledger', debitledger);
     return this._CommonService.getAPI('/AccountingTransactions/GetInterBranchJVDetails', params, 'YES');
@@ -477,9 +486,10 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
     return this._CommonService.postAPI('/accountingtransactions/SaveInterBranchJVDetails', data)
   }
 
-  GetTDSJVDetailsDuplicateCheck(monthYear: any, jvType: any): Observable<any> {
-    const params = new HttpParams().set('Branchschema', this._CommonService.getschemaname()).set('MonthYear', monthYear).set('JVType', jvType);
-    return this._CommonService.getAPI('/AccountingTransactions/GetTDSJVDetailsDuplicateCheck', params, 'YES');
+  GetTDSJVDetailsDuplicateCheck(Branchschema:any,JVType: any,MonthYear: any,GlobalSchema:any,companyCode:any,branchCode:any): Observable<any> {
+    const params = new HttpParams().set('Branchschema', Branchschema).set('JVType', JVType).set('MonthYear', MonthYear)
+    .set('GlobalSchema',GlobalSchema).set('companyCode',companyCode).set('branchCode',branchCode);
+    return this._CommonService.getAPI('/Accounts/GetTDSJVDetailsDuplicateCheck', params, 'YES');
   }
 
   GetLCExpensesLedgerAccountsList(formname: any): Observable<any> {

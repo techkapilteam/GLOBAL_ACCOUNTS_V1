@@ -47,8 +47,8 @@
           <div class="form-group">
             <label id="pPeriodType" title="Year" class="required-field">Year</label>
             <ng-select id="pPeriodType" title="Calendar Year" [items]="calendarYearData" formControlName="pPeriodType"
-              bindLabel="pPeriodType" bindValue="pCalenderPeriodId" [multiple]=false placeholder="Select Year"
-              [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
+              bindLabel="periodType" bindValue="calendarPeriodId" [multiple]=false placeholder="Select Year"
+              [searchable]=true [clearable]=true dropdownPosition="top" [clearOnBackspace]=true
               (change)="CalendarYear_change($event)" [ngClass]="{ 'is-invalid': formValidationMessages.pPeriodType }">
             </ng-select>
             <app-validation-message [messgae]="formValidationMessages?.pPeriodType">
@@ -59,8 +59,8 @@
             <div class="form-group">
               <label id="pCalendarMonth" title="Month" class="required-field">Month</label>
               <ng-select id="pCalendarMonth" title="Calender Month" [items]="calendarMonthData"
-                formControlName="pCalendarMonth" bindLabel="pCalendarMonth" bindValue="pCalenderPeriodDetailsId"
-                [multiple]=false placeholder="Month" [searchable]=true [clearable]=true dropdownPosition="bottom"
+                formControlName="pCalendarMonth" bindLabel="calendarMonth" bindValue="calendarPeriodDetailsId"
+                [multiple]=false placeholder="Month" [searchable]=true [clearable]=true dropdownPosition="top"
                 [clearOnBackspace]=true (change)="CalendarYearMOnth_change($event)"
                 [ngClass]="{ 'is-invalid': formValidationMessages.pCalendarMonth }">
               </ng-select>
@@ -81,11 +81,11 @@
     <div *ngIf="dataisempty">No Records to Display</div>
     <div class="row" *ngIf="showhidetable">
       <div class="col-md-12 col-xl-12">
-        <h2 class="sec-head font-16">TDS/GST JV's </h2>
+        <h6 class="sec-head font-16">TDS/GST JV's </h6>
       </div>
       
-      <div class="col-md-12 col-xl-12">
-        <div class="d-flex justify-content-end">
+      <div class="col-md-12 col-xl-12 ">
+        <div class="d-flex justify-content-end me-4">
           <a class="export-icons" (click)="export()"><img src="assets/images/icon-excel.svg " title="Excel" width="18px"></a>
         </div>
  
@@ -154,7 +154,7 @@
 
 
 
-<p-table
+<!-- <p-table
   [value]="tdsJvDetailsGrid"
   [paginator]="true"
   [rows]="pageCriteria.pageSize"
@@ -169,13 +169,30 @@
   [showCurrentPageReport]="true"
   currentPageReportTemplate="Page {page} of {totalPages} ({totalRecords} items)"
 >
+currentPageReportTemplate="Page {page} of {totalPages} ({totalRecords} items)" -->
+<p-table
+  [value]="tdsJvDetailsGrid"
+  [paginator]="true"
+  [rows]="pageCriteria.pageSize"
+  [first]="pageCriteria.offset"
+  [responsiveLayout]="'scroll'"
+  [scrollable]="true"
+  [scrollHeight]="'400px'"
+  selectionMode="multiple"
+  [(selection)]="selected1"
+  (onRowSelect)="onSelect($event)"
+  (onRowUnselect)="onSelect($event)"
+  [showCurrentPageReport]="true"
+  
+  styleClass="p-datatable-gridlines p-datatable-striped"
+>
   <!-- Checkbox Column -->
   <ng-template pTemplate="header">
     <tr>
       <th style="width: 60px">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th>
-      <th>Particulars</th>
+      <th style="width: 60px">Particulars</th>
       <th style="width: 120px; text-align: right;">Debit Amount</th>
       <th style="width: 120px; text-align: right;">Credit Amount</th>
     </tr>
