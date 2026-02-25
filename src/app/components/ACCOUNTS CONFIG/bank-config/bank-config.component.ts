@@ -318,7 +318,8 @@ precordid1=1;
         pValidfrom: [''],
         pValidto: [''],
         pUpiid: [''],
-        pUpiname: [''],
+        // pUpiname: [''],
+        upiname: [''],
         popeningjvno: [''],
         pIsupiapplicable: [false],
         pAddress1: [''],
@@ -357,16 +358,6 @@ precordid1=1;
     this.currentdate.showWeekNumbers = false;
 
 
-
-    //   this.currentdate.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');;
-    // this.currentdate.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');;
-    //  this.currentdate.maxDate = new Date();
-    //  this.currentdate.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');;
-    // this.currentdate.containerClass = 'theme-dark-blue';
-    // this.currentdate.showWeekNumbers = false;
-    // this.currentdate.minDate = new Date();
-    // this.currentdate.maxDate = new Date();
-    // this.currentdate.dateInputFormat = 'DD/MM/YYYY';
     this.date = new Date();
     this.bankmasterform['controls']['pBankdate'].setValue(this.date);
     this.bankmasterform['controls']['pOpeningBalanceType'].setValue('D')
@@ -377,11 +368,9 @@ precordid1=1;
     // })
 
  this._accountingmasterserive.GetBankUPIDetails(
-      
       this._commonService.getschemaname(), 
       this._commonService.getBranchCode(),
       this._commonService.getCompanyCode(),
-      
       
       )
        .subscribe({
@@ -392,49 +381,17 @@ precordid1=1;
         this.upiname = res;
 
         console.log('SUCCESS:', res);
-        alert('hello');
+       
       },
       error: (err: any) => {
         console.log('ERROR:', err);
         alert('API Error');
       }
     });
-
-
-
-
-
-
     debugger;
+    this._accountingmasterserive.GetGlobalBanks(
 
-    // this._AccountingTransactionsService.GetReceiptsandPaymentsLoadingData1(
-    //   this._commonService.getschemaname(),
-    //   this._commonService.getbranchname(),
-    //   this._commonService.getCompanyCode(),
-    //   this._commonService.getBranchCode()
-
-    // ).subscribe({
-    //   next: (res: any) => {
-    //     // bankName
-    //     this.banklist = res;
-
-    //     console.log('SUCCESS:', res);
-    //     alert('hello');
-    //   },
-    //   error: (err: any) => {
-    //     console.log('ERROR:', err);
-    //     alert('API Error');
-    //   }
-    // });
-
-
-    this._accountingmasterserive.GetBanks(
-       this.precordid1,
       this._commonService.getschemaname(), 
-      this._commonService.getbranchname(),
-      this._commonService.getCompanyCode(),
-       this._commonService.getBranchCode(),
-      
       )
        .subscribe({
       next: (res: any) => {
@@ -444,26 +401,13 @@ precordid1=1;
         this.banksList = res;
 
         console.log('SUCCESS:', res);
-        alert('hello');
+        
       },
       error: (err: any) => {
         console.log('ERROR:', err);
         alert('API Error');
       }
     });
-
-    // this._accountingmasterserive.GetBanks().subscribe(json => {
-    //   debugger;
-
-    //   if (json != null) {
-
-    //     this.banksList = json;
-    //   }
-    // },
-    //   (error) => {
-
-    //     this._commonService.showErrorMessage(error);
-    //   });
 
 
 
@@ -476,7 +420,13 @@ precordid1=1;
       this.bankdetails = this._accountingmasterserive.editbankdetails1();
       console.log(this.bankdetails)
       this.loading = true;
-      this._accountingmasterserive.viewbank(this.editdata).subscribe(data => {
+      this._accountingmasterserive.viewbank(this.editdata,
+this._commonService.getschemaname(),
+this._commonService.getbranchname(),
+this._commonService.getCompanyCode(),
+this._commonService.getBranchCode()
+
+      ).subscribe(data => {
         debugger;
         console.log(data)
 
@@ -640,7 +590,7 @@ precordid1=1;
   upivalidation(type: any) {
 
     let pUpiid = <FormGroup>this.bankmasterform['controls']['pUpiid'];
-    let pUpiname = <FormGroup>this.bankmasterform['controls']['pUpiname'];
+    let pUpiname = <FormGroup>this.bankmasterform['controls']['upiname'];
 
     if (type == 'GET') {
       pUpiid.setValidators(Validators.required);
@@ -768,71 +718,141 @@ precordid1=1;
     }
   }
 
+  // addtogrid() {
+  //   this.submitted = true
+  //   debugger;
+  //   if (this.validateupi()) {
+  //     this.duplicateupi = this.bankmasterform.controls['pUpiid'].value
+  //     this.upisetup['pUpiid'] = this.bankmasterform.controls['pUpiid'].value
+  //     this.upisetup['pUpiname'] = this.bankmasterform.controls['pUpiname'].value
+  //     this.upisetup['pCreatedby'] = this.bankmasterform.controls['pCreatedby'].value
+  //     this.upisetup['pStatusname'] = this.bankmasterform.controls['pStatusname'].value
+  //     this.upisetup['ptypeofoperation'] = "CREATE";
+  //     this.gridData.push(this.upisetup);
+  //     console.log(this.gridData);
+
+  //     this.bankmasterform.controls['pUpiid'].setValue("");
+  //     this.bankmasterform.controls['pUpiname'].setValue("");
+  //     this.submitted = false;
+  //     this.bankmastervalidations['pUpiname'] = "";
+  //     this.bankmastervalidations['pUpiid'] = ""
+  //     //this.getapi();
+
+  //     this.upisetup = {}
+  //   }
+  // }
+  // validateupi(): boolean {
+
+  //   let isValid = true;
+
+  //   if (this.bankmasterform.controls['pUpiid'].value == "") {
+  //     this.upigridvalidation = true;
+  //     this.bankmastervalidations['pUpiid'] = "Upi ID Required"
+  //     isValid = false;
+  //   }
+
+  //   if (this.bankmasterform.controls['pUpiname'].value == "") {
+  //     this.upigridvalidation = true;
+  //     this.bankmastervalidations['pUpiname'] = "Upi Link with";
+  //     isValid = false;
+  //   }
+  //   let upiiddata = this.gridData.filter((data: any) => {
+  //     return data.pUpiid == this.bankmasterform.controls['pUpiid'].value;
+  //   });
+
+  //   if (upiiddata != null) {
+  //     if (upiiddata.length > 0) {
+  //       isValid = false;
+  //     }
+  //   }
+
+  //   let upinamedata = this.gridData.filter((c: any) => c.pUpiname == this.bankmasterform.controls['pUpiname'].value)
+
+  //   //let upinamedata = this.gridData.filter(data1 => {
+  //   //  return data1.pUpiname == this.upisetup['pUpiname'];
+  //   //});
+
+  //   if (upinamedata != null) {
+  //     if (upinamedata.length > 0) {
+  //       isValid = false;
+  //     }
+  //   }
+
+  //   this.upigridvalidation = false;
+
+
+  //   return isValid
+  // }
+
+
   addtogrid() {
-    this.submitted = true
-    debugger;
-    if (this.validateupi()) {
-      this.duplicateupi = this.bankmasterform.controls['pUpiid'].value
-      this.upisetup['pUpiid'] = this.bankmasterform.controls['pUpiid'].value
-      this.upisetup['pUpiname'] = this.bankmasterform.controls['pUpiname'].value
-      this.upisetup['pCreatedby'] = this.bankmasterform.controls['pCreatedby'].value
-      this.upisetup['pStatusname'] = this.bankmasterform.controls['pStatusname'].value
-      this.upisetup['ptypeofoperation'] = "CREATE";
-      this.gridData.push(this.upisetup);
-      console.log(this.gridData);
+  this.submitted = true;
+  debugger;
 
-      this.bankmasterform.controls['pUpiid'].setValue("");
-      this.bankmasterform.controls['pUpiname'].setValue("");
-      this.submitted = false;
-      this.bankmastervalidations['pUpiname'] = "";
-      this.bankmastervalidations['pUpiid'] = ""
-      //this.getapi();
+  if (this.validateupi()) {
 
-      this.upisetup = {}
-    }
-  }
-  validateupi(): boolean {
+    const newUpi: any = {
+      pUpiid: this.bankmasterform.value.pUpiid,
+      pUpiname: this.bankmasterform.value.upiname,
+      pCreatedby: this.bankmasterform.value.pCreatedby,
+      // pStatusname: this.bankmasterform.value.pStatusname,
+      pStatusname: this.bankmasterform.value.pIsupiapplicable,
+      ptypeofoperation: "CREATE"
+    };
 
-    let isValid = true;
+    this.gridData.push(newUpi);
+    console.log("Grid after add:", this.gridData);
 
-    if (this.bankmasterform.controls['pUpiid'].value == "") {
-      this.upigridvalidation = true;
-      this.bankmastervalidations['pUpiid'] = "Upi ID Required"
-      isValid = false;
-    }
-
-    if (this.bankmasterform.controls['pUpiname'].value == "") {
-      this.upigridvalidation = true;
-      this.bankmastervalidations['pUpiname'] = "Upi Link with";
-      isValid = false;
-    }
-    let upiiddata = this.gridData.filter((data: any) => {
-      return data.pUpiid == this.bankmasterform.controls['pUpiid'].value;
+    // clear form controls
+    this.bankmasterform.patchValue({
+      pUpiid: "",
+      pUpiname: ""
     });
 
-    if (upiiddata != null) {
-      if (upiiddata.length > 0) {
-        isValid = false;
-      }
-    }
+    this.submitted = false;
+    this.bankmastervalidations.pUpiid = "";
+    this.bankmastervalidations.pUpiname = "";
 
-    let upinamedata = this.gridData.filter((c: any) => c.pUpiname == this.bankmasterform.controls['pUpiname'].value)
-
-    //let upinamedata = this.gridData.filter(data1 => {
-    //  return data1.pUpiname == this.upisetup['pUpiname'];
-    //});
-
-    if (upinamedata != null) {
-      if (upinamedata.length > 0) {
-        isValid = false;
-      }
-    }
-
-    this.upigridvalidation = false;
-
-
-    return isValid
   }
+}
+
+  validateupi(): boolean {
+  let isValid = true;
+
+  const upiid = this.bankmasterform.value.pUpiid;
+  const upiname = this.bankmasterform.value.upiname;
+
+  // required fields
+  if (!upiid) {
+    this.upigridvalidation = true;
+    this.bankmastervalidations.pUpiid = "UPI ID Required";
+    isValid = false;
+  }
+
+  if (!upiname) {
+    this.upigridvalidation = true;
+    this.bankmastervalidations.pUpiname = "UPI Link with Required";
+    isValid = false;
+  }
+
+  // check duplicates
+  const duplicateId = this.gridData.find((d: any) => d.pUpiid === upiid);
+  if (duplicateId) {
+    this.bankmastervalidations.pUpiid = "UPI ID already exists!";
+    isValid = false;
+  }
+
+  const duplicateName = this.gridData.find((d: any) => d.pUpiname === upiname);
+  if (duplicateName) {
+    this.bankmastervalidations.pUpiname = "UPI Link already exists!";
+    isValid = false;
+  }
+
+  this.upigridvalidation = !isValid;
+
+  return isValid;
+}
+
 
   getapi() {
     return this.upisetup

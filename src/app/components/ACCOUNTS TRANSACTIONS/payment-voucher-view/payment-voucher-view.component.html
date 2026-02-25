@@ -4,7 +4,7 @@
       <div class="section-content">
         <div class="row">
           <div class="col-md-12 col-xl-12">
-          
+            <!-- <p class="bc-2">Payment Voucher</p> -->
           </div>
 
           <div class="col-md-6 col-xl-4">
@@ -219,16 +219,16 @@
                   </div> -->
 
                   <div class="col-md-12 col-xl-12 mb-2">
-  <div id="sbi-bal">
-    <span class="badge bg-info p-1 fw-light">
-      Bank Book - {{ bankbookBalance }}
-    </span>
+                    <div id="sbi-bal">
+                      <span class="badge bg-info p-1 fw-light">
+                        Bank Book - {{ bankbookBalance }}
+                      </span>
 
-    <span class="badge bg-warning p-1 fw-light">
-      Pass Book - {{ bankpassbookBalance }}
-    </span>
-  </div>
-</div>
+                      <span class="badge bg-warning p-1 fw-light">
+                        Pass Book - {{ bankpassbookBalance }}
+                      </span>
+                    </div>
+                  </div>
 
                 </div>
               </div>
@@ -328,8 +328,7 @@
                 <div class="material-switch d-flex align-items-center">
                   <span class="mr-2 font-weight-bold">GST</span>
 
-                  <input id="gst-switch" type="checkbox" formControlName="pisgstapplicable"
-                    (change)="showgst = paymentVoucherForm.get('pisgstapplicable')?.value">
+                  <input id="gst-switch" type="checkbox" formControlName="pisgstapplicable" (click)="gstChange($event)">
                   <label for="gst-switch" class="badge-success" style="margin-left:8px;"></label>
                 </div>
               </fieldset>
@@ -361,13 +360,34 @@
                     <div class="row">
                       <div class="form-group col-md-4">
                         <label class="required-field">State</label>
-                        <ng-select class="form-control" id="pState" title="State" formControlName="pStateId"
-                          (change)="state_change($event)">
+                        <!-- <ng-select class="form-control" id="pState" title="State" formControlName="pStateId"
+                          (change)="state_change($event)" [items]="statelist" [bind]>
                           <ng-option value="">Select</ng-option>
                           <ng-option *ngFor="let state of statelist" [value]="state.pStateId">
                             {{state.pState}}
                           </ng-option>
+                        </ng-select> -->
+
+
+                        <ng-select class="form-control" id="pState" title="State" formControlName="pStateId"
+                          [items]="statelist" bindLabel="pState" bindValue="pStateId" placeholder="Select"
+                          (change)="state_change($event)">
                         </ng-select>
+                      </div>
+
+                                 <div class="form-group col-md-4" *ngIf="showgstno">
+                                                <label>GST No.</label>
+                                                <input type="text" class="form-control col-md-12" maxlength="15"
+                                                    appAlphanumeric appUppercase id="pgstno" title="GST No."
+                                                    formControlName="pgstno" name="pgstno"
+                                                    
+                                                    (blur)="gsno_change()" />
+
+                                                <!-- <app-validation-message [messgae]="formValidationMessages?.pgstno">
+                                                </app-validation-message>
+                                                [ngClass]="{ 'is-invalid': formValidationMessages.pgstno }" -->
+
+                                            </div>
 
                         <div class="form-group col-md-4">
                           <label class="required-field">GST(%)</label>
@@ -384,7 +404,7 @@
                                                     [messgae]="formValidationMessages?.pgstpercentage">
                                                 </app-validation-message>
                                                  [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage } -->
-                      </div>
+                     
                     </div>
 
                     <div class="row">
@@ -406,17 +426,11 @@
                           }}%)
 
                         </label>
-
-
-
                         <label class="col-md-12"> {{ currencySymbol }}
                           {{
                           paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstamount')?.value ?? 0
                           | currency: currencyCode:'symbol':'1.2-2'
                           }}
-
-
-
 
 
                         </label>
@@ -528,13 +542,11 @@
                 <div class="row">
                   <div class="col-md-4 col-xl-4">
                     <label class="required-field">Section</label>
-                    <ng-select class="form-control" id="pTdsSection" title="Section" formControlName="pTdsSection"
+                    <ng-select class="form-control" formControlName="pTdsSection" [items]="tdssectionlist"
+                      bindLabel="pTdsSection" bindValue="pTdsSection" placeholder="Select Section"
                       (change)="tdsSection_Change($event)">
-                      <ng-option value="">Select</ng-option>
-                      <ng-option *ngFor="let tds of tdssectionlist" [value]="tds.pTdsSection">
-                        {{tds.pTdsSection}}
-                      </ng-option>
                     </ng-select>
+
                     <!--trackBy: trackByFn
                      <app-validation-message [messgae]="formValidationMessages?.pTdsSection">
                                         </app-validation-message> 
@@ -542,13 +554,12 @@
                   </div>
                   <div class="col-md-4 col-xl-4">
                     <label class="required-field">Percentage</label>
-                    <ng-select class="form-control" id="pTdsPercentage" title="Section" formControlName="pTdsPercentage"
+
+                    <ng-select class="form-control" formControlName="pTdsPercentage" [items]="tdspercentagelist"
+                      bindLabel="pTdsPercentage" bindValue="pTdsPercentage" placeholder="Select Percentage"
                       (change)="tds_Change($event)">
-                      <ng-option value="">Select</ng-option>
-                      <ng-option *ngFor="let tds of tdspercentagelist" [value]="tds.pTdsPercentage">
-                        {{tds.pTdsPercentage}}
-                      </ng-option>
                     </ng-select>
+
                     <!-- 
                     trackBy: trackByFn<app-validation-message [messgae]="formValidationMessages?.pTdsPercentage">
                                         </app-validation-message>
@@ -587,13 +598,13 @@
         <div class=" d-flex justify-content-end mt-4">
           <!-- [debounceTime]="1000" -->
           <a data-toggle="tab" class="btn btn-primary mr-4 px-3 border-0" role="tab" aria-controls="hot"
-            aria-selected="false" appButtonDoubleClick (debounceClick)="clearPaymentDetails()"><img
+            aria-selected="false" appButtonDoubleClick (click)="clearPaymentDetails()"><img
               src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3">Clear</a>
 
 
 
           <!-- [debounceTime]="1000" -->
-          <button appButtonDoubleClick (debounceClick)="addPaymentDetails()" class="btn btn-b-icon px-3 border-0"
+          <button appButtonDoubleClick (click)="addPaymentDetails()" class="btn btn-b-icon px-3 border-0"
             [disabled]="disableaddbutton">
             <i class="fa" [ngClass]="{'fa-spin fa-spinner': disableaddbutton, 'fa-plus': !disableaddbutton}"></i>
             {{addbutton}}

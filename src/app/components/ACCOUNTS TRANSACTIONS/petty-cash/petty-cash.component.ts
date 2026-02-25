@@ -1012,7 +1012,14 @@ debugger
 
 
   getPartyDetailsbyid(ppartyid: any, pStateId: any): void {
-    this._AccountingTransactionsService.getPartyDetailsbyid(ppartyid, pStateId).subscribe(
+    this._AccountingTransactionsService.getPartyDetailsbyid(
+      ppartyid, 
+         this._commonService.getbranchname(),
+       this._commonService.getBranchCode(),
+       this._commonService.getCompanyCode(),
+       this._commonService.getschemaname(),
+       'texas'
+    ).subscribe(
         (json: any) => {
           if (!json) return;
           this.tdslist = json.lstTdsSectionDetails || [];

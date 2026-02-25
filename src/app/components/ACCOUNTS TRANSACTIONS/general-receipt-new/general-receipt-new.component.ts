@@ -248,7 +248,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         });
         let date = new Date();
         this.GeneralReceiptForm['controls']['preceiptdate'].setValue(date);
-        this.Paymenttype('Cash'); 
+        this.Paymenttype('Cash');
         this.getLoadData();
         //this.getLoadData()
         this.isgstapplicableChange();
@@ -328,7 +328,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         }
 
     }
-    
+
     getgstPercentage(gstpercentage: any) {
         let data = this.gstlist.filter(function (tds: { pgstpercentage: any; }) {
             return tds.pgstpercentage == gstpercentage;
@@ -390,104 +390,45 @@ export class GeneralReceiptNewComponent implements OnInit {
         trans_date = this._commonService.getFormatDateNormal(trans_date);
         let amt = 0;
 
-        this._Accountservice
-            .GetCashRestrictAmountpercontact(
-                'GENERAL RECEIPT',
-                this._CommonService.getschemaname(),
-                ppartyid,
-                trans_date
-            )
-            .subscribe(
-                (json: any) => {
-
-                    amt = Number(json) || 0;
-                    this.availableAmount =
-                        (Number(this.cashRestrictAmount) || 0) - amt;
-
-                },
-                (error) => {
-                    this._commonService.showErrorMessage(error);
-                }
-            );
-
-
+     this._Accountservice.GetCashRestrictAmountpercontact1(
+  'GENERAL RECEIPT',
+  'KGMS',
+  this._CommonService.getbranchname(),    
+  this._CommonService.getschemaname(),     
+  ppartyid,                                
+  trans_date,                              
+  this._CommonService.getCompanyCode(),    
+  
+  this._CommonService.getBranchCode()).subscribe((res: any) => {console.log(res);
+  const amt = Number(res) || 0;this.availableAmount =(Number(this.cashRestrictAmount) || 0) - amt;},
+  (error: any) => {console.error(error);this._commonService.showErrorMessage(error);
+  }
+);
         if (ppartyid && ppartyid !== '') {
-
             const ledgername = $event.ppartyname;
-            const pStateId = $event.pStateId;   // 👈 Important
-
-            // ✅ Call API with both parameters
-            this.getPartyDetailsbyid(ppartyid, pStateId);
-
-            this.GeneralReceiptForm.controls['ppartyname']
-                .setValue(ledgername);
-
-            this.GeneralReceiptForm.controls['pstatename']
-                .setValue($event.pstatename);
-
-            // ✅ Get selected party safely
-            const selectedParty = this.partylist.find(
-                (x: any) => x.ppartyid == ppartyid
-            );
-
+            const pStateId = $event.pStateId; this.getPartyDetailsbyid(ppartyid, pStateId);
+            this.GeneralReceiptForm.controls['ppartyname'].setValue(ledgername);
+            this.GeneralReceiptForm.controls['pstatename'].setValue($event.pstatename);
+            const selectedParty = this.partylist.find((x: any) => x.ppartyid == ppartyid);
             if (selectedParty) {
-
-                this.GeneralReceiptForm.controls['ppartyreferenceid']
-                    .setValue(selectedParty.ppartyreferenceid);
-
-                this.GeneralReceiptForm.controls['ppartyreftype']
-                    .setValue(selectedParty.ppartyreftype);
-
-                this.GeneralReceiptForm.controls['ppartypannumber']
-                    .setValue(selectedParty.ppartypannumber);
+                this.GeneralReceiptForm.controls['ppartyreferenceid'].setValue(selectedParty.ppartyreferenceid);
+                this.GeneralReceiptForm.controls['ppartyreftype'].setValue(selectedParty.ppartyreftype);
+                this.GeneralReceiptForm.controls['ppartypannumber'].setValue(selectedParty.ppartypannumber);
             }
-
-        } else {
-
-            this.setBalances('PARTY', 0);
-
-            this.GeneralReceiptForm.controls['ppartyname']
-                .setValue('');
+        }
+        else {
+            this.setBalances('PARTY', 0); this.GeneralReceiptForm.controls['ppartyname'].setValue('');
         }
 
     }
     getPartyDetailsbyid(ppartyid: any, pStateId: any) {
-
-        this._Accountservice
-            .getPartyDetailsbyid(ppartyid, pStateId)
-            .subscribe(
+        this._Accountservice.getPartyDetailsbyid(ppartyid,this._commonService.getbranchname(),
+        this._commonService.getBranchCode(),this._commonService.getCompanyCode(),this._commonService.getschemaname(),'taxes').subscribe(
                 (json: any) => {
-
                     if (json != null) {
-
-                        // ✅ Clear old data
                         this.tdssectionlist = [];
-
-                        this.tdslist =
-                            json.lstTdsSectionDetails || [];
-
-                        // Remove duplicate TDS sections
-                        const uniqueSections =
-                            this.tdslist
-                                .map((item: any) => item.pTdsSection)
-                                .filter((value: any, index: number, self: any[]) =>
-                                    self.indexOf(value) === index
-                                );
-
-                        uniqueSections.forEach((section: any) => {
-                            this.tdssectionlist.push({
-                                pTdsSection: section
-                            });
-                        });
-
-                        this.statelist = json.statelist || [];
-
-                        this.claculategsttdsamounts();
-                        this.claculateTDSamount();
-
                         this.setBalances('PARTY', json.accountbalance);
                     }
-
                 },
                 (error) => {
                     this._commonService.showErrorMessage(error);
@@ -612,7 +553,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         }
         //this.GeneralReceiptForm.controls['pmodofreceipt'].updateValueAndValidity();
     }
-    
+
     public Banktype(type: string) {
         debugger;
         this.validation(type);
@@ -627,7 +568,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.GeneralReceiptForm.controls['pdepositbankid'].setValue(null);
 
         this.GeneralReceiptForm.controls['ptypeofpayment'].setValue(null);
-       // this.GeneralReceiptForm.controls['ptypeofpayment'].setValue('');
+        // this.GeneralReceiptForm.controls['ptypeofpayment'].setValue('');
         this.GeneralReceiptForm.controls['pbranchname'].setValue('');
         this.GeneralReceiptForm.controls['pCardNumber'].setValue('');
         this.GeneralReceiptForm.controls['pAccountnumber'].setValue('');
@@ -708,13 +649,7 @@ export class GeneralReceiptNewComponent implements OnInit {
                 DepositBankIDControl.updateValueAndValidity();
             }
         }
-
-        // if (this.GeneralReceiptForm.controls.ptypeofpayment.value == 'UPI') {
-        //   this.showupi = true;
-        // }
-        // else {
-        //   this.showupi = false;
-        // }
+       
         this.bankbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
         this.bankpassbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
 
@@ -722,7 +657,7 @@ export class GeneralReceiptNewComponent implements OnInit {
 
     validation(type: string) {
 
-debugger;
+        debugger;
         this.formValidationMessages = {};
         let ChequeControl = this.GeneralReceiptForm.controls['pChequenumber']
         let ChequeDateControl = this.GeneralReceiptForm.controls['pchequedate'];
@@ -947,7 +882,14 @@ debugger;
             );
 
             this._SubscriberJVService
-                .GetdebitchitCheckbalance(accounthedadid, '', subcategoryid)
+                .GetdebitchitCheckbalance(
+
+                    this._commonService.getbranchname(),
+                    accounthedadid, '', subcategoryid,
+                    this._commonService.getschemaname(), this._commonService.getCompanyCode(), this._commonService.getBranchCode()
+
+
+                )
                 .subscribe((result: any) => {
 
                     //   if (
@@ -2347,4 +2289,8 @@ debugger;
             return false;
         }
     }
+}
+
+function subscribe(arg0: (json: any) => void, arg1: (error: any) => void) {
+    throw new Error('Function not implemented.');
 }

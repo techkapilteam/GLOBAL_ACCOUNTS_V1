@@ -47,11 +47,12 @@ export class PendingTransferComponent implements OnInit {
   ];
 
   userBranchType = sessionStorage.getItem('userBranchType')??'';
-  loginBranchschema = sessionStorage.getItem('loginBranchSchemaname')??'';
+  // loginBranchschema = sessionStorage.getItem('loginBranchSchemaname')??'';
+  loginBranchschema = 'accounts';
   loginBranchname = sessionStorage.getItem('loginBranchName')??'';
 
   branchname: any;
-  caoschema: any;
+  caoschema: any='accounts';
   formname = '';
   branchkgms = false;
   branchcao = true;
@@ -71,6 +72,7 @@ export class PendingTransferComponent implements OnInit {
   // }];
 
   ngOnInit(): void {
+    debugger;
    this.buildForm();
     this.setPageModel();
 
@@ -81,10 +83,10 @@ export class PendingTransferComponent implements OnInit {
       const kgms = this.pendingtransferform.get('kgmsbranchschema');
       kgms?.setValidators(Validators.required);
       kgms?.updateValueAndValidity();
-
-      this._ChitTransactionsService
-        .getBranchesByCAO(this.loginBranchschema, this.loginBranchschema)
-        .subscribe((res: any) => this.CAOBranchList = res);
+      this._ChitTransactionsService.getCAOBranchlist('accounts','global','KAPILCHITS','KLC01')
+      .subscribe((res: any[]) => this.CAOBranchList = res || []);
+        // .getBranchesByCAO(this.loginBranchschema, this.loginBranchschema)
+        // .subscribe((res: any) => this.CAOBranchList = res);
 
     } else if (this.userBranchType === 'KGMS') {
       this.branchkgms = true;
@@ -147,7 +149,8 @@ export class PendingTransferComponent implements OnInit {
     this.gridData = [];
 
     this._ChitTransactionsService
-      .getCAOpendingtrasferlist(this.caoschema, this.loginBranchschema, this.typeofpayment)
+      // .getCAOpendingtrasferlist(this.caoschema, this.loginBranchschema, this.typeofpayment)
+      .getCAOpendingtrasferlist(this.caoschema, this.loginBranchschema, this.typeofpayment,'KAPILCHITS','KLC01','global')
       .subscribe((res:any) => {
         this.gridData = res || [];
         this.list = [...this.gridData];
