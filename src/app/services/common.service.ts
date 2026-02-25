@@ -22,9 +22,53 @@ import { environment } from '../envir/environment';
   providedIn: 'root',
 })
 export class CommonService {
-  addWrappedText(arg0: { text: any[]; textWidth: number; doc: jsPDF; fontSize: number; fontType: string; lineSpacing: number; xPosition: number; initialYPosition: number; pageWrapInitialYPosition: number; }) {
-    throw new Error('Method not implemented.');
-  }
+  addWrappedText({
+  text,
+  textWidth,
+  doc,
+  fontSize = 10,
+  fontType = 'normal',
+  lineSpacing = 7,
+  xPosition = 10,
+  initialYPosition = 10,
+  pageWrapInitialYPosition = 10
+}: any) {
+
+  if (!doc || !text) return;
+
+  doc.setFont('helvetica', fontType);
+  doc.setFontSize(fontSize);
+
+  const textLines =
+    doc.splitTextToSize(text, textWidth);
+
+  const pageHeight =
+    doc.internal.pageSize.getHeight();
+
+  let cursorY = initialYPosition;
+
+  textLines.forEach((lineText: string) => {
+
+    if (cursorY > pageHeight - 10) {
+
+      doc.addPage();
+      cursorY = pageWrapInitialYPosition;
+    }
+
+    doc.text(
+      lineText,
+      xPosition,
+      cursorY,
+      {
+        align: 'justify'
+      }
+    );
+
+    cursorY += lineSpacing;
+
+  });
+
+}
 
 
 
@@ -1485,6 +1529,7 @@ export class CommonService {
       return null;
     }
   }
+
   getCreatedBy(): string {
     const userId = sessionStorage.getItem('LoginUserid');
     return userId ? JSON.parse(userId).toString() : '';
@@ -2919,127 +2964,369 @@ export class CommonService {
   //   return final;
   // }
   _groupwiseSummaryExportDataTB(
-  griddata: any[],
-  groupdcol: string,
-  debitamount1: string,
-  creditamount1: string,
-  debitamount2: string,
-  creditamount2: string,
-  debittotal: string,
-  credittotal: string,
-  sumstring: string,
-  isgroupedcolDate: boolean
-): any[] {
-  const groupMap = new Map<string, any[]>();
+    griddata: any[],
+    groupdcol: string,
+    debitamount1: string,
+    creditamount1: string,
+    debitamount2: string,
+    creditamount2: string,
+    debittotal: string,
+    credittotal: string,
+    sumstring: string,
+    isgroupedcolDate: boolean
+  ): any[] {
+    const groupMap = new Map<string, any[]>();
 
-  for (const row of griddata) {
-    const groupKey: string = isgroupedcolDate
-      ? this.getFormatDateGlobal(row[groupdcol])
-      : String(row[groupdcol] ?? '');
+    for (const row of griddata) {
+      const groupKey: string = isgroupedcolDate
+        ? this.getFormatDateGlobal(row[groupdcol])
+        : String(row[groupdcol] ?? '');
 
-    if (!groupMap.has(groupKey)) {
-      groupMap.set(groupKey, []);
-    }
-    groupMap.get(groupKey)!.push(row);
-  }
-
-  const final: any[] = [];
-
-  for (const [groupKey, rows] of groupMap.entries()) {
-    final.push({
-      isGroupHeader: true,
-      groupLabel: groupKey,
-      group: {
-        content: groupKey,
-        colSpan: 7,
-        styles: {
-          halign: 'left',
-          fillColor: '#e6f7ff',
-          fontStyle: 'bold',
-          fontSize: 9,
-        },
+      if (!groupMap.has(groupKey)) {
+        groupMap.set(groupKey, []);
       }
-    });
-
-    let d1Sum = 0, c1Sum = 0, d2Sum = 0, c2Sum = 0, dtSum = 0, ctSum = 0;
-
-    for (const row of rows) {
-      d1Sum += parseFloat(row[debitamount1])  || 0;
-      c1Sum += parseFloat(row[creditamount1]) || 0;
-      d2Sum += parseFloat(row[debitamount2])  || 0;
-      c2Sum += parseFloat(row[creditamount2]) || 0;
-      dtSum += parseFloat(row[debittotal])    || 0;
-      ctSum += parseFloat(row[credittotal])   || 0;
-      final.push(row);
+      groupMap.get(groupKey)!.push(row);
     }
 
-    final.push({
-      isSubtotal: true,
-      accountname: `${groupKey} Total`,
-      [debitamount1]:  d1Sum,
-      [creditamount1]: c1Sum,
-      [debitamount2]:  d2Sum,
-      [creditamount2]: c2Sum,
-      [debittotal]:    dtSum,
-      [credittotal]:   ctSum,
-    });
+    const final: any[] = [];
+
+    for (const [groupKey, rows] of groupMap.entries()) {
+      final.push({
+        isGroupHeader: true,
+        groupLabel: groupKey,
+        group: {
+          content: groupKey,
+          colSpan: 7,
+          styles: {
+            halign: 'left',
+            fillColor: '#e6f7ff',
+            fontStyle: 'bold',
+            fontSize: 9,
+          },
+        }
+      });
+
+      let d1Sum = 0, c1Sum = 0, d2Sum = 0, c2Sum = 0, dtSum = 0, ctSum = 0;
+
+      for (const row of rows) {
+        d1Sum += parseFloat(row[debitamount1]) || 0;
+        c1Sum += parseFloat(row[creditamount1]) || 0;
+        d2Sum += parseFloat(row[debitamount2]) || 0;
+        c2Sum += parseFloat(row[creditamount2]) || 0;
+        dtSum += parseFloat(row[debittotal]) || 0;
+        ctSum += parseFloat(row[credittotal]) || 0;
+        final.push(row);
+      }
+
+      final.push({
+        isSubtotal: true,
+        accountname: `${groupKey} Total`,
+        [debitamount1]: d1Sum,
+        [creditamount1]: c1Sum,
+        [debitamount2]: d2Sum,
+        [creditamount2]: c2Sum,
+        [debittotal]: dtSum,
+        [credittotal]: ctSum,
+      });
+    }
+
+    return final;
   }
 
-  return final;
-}
+
   
+  // _getGroupingGridExportData<T extends Record<string, any>>(
+  //   gridData: T[],
+  //   groupedCol: keyof T,
+  //   isGroupedColDate: boolean
+  // ): T[] {
+  //   debugger;
+
+  //   if (!gridData?.length) return [];
+
+  //   const groupedMap = new Map<string, T[]>();
+
+  //   // 🔹 Grouping
+  //   for (const item of gridData) {
+  //     const rawValue = item[groupedCol];
+
+  //     const groupKey = isGroupedColDate
+  //       ? this.getFormatDateGlobal(rawValue)
+  //       : String(rawValue);
+
+  //     if (!groupedMap.has(groupKey)) {
+  //       groupedMap.set(groupKey, []);
+  //     }
+
+  //     groupedMap.get(groupKey)!.push({ ...item }); // clone to avoid mutation
+  //   }
+
+  //   const finalResult: T[] = [];
+
+  //   // 🔹 Build final array with group headers
+  //   groupedMap.forEach((items, key) => {
+  //     items.forEach((item, index) => {
+  //       if (index === 0) {
+  //         const groupHeader = isGroupedColDate
+  //           ? this.getFormatDateGlobal(item[groupedCol])
+  //           : String(item[groupedCol]);
+
+  //         (item as any).group = {
+  //           content: groupHeader,
+  //           colSpan: 17,
+  //           styles: {
+  //             halign: 'left',
+  //             fillColor: '#e6f7ff'
+  //           }
+  //         };
+  //       }
+
+  //       finalResult.push(item);
+  //     });
+  //   });
+
+  //   return finalResult;
+  // }
   _getGroupingGridExportData<T extends Record<string, any>>(
-    gridData: T[],
-    groupedCol: keyof T,
-    isGroupedColDate: boolean
-  ): T[] {
-    debugger;
+  gridData: T[],
+  groupedCol: keyof T,
+  isGroupedColDate: boolean
+): T[] {
 
-    if (!gridData?.length) return [];
+  if (!gridData?.length) return [];
 
-    const groupedMap = new Map<string, T[]>();
+  const groupedMap = new Map<string, T[]>();
 
-    // 🔹 Grouping
-    for (const item of gridData) {
-      const rawValue = item[groupedCol];
+  for (const item of gridData) {
 
-      const groupKey = isGroupedColDate
-        ? this.getFormatDateGlobal(rawValue)
-        : String(rawValue);
+    const rawValue = item[groupedCol];
 
-      if (!groupedMap.has(groupKey)) {
-        groupedMap.set(groupKey, []);
-      }
+    const groupKey = isGroupedColDate
+      ? this.getFormatDateGlobal(rawValue)
+      : String(rawValue);
 
-      groupedMap.get(groupKey)!.push({ ...item }); // clone to avoid mutation
+    if (!groupedMap.has(groupKey)) {
+      groupedMap.set(groupKey, []);
     }
 
-    const finalResult: T[] = [];
+    groupedMap.get(groupKey)!.push({ ...item });
+  }
 
-    // 🔹 Build final array with group headers
-    groupedMap.forEach((items, key) => {
-      items.forEach((item, index) => {
-        if (index === 0) {
-          const groupHeader = isGroupedColDate
-            ? this.getFormatDateGlobal(item[groupedCol])
-            : String(item[groupedCol]);
+  const finalResult: T[] = [];
 
-          (item as any).group = {
-            content: groupHeader,
-            colSpan: 17,
-            styles: {
-              halign: 'left',
-              fillColor: '#e6f7ff'
-            }
-          };
+  groupedMap.forEach((items) => {
+
+    items.forEach((item, index) => {
+
+      if (index === 0) {
+
+        const groupHeader = isGroupedColDate
+          ? this.getFormatDateGlobal(item[groupedCol])
+          : String(item[groupedCol]);
+
+        (item as any).group = {
+          content: groupHeader,
+          colSpan: 8,
+          styles: {
+            halign: 'left',
+            fillColor: '#e6f7ff'
+          }
+        };
+      }
+
+      finalResult.push(item);
+    });
+  });
+
+  return finalResult;
+}
+  _downloadDayBookReportsPdf(
+  reportName: string,
+  gridData: any[],
+  gridheaders: any[],
+  colWidthHeight: any,
+  pagetype: any,
+  betweenorason: string,
+  fromdate: string,
+  todate: string,
+  Secondreportname: string,
+  secondgridrows: any[],
+  secondgridheaders: any[],
+  SecondcolWidthHeight: any,
+  receiptamt: any,
+  paidamt: any,
+  printorpdf: string
+): void {
+
+  const address = this.getcompanyaddress();
+  const currencyformat = this.currencysymbol;
+  const Companyreportdetails = this._getCompanyDetails();
+  const doc = new jsPDF(pagetype);
+  const totalPagesExp = '{total_pages_count_string}';
+  const today = this.pdfProperties('Date');
+  const kapil_logo = this.getKapilGroupLogo();
+
+  const lMargin = 15;
+  const rMargin = 15;
+  let pdfInMM: number;
+
+  autoTable(doc, {
+    columns: gridheaders,
+    body: gridData,
+    theme: 'grid',
+     rowPageBreak: 'avoid',
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: this.pdfProperties('Header Alignment')as 'left' | 'center' | 'right',
+      fontSize: Number(this.pdfProperties('Header Fontsize'))
+    },
+    styles: {
+      cellPadding: 1,
+      fontSize: 6,
+      cellWidth: 'wrap',
+     
+      overflow: 'linebreak'
+    },
+    columnStyles: colWidthHeight,
+    startY: 62,
+    showHead: 'everyPage',
+    showFoot: 'lastPage',
+    didDrawPage: (data: any) => {
+
+      const pageSize = doc.internal.pageSize;
+      const pageWidth = pageSize.getWidth();
+      const pageHeight = pageSize.getHeight();
+
+      if (doc.getNumberOfPages() === 1) {
+
+        doc.setFontSize(15);
+
+        if (pagetype === 'a4') {
+
+          doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
+          doc.text(Companyreportdetails?.pCompanyName??'', 60, 20);
+          doc.setFontSize(8);
+          doc.text(address, 40, 27);
+
+          if (Companyreportdetails?.pCinNo??'') {
+            doc.text('CIN : ' + Companyreportdetails?.pCinNo, 85, 32);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 42);
+
+          doc.setFontSize(10);
+          doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 50);
+
+          if (betweenorason === 'Between') {
+            doc.text('Between : ' + fromdate + ' And ' + todate, 15, 50);
+          } else if (betweenorason === 'As On' && fromdate) {
+            doc.text('As on : ' + fromdate, 15, 50);
+          }
+
+          pdfInMM = 233;
+          doc.line(10, 53, pdfInMM - lMargin - rMargin, 53);
         }
 
-        finalResult.push(item);
-      });
-    });
+        if (pagetype === 'landscape') {
 
-    return finalResult;
+          doc.addImage(kapil_logo, 'JPEG', 20, 5,20,20);
+          doc.text(Companyreportdetails?.pCompanyName??'', 110, 10);
+          doc.setFontSize(10);
+          doc.text(address.substring(0, 150), 150, 15, { align: 'center' });
+
+          if (Companyreportdetails?.pCinNo??'') {
+            doc.text('CIN : ' + Companyreportdetails?.pCinNo, 115, 20);
+          }
+
+          doc.setFontSize(14);
+          doc.text(reportName, 130, 30);
+          doc.text('Form XV', 132, 40);
+
+          doc.setFontSize(10);
+          doc.text('Branch : ' + Companyreportdetails?.pBranchname, 235, 50);
+
+          if (betweenorason === 'Between') {
+            doc.text('Between : ' + fromdate + ' And ' + todate, 15, 50);
+          } else if (betweenorason === 'Date' && fromdate) {
+            doc.text('As on : ' + fromdate, 15, 50);
+          }
+
+          pdfInMM = 315;
+          doc.line(10, 53, pdfInMM - lMargin - rMargin, 53);
+
+          doc.text('Receipts', 90, 60);
+          doc.text('Payments', 190, 60);
+        }
+      }
+
+      let page = 'Page ' + doc.getNumberOfPages();
+      if (typeof doc.putTotalPages === 'function') {
+        page += ' of ' + totalPagesExp;
+      }
+
+      doc.line(5, pageHeight - 10, pdfInMM - lMargin - rMargin, pageHeight - 10);
+      doc.setFontSize(10);
+      doc.text(page, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+    }
+  });
+
+  autoTable(doc, {
+    columns: secondgridheaders,
+    body: secondgridrows,
+    theme: 'striped',
+    rowPageBreak: 'avoid',
+    headStyles: {
+      fillColor: this.pdfProperties('Header Color'),
+      halign: this.pdfProperties('Header Alignment')as 'left' | 'center' | 'right',
+      fontSize: Number(this.pdfProperties('Header Fontsize'))
+    },
+    styles: {
+      cellPadding: 1,
+      fontSize: Number(this.pdfProperties('Cell Fontsize')),
+      cellWidth: 'wrap',
+      
+      overflow: 'linebreak'
+    },
+    columnStyles: {
+      0: { cellWidth: 'auto' },
+      1: { cellWidth: 35, halign: 'right' },
+      2: { cellWidth: 35, halign: 'right' },
+      3: { cellWidth: 35, halign: 'right' },
+      4: { cellWidth: 35, halign: 'right' }
+    },
+    startY: (doc as any).lastAutoTable.finalY + 20,
+    showHead: 'everyPage',
+    showFoot: 'lastPage',
+    didDrawPage: (data: any) => {
+
+      const pageSize = doc.internal.pageSize;
+      const pageWidth = pageSize.getWidth();
+      const pageHeight = pageSize.getHeight();
+
+      let page = 'Page ' + doc.getNumberOfPages();
+      if (typeof doc.putTotalPages === 'function') {
+        page += ' of ' + totalPagesExp;
+      }
+
+      doc.setFontSize(10);
+      doc.text('Printed on : ' + today, data.settings.margin.left, pageHeight - 5);
+      doc.text(page, pageWidth - data.settings.margin.right - 20, pageHeight - 5);
+    }
+  });
+
+  if (typeof doc.putTotalPages === 'function') {
+    doc.putTotalPages(totalPagesExp);
   }
+
+  if (printorpdf === 'Pdf') {
+    doc.save(reportName + '.pdf');
+  }
+
+  if (printorpdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
   _downloadReportsPdfAccountSummaryason(
     reportName: string,
     gridData: any[],
@@ -3415,6 +3702,403 @@ export class CommonService {
       this.setiFrameForPrint(doc);
     }
   }
+  _setCompanyDetails() {
+
+    this.comapnydetails = JSON.parse(sessionStorage.getItem("companydetails")??'');
+  }
+  _downloadGridPdf1(
+  reportName: any,
+  gridData: any[],
+  gridheaders: any,
+  colWidthHeight: any,
+  pagetype: any,
+  printorpdf: string,
+  Narration: any,
+  JVNumber: any,
+  Jvdate: any,
+  printeddate: any,
+  postedby: any
+) {
+
+  const address = this.getcompanyaddress();
+  const Companyreportdetails =
+    this._getCompanyDetails();
+
+  const doc = new jsPDF(pagetype);
+
+  const totalPagesExp =
+    '{total_pages_count_string}';
+
+  const today =
+    this.pdfProperties('Date');
+
+  const currencyformat =
+    this.currencysymbol;
+
+  const rupeeImage =
+    this._getRupeeSymbol();
+
+  const kapil_logo =
+    this.getKapilGroupLogo();
+
+  const lMargin = 15;
+  const rMargin = 15;
+
+  let pdfInMM: number;
+
+  autoTable(doc, {
+
+    head: [gridheaders],
+    body: gridData,
+
+    theme: 'grid',
+         rowPageBreak: 'avoid',
+
+    headStyles: {
+      fillColor:
+        this.pdfProperties('Header Color'),
+      halign:
+        this.pdfProperties(
+          'Header Alignment'
+        )as 'left'|'right'|'center',
+      fontSize:
+        Number(this.pdfProperties(
+          'Header Fontsize'
+        ))
+    },
+
+    styles: {
+      cellWidth: 'wrap',
+      fontSize:
+       Number( this.pdfProperties(
+          'Cell Fontsize'
+        )),
+ 
+      overflow: 'linebreak'
+    },
+
+    columnStyles: colWidthHeight,
+
+    startY: 50,
+
+    margin: {
+      right: 30,
+      left: 30
+    },
+
+    showHead: 'everyPage',
+
+    didDrawPage: (data: any) => {
+
+      const pageSize =
+        doc.internal.pageSize;
+
+      const pageWidth =
+        pageSize.getWidth();
+
+      const pageHeight =
+        pageSize.getHeight();
+
+      doc.setFont('helvetica', 'normal');
+
+      if (
+        doc.getNumberOfPages() === 1
+      ) {
+
+        doc.setFontSize(15);
+
+        if (pagetype === 'a4') {
+
+          doc.addImage(
+            kapil_logo,
+            'JPEG',
+            10,
+            5,20,20
+          );
+
+          doc.text(
+            Companyreportdetails?.pCompanyName??'',
+            72,
+            10
+          );
+
+          doc.setFontSize(8);
+
+          const address1 =
+            address.substr(0, 115);
+
+          doc.text(
+            address1,
+            110,
+            15,
+            { align: 'center' }
+          );
+
+          const address2 =
+            address.substring(115);
+
+          doc.text(
+            address2,
+            110,
+            18
+          );
+
+          if (
+            Companyreportdetails?.pCinNo??''
+          ) {
+            doc.text(
+              'CIN : ' +
+                Companyreportdetails?.pCinNo,
+              90,
+              20
+            );
+          }
+
+          doc.setFontSize(14);
+
+          doc.text(
+            reportName,
+            87,
+            30
+          );
+
+          doc.setFontSize(10);
+
+          doc.text(
+            'Branch : ' +
+              Companyreportdetails?.pBranchname,
+            150,
+            35
+          );
+
+          doc.text(
+            'JV No. : ' + JVNumber,
+            15,
+            45
+          );
+
+          doc.text(
+            'Date : ' + Jvdate,
+            160,
+            45
+          );
+
+          pdfInMM = 233;
+
+          doc.line(
+            10,
+            39,
+            pdfInMM -
+              lMargin -
+              rMargin,
+            39
+          );
+        }
+
+        if (pagetype === 'landscape') {
+
+          doc.addImage(
+            kapil_logo,
+            'JPEG',
+            20,
+            15,
+            20,
+            20
+          );
+
+          doc.text(
+            Companyreportdetails?.pCompanyName??'',
+            110,
+            20
+          );
+
+          doc.setFontSize(10);
+
+          doc.text(
+            address,
+            80,
+            27
+          );
+
+          if (
+            Companyreportdetails?.pCinNo??''
+          ) {
+            doc.text(
+              'CIN : ' +
+                Companyreportdetails?.pCinNo,
+              125,
+              32
+            );
+          }
+
+          doc.setFontSize(14);
+
+          doc.text(
+            reportName,
+            130,
+            42
+          );
+
+          doc.text(
+            'Branch : ' +
+              Companyreportdetails?.pBranchname,
+            235,
+            50
+          );
+
+          pdfInMM = 315;
+
+          doc.line(
+            10,
+            48,
+            pdfInMM -
+              lMargin -
+              rMargin,
+            48
+          );
+        }
+      }
+
+      let page =
+        'Page ' +
+        doc.getNumberOfPages();
+
+      if (
+        typeof doc.putTotalPages ===
+        'function'
+      ) {
+        page =
+          page +
+          ' of ' +
+          totalPagesExp;
+      }
+
+      doc.line(
+        5,
+        pageHeight - 10,
+        pdfInMM -
+          lMargin -
+          rMargin,
+        pageHeight - 10
+      );
+
+      doc.setFontSize(10);
+
+      doc.text(
+        'Printed on : ' + today,
+        data.settings.margin.left,
+        pageHeight - 5
+      );
+
+      doc.text(
+        page,
+        pageWidth -
+          data.settings.margin.right -
+          20,
+        pageHeight - 5
+      );
+    },
+
+    didDrawCell: (data: any) => {
+
+      if (
+        (data.column.index === 1 ||
+          data.column.index === 2) &&
+        data.cell.section === 'body' &&
+        reportName ===
+          'Journal Voucher'
+      ) {
+
+        const td =
+          data.cell.raw;
+
+        if (
+          td &&
+          currencyformat === '₹'
+        ) {
+
+          const textPos =
+            data.cell.textPos;
+
+          doc.addImage(
+            rupeeImage,
+            textPos.x -
+              data.cell.contentWidth,
+            textPos.y + 0.5,
+            1.5,
+            1.5
+          );
+        }
+      }
+    }
+  });
+
+  doc.setFontSize(10);
+
+  const Content =
+    Narration + '\n';
+
+  const P1Lines =
+    doc.splitTextToSize(
+      Content,
+      185
+    );
+
+  this.addWrappedText({
+    text: P1Lines,
+    textWidth: 180,
+    doc,
+    fontSize: 9,
+    fontType: 'normal',
+    lineSpacing: 4,
+    xPosition: 40,
+    initialYPosition:
+      (doc as any).lastAutoTable.finalY +
+      15,
+    pageWrapInitialYPosition: 15
+  });
+
+  const finalY =
+  (doc as any).lastAutoTable?.finalY ?? 60;
+
+const pageHeight =
+  doc.internal.pageSize.getHeight();
+
+if (finalY + 60 > pageHeight) {
+  doc.addPage();
+}
+
+doc.text('Narration : ', 15, finalY + 15);
+
+doc.text('(Approved By)', 25, finalY + 50);
+
+doc.text('(Verified By)', 95, finalY + 50);
+
+doc.text('(Posted By)', 160, finalY + 50);
+
+doc.text(
+  String(postedby ?? ''),
+  160,
+  finalY + 44
+);
+
+  if (
+    typeof doc.putTotalPages ===
+    'function'
+  ) {
+    doc.putTotalPages(
+      totalPagesExp
+    );
+  }
+
+  if (printorpdf === 'Pdf') {
+    doc.save(reportName + '.pdf');
+  }
+
+  if (printorpdf === 'Print') {
+    this.setiFrameForPrint(doc);
+  }
+}
 }
 
 

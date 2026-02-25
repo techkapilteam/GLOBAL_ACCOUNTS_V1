@@ -10,8 +10,8 @@
 
           <div class="col-md-4" *ngIf="branchcao">
             <label class="required-field">Branch</label>
-            <ng-select [items]="CAOBranchList" formControlName="kgmsbranchschema" bindLabel="branch_name"
-              bindValue="branch_code" placeholder="Select" [searchable]="true" appendTo="body" [clearable]="false"
+            <ng-select [items]="CAOBranchList" formControlName="kgmsbranchschema" bindLabel="branchName"
+              bindValue="branchCode" placeholder="Select" [searchable]="true" appendTo="body" [clearable]="false"
               (change)="Caobranchchange($event)"
               [ngClass]="{ 'is-invalid': f['kgmsbranchschema'].invalid && f['kgmsbranchschema'].touched }">
             </ng-select>

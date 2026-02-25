@@ -336,6 +336,7 @@ export class PettyCashComponent implements OnInit {
     this.getpartyJournalEntryData();
 
   }
+  
   addModeofpaymentValidations() {
 
     let modeofpaymentControl = <FormGroup>this.paymentVoucherForm['controls']['pmodofpayment'];

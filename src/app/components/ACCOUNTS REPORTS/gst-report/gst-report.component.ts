@@ -229,7 +229,8 @@ private loadGstPayments(): void {
   const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
   const branchschema = this.loginbranchschema;
 
-  this.tdsReportService.Getgstreport(branchschema, fromdate, todate)
+  // this.tdsReportService.Getgstreport(branchschema, fromdate, todate)
+  this.tdsReportService.Getgstreport('accounts', fromdate, todate,'global','KAPILCHITS','KLC01')
     .subscribe({
       next: (result: any[]) => {
         this.gstpaymentsdata = result ?? [];

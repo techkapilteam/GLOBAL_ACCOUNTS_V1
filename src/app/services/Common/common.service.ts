@@ -5,6 +5,50 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class CommonService {
+  showSuccessMessage() {
+    throw new Error('Method not implemented.');
+  }
+  isNullOrEmptyString(chitgroupstatus: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  //  isNullOrEmptyString(value:any): boolean {
+  //   let isvalid = false;
+  //   if (value == undefined || value == '' || value == null)
+  //     isvalid = true;
+  //   return isvalid;
+  // }
+  _downloadchequesReportsPdf(reportname: string, rows: (string | { content: string; styles: { halign: string; fontSize: number; fontStyle: string; }; })[][], gridheaders: any[], colWidthHeight: { 0: { cellWidth: string; halign: string; }; 1: { cellWidth: string; halign: string; }; 2: { cellWidth: number; halign: string; }; 3: { cellWidth: number; halign: string; }; 4: { cellWidth: number; halign: string; }; 5: { cellWidth: string; halign: string; }; 6: { cellWidth: string; halign: string; }; 7: { cellWidth: string; halign: string; }; 8: { cellWidth: string; }; 9: { cellWidth: string; }; } | { 0: { cellWidth: string; halign: string; }; 1: { cellWidth: string; }; 2: { cellWidth: number; halign: string; }; 3: { cellWidth: number; halign: string; }; 4: { cellWidth: number; halign: string; }; 5: { cellWidth: string; halign: string; }; 6: { cellWidth: string; halign: string; }; 7: { cellWidth: string; }; 8: { cellWidth: string; }; 9: { cellWidth: string; }; 10: { cellWidth: string; halign: string; }; }, arg4: string, arg5: string, arg6: string, arg7: string, printorpdf: any, amounttotal: any) {
+    throw new Error('Method not implemented.');
+  }
+  convertAmountToPdfFormat(totalreceivedamt: any): any {
+    throw new Error('Method not implemented.');
+  }
+  currencyformat(ptotalreceivedamount: any): any {
+    throw new Error('Method not implemented.');
+  }
+  transform(gridDatatemp: any[], searchText: any, columnName: string): any[] {
+    throw new Error('Method not implemented.');
+  }
+  searchfilterlength: any;
+  showErrorMessage(error: any) {
+    throw new Error('Method not implemented.');
+  }
+  getDateObjectFromDataBase(pfrombrsdate: any): any {
+    throw new Error('Method not implemented.');
+  }
+  exportAsExcelFile(rows: any[], arg1: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  getFormatDateGlobal(ptobrsdate: any): any {
+    throw new Error('Method not implemented.');
+  }
+  
+  currencysymbol: any;
+  _getCompanyDetails(): any {
+    throw new Error('Method not implemented.');
+  }
 
   // COMPANY DETAILS
   comapnydetails: any = {

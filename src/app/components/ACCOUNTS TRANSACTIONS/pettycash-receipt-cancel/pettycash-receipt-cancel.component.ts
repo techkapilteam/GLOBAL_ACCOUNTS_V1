@@ -213,9 +213,24 @@ export class PettycashReceiptCancelComponent implements OnInit {
   getreceiptdata(event: any) {
     if (!event) return;
 
-    this._paymentVouecherServices.GetPettyCashbyId(event).subscribe({
-      next: (res: any) => this.bindReceiptData(res?.[0]),
-      error: () => this.bindReceiptData(this.getDummyReceipt())
+    this.showtotalamount = 0;
+
+    this._paymentVouecherServices
+      .GetPettyCashbyId(event,'accounts','KAPILCHITS','KLC01','global')
+      .subscribe(res => {
+
+        const data = res?.[0];
+        if (!data) return;
+
+        this.creditto = data.pcontactname;
+        this.receivedfrom = data.pcontactname;
+        this.receiptdate = data.ppaymentdate;
+        this.narration = data.pnarration;
+        this.doneby = data.pemployeename;
+        this.pmodofPayment = data.pmodofPayment;
+    // this._paymentVouecherServices.GetPettyCashbyId(event).subscribe({
+    //   next: (res: any) => this.bindReceiptData(res?.[0]),
+    //   error: () => this.bindReceiptData(this.getDummyReceipt())
     });
   }
 

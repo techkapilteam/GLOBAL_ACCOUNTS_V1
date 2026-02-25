@@ -57,7 +57,8 @@ export class TdsReportComponent implements OnInit{
     private fb: FormBuilder,
     private datepipe: DatePipe,
     private commonService: CommonService,
-    private tdsreportservice: TDSReportService
+    private tdsreportservice: TDSReportService,
+    private tdsservice:TdsService
   ) { }
 
   ngOnInit(): void {
@@ -109,9 +110,13 @@ export class TdsReportComponent implements OnInit{
     this.tdsreportdata = [];
   }
 
+  // getTDSSectionDetails(): void {
+  //   this.tdsreportservice.getTDSSectionDetails()
+  //     .subscribe(res => this.tdssectiondata = res || []);
+  // }
   getTDSSectionDetails(): void {
-    this.tdsreportservice.getTDSSectionDetails()
-      .subscribe(res => this.tdssectiondata = res || []);
+    this.tdsservice.getTdsSectionDetails('taxes','KAPILCHITS','KLC01')
+      .subscribe((res: never[]) => this.tdssectiondata = res || []);
   }
 
   onsectionidchange(event: any): void {
@@ -121,8 +126,8 @@ export class TdsReportComponent implements OnInit{
     }
 
     this.TdsReportForm.patchValue({
-      sectionid: event.tblmsttdsid,
-      sectionname: event.sectionname
+      sectionid: event.tbl_mst_tds_id,
+      sectionname: event.section_name
     });
 
     this.tdsreportdata = [];
