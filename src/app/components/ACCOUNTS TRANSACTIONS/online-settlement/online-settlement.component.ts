@@ -3,7 +3,6 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
-import { HttpClient } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
@@ -12,7 +11,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,  
+    ReactiveFormsModule,
     BsDatepickerModule,
     TableModule,
     NgSelectModule
@@ -23,49 +22,41 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class OnlineSettlementComponent implements OnInit {
 
-  
   ChequesInBankForm!: FormGroup;
 
-  
   gridData: any[] = [];
+  originalGridData: any[] = [];
   selected: any[] = [];
 
-  
   bankList: any[] = [];
   PaytmList: any[] = [];
 
- 
   currencySymbol = '₹';
-  bankbalance = 0;
-  bankbalancetype = 'Dr';
-  brsdate = '';
-
-  
-  today = '';
-  receiptDate!: Date;
-  clearDate!: Date;
+  bankbalance = 125000.75;
+  bankbalancetype = 'Cr';
+  brsdate = '23-Feb-2026';
 
   dpConfig: Partial<BsDatepickerConfig> = {};
   ptransactiondateConfig: Partial<BsDatepickerConfig> = {};
   pchequecleardateConfig: Partial<BsDatepickerConfig> = {};
 
-  private datePipe = inject(DatePipe);
-  private http = inject(HttpClient);
   private fb = inject(FormBuilder);
+  private datePipe = inject(DatePipe);
 
-  
+  // ==================================================
+  // INIT
+  // ==================================================
+
   ngOnInit(): void {
 
     const todayDate = new Date();
-    this.today = this.formatDate(todayDate);
 
-    
     this.ChequesInBankForm = this.fb.group({
       ptransactiondate: [todayDate],
       pchequereceiptdate: [todayDate],
       pchequecleardate: [todayDate],
       bankname: [''],
-      paytmname: [''],
+      paytmname: [{ value: '', disabled: true }],
       chequeintype: ['A'],
       searchtext: ['']
     });
@@ -79,51 +70,153 @@ export class OnlineSettlementComponent implements OnInit {
     this.ptransactiondateConfig = this.dpConfig;
     this.pchequecleardateConfig = this.dpConfig;
 
-    this.loadBanks();
-    this.loadDataFromBackend();
+    this.loadDummyBanks();
+    this.loadDummyGrid();
+    this.setupDependencies();
   }
 
-  loadBanks(): void {
-    this.http.get<any[]>('YOUR_BANK_API_URL')
-      .subscribe({
-        next: (res) => {
-          this.bankList = res || [];
-          this.PaytmList = res || []; 
-        },
-        error: (err) => {
-          console.error('Bank API Error:', err);
-        }
-      });
+  // ==================================================
+  // DEPENDENCY LOGIC
+  // ==================================================
+
+  setupDependencies(): void {
+
+    // Bank → Enable Online Account
+    this.ChequesInBankForm.get('bankname')?.valueChanges.subscribe(value => {
+      if (value) {
+        this.ChequesInBankForm.get('paytmname')?.enable();
+      } else {
+        this.ChequesInBankForm.get('paytmname')?.disable();
+        this.ChequesInBankForm.get('paytmname')?.setValue('');
+      }
+    });
+
+    // Radio Filter
+    this.ChequesInBankForm.get('chequeintype')?.valueChanges.subscribe(type => {
+      this.applyRadioFilter(type);
+    });
   }
 
-  loadDataFromBackend(): void {
-    this.http.get<any[]>('YOUR_GRID_API_URL')
-      .subscribe({
-        next: (response) => {
-          this.gridData = response || [];
-        },
-        error: (error) => {
-          console.error('Grid API Error:', error);
-        }
-      });
-  }
+  // ==================================================
+  // RADIO FILTER
+  // ==================================================
 
-  onSearch(value: string): void {
-    if (!value) {
-      this.loadDataFromBackend();
-      return;
+  applyRadioFilter(type: string): void {
+
+    if (type === 'A') {
+      this.gridData = [...this.originalGridData];
+    }
+    else if (type === 'D') {
+      this.gridData = this.originalGridData.filter(x => x.pCleardate);
+    }
+    else if (type === 'ND') {
+      this.gridData = this.originalGridData.filter(x => !x.pCleardate);
     }
 
-    const search = value.toLowerCase();
-    this.gridData = this.gridData.filter(item =>
-      JSON.stringify(item).toLowerCase().includes(search)
-    );
+    this.selected = [];
   }
 
-  formatDate(date: Date | string | null): string {
-    if (!date) return '';
-    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+  // ==================================================
+  // SEARCH (WITH RADIO SUPPORT)
+  // ==================================================
+
+  onSearch(value: string): void {
+
+    let filteredData = [...this.originalGridData];
+    const type = this.ChequesInBankForm.value.chequeintype;
+
+    // Apply radio filter first
+    if (type === 'D') {
+      filteredData = filteredData.filter(x => x.pCleardate);
+    }
+    else if (type === 'ND') {
+      filteredData = filteredData.filter(x => !x.pCleardate);
+    }
+
+    // Apply search filter
+    if (value) {
+      const search = value.toLowerCase();
+      filteredData = filteredData.filter(item =>
+        JSON.stringify(item).toLowerCase().includes(search)
+      );
+    }
+
+    this.gridData = filteredData;
   }
+
+  // ==================================================
+  // DUMMY DROPDOWN DATA
+  // ==================================================
+
+  private loadDummyBanks(): void {
+
+    this.bankList = [
+      { paccountid: 1, pdepositbankname: 'SBI - 1234567890' },
+      { paccountid: 2, pdepositbankname: 'HDFC - 9876543210' },
+      { paccountid: 3, pdepositbankname: 'ICICI - 4567891230' }
+    ];
+
+    this.PaytmList = [
+      { paccountid: 101, pdepositbankname: 'Paytm Wallet' },
+      { paccountid: 102, pdepositbankname: 'PhonePe UPI' },
+      { paccountid: 103, pdepositbankname: 'Google Pay' }
+    ];
+  }
+
+  // ==================================================
+  // DUMMY GRID DATA
+  // ==================================================
+
+  private loadDummyGrid(): void {
+
+    this.originalGridData = [
+      {
+        preceiptid: 1001,
+        chitReceiptNo: 'CR001',
+        pChequenumber: 'CHQ12345',
+        pbranchname: 'Hyderabad',
+        ptotalreceivedamount: 15000,
+        ppartyname: 'Ramesh Kumar',
+        preceiptdate: '20-Feb-2026',
+        pdepositeddate: '21-Feb-2026',
+        pCleardate: '22-Feb-2026',
+        ptypeofpayment: 'Cheque',
+        cheque_bank: 'SBI'
+      },
+      {
+        preceiptid: 1002,
+        chitReceiptNo: 'CR002',
+        pChequenumber: 'CHQ56789',
+        pbranchname: 'Warangal',
+        ptotalreceivedamount: 25000,
+        ppartyname: 'Suresh Babu',
+        preceiptdate: '19-Feb-2026',
+        pdepositeddate: '20-Feb-2026',
+        pCleardate: '',
+        ptypeofpayment: 'UPI',
+        cheque_bank: 'PhonePe'
+      },
+      {
+        preceiptid: 1003,
+        chitReceiptNo: 'CR003',
+        pChequenumber: 'CHQ99887',
+        pbranchname: null,
+        ptotalreceivedamount: 10000,
+        ppartyname: 'Lakshmi Devi',
+        preceiptdate: '18-Feb-2026',
+        pdepositeddate: '19-Feb-2026',
+        pCleardate: '',
+        ptypeofpayment: 'Cheque',
+        cheque_bank: 'HDFC'
+      }
+    ];
+
+    this.gridData = [...this.originalGridData];
+  }
+
+  // ==================================================
+  // HELPERS
+  // ==================================================
 
   getSelectedTotal(): number {
     return this.selected.reduce(
@@ -138,5 +231,10 @@ export class OnlineSettlementComponent implements OnInit {
 
   Save(): void {
     console.log('Selected Rows:', this.selected);
+  }
+
+  formatDate(date: Date | string | null): string {
+    if (!date) return '';
+    return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
   }
 }

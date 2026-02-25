@@ -233,7 +233,7 @@ export class BankConfigViewComponent implements OnInit
     this.accountingmasterservice.newformstatus("edit")
     //console.log(event.dataItem)
     //this.recordid = event.dataItem.pRecordid
-    this.recordid=row.pContactId;
+    this.recordid=row.bank_id;
     this.accountingmasterservice.GetBankDetails1(row.pRecordid,row)
 
 

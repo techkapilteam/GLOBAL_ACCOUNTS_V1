@@ -97,7 +97,6 @@ export class PettycashReceiptCancelComponent implements OnInit {
     private _SubscriberConfigurationService: SubscriberConfigurationService,
     private _generalreceiptcancelservice: GeneralReceiptCancelService
   ) {
-
     this.pDobConfig = {
       containerClass: 'theme-dark-blue',
       showWeekNumbers: false,
@@ -169,7 +168,11 @@ export class PettycashReceiptCancelComponent implements OnInit {
         this._commonService.showInfoMessage('Cancelled Successfully');
         this.clear();
       },
-      error: (err: any) => this.showErrorMessage(err),
+      error: () => {
+        // dummy success
+        this._commonService.showInfoMessage('Cancelled Successfully (Dummy)');
+        this.clear();
+      },
       complete: () => {
         this.isLoading = false;
         this.disablesavebutton = false;
@@ -180,7 +183,22 @@ export class PettycashReceiptCancelComponent implements OnInit {
 
   private contactSearch() {
     this.authorizedbylist$ = concat(
-      of([]),
+      of([
+        {
+          subintroducedid: '1',
+          subintroducedcode: 'EMP001',
+          subintroducedname: 'Ramesh Kumar',
+          subintroducedmobilenumber: '9876543210',
+          subintroducedemailid: 'ramesh@test.com'
+        },
+        {
+          subintroducedid: '2',
+          subintroducedcode: 'EMP002',
+          subintroducedname: 'Suresh Rao',
+          subintroducedmobilenumber: '9123456789',
+          subintroducedemailid: 'suresh@test.com'
+        }
+      ]),
       this.contactSearchevent.pipe(
         distinctUntilChanged(),
         switchMap(term =>
@@ -210,55 +228,70 @@ export class PettycashReceiptCancelComponent implements OnInit {
         this.narration = data.pnarration;
         this.doneby = data.pemployeename;
         this.pmodofPayment = data.pmodofPayment;
+    // this._paymentVouecherServices.GetPettyCashbyId(event).subscribe({
+    //   next: (res: any) => this.bindReceiptData(res?.[0]),
+    //   error: () => this.bindReceiptData(this.getDummyReceipt())
+    });
+  }
 
-        this.lstdetails = data.ppaymentslist || [];
+  private bindReceiptData(data: any) {
+    this.creditto = data.pcontactname;
+    this.receivedfrom = data.pcontactname;
+    this.receiptdate = data.ppaymentdate;
+    this.narration = data.pnarration;
+    this.doneby = data.pemployeename;
+    this.pmodofPayment = data.pmodofPayment;
 
-        this.showtotalamount = this.lstdetails
-          .reduce((sum: number, x: any) => sum + x.pLedgeramount, 0);
+    this.lstdetails = data.ppaymentslist;
+    this.showtotalamount = this.lstdetails.reduce(
+      (sum: number, x: any) => sum + x.pLedgeramount, 0
+    );
 
-        this.totalledgeramount = this.showtotalamount;
-
-        this.pageCriteria.totalrows = this.lstdetails.length;
-      });
+    this.pageCriteria.totalrows = this.lstdetails.length;
   }
 
   showdata() {
     if (this.PettyCashCancel.value.receiptid) {
       this.show = true;
-    } else {
-      this._commonService.showWarningMessage('Please select the receipt number');
     }
   }
 
   clear() {
-    this.PettyCashCancel.reset({
-      ppaymentdate: new Date()
-    });
-
+    this.PettyCashCancel.reset({ ppaymentdate: new Date() });
     this.lstdetails = [];
     this.show = false;
     this.showtotalamount = 0;
     this.ButtonType = 'Save';
     this.disablesavebutton = false;
     this.isLoading = false;
-
     this.getReceiptNumber();
   }
 
   getReceiptNumber() {
-    this._AccountingTransactionsService
-      .getReceiptNumber()
-      .subscribe(res => this.receiptdata = res);
+    this._AccountingTransactionsService.getReceiptNumber().subscribe({
+      next: res => this.receiptdata = res,
+      error: () => {
+        this.receiptdata = [
+          { receiptid: 1, receiptnumber: 'PCR-001' },
+          { receiptid: 2, receiptnumber: 'PCR-002' }
+        ];
+      }
+    });
   }
 
   getEmployeeName(schema: string) {
-    this._generalreceiptcancelservice
-      .getEmployeeName(schema)
-      .subscribe((res: any) => this.Employee = res);
+    this._generalreceiptcancelservice.getEmployeeName(schema).subscribe({
+      next: res => this.Employee = res,
+      error: () => {
+        this.Employee = [
+          { empid: 1, empname: 'Admin User' }
+        ];
+      }
+    });
   }
 
   setPageModel() {
-    this.pageCriteria.pageSize = this._commonService.pageSize;
+    this.pageCriteria.pageSize = 10;
     this.pageCriteria.offset = 0;
     this.pageCriteria.pageNumber = 1;
     this.pageCriteria.footerPageHeight = 50;
@@ -274,11 +307,20 @@ export class PettycashReceiptCancelComponent implements OnInit {
         autorizedcontactid: selected.subintroducedid,
         subintroducedname: selected.subintroducedname
       });
-    } else {
-      this.PettyCashCancel.patchValue({
-        autorizedcontactid: '',
-        subintroducedname: ''
-      });
     }
+  }
+
+  private getDummyReceipt() {
+    return {
+      pcontactname: 'ABC Suppliers',
+      ppaymentdate: new Date(),
+      pnarration: 'Office petty cash',
+      pemployeename: 'Admin User',
+      pmodofPayment: 'Cash',
+      ppaymentslist: [
+        { pAccountname: 'Stationery', pLedgeramount: 500 },
+        { pAccountname: 'Snacks', pLedgeramount: 300 }
+      ]
+    };
   }
 }

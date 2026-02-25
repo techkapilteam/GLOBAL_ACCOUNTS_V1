@@ -10,7 +10,7 @@ export class TdsService {
   constructor(
     private http: HttpClient,
     private commonService: CommonService
-  ) {}
+  ) { }
 
   getTdsReport(
     fromDate: string,

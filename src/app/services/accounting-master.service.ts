@@ -165,13 +165,13 @@ export class AccountingMasterService {
     );
   }
 
-  viewbank(recordid: any): Observable<any> {
-    const params = new HttpParams()
-      .set('BranchSchema', this._CommonService.getschemaname())
-      .set('precordid', recordid);
+  viewbank(precordid: any,GlobalSchema:any,BranchSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+    const params = new HttpParams() .set('precordid', precordid) .set('GlobalSchema', GlobalSchema)
+      .set('BranchSchema', BranchSchema) .set('CompanyCode', CompanyCode) .set('BranchCode', BranchCode)
 
     return this._CommonService.getAPI(
-      '/BankInformation/ViewBankInformation',
+      '/Accounts/GetViewBankInformation',
+      
       params,
       'Yes'
     );
@@ -235,7 +235,12 @@ export class AccountingMasterService {
     // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
     return this._CommonService.getAPI('/Accounts/GetViewBankInformation', params, 'YES');
   }
-
+ GetGlobalBanks(GlobalSchema: any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema);
+    // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetGlobalBanks', params, 'YES');
+  }
 
 
   GetAccountTree(): Observable<any> {
