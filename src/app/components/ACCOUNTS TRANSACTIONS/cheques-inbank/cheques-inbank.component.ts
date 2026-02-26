@@ -485,7 +485,12 @@ export class ChequesInbankComponent implements OnInit {
 
 
   GetBankBalance(bankid: any) {
-    this._accountingtransaction.GetBankBalance(bankid).subscribe(bankdetails => {
+    this._accountingtransaction.GetBankBalance(
+            '29-02-2024',
+      bankid,
+      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
+
+    ).subscribe(bankdetails => {
 
       this.bankbalancedetails = bankdetails;
       if (this.bankid == 0) {

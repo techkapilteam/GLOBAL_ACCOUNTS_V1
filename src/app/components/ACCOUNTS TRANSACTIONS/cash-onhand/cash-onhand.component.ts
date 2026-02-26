@@ -70,6 +70,7 @@ export class CashOnhandComponent implements OnInit {
   pdfstatus = "All";
   count = 0;
   pcashonhandbalance: any;
+  currencyCode!:'INR';
   // cancel = false;
   // bankselection = false;
   hiddendate = true;
@@ -171,7 +172,7 @@ export class CashOnhandComponent implements OnInit {
     this.bankid = 0;
     this.banknameshowhide = false;
     this.CashOnHandValidation = {};
-    //this.GetBankBalance(this.bankid);
+    // this.GetBankBalance(this.bankid);
     this.GetCashonhandBalance();
 
     // this._accountingtransaction.GetCAOBranchList(this._commonService.getschemaname()).subscribe(bankslist => {
@@ -239,12 +240,13 @@ export class CashOnhandComponent implements OnInit {
 
 
   GetCashonhandBalance() {
+    debugger
     this._accountingtransaction.GetCashonhandBalance(
       this._commonService.getschemaname(),this._commonService.getbranchname(),this._commonService.getBranchCode()
       ,this._commonService.getCompanyCode()
     ).subscribe(data => {
-      console.log(data);
-      this.pcashonhandbalance = data;
+      console.log('BALCE',data);
+      this.pcashonhandbalance = data[0].balance;
       if (parseFloat(this.pcashonhandbalance) != 0) {
         this.buttonname = "Update";
         this.GetChequesOnHand("");
@@ -255,7 +257,11 @@ export class CashOnhandComponent implements OnInit {
   }
   GetBankBalance(bankid: any) {
     debugger;
-    this._accountingtransaction.GetBankBalance(bankid).subscribe(bankdetails => {
+    this._accountingtransaction.GetBankBalance(
+            '29-02-2024',
+      bankid,
+      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
+    ).subscribe(bankdetails => {
       debugger
       this.bankbalancedetails = bankdetails;
       if (this.bankid == 0) {
@@ -289,11 +295,12 @@ export class CashOnhandComponent implements OnInit {
     this.gridLoading = true;
     let fromdate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['fromdate'].value);
     let todate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['todate'].value);
-    let caobarnch=this.CashOnHandForm.controls['bankname'].value;
+    // let asOnDate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['asondate'].value);
+    // let caobarnch=this.CashOnHandForm.controls['bankname'].value;
     this.disableShowbutton = true;
     this.showbuttontext = "Processing"
     // this._accountingtransaction.GetCashOnHandData(bankid).subscribe(data => {
-    this._accountingtransaction.GetCashOnHandData_(this._commonService.getbranchname(),caobarnch,
+    this._accountingtransaction.GetCashOnHandData_(this._commonService.getbranchname(),
        fromdate, todate, this.AsOnDate,this._commonService.getCompanyCode(),this._commonService.getBranchCode(),this._commonService.getschemaname()).subscribe(data => {
       debugger;
       console.log(data)

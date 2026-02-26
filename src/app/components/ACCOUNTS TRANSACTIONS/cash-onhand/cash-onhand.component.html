@@ -92,8 +92,10 @@
         <div class="row" *ngIf="pcashonhandbalance!=0">
             <div class="col-md-6 col-xl-4">
                 <div class="form-group">
-                    <label>Cash On Hand Balance :{{currencySymbol}} 
-                        {{pcashonhandbalance| currency }}</label>
+                    <label>
+                        Cash On Hand Balance :
+                        {{pcashonhandbalance|  currency:currencyCode:'symbol':'1.2-2' }}
+                    </label>
 <!-- {{ pcashonhandbalance | currency:currencyCode:'symbol':'1.2-2' }} -->
 
                 </div>

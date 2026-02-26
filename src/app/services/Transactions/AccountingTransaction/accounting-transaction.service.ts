@@ -203,8 +203,8 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname()).set('caoBranch', caobranch);
     return this._CommonService.getAPI('/ChequesOnHand/GetCashOnHandData', params, 'YES')
   }
-  GetCashOnHandData_(BranchSchema:any,caobranch: any, fromdate: any, todate:any,AsOnDate:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {//added by uday on 04-09-2024
-    const params = new HttpParams().set('BranchSchema', BranchSchema).set('caoBranch', caobranch).set('fromdate', fromdate)
+  GetCashOnHandData_(BranchSchema:any, fromdate: any, todate:any,AsOnDate:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {//added by uday on 04-09-2024
+    const params = new HttpParams().set('BranchSchema', BranchSchema).set('fromdate', fromdate)
     .set('todate', todate).set('AsOnDate', AsOnDate).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode).set('GlobalSchema',GlobalSchema);
     return this._CommonService.getAPI('/Accounts/GetCashOnHandData', params, 'YES');
   }
@@ -224,9 +224,9 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/ChequesOnHand/GetChequesOnHandData_New', params, 'YES');
   }
 
-  GetBankBalance(bankid: any) {
-    const params = new HttpParams().set('_recordid', bankid).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/ChequesOnHand/GetBankBalance', params, 'YES');
+  GetBankBalance(brstodate:any,_recordid:any,BranchSchema:any,branchCode:any,companyCode:any) {
+    const params = new HttpParams().set('brstodate', brstodate).set('_recordid',_recordid).set('BranchSchema',BranchSchema).set('branchCode',branchCode).set('companyCode',companyCode);
+    return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
   }
   GetCashonhandBalance(globalSchema:any,BranchSchema:any,branchCode:any,companyCode:any) {
     const params = new HttpParams().set('globalSchema',globalSchema)
@@ -441,9 +441,9 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
     set('BranchCode', this._CommonService.getBranchCode()).set('CompanyCode', this._CommonService.getCompanyCode()).set('GlobalSchema', 'global').set('TaxSchema', 'taxes');
     return this._CommonService.getAPI('/Accounts/getPartyDetailsbyid',params,'YES');
 }
-  GetCashAmountAccountWise(formname: any, account_id: any, transaction_date: any): Observable<any> {
-    const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname()).set('account_id', account_id).set('transaction_date', transaction_date);
-    return this._CommonService.getAPI('/AccountingTransactions/GetCashAmountAccountWise', params, 'YES')
+  GetCashAmountAccountWise(formname: any,BranchSchema:any, account_id: any, transaction_date: any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('account_id', account_id).set('transaction_date', transaction_date).set('GlobalSchema',GlobalSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetCashAmountAccountWise', params, 'YES')
   }
 
   GettdsLedgerAccountsList(formname: any): Observable<any> {

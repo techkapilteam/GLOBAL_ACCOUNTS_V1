@@ -2020,90 +2020,233 @@ calculateTotals() {
       this._commonService.showErrorMessage(e);
     }
   }
+  // saveJournalVoucher() {
+  //   debugger;
+
+  //   if (this.validatesaveJournalVoucher()) {
+  //     if (confirm('Do Your Want to Save ?')) {
+
+  //       this.disablesavebutton = true;
+  //       this.savebutton = 'Processing';
+  //       let bankid = this.paymentVoucherForm.controls['pbankid'].value;
+  //       if (bankid == "" || bankid == null)
+  //         this.paymentVoucherForm['controls']['pbankid'].setValue(0);
+  //       this.paymentVoucherForm['controls']['ptotalpaidamount'].setValue(0);
+  //       this.paymentVoucherForm['controls']['pCreatedby'].setValue(this._commonService.pCreatedby);
+  //       this.paymentVoucherForm.controls['pipaddress'].setValue(this._commonService.getIpAddress())
+  //       this.paymentVoucherForm.controls['schemaname'].setValue(this._commonService.getschemaname())
+        
+  //       let totaladebitmount = Number(parseFloat(this.paymentslist.
+  //         reduce((sum: any, item: any) => sum + Number(item.ptotaldebitamount), 0)).toFixed(2));
+  //       let totalacreditmount = Number(parseFloat(this.paymentslist.
+  //         reduce((sum: any, item: any) => sum + Number(item.ptotalcreditamount), 0)).toFixed(2));
+  //       // added on 05-03-2025 by Uday for vijayanagar issue end
+
+
+  //       //let debittotalamount = this.paymentslist.reduce((sum, c) => (isNullOrEmptyString(sum) ? 0 : isNaN(sum) ? 0 : sum) + parseFloat((c.ptotaldebitamount).replace(/,/g, "")), 0)
+  //       //let credittotalamount = this.paymentslist.reduce((sum, c) => (isNullOrEmptyString(sum) ? 0 : isNaN(sum) ? 0 : sum) + parseFloat((c.ptotalcreditamount).replace(/,/g, "")), 0)
+  //       if (totaladebitmount != totalacreditmount) {
+  //         this._commonService.showWarningMessage("Total Debit amount and Credit amount mismatch.");
+  //         this.disablesavebutton = false;
+  //         this.savebutton = 'Save';
+  //       }
+  //       else {
+  //         let newdata = { pJournalVoucherlist: this.paymentslist };
+  //         console.log('data 1',newdata);
+          
+  //         let paymentVoucherdata = Object.assign(this.paymentVoucherForm.value, newdata);
+  //                   console.log('data 2',paymentVoucherdata);
+
+  //         paymentVoucherdata.pjvdate = this._commonService.getFormatDateNormal(paymentVoucherdata.pjvdate);
+  //         let data = JSON.stringify(paymentVoucherdata);
+  //         console.log('data 3 final',data);
+
+  //         this._AccountingTransactionsService.saveJournalVoucher(data).subscribe((res: any) => {
+
+  //           //if (res) {
+  //           //  this._commonService.showInfoMessage("Saved sucessfully");
+  //           // // this.clearPaymentVoucher();
+  //           //  this._routes.navigate(['/JournalvoucherView'])
+  //           //}
+  //           if (res[0] == 'TRUE') {
+  //             //this.JSONdataItem = res;
+  //             this.disablesavebutton = false;
+  //             this.savebutton = 'Save';
+  //             this._commonService.showInfoMessage("Saved sucessfully");
+  //             this.clearPaymentVoucher();
+  //             // this._routes.navigate(['/JournalvoucherView']);
+  //             //this._routes.navigate(['/Transactions/JournalVoucherView']);
+  //             //this.router.navigate(['/Transactions/JournalVoucherView']);
+  //             debugger;
+  //             //window.open('/#/Reports/JournalVoucherReport?id=' + btoa(res[1] + ',' + 'Journal Voucher'));
+  //             let receipt = btoa(res[1] + ',' + 'Journal Voucher');
+  //             // this.router.navigate(['/Reports/JournalVoucherReport', receipt]);
+  //             window.open('/#/JournalVoucherReport?id=' + receipt + '', "_blank");
+  //           }
+
+  //         },
+  //           (error: any) => {
+  //             //this.isLoading = false;
+  //             this._commonService.showErrorMessage(error);
+  //             this.disablesavebutton = false;
+  //             this.savebutton = 'Save';
+  //           });
+  //       }
+  //     }
+  //   }
+
+  // }
+
+
+
   saveJournalVoucher() {
-    debugger;
 
-    if (this.validatesaveJournalVoucher()) {
-      if (confirm('Do Your Want to Save ?')) {
+  if (!this.validatesaveJournalVoucher()) {
+    return;
+  }
 
-        this.disablesavebutton = true;
-        this.savebutton = 'Processing';
-        let bankid = this.paymentVoucherForm.controls['pbankid'].value;
-        if (bankid == "" || bankid == null)
-          this.paymentVoucherForm['controls']['pbankid'].setValue(0);
-        this.paymentVoucherForm['controls']['ptotalpaidamount'].setValue(0);
-        this.paymentVoucherForm['controls']['pCreatedby'].setValue(this._commonService.pCreatedby);
-        this.paymentVoucherForm.controls['pipaddress'].setValue(this._commonService.getIpAddress())
-        this.paymentVoucherForm.controls['schemaname'].setValue(this._commonService.getschemaname())
-        // let totaladebitmount = 0;
-        // let totalacreditmount = 0;
+  if (!confirm('Do You Want to Save ?')) {
+    return;
+  }
 
+  this.disablesavebutton = true;
+  this.savebutton = 'Processing';
 
-        // commented on 05-03-2025 by Uday for vijayanagar issue start
-        //this.paymentslist.reduce((acc, item) => {
-        //totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(item.ptotaldebitamount.replace(/,/g, ""));
-        //totalacreditmount += isNullOrEmptyString(item.ptotalcreditamount) ? parseFloat('0') : parseFloat(item.ptotalcreditamount.replace(/,/g, ""));
-        //totaladebitmount += isNullOrEmptyString(item.ptotaldebitamount) ? parseFloat('0') : parseFloat(this._commonService.removeCommasInAmount(item.ptotaldebitamount).toString());
-        //totalacreditmount += isNullOrEmptyString(item.ptotalcreditamount) ? parseFloat('0') : parseFloat(this._commonService.removeCommasInAmount(item.ptotalcreditamount).toString());
+  try {
 
-        //}, 0);
-        // commented on 05-03-2025 by Uday for vijayanagar issue end
-        // added on 05-03-2025 by Uday for vijayanagar issue start
-        let totaladebitmount = Number(parseFloat(this.paymentslist.
-          reduce((sum: any, item: any) => sum + Number(item.ptotaldebitamount), 0)).toFixed(2));
-        let totalacreditmount = Number(parseFloat(this.paymentslist.
-          reduce((sum: any, item: any) => sum + Number(item.ptotalcreditamount), 0)).toFixed(2));
-        // added on 05-03-2025 by Uday for vijayanagar issue end
+    // Ensure bank id
+    const bankid = this.paymentVoucherForm.controls['pbankid'].value;
+    if (!bankid) {
+      this.paymentVoucherForm.controls['pbankid'].setValue(0);
+    }
 
+    // Set system values
+    this.paymentVoucherForm.controls['pCreatedby']
+      .setValue(this._commonService.pCreatedby);
 
-        //let debittotalamount = this.paymentslist.reduce((sum, c) => (isNullOrEmptyString(sum) ? 0 : isNaN(sum) ? 0 : sum) + parseFloat((c.ptotaldebitamount).replace(/,/g, "")), 0)
-        //let credittotalamount = this.paymentslist.reduce((sum, c) => (isNullOrEmptyString(sum) ? 0 : isNaN(sum) ? 0 : sum) + parseFloat((c.ptotalcreditamount).replace(/,/g, "")), 0)
-        if (totaladebitmount != totalacreditmount) {
-          this._commonService.showWarningMessage("Total Debit amount and Credit amount mismatch.");
+    this.paymentVoucherForm.controls['pipaddress']
+      .setValue(this._commonService.getIpAddress());
+
+    this.paymentVoucherForm.controls['schemaname']
+      .setValue(this._commonService.getschemaname());
+
+    // ==============================
+    // Debit / Credit Validation
+    // ==============================
+
+    const totalDebitAmount = Number(
+      this.paymentslist.reduce(
+        (sum: number, item: any) =>
+          sum + Number(item.ptotaldebitamount || 0),
+        0
+      ).toFixed(2)
+    );
+
+    const totalCreditAmount = Number(
+      this.paymentslist.reduce(
+        (sum: number, item: any) =>
+          sum + Number(item.ptotalcreditamount || 0),
+        0
+      ).toFixed(2)
+    );
+
+    if (totalDebitAmount !== totalCreditAmount) {
+
+      this._commonService
+        .showWarningMessage("Total Debit amount and Credit amount mismatch.");
+
+      this.disablesavebutton = false;
+      this.savebutton = 'Save';
+      return;
+    }
+
+    // ==============================
+    // CREATE BACKEND PAYLOAD
+    // ==============================
+
+    const payload = {
+
+      global_schema: this._commonService.getschemaname(),
+      branch_schema: this._commonService.getbranchname(),
+      company_code: this._commonService.getCompanyCode(),
+      branch_code: this._commonService.getBranchCode(),
+
+      journal_voucher_no: this.paymentVoucherForm.value.ppaymentid || '',
+      journal_voucher_date: this._commonService
+        .getFormatDateNormal(this.paymentVoucherForm.value.pjvdate),
+
+      narration: this.paymentVoucherForm.value.pnarration,
+      type_of_operation: this.paymentVoucherForm.value.ptypeofoperation,
+      mode_of_transaction: this.paymentVoucherForm.value.pmodofpayment,
+      reference_no: '',
+
+      branch_id: 0,
+      created_by: 0,
+      ip_address: this._commonService.getIpAddress(),
+      form_name: 'Journal Voucher',
+
+      journal_voucher_details: this.paymentslist.map((item: any) => ({
+
+        ppartyid: Number(item.ppartyid || 0),
+
+        pamount: Number(
+          item.pdebitamount ||
+          item.pcreditamount ||
+          item.pamount ||
+          0
+        ),
+
+        psubledgerid: Number(item.psubledgerid || 0),
+        ptranstype: item.ptranstype,
+        pledgername: item.pledgername,
+        paccountname: item.psubledgername
+
+      }))
+    };
+
+    console.log("FINAL BACKEND PAYLOAD", payload);
+
+    // ==============================
+    // API CALL
+    // ==============================
+
+    this._AccountingTransactionsService
+      .saveJournalVoucher(payload)
+      .subscribe(
+
+        (res: any) => {
+
+          if (res && res[0] === 'TRUE') {
+
+            this._commonService
+              .showInfoMessage("Saved successfully");
+
+            this.clearPaymentVoucher();
+
+            const receipt = btoa(res[1] + ',' + 'Journal Voucher');
+            window.open('/#/JournalVoucherReport?id=' + receipt, "_blank");
+          }
+
+          this.disablesavebutton = false;
+          this.savebutton = 'Save';
+        },
+
+        (error: any) => {
+
+          this._commonService.showErrorMessage(error);
           this.disablesavebutton = false;
           this.savebutton = 'Save';
         }
-        else {
-          let newdata = { pJournalVoucherlist: this.paymentslist };
-          let paymentVoucherdata = Object.assign(this.paymentVoucherForm.value, newdata);
-          paymentVoucherdata.pjvdate = this._commonService.getFormatDateNormal(paymentVoucherdata.pjvdate);
-          let data = JSON.stringify(paymentVoucherdata);
-          console.log(data);
-          this._AccountingTransactionsService.saveJournalVoucher(data).subscribe((res: any) => {
 
-            //if (res) {
-            //  this._commonService.showInfoMessage("Saved sucessfully");
-            // // this.clearPaymentVoucher();
-            //  this._routes.navigate(['/JournalvoucherView'])
-            //}
-            if (res[0] == 'TRUE') {
-              //this.JSONdataItem = res;
-              this.disablesavebutton = false;
-              this.savebutton = 'Save';
-              this._commonService.showInfoMessage("Saved sucessfully");
-              this.clearPaymentVoucher();
-              // this._routes.navigate(['/JournalvoucherView']);
-              //this._routes.navigate(['/Transactions/JournalVoucherView']);
-              //this.router.navigate(['/Transactions/JournalVoucherView']);
-              debugger;
-              //window.open('/#/Reports/JournalVoucherReport?id=' + btoa(res[1] + ',' + 'Journal Voucher'));
-              let receipt = btoa(res[1] + ',' + 'Journal Voucher');
-              // this.router.navigate(['/Reports/JournalVoucherReport', receipt]);
-              window.open('/#/JournalVoucherReport?id=' + receipt + '', "_blank");
-            }
+      );
 
-          },
-            (error: any) => {
-              //this.isLoading = false;
-              this._commonService.showErrorMessage(error);
-              this.disablesavebutton = false;
-              this.savebutton = 'Save';
-            });
-        }
-      }
-    }
+  } catch (error) {
 
+    this._commonService.showErrorMessage(error);
+    this.disablesavebutton = false;
+    this.savebutton = 'Save';
   }
+}
   getpartyJournalEntryData() {
 
     let dataobject = { accountname: '', debitamount: '', creditamount: '' }

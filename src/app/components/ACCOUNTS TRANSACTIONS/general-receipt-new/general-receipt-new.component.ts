@@ -390,20 +390,23 @@ export class GeneralReceiptNewComponent implements OnInit {
         trans_date = this._commonService.getFormatDateNormal(trans_date);
         let amt = 0;
 
-     this._Accountservice.GetCashRestrictAmountpercontact1(
-  'GENERAL RECEIPT',
-  'KGMS',
-  this._CommonService.getbranchname(),    
-  this._CommonService.getschemaname(),     
-  ppartyid,                                
-  trans_date,                              
-  this._CommonService.getCompanyCode(),    
-  
-  this._CommonService.getBranchCode()).subscribe((res: any) => {console.log(res);
-  const amt = Number(res) || 0;this.availableAmount =(Number(this.cashRestrictAmount) || 0) - amt;},
-  (error: any) => {console.error(error);this._commonService.showErrorMessage(error);
-  }
-);
+        this._Accountservice.GetCashRestrictAmountpercontact1(
+            'GENERAL RECEIPT',
+            'KGMS',
+            this._CommonService.getbranchname(),
+            this._CommonService.getschemaname(),
+            ppartyid,
+            trans_date,
+            this._CommonService.getCompanyCode(),
+
+            this._CommonService.getBranchCode()).subscribe((res: any) => {
+                console.log(res);
+                const amt = Number(res) || 0; this.availableAmount = (Number(this.cashRestrictAmount) || 0) - amt;
+            },
+                (error: any) => {
+                    console.error(error); this._commonService.showErrorMessage(error);
+                }
+            );
         if (ppartyid && ppartyid !== '') {
             const ledgername = $event.ppartyname;
             const pStateId = $event.pStateId; this.getPartyDetailsbyid(ppartyid, pStateId);
@@ -422,8 +425,8 @@ export class GeneralReceiptNewComponent implements OnInit {
 
     }
     getPartyDetailsbyid(ppartyid: any, pStateId: any) {
-        this._Accountservice.getPartyDetailsbyid(ppartyid,this._commonService.getbranchname(),
-        this._commonService.getBranchCode(),this._commonService.getCompanyCode(),this._commonService.getschemaname(),'taxes').subscribe(
+        this._Accountservice.getPartyDetailsbyid(ppartyid, this._commonService.getbranchname(),
+            this._commonService.getBranchCode(), this._commonService.getCompanyCode(), this._commonService.getschemaname(), 'taxes').subscribe(
                 (json: any) => {
                     if (json != null) {
                         this.tdssectionlist = [];
@@ -649,7 +652,7 @@ export class GeneralReceiptNewComponent implements OnInit {
                 DepositBankIDControl.updateValueAndValidity();
             }
         }
-       
+
         this.bankbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
         this.bankpassbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
 
@@ -1204,7 +1207,16 @@ export class GeneralReceiptNewComponent implements OnInit {
             let accountid = acc.join(',');
             let trans_date = this.GeneralReceiptForm.controls['preceiptdate'].value;
             trans_date = this._commonService.getFormatDateNormal(trans_date);
-            this._AccountingTransactionsService.GetCashAmountAccountWise("GENERAL RECEIPT", accountid, trans_date).subscribe(result => {
+            this._AccountingTransactionsService.GetCashAmountAccountWise(
+                "GENERAL RECEIPT",
+
+
+                this._commonService.getbranchname(),
+                accountid,
+                trans_date, this._commonService.getschemaname(),
+                this._commonService.getCompanyCode(),
+                this._commonService.getBranchCode()
+            ).subscribe(result => {
                 console.log(result);
                 debugger;
                 if (this.GeneralReceiptForm.controls['pmodofreceipt'].value == "CASH" && this.bankexists == false) {

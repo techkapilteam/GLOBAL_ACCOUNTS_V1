@@ -2275,7 +2275,14 @@ getPaymentListColumnWisetotals() {
     let trans_date = this.paymentVoucherForm.controls['ppaymentdate'].value;
     trans_date = this._commonService.getFormatDateNormal(trans_date);
 
-    this._AccountingTransactionsService.GetCashAmountAccountWise("PAYMENT VOUCHER", accountIds, trans_date)
+    this._AccountingTransactionsService.GetCashAmountAccountWise(
+      "PAYMENT VOUCHER",
+      this._commonService.getbranchname(), 
+      accountIds, 
+      trans_date,this._commonService.getschemaname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode()
+    )
       .subscribe(result => {
         debugger;
 
@@ -2361,110 +2368,252 @@ getPaymentListColumnWisetotals() {
 
 
 
+  // getpartyJournalEntryData() {
+  //   debugger;
+  //   try {
+  //     const tdsJournalEntries: any[] = [];
+  //     const ledgerNames = [...new Set(this.paymentslist.map((item: any) => item.pledgername))];
+  //     this.partyjournalentrylist = [];
+  //     let journalIndex = 1;
+
+  //     // Process each ledger
+  //     for (const ledger of ledgerNames) {
+  //       const ledgerPayments = this.paymentslist.filter((p: any) => p.pledgername === ledger);
+
+  //       // Total debit amount for the ledger (payment + TDS)
+  //       const ledgerDebit = ledgerPayments.reduce(
+  //         (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.pamount) + this._commonService.removeCommasInAmount(p.ptdsamount),
+  //         0
+  //       );
+
+  //       // Push ledger debit entry
+  //       this.partyjournalentrylist.push({
+  //         type: 'Payment Voucher',
+  //         accountname: ledger,
+  //         debitamount: ledgerDebit,
+  //         creditamount: ''
+  //       });
+
+  //       // Process TDS per section
+  //       const tdsSections = [...new Set(ledgerPayments.map((p: any) => p.pTdsSection))];
+  //       for (const section of tdsSections) {
+  //         const tdsAmount = ledgerPayments
+  //           .filter((p: any) => p.pTdsSection === section)
+  //           .reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
+
+  //         if (tdsAmount > 0) {
+  //           tdsJournalEntries.push({
+  //             type: `Journal Voucher${journalIndex}`,
+  //             accountname: `TDS-${section} RECEIVABLE`,
+  //             debitamount: tdsAmount,
+  //             creditamount: ''
+  //           });
+  //         }
+  //       }
+
+  //       // Ledger credit for total TDS
+  //       const totalTDS = ledgerPayments.reduce(
+  //         (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount),
+  //         0
+  //       );
+  //       if (totalTDS > 0) {
+  //         tdsJournalEntries.push({
+  //           type: `Journal Voucher${journalIndex}`,
+  //           accountname: ledger,
+  //           debitamount: '',
+  //           creditamount: totalTDS
+  //         });
+  //       }
+
+  //       journalIndex++;
+  //     }
+
+  //     // Add GST entries if present
+  //     const gstTypes = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
+  //     const gstNames = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
+
+  //     gstTypes.forEach((key, idx) => {
+  //       const totalGST = this.paymentslist.reduce(
+  //         (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p[key]),
+  //         0
+  //       );
+  //       if (totalGST > 0) {
+  //         this.partyjournalentrylist.push({
+  //           type: 'Payment Voucher',
+  //           accountname: gstNames[idx],
+  //           debitamount: totalGST,
+  //           creditamount: ''
+  //         });
+  //       }
+  //     });
+
+  //     // Total paid amount
+  //     const totalPaid = this.paymentslist.reduce(
+  //       (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptotalamount),
+  //       0
+  //     );
+  //     if (totalPaid > 0) {
+  //       this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
+
+  //       const accountName = this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' ? 'CASH ON HAND' : 'BANK';
+  //       this.partyjournalentrylist.push({
+  //         type: 'Payment Voucher',
+  //         accountname: accountName,
+  //         debitamount: '',
+  //         creditamount: totalPaid.toFixed(2)
+  //       });
+  //     }
+
+  //     // Append TDS journal entries
+  //     this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
+
+  //     this.loadgrid();
+  //   } catch (e) {
+  //     this._commonService.showErrorMessage(e);
+  //   }
+  // }
+
   getpartyJournalEntryData() {
-    debugger;
-    try {
-      const tdsJournalEntries: any[] = [];
-      const ledgerNames = [...new Set(this.paymentslist.map((item: any) => item.pledgername))];
-      this.partyjournalentrylist = [];
-      let journalIndex = 1;
+  try {
 
-      // Process each ledger
-      for (const ledger of ledgerNames) {
-        const ledgerPayments = this.paymentslist.filter((p: any) => p.pledgername === ledger);
+    const tdsJournalEntries: any[] = [];
+    this.partyjournalentrylist = [];
 
-        // Total debit amount for the ledger (payment + TDS)
-        const ledgerDebit = ledgerPayments.reduce(
-          (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.pamount) + this._commonService.removeCommasInAmount(p.ptdsamount),
-          0
-        );
+    // Get unique ledger names
+    const ledgerNames = [...new Set(
+      this.paymentslist
+        .map((item: any) => item.pledgername)
+        .filter((name: any) => name)
+    )];
 
-        // Push ledger debit entry
-        this.partyjournalentrylist.push({
-          type: 'Payment Voucher',
-          accountname: ledger,
-          debitamount: ledgerDebit,
-          creditamount: ''
-        });
+    let journalIndex = 1;
 
-        // Process TDS per section
-        const tdsSections = [...new Set(ledgerPayments.map((p: any) => p.pTdsSection))];
-        for (const section of tdsSections) {
-          const tdsAmount = ledgerPayments
-            .filter((p: any) => p.pTdsSection === section)
-            .reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
+    // 🔹 Process each ledger
+    for (const ledger of ledgerNames) {
 
-          if (tdsAmount > 0) {
-            tdsJournalEntries.push({
-              type: `Journal Voucher${journalIndex}`,
-              accountname: `TDS-${section} RECEIVABLE`,
-              debitamount: tdsAmount,
-              creditamount: ''
-            });
-          }
-        }
+      const ledgerPayments = this.paymentslist
+        .filter((p: any) => p.pledgername === ledger);
 
-        // Ledger credit for total TDS
-        const totalTDS = ledgerPayments.reduce(
-          (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount),
-          0
-        );
-        if (totalTDS > 0) {
-          tdsJournalEntries.push({
-            type: `Journal Voucher${journalIndex}`,
-            accountname: ledger,
-            debitamount: '',
-            creditamount: totalTDS
-          });
-        }
-
-        journalIndex++;
-      }
-
-      // Add GST entries if present
-      const gstTypes = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
-      const gstNames = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
-
-      gstTypes.forEach((key, idx) => {
-        const totalGST = this.paymentslist.reduce(
-          (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p[key]),
-          0
-        );
-        if (totalGST > 0) {
-          this.partyjournalentrylist.push({
-            type: 'Payment Voucher',
-            accountname: gstNames[idx],
-            debitamount: totalGST,
-            creditamount: ''
-          });
-        }
-      });
-
-      // Total paid amount
-      const totalPaid = this.paymentslist.reduce(
-        (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptotalamount),
+      // Total debit (Payment + TDS)
+      const ledgerDebit = ledgerPayments.reduce((sum: number, p: any) =>
+        sum +Number
+        (this._commonService.removeCommasInAmount(p.pamount) || 0) +
+       Number (this._commonService.removeCommasInAmount(p.ptdsamount) || 0),
         0
       );
-      if (totalPaid > 0) {
-        this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
 
-        const accountName = this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' ? 'CASH ON HAND' : 'BANK';
-        this.partyjournalentrylist.push({
-          type: 'Payment Voucher',
-          accountname: accountName,
-          debitamount: '',
-          creditamount: totalPaid.toFixed(2)
+      // Push ledger debit entry
+      this.partyjournalentrylist.push({
+        type: 'Payment Voucher',
+        accountname: ledger,
+        debitamount: ledgerDebit,
+        creditamount: 0
+      });
+
+      // 🔹 TDS Section Wise
+      const tdsSections = [...new Set(
+        ledgerPayments
+          .map((p: any) => p.pTdsSection)
+          .filter((section: any) => section)
+      )];
+
+      for (const section of tdsSections) {
+
+        const tdsAmount = ledgerPayments
+          .filter((p: any) => p.pTdsSection === section)
+          .reduce((sum: number, p: any) =>
+            sum + Number(this._commonService.removeCommasInAmount(p.ptdsamount) || 0),
+            0
+          );
+
+        if (tdsAmount > 0) {
+          tdsJournalEntries.push({
+            type: `Journal Voucher ${journalIndex}`,
+            accountname: `TDS-${section} RECEIVABLE`,
+            debitamount: tdsAmount,
+            creditamount: 0
+          });
+        }
+      }
+
+      // 🔹 Ledger Credit for total TDS
+      const totalTDS = ledgerPayments.reduce((sum: number, p: any) =>
+        sum + Number(this._commonService.removeCommasInAmount(p.ptdsamount) || 0),
+        0
+      );
+
+      if (totalTDS > 0) {
+        tdsJournalEntries.push({
+          type: `Journal Voucher ${journalIndex}`,
+          accountname: ledger,
+          debitamount: 0,
+          creditamount: totalTDS
         });
       }
 
-      // Append TDS journal entries
-      this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
-
-      this.loadgrid();
-    } catch (e) {
-      this._commonService.showErrorMessage(e);
+      journalIndex++;
     }
+
+    // 🔹 GST Entries
+    const gstConfig = [
+      { key: 'pigstamount', name: 'P-IGST' },
+      { key: 'pcgstamount', name: 'P-CGST' },
+      { key: 'psgstamount', name: 'P-SGST' },
+      { key: 'putgstamount', name: 'P-UTGST' }
+    ];
+
+    gstConfig.forEach(gst => {
+
+      const totalGST = this.paymentslist.reduce((sum: number, p: any) =>
+        sum +Number (this._commonService.removeCommasInAmount(p[gst.key]) || 0),
+        0
+      );
+
+      if (totalGST > 0) {
+        this.partyjournalentrylist.push({
+          type: 'Payment Voucher',
+          accountname: gst.name,
+          debitamount: totalGST,
+          creditamount: 0
+        });
+      }
+    });
+
+    // 🔹 Total Paid Amount
+    const totalPaid = this.paymentslist.reduce((sum: number, p: any) =>
+      sum + Number(this._commonService.removeCommasInAmount(p.ptotalamount) || 0),
+      0
+    );
+
+    if (totalPaid > 0) {
+
+      this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
+
+      const accountName =
+        this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH'
+          ? 'CASH ON HAND'
+          : 'BANK';
+
+      this.partyjournalentrylist.push({
+        type: 'Payment Voucher',
+        accountname: accountName,
+        debitamount: 0,
+        creditamount: totalPaid
+      });
+    }
+
+    // 🔹 Append TDS Journal Entries at end
+    this.partyjournalentrylist = [
+      ...this.partyjournalentrylist,
+      ...tdsJournalEntries
+    ];
+
+    this.loadgrid();
+
+  } catch (e) {
+    this._commonService.showErrorMessage(e);
   }
+}
 
 
 

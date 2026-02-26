@@ -721,9 +721,9 @@
               <td>{{rowData.ppartyname || '-- NA --'}}</td>
               <td>{{rowData.pledgername || '-- NA --'}}</td>
               <td>{{rowData.psubledgername || '-- NA --'}}</td>
-              <td class="text-right">{{currencySymbol}}{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2'
+              <td class="text-right">{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2'
                 }}</td>
-              <td class="text-right">{{currencySymbol}}{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}
+              <td class="text-right">{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}
               </td>
               <td class="text-center">{{ rowData.pgstcalculationtype || '-- NA --' }}</td>
               <td>{{ rowData.pTdsSection || '-- NA --' }}</td>
@@ -786,7 +786,7 @@
           </ngx-datatable-column>
         </ngx-datatable> -->
 
-        <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="300px">
+        <!-- <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="300px">
 
           <ng-template pTemplate="header">
             <tr>
@@ -824,8 +824,41 @@
             </tr>
           </ng-template>
 
-        </p-table>
+        </p-table> -->
+<p-table [value]="partyjournalentrylist"
+         [paginator]="true"
+         [rows]="5"
+         [scrollable]="true"
+         scrollHeight="300px">
 
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Particulars</th>
+      <th style="text-align:right">Dr</th>
+      <th style="text-align:right">Cr</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData>
+    <tr>
+      <td>{{ rowData.accountname }}</td>
+
+      <td style="text-align:right">
+        <span *ngIf="rowData.debitamount > 0">
+          {{ rowData.debitamount | currency:currencyCode:'symbol':'1.2-2' }}
+        </span>
+      </td>
+
+      <td style="text-align:right">
+        <span *ngIf="rowData.creditamount > 0">
+          {{ rowData.creditamount | currency:currencyCode:'symbol':'1.2-2' }}
+        </span>
+      </td>
+
+    </tr>
+  </ng-template>
+
+</p-table>
 
       </div>
 

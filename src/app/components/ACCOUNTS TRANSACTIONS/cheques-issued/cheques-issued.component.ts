@@ -272,7 +272,12 @@ pageSetUp() {
 
 GetBankBalance(bankid: number) {
   this._accountingtransaction
-    .GetBankBalance(bankid)
+    .GetBankBalance(
+           '29-02-2024',
+      bankid,
+      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
+
+    )
     .subscribe({
       next: (bankdetails: any) => {
 
