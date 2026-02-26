@@ -12,7 +12,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 @Injectable({
     providedIn: 'root'
 })
-export class AddFotmToMenuService {
+export class AddFormToMenuService {
 
     constructor(private commonService: CommonService) { }
     GetModules(parentmodulename:any):any {
