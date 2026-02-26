@@ -108,7 +108,9 @@ export class ChequeEnquiryComponent implements OnInit {
 
   private loadBanks() {
     this.accountingService
-      .GetBanksList(this.commonService.getschemaname())
+      // .GetBanksList(this.commonService.getschemaname())
+      .GetBanksntList(this.commonService.getbranchname(),this.commonService.getschemaname()
+      ,this.commonService.getCompanyCode(),this.commonService.getBranchCode())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (banks) => (this.BanksList = banks),

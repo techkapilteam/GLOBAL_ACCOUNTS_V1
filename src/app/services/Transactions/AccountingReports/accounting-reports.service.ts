@@ -489,15 +489,18 @@ export class AccountingReportsService {
 
     return this._CommonService.getAPI('/Accounts/GetJvListDetails', params, 'YES');
   }
-  GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string): Observable<any> {
+  GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('fromdate', fromdate)
       .set('todate', todate)
       .set('pmodeoftransaction', pmodeoftransaction)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
     return this._CommonService.getAPI(
-      '/Accounting/AccountingReports/GetJvListDetailsGroup',
+      '/Accounts/GetJvListDetailsGroup',
       params,
       'YES'
     );

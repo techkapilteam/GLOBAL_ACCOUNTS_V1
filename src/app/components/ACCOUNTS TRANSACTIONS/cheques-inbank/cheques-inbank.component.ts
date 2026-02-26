@@ -351,7 +351,9 @@ export class ChequesInbankComponent implements OnInit {
 
     // ---------- API Calls ----------
     this._accountingtransaction
-      .GetBanksList(this._commonService.getschemaname())
+      .GetBanksntList(this._commonService.getbranchname(),this._commonService.getschemaname()
+      ,this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+    )
       .subscribe(bankslist => {
         this.BanksList = bankslist;
       });

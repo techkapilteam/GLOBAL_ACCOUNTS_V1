@@ -168,9 +168,13 @@ export class AccountingTransactionsService {
     .set('checkdate', checkdate).set('CompanyCode', CompanyCode).set('GlobalSchema', GlobalSchema).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/GetCashRestrictAmountpercontact', params, 'YES');
   }
-  GetBanksList(BranchSchema: any): Observable<any> {
-    const params = new HttpParams().set('BranchSchema', BranchSchema);
-    return this._CommonService.getAPI('/AccountingTransactions/GetBankntList', params, 'YES')
+  // GetBanksList(BranchSchema: any): Observable<any> {
+  //   const params = new HttpParams().set('BranchSchema', BranchSchema);
+  //   return this._CommonService.getAPI('/AccountingTransactions/GetBankntList', params, 'YES')
+  // }
+  GetBanksntList(BranchSchema: any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+    const params = new HttpParams().set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetBankntList', params, 'YES')
   }
 
   // GetPayTmBanksList(BranchSchema: any, p0: string, p1: string): Observable<any> {
