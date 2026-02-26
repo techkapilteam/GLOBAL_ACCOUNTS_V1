@@ -178,6 +178,8 @@ export class GeneralReceiptNewComponent implements OnInit {
     pAccountnumber_change() {
         this.formValidationMessages['pAccountnumber'] = '';
     }
+    
+    isStateSelected = false;
     ngOnInit(): void {
 
         this.currencySymbol = this._commonService.currencysymbol;
@@ -710,6 +712,9 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.bankbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
         this.bankpassbookBalance = this.currencySymbol + ' 0.00' + ' Dr';
 
+        console.log(this.banklist);
+        
+
     }
 
     validation(type: string) {
@@ -828,23 +833,32 @@ export class GeneralReceiptNewComponent implements OnInit {
 
     bankName_Change($event: any): void {
 
-        const pbankid = $event.target.value;
-        this.upinameslist = [];
-        this.chequenumberslist = [];
-        this.GeneralReceiptForm['controls']['pUpiname'].setValue('');
-        this.GeneralReceiptForm['controls']['pUpiid'].setValue('');
-        if (pbankid && pbankid != '') {
-            const bankname = $event.target.options[$event.target.selectedIndex].text;
-            this.GetStatedetailsbyId(pbankid);
-            this.getBankBranchName(pbankid);
-            //this.GeneralReceiptForm['controls']['pbankname'].setValue(bankname);
-            this.GeneralReceiptForm['controls']['pbankid'].setValue(bankname);
+  const pbankid = $event;   // For ng-select
 
-        }
-        else {
-            this.GeneralReceiptForm['controls']['pbankname'].setValue('');
-        }
+  this.upinameslist = [];
+  this.chequenumberslist = [];
+
+  this.GeneralReceiptForm.get('pUpiname')?.setValue('');
+  this.GeneralReceiptForm.get('pUpiid')?.setValue('');
+
+  if (pbankid && pbankid !== '') {
+
+    // If you really need state details, make sure method exists
+    // this.getStatedetailsbyId(pbankid);
+
+    this.getBankBranchName(pbankid);
+
+    // If you want to store bank name instead of id
+    const selectedBank = this.banklist.find(x => x.pbankid == pbankid);
+
+    if (selectedBank) {
+      this.GeneralReceiptForm.get('pbankname')?.setValue(selectedBank.pbankname);
     }
+
+  } else {
+    this.GeneralReceiptForm.get('pbankname')?.setValue('');
+  }
+}
     getBankBranchName(pbankid: any): void {
 
         if (!pbankid) {
@@ -1819,62 +1833,64 @@ export class GeneralReceiptNewComponent implements OnInit {
     }
     //  { target: { value: any; options: { [x: string]: { text: any; }; }; selectedIndex: string | number; }; }
 
-    state_change($event: any) {
-        debugger;
-        const pstateid = $event.target.value;
-        this.gst_clear();
-        //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['pgstpercentage'].setValue('');
-        if (pstateid && pstateid != '') {
+   state_change($event: any) {
 
+  const pstateid = $event?.value || $event?.target?.value;
 
-            const statename = $event.target.options[$event.target.selectedIndex].text;
-            this.GeneralReceiptForm.get('preceiptslist.pState')?.setValue(statename);
-            let gstnoControl = <FormGroup>this.GeneralReceiptForm.get('preceiptslist.pgstno');
+  this.gst_clear();
 
-            let gstno = statename.split('-')[1];
-            if (gstno) {
-                this.showgstno = false;
-                //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['pgstno'].clearValidators();
-            }
-            else {
-                this.showgstno = true;
-                //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['pgstno'].setValidators([Validators.required]);
-            }
-            //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['pgstno'].updateValueAndValidity();
+  // Hide everything by default
+  this.showgstamount = false;
+  this.showigst = false;
+  this.showcgst = false;
+  this.showsgst = false;
+  this.showutgst = false;
+  this.showgstno = false;
 
-            let data = this.GetStatedetailsbyId(pstateid);
+  if (pstateid && pstateid !== '') {
 
-            this.showgstamount = true;
-            this.showigst = false;
-            this.showcgst = false;
-            this.showsgst = false;
-            this.showutgst = false;
+    // If using ng-select, get selected object properly
+    let selectedState = this.statelist.find(x => x.pStateId == pstateid);
 
-            this.GeneralReceiptForm.get('preceiptslist.pgsttype')?.setValue(data.pgsttype);
-            this.GeneralReceiptForm.get('preceiptslist.pgstno')?.setValue(data.gstnumber);
-            if (data.pgsttype == 'IGST')
-                this.showigst = true;
-            else {
-                this.showcgst = true;
-                if (data.pgsttype == 'CGST,SGST')
-                    this.showsgst = true;
-                if (data.pgsttype == 'CGST,UTGST')
-                    this.showutgst = true;
-            }
-        }
-        else {
+    if (!selectedState) return;
 
-            this.GeneralReceiptForm.get('preceiptslist.pState')?.setValue('');
-        }
-        this.claculategsttdsamounts();
-        this.claculateTDSamount();
+    this.GeneralReceiptForm.get('preceiptslist.pState')?.setValue(selectedState.pState);
+
+    // GST No visibility
+    if (selectedState.gstnumber) {
+      this.showgstno = false;
+    } else {
+      this.showgstno = true;
     }
 
-    GetStatedetailsbyId(pstateid: any): any {
-        return (this.statelist.filter(function (tds: { pStateId: any; }) {
-            return tds.pStateId == pstateid;
-        }))[0];
+    this.GeneralReceiptForm.get('preceiptslist.pgsttype')?.setValue(selectedState.pgsttype);
+    this.GeneralReceiptForm.get('preceiptslist.pgstno')?.setValue(selectedState.gstnumber);
+
+    // Show GST amount section
+    this.showgstamount = true;
+
+    // Show GST type fields
+    if (selectedState.pgsttype === 'IGST') {
+      this.showigst = true;
     }
+    else {
+      this.showcgst = true;
+
+      if (selectedState.pgsttype === 'CGST,SGST')
+        this.showsgst = true;
+
+      if (selectedState.pgsttype === 'CGST,UTGST')
+        this.showutgst = true;
+    }
+
+    this.claculategsttdsamounts();
+    this.claculateTDSamount();
+  }
+  else {
+    // Clear state if nothing selected
+    this.GeneralReceiptForm.get('preceiptslist.pState')?.setValue('');
+  }
+}
 
 
     ledgerName_Change($event: any): void {
