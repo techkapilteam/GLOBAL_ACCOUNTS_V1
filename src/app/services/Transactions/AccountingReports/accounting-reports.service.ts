@@ -489,15 +489,18 @@ export class AccountingReportsService {
 
     return this._CommonService.getAPI('/Accounts/GetJvListDetails', params, 'YES');
   }
-  GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string): Observable<any> {
+  GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('fromdate', fromdate)
       .set('todate', todate)
       .set('pmodeoftransaction', pmodeoftransaction)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
     return this._CommonService.getAPI(
-      '/Accounting/AccountingReports/GetJvListDetailsGroup',
+      '/Accounts/GetJvListDetailsGroup',
       params,
       'YES'
     );
@@ -1324,7 +1327,8 @@ export class AccountingReportsService {
     didDrawPage: () => {
       const pageHeight = doc.internal.pageSize.getHeight();
       const pageWidth = doc.internal.pageSize.getWidth();
-
+      const currentPage = (doc as any).internal.getCurrentPageInfo().pageNumber;
+if (currentPage === 1) {
       doc.setFont('helvetica', 'normal');
       if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
 
@@ -1338,6 +1342,7 @@ export class AccountingReportsService {
         doc.setFontSize(11);
         doc.text(`Between : ${fromdate ?? ''} And ${todate ?? ''}`, 15, 42);
       }
+    }
 
       const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
       let page = 'Page ' + String(pageNo);
@@ -1412,12 +1417,22 @@ export class AccountingReportsService {
 
     return this._CommonService.getAPI('/Accounting/AccountingReports/GetFormNameDetails', params, 'YES');
   }
-  GetTransTypeDetails(formname: string): Observable<any> {
+  // GetTransTypeDetails(formname: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('formname', formname)
+  //     .set('BranchSchema', this._CommonService.getschemaname());
+
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetTrnastype', params, 'YES');
+  // }
+  GetTransTypeDetails(formname: string,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
     const params = new HttpParams()
       .set('formname', formname)
-      .set('BranchSchema', this._CommonService.getschemaname());
+      .set('BranchSchema', BranchSchema)
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
 
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetTrnastype', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetTrnastype', params, 'YES');
   }
   GetChitReceiptCancelbyId(paymentId: string | number): Observable<any> {
     const params = new HttpParams()

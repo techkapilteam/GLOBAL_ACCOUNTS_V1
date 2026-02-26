@@ -33,7 +33,7 @@ export class PendingTransferComponent implements OnInit {
   totalamount = 0;
   showicons = false;
   showhidetable = false;
-  dataisempty = false;
+  dataisempty = true;
   pendingtransferform!: FormGroup;
   pendingtransfervalidation: Record<string, string> = {};
 
@@ -46,7 +46,7 @@ export class PendingTransferComponent implements OnInit {
     { ptypeofpayment: 'ONLINE', ptranstype: 'ONLINE' }
   ];
 
-  userBranchType = sessionStorage.getItem('userBranchType')??'';
+  userBranchType = sessionStorage.getItem('userBranchType')??'CAO';
   // loginBranchschema = sessionStorage.getItem('loginBranchSchemaname')??'';
   loginBranchschema = 'accounts';
   loginBranchname = sessionStorage.getItem('loginBranchName')??'';
@@ -77,6 +77,7 @@ export class PendingTransferComponent implements OnInit {
     this.setPageModel();
 
     if (this.userBranchType === 'CAO') {
+      debugger
       this.branchcao = true;
       this.formname = 'Pending Transfer In';
 
@@ -141,6 +142,7 @@ export class PendingTransferComponent implements OnInit {
 
   GenerateReport() {
     this.totalamount = 0;
+    this.showhidetable=true
 
     if (!this.validateSaveDeatails(this.pendingtransferform)) return;
 
@@ -188,16 +190,31 @@ export class PendingTransferComponent implements OnInit {
   }
 
   onSort(event: any) {
-    this.loading = true;
-    const sort = event.sorts[0];
+  this.loading = true;
 
-    setTimeout(() => {
-      this.gridData = [...this.gridData].sort((a, b) =>
-        a[sort.prop] > b[sort.prop] ? 1 : -1
-      );
-      this.loading = false;
-    }, 500);
-  }
+  const field = event.field;
+  const order = event.order;
+
+  setTimeout(() => {
+    this.gridData = [...this.gridData].sort((a, b) => {
+      const value1 = a[field];
+      const value2 = b[field];
+
+      let result = 0;
+
+      if (value1 == null && value2 != null) result = -1;
+      else if (value1 != null && value2 == null) result = 1;
+      else if (value1 == null && value2 == null) result = 0;
+      else if (value1 > value2) result = 1;
+      else if (value1 < value2) result = -1;
+      else result = 0;
+
+      return order * result;
+    });
+
+    this.loading = false;
+  }, 500);
+}
   validateSaveDeatails(group: FormGroup): boolean {
     let valid = true;
     Object.keys(group.controls).forEach(k => {

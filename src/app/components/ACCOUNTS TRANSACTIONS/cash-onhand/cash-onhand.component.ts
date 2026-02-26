@@ -205,7 +205,8 @@ export class CashOnhandComponent implements OnInit {
 
   bankNamesList() {
     debugger;
-    this._accountingtransaction.GetBanksList(this._commonService.getschemaname()
+    this._accountingtransaction.GetBanksntList(this._commonService.getbranchname(),this._commonService.getschemaname()
+      ,this._commonService.getCompanyCode(),this._commonService.getBranchCode()
   
   ).subscribe(res => {
       debugger;

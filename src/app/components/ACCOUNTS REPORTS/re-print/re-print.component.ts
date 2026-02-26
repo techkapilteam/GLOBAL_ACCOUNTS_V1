@@ -77,7 +77,7 @@ export class RePrintComponent implements OnInit {
       { reporttype: 'General Receipt', reporttypeid: 'General Receipt' },
       { reporttype: 'Payment Voucher', reporttypeid: 'Payment Voucher' },
       { reporttype: 'Journal Voucher', reporttypeid: 'Journal Voucher' },
-      // { reporttype: 'Chit Receipt/PSO Chit Receipt', reporttypeid: 'Chit Receipt/PSO Chit Receipt' },
+      { reporttype: 'Chit Receipt/PSO Chit Receipt', reporttypeid: 'Chit Receipt/PSO Chit Receipt' },
       { reporttype: 'Subscriber JV', reporttypeid: 'Subscriber JV' },
       { reporttype: 'Petty Cash', reporttypeid: 'Petty Cash' },
       { reporttype: 'Chit Payment', reporttypeid: 'Chit Payment' },
@@ -196,7 +196,7 @@ export class RePrintComponent implements OnInit {
         if (event?.reporttype === 'Verification Charges') {
           this.userbranchtxtboxshowhide = false;
           this.form15UID = false;
-          this.userbranchngselectshowhide = false;
+          this.userbranchngselectshowhide = true;
           this.ReprintRepotForm.controls['panno'].clearValidators();
           this.ReprintRepotForm.controls['Transno'].clearValidators();
           this.ReprintRepotForm.controls['Transno'].updateValueAndValidity();

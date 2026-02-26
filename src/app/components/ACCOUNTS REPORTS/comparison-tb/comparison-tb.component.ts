@@ -448,12 +448,12 @@ pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
     const sum = (field: string) =>
       this.gridData.reduce((a, b) => a + (+b[field] || 0), 0);
 
-    this.totaldebitamount1 = sum('pdebitamount1');
-    this.totalcreditamount1 = sum('pcreditamount1');
-    this.totaldebitamount2 = sum('pdebitamount2');
-    this.totalcreditamount2 = sum('pcreditamount2');
-    this.totaldebitamount3 = sum('pdebittotal');
-    this.totalcreditamount3 = sum('pcredittotal');
+    this.totaldebitamount1 = sum('debitamount1');
+    this.totalcreditamount1 = sum('creditamount1');
+    this.totaldebitamount2 = sum('debitamount2');
+    this.totalcreditamount2 = sum('creditamount2');
+    this.totaldebitamount3 = sum('debittotal');
+    this.totalcreditamount3 = sum('credittotal');
 
     this.difference = Math.abs(this.totaldebitamount1 - this.totalcreditamount1);
     this.hideprint = this.difference === 0;
@@ -461,14 +461,14 @@ pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
 
   export(): void {
     const rows = this.gridData.map(e => ({
-      'Comparision Name': e.pparentaccountName,
-      'Particulars': e.paccountName,
-      'Debit': e.pdebitamount1,
-      'Credit': e.pcreditamount1,
-      'Debit 2': e.pdebitamount2,
-      'Credit 2': e.pcreditamount2,
-      'Debit Total': e.pdebittotal,
-      'Credit Total': e.pcredittotal
+      'Comparision Name': e.parentaccountName,
+      'Particulars': e.accountName,
+      'Debit': e.debitamount1,
+      'Credit': e.creditamount1,
+      'Debit 2': e.debitamount2,
+      'Credit 2': e.creditamount2,
+      'Debit Total': e.debittotal,
+      'Credit Total': e.credittotal
     }));
 
     this.commonService.exportAsExcelFile(rows, 'Comparision_tb_dummy');
