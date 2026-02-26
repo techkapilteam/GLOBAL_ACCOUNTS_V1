@@ -1,0 +1,27 @@
+.receipt-wrapper {
+  min-height: 950px;
+  page-break-after: always;
+}
+
+.receipt-table th,
+.receipt-table td {
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+}
+
+.cancel-watermark {
+  position: absolute;
+  top: 250px;
+  left: 200px;
+  font-size: 120px;
+  color: rgba(200, 200, 200, 0.3);
+  transform: rotate(-45deg);
+  pointer-events: none;
+}
+.temp-ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+}

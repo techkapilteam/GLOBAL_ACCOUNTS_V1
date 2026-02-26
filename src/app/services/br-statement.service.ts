@@ -8,42 +8,97 @@ import { HttpParams } from '@angular/common/http';
 })
 export class BrStatementService {
    constructor(private _commonService: CommonService) {}
-    GetBrStatementReportByDates(
-    fromDate: string,
-    bankAccountId: number
+  // GetBrStatementReportByDates(
+  //   fromDate: string,
+  //   bankAccountId: number
+  // ): Observable<any> {
+
+  //   const params = new HttpParams({
+  //     fromObject: {
+  //       fromdate: fromDate,
+  //       _pBankAccountId: bankAccountId.toString(),
+  //       BranchSchema: this._commonService.getschemaname()
+  //     }
+  //   });
+
+  //   return this._commonService.getAPI(
+  //     '/Accounting/AccountingReports/GetBrs',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  GetBrStatementReportByDates(
+    fromdate: string,
+    _pBankAccountId: number,
+    BranchSchema:any,
+    branchCode:any,
+    companyCode:any,
+    GlobalSchema:any
   ): Observable<any> {
 
     const params = new HttpParams({
       fromObject: {
-        fromdate: fromDate,
-        _pBankAccountId: bankAccountId.toString(),
-        BranchSchema: this._commonService.getschemaname()
+        fromdate: fromdate,
+        _pBankAccountId: _pBankAccountId,
+        BranchSchema: BranchSchema,
+        branchCode:branchCode,
+        companyCode:companyCode,
+        GlobalSchema:GlobalSchema
       }
     });
 
     return this._commonService.getAPI(
-      '/Accounting/AccountingReports/GetBrs',
+      '/Accounts/GetBrs',
       params,
       'YES'
     );
   }
+  // GetBrStatementReportByDatesChequesInfo(
+  //   fromDate: string,
+  //   toDate: string,
+  //   bankAccountId: number
+  // ): Observable<any> {
+
+  //   const params = new HttpParams({
+  //     fromObject: {
+  //       fromdate: fromDate,
+  //       todate: toDate,
+  //       _pBankAccountId: bankAccountId.toString(),
+  //       BranchSchema: this._commonService.getschemaname()
+  //     }
+  //   });
+
+  //   return this._commonService.getAPI(
+  //     '/Accounting/AccountingReports/GetBrStatementReportbyDatesChequesInfo',
+  //     params,
+  //     'YES'
+  //   );
+  // }
+  
   GetBrStatementReportByDatesChequesInfo(
     fromDate: string,
     toDate: string,
-    bankAccountId: number
+    bankAccountId: number,
+    BranchSchema:any,
+    GlobalSchema:any,
+    BranchCode:any,
+CompanyCode:any
   ): Observable<any> {
 
     const params = new HttpParams({
       fromObject: {
         fromdate: fromDate,
         todate: toDate,
-        _pBankAccountId: bankAccountId.toString(),
-        BranchSchema: this._commonService.getschemaname()
+        pBankAccountId: bankAccountId.toString(),
+        BranchSchema: BranchSchema,
+        GlobalSchema:GlobalSchema,
+        BranchCode:BranchCode,
+        CompanyCode:CompanyCode
       }
     });
 
     return this._commonService.getAPI(
-      '/Accounting/AccountingReports/GetBrStatementReportbyDatesChequesInfo',
+      '/Accounts/GetBrStatementReportbyDatesChequesInfo',
       params,
       'YES'
     );

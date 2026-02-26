@@ -32,7 +32,7 @@
             <div class="col-md-3 col-xl-3" *ngIf="fromdatevisible">
                 <div class="form-group">
                     <label class="required-field">From Date</label>
-                    <input class="form-control w-auto" type="text" title="Date" id="fromdate"
+                    <input class="form-control w-auto" type="text"  id="fromdate"
                          formControlName="fromdate" placeholder="" readonly (ngModelChange)="fromdateChange($event)"
                         [bsConfig]="fromdate" #dp="bsDatepicker" bsDatepicker placement="bottom"
                         >
@@ -61,7 +61,7 @@
                     <select class="form-control" (change)="SelectBank($event)" id="bankname" formControlName="bankname"
                         title="Bank" [ngClass]="{ 'is-invalid': CashOnHandValidation.bankname }">
                         <option value="">Select</option>
-                        <option *ngFor="let bank of BanksList" [value]="bank.branch_name">{{bank.branch_name}}</option>
+                        <option *ngFor="let bank of BanksList" [value]="bank.branchName">{{bank.branchName}}</option>
 
                     </select>
                     <!--

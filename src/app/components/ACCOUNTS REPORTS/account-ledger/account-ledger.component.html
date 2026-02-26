@@ -73,12 +73,11 @@
                 </small>
               </div>
 
-              <!-- Sub Ledger -->
               <div class="col-xl-3 col-md-4 form-group">
                 <label>Sub Ledger</label>
 
                 <ng-select [items]="subledgeraccountslist" formControlName="psubledgerid" bindLabel="psubledgername"
-                  bindValue="psubledgerid" placeholder="Select" [searchable]="true" [clearable]="false">
+                  bindValue="psubledgerid" placeholder="Select" appendTo="Body" [searchable]="true" [clearable]="false">
                 </ng-select>
               </div>
 
@@ -166,7 +165,6 @@
             <p-table [value]="gridView" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,20]"
               responsiveLayout="scroll" class="mt-3">
 
-              <!-- Header -->
               <ng-template pTemplate="header">
                 <tr>
                   <th *ngFor="let col of columns">
@@ -175,7 +173,6 @@
                 </tr>
               </ng-template>
 
-              <!-- Body -->
               <ng-template pTemplate="body" let-row>
                 <tr>
                   <td *ngFor="let col of columns">

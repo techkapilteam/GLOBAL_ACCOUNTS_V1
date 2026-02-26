@@ -78,10 +78,18 @@
 <div *ngIf="gridData.length > 0">
 
   <div class="d-flex justify-content-end mb-3">
-    <button pButton icon="pi pi-file-excel"
-            class="p-button-success mr-2"
-            (click)="exportExcel()">
-    </button>
+    <ul class="temp-ul">
+            <li class="temp-ico ml-2">
+                <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf" style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
+            </li>
+            <li class="temp-ico ml-2">
+                <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print" (click)="pdfOrprint('Print')" style="cursor: pointer;" />
+            </li>
+             <li class="temp-ico ml-2">
+                <img src="assets/images/icon-excel.svg "  width="18px" class="pt-2" title="Excel"
+                    style="cursor: pointer;" (click)="exportExcel()" />
+            </li>
+        </ul>
   </div>
 
   <p-table

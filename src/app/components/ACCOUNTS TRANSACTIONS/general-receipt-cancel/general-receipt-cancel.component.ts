@@ -1,77 +1,168 @@
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TableModule } from 'primeng/table';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-general-receipt-cancel',
   standalone: true,
-  imports: [CommonModule, BsDatepickerModule, ReactiveFormsModule, NgxDatatableModule],
-  templateUrl: './general-receipt-cancel.component.html'
+  templateUrl: './general-receipt-cancel.component.html',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgSelectModule,
+    BsDatepickerModule,
+    TableModule
+  ]
 })
-export class GeneralReceiptCancelComponent {
+export class GeneralReceiptCancelComponent implements OnInit {
 
-  generalrecipetcancelform!: FormGroup;
-  today: Date = new Date();
-  public dpConfig: Partial<BsDatepickerConfig> = new BsDatepickerConfig();
+  GeneralReceiptCancelForm!: FormGroup;
 
-  show: boolean = false;
-  selectedReceipt: any = null;
+  show = false;
+  disablesavebutton = false;
+  ButtonType = 'Save';
 
-  receipts = [
+  lblcontact = '';
+  lblreceiptdate: any = null;
+  lblnarration = '';
+  lblmodeoftransaction = '';
+  lblemployee = '';
+  currencysymbol = '₹';
+
+  // 🔹 Dummy receipt dropdown data
+  receiptdata: any[] = [
     {
-      id: 1,
-      receiptNo: 'REC001',
-      receivedFrom: 'Kapil Chits Hyderabad Pvt Ltd',
-      receiptDate: '15-Nov-2025',
-      narration: 'Being the cash received from SECUNDERABAD-SAINIKPUR as on 20-08-2025 12:46:53 but not receipted (unknown)',
-      mode: 'Cash',
-      doneBy: 'DIRECT',
-      items: [
-        { sNo: 1, particulars: 'SUSPENSE ACCOUNT(UNKNOWN AMOUNT)', amount: 200 }
-      ]
+      payment_number: 'GR-001',
+      tbl_trans_pettycash_voucher_id: 1
     },
     {
-      id: 2,
-      receiptNo: 'REC002',
-      receivedFrom: 'Kapil Chits Hyderabad Pvt Ltd',
-      receiptDate: '16-Jan-2026',
-      narration: 'Payment received for consulting services',
-      mode: 'Bank Transfer',
-      doneBy: 'DIRECT',
-      items: [
-        { sNo: 1, particulars: 'Service Charges', amount: 100 },
-        { sNo: 2, particulars: 'Consulting Fees', amount: 250 }
-      ]
+      payment_number: 'GR-002',
+      tbl_trans_pettycash_voucher_id: 2
     }
   ];
 
-  constructor(private fb: FormBuilder) {
-    this.dpConfig.maxDate = new Date();
-    this.dpConfig.containerClass = 'theme-dark-blue';
-    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
-    this.dpConfig.showWeekNumbers = false;
+  // 🔹 Dummy authorised-by list
+  authorizedbylist!: Observable<any[]>;
+
+  // 🔹 Dummy grid data
+  generealreceiptdata: any[] = [];
+
+  pageCriteria = {
+    pageSize: 10,
+    offset: 0,
+    totalrows: 0
+  };
+
+  dpConfig = {
+    dateInputFormat: 'DD/MMM/YYYY',
+    showWeekNumbers: false
+  };
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.createForm();
+
+    // Dummy authorised-by observable
+    this.authorizedbylist = of([
+      { subintroducedid: 1, subintroducedname: 'Manager One' },
+      { subintroducedid: 2, subintroducedname: 'Manager Two' }
+    ]);
   }
 
-  ngOnInit() {
-    this.generalrecipetcancelform = this.fb.group({
-      receiptNo: [''],
-      toDate: [this.today]
+  private createForm(): void {
+    this.GeneralReceiptCancelForm = this.fb.group({
+      receiptid: [null, Validators.required],
+      ppaymentdate: [{ value: new Date(), disabled: true }, Validators.required],
+      cancellationreason: ['', Validators.required],
+      autorizedcontactid: [null, Validators.required]
     });
   }
 
-  onSelectReceipt(event: any) {
-    const receiptId = parseInt(event.target.value, 10);
-    this.selectedReceipt = this.receipts.find(r => r.id === receiptId);
+  Show(): void {
+
+    if (this.GeneralReceiptCancelForm.get('receiptid')?.invalid) {
+      this.GeneralReceiptCancelForm.get('receiptid')?.markAsTouched();
+      return;
+    }
+
+    this.show = true;
+
+    // 🔹 Bind dummy header + grid data
+    this.bindDummyReceiptData();
+  }
+
+  // 🔹 Dummy receipt details (exactly matching HTML bindings)
+  private bindDummyReceiptData(): void {
+
+    this.lblcontact = 'Dummy Customer';
+    this.lblreceiptdate = new Date();
+    this.lblnarration = 'Dummy receipt narration';
+    this.lblmodeoftransaction = 'Cash';
+    this.lblemployee = 'Dummy Employee';
+
+    this.generealreceiptdata = [
+      {
+        parentaccountname: 'Sales Account',
+        totalreceivedamount: 3000
+      },
+      {
+        parentaccountname: 'Service Charges',
+        totalreceivedamount: 1500
+      },
+      {
+        parentaccountname: 'Tax',
+        totalreceivedamount: 500
+      }
+    ];
+
+    this.pageCriteria.totalrows = this.generealreceiptdata.length;
+  }
+
+  Save(): void {
+
+    if (this.GeneralReceiptCancelForm.invalid) {
+      this.GeneralReceiptCancelForm.markAllAsTouched();
+      return;
+    }
+
+    this.disablesavebutton = true;
+    this.ButtonType = 'Processing';
+
+    const payload = this.GeneralReceiptCancelForm.getRawValue();
+    console.log('Dummy Save Payload:', payload);
+
+    setTimeout(() => {
+      alert('Receipt cancelled successfully (Dummy)');
+      this.resetForm();
+      this.disablesavebutton = false;
+      this.ButtonType = 'Save';
+    }, 1000);
+  }
+
+  Cancel(): void {
+    this.resetForm();
+  }
+
+  private resetForm(): void {
+    this.GeneralReceiptCancelForm.reset({
+      receiptid: null,
+      ppaymentdate: new Date(),
+      cancellationreason: '',
+      autorizedcontactid: null
+    });
+
+    this.generealreceiptdata = [];
+    this.pageCriteria.totalrows = 0;
     this.show = false;
   }
 
-  onShow() {
-    if (!this.selectedReceipt) {
-      alert('Please select a receipt first');
-      return;
-    }
-    this.show = true;
+  onPrimePageChange(event: any): void {
+    this.pageCriteria.offset = event.first / event.rows;
+    this.pageCriteria.pageSize = event.rows;
   }
 }

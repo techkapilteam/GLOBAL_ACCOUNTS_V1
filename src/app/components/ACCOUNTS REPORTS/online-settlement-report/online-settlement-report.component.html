@@ -3,10 +3,8 @@
         <div class="screen-header">
             <h2>Online Settlement Report</h2>
         </div>
-        <div class="section-content">
+        <div class="section-content px-4 py-3">
             <form [formGroup]="onlinecollectionreportForm" autocomplete="off">
-
-
                 <div class="row">
                     <div class="col-md-3 col-xl-3">
                         <div class="form-group">
@@ -70,13 +68,14 @@
                         <div class="d-flex justify-content-end me-3">
                             <ul class="d-flex align-items-center mb-0 list-unstyled gap-3">
                                 <li>
-                                    <img src="images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')">
+                                    <img src="assets/images/pdf-icon-blue.svg" width="18" (click)="pdfOrprint('Pdf')">
                                 </li>
                                 <li>
-                                    <img src="images/print-icon-blue.svg" width="18" (click)="pdfOrprint('Print')">
+                                    <img src="assets/images/print-icon-blue.svg" width="18"
+                                        (click)="pdfOrprint('Print')">
                                 </li>
                                 <li>
-                                    <img src="images/icon-excel.svg" width="18" (click)="export()">
+                                    <img src="assets/images/icon-excel.svg" width="18" (click)="export()">
                                 </li>
                             </ul>
                         </div>
@@ -124,6 +123,13 @@
                                         {{ Amttotal | number:'1.2-2' }}
                                     </td>
                                     <td></td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="7" class="text-center font-bold" style="padding:20px;">
+                                        No Data Available
+                                    </td>
                                 </tr>
                             </ng-template>
 

@@ -39,7 +39,7 @@
                                         [ngClass]="{ 'is-invalid': f.pbankname.errors && submitted }">
                                         <option value="">Select</option>
                                         <option *ngFor="let bankDataDetails of bankData"
-                                            [value]="bankDataDetails.pbankaccountid">
+                                            [value]="bankDataDetails.bankAccountId">
                                             {{ bankDataDetails.bankName }}
                                         </option>
                                     </select>
@@ -136,20 +136,20 @@
 
                                 <ng-template pTemplate="body" let-row>
                                     <tr>
-                                        <td>{{ row.pissuedate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.pissuedate | date:'dd-MMM-yyyy' }}</td>
                                         <td>{{ row.ptransactionno }}</td>
                                         <td>{{ currencysymbol }} {{ row.ptotalamount | number:'1.2-2' }}</td>
                                         <td>{{ row.preferencenumber || '--NA--' }}</td>
                                         <td>
                                             <span *ngIf="row.preferencenumber != ''">
-                                                {{ row.pissuedate | date:'DD-MMM-YYYY' }}
+                                                {{ row.pissuedate | date:'dd-MMM-yyyy' }}
                                             </span>
                                             <span *ngIf="row.preferencenumber == ''">--NA--</span>
                                         </td>
-                                        <td>{{ row.pdepositdate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.pdepositdate | date:'dd-MMM-yyyy' }}</td>
                                         <td>
                                             <span *ngIf="row.preferencenumber != ''">
-                                                {{ row.pclearDate | date:'DD-MMM-YYYY' }}
+                                                {{ row.pclearDate | date:'dd-MMM-yyyy' }}
                                             </span>
                                             <span *ngIf="row.preferencenumber == ''">--NA--</span>
                                         </td>
@@ -176,11 +176,11 @@
 
                                 <ng-template pTemplate="body" let-row>
                                     <tr>
-                                        <td>{{ row.pissuedate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.pissuedate | date:'dd-MMM-yyyy' }}</td>
                                         <td>{{ row.ptransactionno }}</td>
                                         <td>{{ row.preferencenumber }}</td>
                                         <td>{{ currencysymbol }} {{ row.ptotalamount | number:'1.2-2' }}</td>
-                                        <td>{{ row.pclearDate | date:'DD-MMM-YYYY' }}</td>
+                                        <td>{{ row.pclearDate | date:'dd-MMM-yyyy' }}</td>
                                         <td>{{ row.pparticulars || '--NA--' }}</td>
                                     </tr>
                                 </ng-template>

@@ -156,6 +156,8 @@ export class AccountSummaryComponent {
 
   totalDebit = 0;
   totalCredit = 0;
+  AsOnDate!: string;
+  betweendates: any;
 
   constructor(
     private fb: FormBuilder,
@@ -279,5 +281,215 @@ export class AccountSummaryComponent {
 
     this.commonService.exportAsExcelFile(rows, 'Account_Summary');
   }
+  pdfOrprint(printOrPdf: 'Pdf' | 'Print'): void {
+
+  const reportName = 'Account Summary';
+
+  const gridHeaders = [
+    'Particulars',
+    'Max Transaction Date',
+    'Opening Balance',
+    'Debit Amount',
+    'Credit Amount',
+    'Closing Balance'
+  ];
+
+  const gridHeadersAsOn = [
+    'Particulars',
+    'Max Transaction Date',
+    'Debit Amount',
+    'Credit Amount'
+  ];
+
+  const rows: any[] = [];
+  const rowsAsOn: any[] = [];
+
+  const fromDateRaw = this.accountSummaryForm.get('dfromdate')?.value;
+  const toDateRaw = this.accountSummaryForm.get('dtodate')?.value;
+
+  const fromDate = fromDateRaw
+    ? this.commonService.getFormatDateGlobal(fromDateRaw)
+    : '';
+
+  const toDate = toDateRaw
+    ? this.commonService.getFormatDateGlobal(toDateRaw)
+    : '';
+
+  const groupedData =
+    this.commonService._getGroupingGridExportData(
+      this.gridData,
+      'pparentname',
+      false
+    );
+
+  groupedData?.forEach((element: any) => {
+
+    let openingBal = '';
+    let debitAmt = '';
+    let creditAmt = '';
+    let closingBal = '';
+    let transactionDate = '';
+
+    if (element.popeningbal) {
+      openingBal =
+        this.commonService.convertAmountToPdfFormat(
+          element.popeningbal
+        ) + element.pFormName;
+    }
+
+    if (element.pdebitamount) {
+      debitAmt =
+        this.commonService.convertAmountToPdfFormat(
+          this.commonService.currencyformat(element.pdebitamount)
+        );
+    }
+
+    if (element.pcreditamount) {
+      creditAmt =
+        this.commonService.convertAmountToPdfFormat(
+          this.commonService.currencyformat(
+            Number(element.pcreditamount)
+          )
+        );
+    }
+
+    if (element.pclosingbal) {
+      closingBal =
+        this.commonService.convertAmountToPdfFormat(
+          element.pclosingbal
+        ) + element.pBalanceType;
+    }
+
+    if (element.ptransactiondate) {
+      transactionDate =
+        this.commonService.getFormatDateGlobal(
+          element.ptransactiondate
+        );
+    }
+
+    let row: any[];
+    let rowAsOn: any[];
+
+    if (element.group !== undefined) {
+      row = [element.group];
+      rowAsOn = [element.group];
+    } else {
+      row = [
+        element.paccountname,
+        transactionDate,
+        openingBal,
+        debitAmt,
+        creditAmt,
+        closingBal
+      ];
+
+      rowAsOn = [
+        element.paccountname,
+        transactionDate,
+        debitAmt,
+        creditAmt
+      ];
+    }
+
+    rows.push(row);
+    rowsAsOn.push(rowAsOn);
+  });
+
+  // Column configuration
+  let columnStyles: any;
+
+  if (this.AsOnDate === 'T') {
+
+    columnStyles = {
+      0: { cellWidth: 'auto' },
+      1: { cellWidth: 'auto', halign: 'center' },
+      2: { cellWidth: 'auto', halign: 'right' },
+      3: { cellWidth: 'auto', halign: 'right' }
+    };
+
+    const totals = [
+      'Total',
+      '',
+      this.commonService.convertAmountToPdfFormat(this.totalDebit),
+      this.commonService.convertAmountToPdfFormat(this.totalCredit)
+    ];
+
+    const grandTotals = [
+      { content: 'Grand Total', colSpan: 2, styles: { halign: 'center' } },
+      {
+        content: this.commonService.convertAmountToPdfFormat(
+          this.totalDebit - this.totalCredit
+        ),
+        colSpan: 3,
+        styles: { halign: 'center' }
+      }
+    ];
+
+    rowsAsOn.push(totals);
+    rowsAsOn.push(grandTotals);
+
+    this.commonService._downloadReportsPdfAccountSummaryason(
+      reportName,
+      rowsAsOn,
+      gridHeadersAsOn,
+      columnStyles,
+      'a4',
+      this.betweendates,
+      fromDate,
+      toDate,
+      printOrPdf
+    );
+
+  } else {
+
+    columnStyles = {
+      0: { cellWidth: 'auto', halign: 'left' },
+      1: { cellWidth: 'auto', halign: 'center' },
+      2: { cellWidth: 'auto', halign: 'right' },
+      3: { cellWidth: 'auto', halign: 'right' },
+      4: { cellWidth: 'auto', halign: 'right' },
+      5: { cellWidth: 'auto', halign: 'right' }
+    };
+
+    const totals = [
+      'Total',
+      '',
+      '',
+      this.commonService.convertAmountToPdfFormat(this.totalDebit),
+      this.commonService.convertAmountToPdfFormat(this.totalCredit),
+      ''
+    ];
+
+    const grandTotals = [
+      { content: 'Grand Total', colSpan: 1, styles: { halign: 'center' } },
+      '',
+      '',
+      {
+        content: this.commonService.convertAmountToPdfFormat(
+          this.totalDebit - this.totalCredit
+        ),
+        colSpan: 2,
+        styles: { halign: 'center' }
+      },
+      ''
+    ];
+
+    rows.push(totals);
+    rows.push(grandTotals);
+
+    this.commonService._downloadReportsPdfAccountSummary(
+      reportName,
+      rows,
+      gridHeaders,
+      columnStyles,
+      'landscape',
+      this.betweendates,
+      fromDate,
+      toDate,
+      printOrPdf
+    );
+  }
+}
+  
 
 }

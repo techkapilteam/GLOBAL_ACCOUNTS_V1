@@ -10,10 +10,10 @@
             <div class="section-content">
               <div class="row">
 
-                <div class="col-md-4 col-xl-4">
+                <div class="col-md-3 col-xl-3">
                   <div class="form-group">
                     <label class="required-field">Select Bank</label>
-                    <div class="input-group">
+                    <!-- <div class="input-group"> -->
                       <!-- pBankname -->
                       <!-- <select class="form-control" id="bankName" formControlName="bankName"
                         (change)="getrecordid($event)">
@@ -27,11 +27,11 @@
                         placeholder="--Select--" formControlName="bankName" (change)="getrecordid($event)">
                       </ng-select>
 
-                    </div>
+                    <!-- </div> -->
                   </div>
                 </div>
 
-                <div class="col-md-4 col-xl-4">
+                <div class="col-md-3 col-xl-3">
                   <div class="form-group">
                     <label class="required-field">Number Of Cheques</label>
                     <input type="text" class="form-control" id="pNoofcheques" maxlength="3"
@@ -39,39 +39,39 @@
                   </div>
                 </div>
 
-                <div class="col-md-4 col-xl-4">
-                  <div class="row">
+                <!-- <div class="col-md-4 col-xl-4"> -->
+                <!-- <div class="row"> -->
 
-                    <div class="col-md-6 col-xl-6">
-                      <div class="form-group">
-                        <label class="required-field">From No.</label>
-                        <input type="text" class="form-control" id="pChequefrom" maxlength="8"
-                          formControlName="pChequefrom" (change)="fromchequeno($event)" appZero appNumbersonly>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6 col-xl-6">
-                      <div class="form-group">
-                        <label class="required-field">To No.</label>
-                        <input type="text" class="form-control" id="pChequeto" formControlName="pChequeto" readonly
-                          appNumbersonly>
-                      </div>
-                    </div>
-
+                <div class="col-md-3 col-xl-3">
+                  <div class="form-group">
+                    <label class="required-field">From No.</label>
+                    <input type="text" class="form-control" id="pChequefrom" maxlength="8" formControlName="pChequefrom"
+                      (change)="fromchequeno($event)" appZero appNumbersonly>
                   </div>
                 </div>
 
-                <div class="col-md-12 col-xl-12">
-                  <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary border-0" (click)="addtoGrid()"
-                      [disabled]="chequemanagementform.invalid">
-                      <!-- <img src="assets/images/icon-add-blue-rounded.svg" class="me-2" width="20" height="20"> -->
-                      Add
-                    </button>
+                <div class="col-md-3 col-xl-3">
+                  <div class="form-group">
+                    <label class="required-field">To No.</label>
+                    <input type="text" class="form-control" id="pChequeto" formControlName="pChequeto" readonly
+                      appNumbersonly>
                   </div>
                 </div>
 
+                <!-- </div> -->
+                <!-- </div> -->
               </div>
+              <div class="col-md-12 col-xl-12 mt-3">
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary border-0" (click)="addtoGrid()"
+                    [disabled]="chequemanagementform.invalid">
+                    <!-- <img src="assets/images/icon-add-blue-rounded.svg" class="me-2" width="20" height="20"> -->
+                    Add
+                  </button>
+                </div>
+              </div>
+
+
             </div>
 
             <div class="section-content mt-2">

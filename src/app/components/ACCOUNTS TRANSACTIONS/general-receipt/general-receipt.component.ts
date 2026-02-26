@@ -14,17 +14,17 @@ import { AccountingTransactionsService } from '../../../services/Transactions/Ac
 export class GeneralReceiptComponent implements OnInit {
 
   gridView: any[] = [];
-  allGridView: any[] = []; // original data for filtering
+  allGridView: any[] = [];
+
   pageCriteria = {
-    footerPageHeight: 50,
     pageSize: 10,
     pageNumber: 1,
     TotalPages: 1,
-    totalrows: 0,
-    offset: 0
+    totalrows: 0
   };
+
   currencySymbol: string = '₹';
-  loading: boolean = false; // show loader if needed
+  loading: boolean = false;
 
   constructor(
     private commonService: CommonService,
@@ -36,71 +36,111 @@ export class GeneralReceiptComponent implements OnInit {
     this.loadData();
   }
 
-  // Fetch data from service
   loadData(): void {
+
     this.loading = true;
-    this.accountingTransactionsService.GetGeneralReceiptExistingData().subscribe({
-      next: (data: any[]) => {
-        this.loading = false;
-        if (!data) {
-          this.gridView = [];
-          this.allGridView = [];
-          return;
+
+    this.accountingTransactionsService
+      .GetGeneralReceiptsData(
+        'global',
+        'accounts',
+        'taxes',
+       'KAPILCHITS',
+        'KLC01'
+      )
+      .subscribe({
+        next: (data: any[]) => {
+
+          this.loading = false;
+
+          if (!data || data.length === 0) {
+            this.resetGrid();
+            return;
+          }
+          this.allGridView = data.map(item => ({
+            ...item,
+            preceiptdate:
+              this.commonService.getFormatDateGlobal(item.preceiptdate) || '--',
+            pmodofreceipt: item.pmodofreceipt || '--',
+            ptypeofpayment: item.ptypeofpayment || '',
+            pChequenumber: item.pChequenumber || '',
+            ptotalreceivedamount: item.ptotalreceivedamount ?? 0,
+            pnarration: item.pnarration || ''
+          }));
+
+          this.pageCriteria.totalrows = this.allGridView.length;
+          this.pageCriteria.TotalPages = Math.ceil(
+            this.allGridView.length / this.pageCriteria.pageSize
+          );
+
+          this.updatePagedData();
+        },
+        error: (error) => {
+          this.loading = false;
+          this.resetGrid();
+          this.commonService.showErrorMessage(error);
         }
+      });
+  }
+  onFooterPageChange(event: any): void {
 
-        // Format date and sanitize data
-        this.gridView = data.map(item => ({
-          ...item,
-          preceiptdate: this.commonService.getFormatDateGlobal(item.preceiptdate) || '--',
-          pmodofreceipt: item.pmodofreceipt || '--',
-          ptypeofpayment: item.ptypeofpayment || '',
-          pChequenumber: item.pChequenumber || '',
-          ptotalreceivedamount: item.ptotalreceivedamount ?? 0,
-          pnarration: item.pnarration || ''
-        }));
+    this.pageCriteria.pageNumber = event.page + 1;
+    this.pageCriteria.pageSize = event.rows;
 
-        this.allGridView = [...this.gridView];
-
-        // update pagination info
-        this.pageCriteria.totalrows = this.gridView.length;
-        this.pageCriteria.TotalPages = Math.ceil(this.gridView.length / this.pageCriteria.pageSize);
-      },
-      error: (error) => {
-        this.loading = false;
-        this.gridView = [];
-        this.allGridView = [];
-        this.pageCriteria.totalrows = 0;
-        this.pageCriteria.TotalPages = 1;
-        this.commonService.showErrorMessage(error);
-      }
-    });
+    this.updatePagedData();
   }
 
-  
+  updatePagedData(): void {
+
+    const startIndex =
+      (this.pageCriteria.pageNumber - 1) * this.pageCriteria.pageSize;
+
+    const endIndex =
+      startIndex + this.pageCriteria.pageSize;
+
+    this.gridView = this.allGridView.slice(startIndex, endIndex);
+  }
   filterDatatable(event: any): void {
+
     const value = (event.target.value || '').toLowerCase();
-    this.gridView = this.allGridView.filter(d =>
+
+    if (!value) {
+      this.pageCriteria.pageNumber = 1;
+      this.pageCriteria.totalrows = this.allGridView.length;
+      this.pageCriteria.TotalPages = Math.ceil(
+        this.allGridView.length / this.pageCriteria.pageSize
+      );
+      this.updatePagedData();
+      return;
+    }
+
+    const filtered = this.allGridView.filter(d =>
       (d.preceiptdate?.toLowerCase() || '').includes(value) ||
-      (d.preceiptid?.toLowerCase() || '').includes(value) ||
+      (d.preceiptid?.toString().toLowerCase() || '').includes(value) ||
       (d.pmodofreceipt?.toLowerCase() || '').includes(value) ||
       (d.pnarration?.toLowerCase() || '').includes(value)
     );
 
-    this.pageCriteria.totalrows = this.gridView.length;
-    this.pageCriteria.TotalPages = Math.ceil(this.gridView.length / this.pageCriteria.pageSize);
-    this.pageCriteria.pageNumber = 1; // reset to first page after filter
-  }
+    this.pageCriteria.pageNumber = 1;
+    this.pageCriteria.totalrows = filtered.length;
+    this.pageCriteria.TotalPages = Math.ceil(
+      filtered.length / this.pageCriteria.pageSize
+    );
 
-  // Handle paginator
-  onFooterPageChange(event: any): void {
-    this.pageCriteria.pageNumber = event.page + 1;
+    this.gridView = filtered.slice(0, this.pageCriteria.pageSize);
   }
-
-  // View row
   viewRow(row: any): void {
+
     const receipt = btoa(
       `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
     );
+
     window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
+  }
+  private resetGrid(): void {
+    this.gridView = [];
+    this.allGridView = [];
+    this.pageCriteria.totalrows = 0;
+    this.pageCriteria.TotalPages = 1;
   }
 }

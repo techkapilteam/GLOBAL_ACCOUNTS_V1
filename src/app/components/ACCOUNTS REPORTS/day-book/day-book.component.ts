@@ -12,6 +12,7 @@ import { CommonService } from '../../../services/common.service';
 import { finalize } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-day-book',
@@ -191,6 +192,7 @@ ChequesAmount: number = 0;
   pageCriteria = new PageCriteria();
   dpConfig: Partial<BsDatepickerConfig> = {};
   dppConfig: Partial<BsDatepickerConfig> = {};
+  showdate:any;
 
   gridData: any[] = [];
   totalBalanceGrid: any[] = [];
@@ -230,6 +232,7 @@ dte:boolean=false;
   ngOnInit(): void {
 
     this.dayBookForm = this.fb.group({
+      date:[new Date()],
       dfromdate: [new Date()],
       dtodate: [new Date()],
       branch_code: ['']
@@ -242,8 +245,11 @@ dte:boolean=false;
   }
 
   private loadBranches(): void {
+    // this.chitService
+    //   .getCAOBranchlist(this.loginBranchschema)
+    //   .subscribe((res: any[]) => this.kgmsBranchList = res || []);
     this.chitService
-      .getCAOBranchlist(this.loginBranchschema)
+      .getCAOBranchlist('accounts','global','KAPILCHITS','KLC01')
       .subscribe((res: any[]) => this.kgmsBranchList = res || []);
   }
 
@@ -268,7 +274,7 @@ dte:boolean=false;
     this.paymentsAmount = 0;
 
     this.reportService
-      .GetDayBook(fromDate, toDate, 'T')
+      .GetDayBook(fromDate, toDate, 'F','accounts','KLC01','KAPILCHITS','global')
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (res: any) => {
@@ -354,69 +360,174 @@ dte:boolean=false;
 
     this.commonService.exportAsExcelFile(rows, 'KGMS WISE COLLECTION REPORT');
   }
-  pdfOrprint(type: 'Pdf' | 'Print'): void {
+  pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
 
-  if (!this.gridData?.length) {
-    return;
-  }
+  const firstgridrows: any[] = [];
+  const secondgridrows: any[] = [];
 
-  const doc = new jsPDF('landscape');
+  const Firstreportname = 'Day Book';
+  const Secondreportname = '';
 
-  const fromDate = this.datePipe.transform(
-    this.dayBookForm.value.dfromdate,
-    'dd-MMM-yyyy'
+  const firstgridheaders: string[] = [
+    'Transaction\nNo.',
+    'Particulars',
+    'Type',
+    'Amount ',
+    'Transaction\nNo.',
+    'Particulars',
+    'Type  ',
+    'Amount  '
+  ];
+
+  const format = this.dayBookForm.controls['dfromdate'].value;
+  const fromDate = this.commonService.getFormatDateGlobal(format);
+
+  const formattodate = this.dayBookForm.controls['dtodate'].value;
+  const toDate = this.commonService.getFormatDateGlobal(formattodate);
+
+  const FirstcolWidthHeight: any = {
+    0: { cellWidth: 'auto', halign: 'center' },
+    1: { cellWidth: 'auto', halign: 'left' },
+    2: { cellWidth: 'auto' },
+    3: { cellWidth: 'auto', halign: 'right' },
+    4: { cellWidth: 'auto' },
+    5: { cellWidth: 'auto', halign: 'left' },
+    6: { cellWidth: 'auto', halign: 'left' },
+    7: { cellWidth: 'auto', halign: 'right' }
+  };
+
+  const retungridData = this.commonService._getGroupingGridExportData(
+    this.gridData,
+    'prcpttransactiondate',
+    true
   );
 
-  const toDate = this.datePipe.transform(
-    this.dayBookForm.value.dtodate,
-    'dd-MMM-yyyy'
-  );
+  retungridData.forEach((element: any) => {
 
-  doc.setFontSize(14);
-  doc.text('Day Book Report', 14, 15);
+    let debitamount = '';
+    let paycreditamt = '';
+    
 
-  doc.setFontSize(10);
-  doc.text(`From: ${fromDate}  To: ${toDate}`, 14, 22);
+    if (element.prcptdebitamount !== 0) {
+      // debitamount = this.commonService.currencyformat(parseFloat(element.prcptdebitamount));
+      debitamount = this.commonService.convertAmountToPdfFormat(parseFloat(element.prcptdebitamount));
+    }
 
-  let startY = 30;
+    if (element.pcreditamount !== 0) {
+      // paycreditamt = this.commonService.currencyformat(element.pcreditamount);
+      paycreditamt = this.commonService.convertAmountToPdfFormat(parseFloat(element.pcreditamount));
+    }
+    
 
-  const rows = this.gridData.map(item => ([
-    item.prcpttransactionno ?? '',
-    item.prcptparticulars ?? '',
-    item.prcptaccountname ?? '',
-    item.prcptdebitamount
-      ? `${this.currencysymbol} ${Number(item.prcptdebitamount).toFixed(2)}`
-      : '',
-    item.ptransactionno ?? '',
-    item.pparticulars ?? '',
-    item.paccountname ?? '',
-    item.pcreditamount
-      ? `${this.currencysymbol} ${Number(item.pcreditamount).toFixed(2)}`
-      : ''
-  ]));
+    // let temp: any[];
 
-  (doc as any).autoTable({
-    head: [[
-      'Transaction No',
-      'Particulars',
-      'Type',
-      'Amount',
-      'Transaction No',
-      'Particulars',
-      'Type',
-      'Amount'
-    ]],
-    body: rows,
-    startY,
-    styles: { fontSize: 8 },
-    theme: 'grid'
+    if (element.group) {
+      firstgridrows.push([
+        element.group,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        ''
+      ]);
+    }
+
+    const temp = [
+      element.prcpttransactionno ?? '',
+      element.prcptparticulars ?? '',
+      element.prcptaccountname ?? '',
+      debitamount,
+      element.ptransactionno ?? '',
+      element.pparticulars ?? '',
+      element.paccountname ?? '',
+      paycreditamt
+    ];
+
+    firstgridrows.push(temp);
   });
 
-  if (type === 'Pdf') {
-    doc.save('DayBookReport.pdf');
-  } else {
-    window.open(doc.output('bloburl'), '_blank');
+  const secondgridheaders: string[] = [
+    'Bank Name',
+    'Opening Balance',
+    'Receipts',
+    'Payments',
+    'Closing Balance'
+  ];
+
+  const SecondcolWidthHeight: any = {
+    paccountname: { cellWidth: 'auto' },
+    popeningbal: { cellWidth: 'auto' },
+    pdebitamount: { cellWidth: 'auto' },
+    pcreditamount: { cellWidth: 'auto' },
+    pclosingbal: { cellWidth: 'auto' }
+  };
+
+  this.totalBalanceGrid.forEach((element: any) => {
+
+    let openingbal = '';
+    let debitamt = '';
+    let creditamt = '';
+    let closingbal = '';
+    
+    const openingVal = parseFloat(element.popeningbal);
+  if (!isNaN(openingVal) && openingVal !== 0) {
+    openingbal = this.commonService.convertAmountToPdfFormat(openingVal);
   }
+
+  if (Number(element.pdebitamount) > 0) {
+    debitamt = this.commonService.convertAmountToPdfFormat(
+      parseFloat(element.pdebitamount)
+    );
+  }
+
+  if (Number(element.pcreditamount) > 0) {
+    creditamt = this.commonService.convertAmountToPdfFormat(
+      parseFloat(element.pcreditamount)
+    );
+  }
+
+    if (element.pclosingbal && element.pclosingbal !== '') {
+    closingbal = element.pclosingbal;
+  }
+
+    const temp = [
+      element.paccountname ??'',
+      openingbal,
+      debitamt,
+      creditamt,
+      closingbal
+    ];
+
+    secondgridrows.push(temp);
+  });
+
+  const Receiptamt = this.commonService.convertAmountToPdfFormat(
+    String(Number(this.receiptsAmount ?? 0))
+  );
+
+  const paymentamt = this.commonService.convertAmountToPdfFormat(
+    String(Number(this.paymentsAmount ?? 0))
+  );
+
+  this.commonService._downloadDayBookReportsPdf(
+    Firstreportname,
+    firstgridrows,
+    firstgridheaders,
+    FirstcolWidthHeight,
+    'landscape',
+    this.showdate,
+    fromDate,
+    toDate,
+    Secondreportname,
+    secondgridrows,
+    secondgridheaders,
+    SecondcolWidthHeight,
+    Receiptamt,
+    paymentamt,
+    printorpdf
+  );
 }
 GetChequeonHandDetails(): void {
 
@@ -425,7 +536,8 @@ GetChequeonHandDetails(): void {
   this.loading = true;
 
   this.reportTransService
-    .GetChequesOnHand(today)
+    // .GetChequesOnHand(today)
+    .GetChequesOnHand(today,'accounts','global','KAPILCHITS','KLC01')
     .pipe(finalize(() => this.loading = false))
     .subscribe({
       next: (res: any[]) => {

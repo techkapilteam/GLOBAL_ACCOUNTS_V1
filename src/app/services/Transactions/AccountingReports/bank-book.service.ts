@@ -96,10 +96,22 @@ export class BankBookService {
         })
       );
   }
-  GetBrsReportBankDebitsBankCredits(fromdate: string | number | boolean, todate: string | number | boolean, bankid: string | number | boolean, transtype: string | number | boolean, branchschema: any): Observable<any> {
+  // GetBrsReportBankDebitsBankCredits(fromdate: string | number | boolean, todate: string | number | boolean, bankid: string | number | boolean, transtype: string | number | boolean, branchschema: any): Observable<any> {
 
-    let params = new HttpParams().set('fromdate', fromdate).set('todate', todate).set('bankid', bankid).set('transtype', transtype).set('branchschema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/ChitTransactions/ChitReports/GetBrsReportBankDebitsBankCredits', params, 'YES')
+  //   let params = new HttpParams().set('fromdate', fromdate).set('todate', todate).set('bankid', bankid).set('transtype', transtype).set('branchschema', this._CommonService.getschemaname());
+  //   return this._CommonService.getAPI('/ChitTransactions/ChitReports/GetBrsReportBankDebitsBankCredits', params, 'YES')
+
+  //     .pipe(
+  //       catchError((e: any) => {
+  //         this._CommonService.showErrorMessage(e);
+  //         return throwError(() => e);
+  //       })
+  //     );
+  // }
+  GetBrsReportBankDebitsBankCredits(fromdate: string | number | boolean, todate: string | number | boolean, bankid: string | number | boolean, transtype: string | number | boolean, branchschema: any,GlobalSchema:any,Branchcode:any,companycode:any): Observable<any> {
+
+    let params = new HttpParams().set('fromdate', fromdate).set('todate', todate).set('bankid', bankid).set('transtype', transtype).set('branchschema', branchschema).set('GlobalSchema', GlobalSchema).set('Branchcode', Branchcode).set('companycode', companycode);
+    return this._CommonService.getAPI('/Accounts/GetBrsReportBankDebitsBankCredits', params, 'YES')
 
       .pipe(
         catchError((e: any) => {

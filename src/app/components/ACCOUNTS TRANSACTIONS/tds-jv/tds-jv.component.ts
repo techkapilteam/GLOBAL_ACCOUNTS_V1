@@ -987,8 +987,29 @@ export class TdsJvComponent implements OnInit {
     }
   }
 
-  gettdsaccountsledger() {
-    this._AccountingTransactionsService.GettdsLedgerAccountsList('TDS JV').subscribe((json:any) => {
+  // gettdsaccountsledger() {
+  //   this._AccountingTransactionsService.GettdsLedgerAccountsList('TDS JV').
+  //   subscribe((json:any) => {
+  //     debugger;
+  //     let JSONDATA = json
+  //     if (json != null) {
+  //       this.tdsledgeraccountslist = json;
+  //     }
+  //   },
+  //     (error:any) => {
+  //       this._commonService.showErrorMessage(error);
+  //     });      
+  // }
+
+    gettdsaccountsledger() {
+      debugger
+    this._AccountingTransactionsService.GettdsLedgerAccountsList1('TDS JV',
+      this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode(),
+      this._commonService.getschemaname()
+    ).
+    subscribe((json:any) => {
       debugger;
       let JSONDATA = json
       if (json != null) {
@@ -1001,7 +1022,12 @@ export class TdsJvComponent implements OnInit {
   }
 
   getaccountsledger() {
-    this._AccountingTransactionsService.GettdsLedgerAccountsList('PAYMENT VOUCHER').subscribe((json:any) => {
+    this._AccountingTransactionsService.GettdsLedgerAccountsList1('PAYMENT VOUCHER',
+       this._commonService.getbranchname(),
+      this._commonService.getCompanyCode(),
+      this._commonService.getBranchCode(),
+      this._commonService.getschemaname()
+    ).subscribe((json:any) => {
       debugger;
       let JSONDATA = json
       if (json != null) {

@@ -255,6 +255,7 @@ get f() { return this.BrsStatementsReport.controls; }
   }
 
   Show(): void {
+    debugger
 
     this.disablesavebutton = true;
     this.savebutton = 'Processing';
@@ -269,7 +270,7 @@ get f() { return this.BrsStatementsReport.controls; }
 
     const bankid = this.BrsStatementsReport.value.pbankname??'';
     const transtype = this.BrsStatementsReport.value.Bank??'';
-    const branchschema = this._CommonService.getschemaname();
+    // const branchschema = this._CommonService.getschemaname();
 
     this._bankBookService
       .GetBrsReportBankDebitsBankCredits(
@@ -277,7 +278,10 @@ get f() { return this.BrsStatementsReport.controls; }
         toDate,
         bankid,
         transtype,
-        branchschema
+        'accounts',
+        'global',
+        'KLC01',
+        'KAPILCHITS'
       )
       .subscribe({
         next: (res: any[]) => {
