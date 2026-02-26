@@ -282,7 +282,7 @@ export class CommonService {
       formattedAmount = `(${formattedAmount})`;
     }
 
-    if (this.currencysymbol !== "₹") {
+    if (this.currencysymbol && this.currencysymbol !== "₹") {
       return `${this.currencysymbol} ${formattedAmount}`;
     }
 
@@ -3124,15 +3124,21 @@ export class CommonService {
           ? this.getFormatDateGlobal(item[groupedCol])
           : String(item[groupedCol]);
 
-        (item as any).group = {
-          content: groupHeader,
-          colSpan: 8,
-          styles: {
-            halign: 'left',
-            fillColor: '#e6f7ff'
-          }
-        };
-      }
+      //   (item as any).group = {
+      //     content: groupHeader,
+      //     colSpan: 8,
+      //     styles: {
+      //       halign: 'left',
+      //       fillColor: '#e6f7ff'
+      //     }
+      //   };
+      // }
+      finalResult.push({
+        group: { content: groupHeader, colSpan: 8, styles: { halign: 'left', fillColor: '#e6f7ff' } }
+      } as any);
+    }
+
+    delete (item as any).group;
 
       finalResult.push(item);
     });

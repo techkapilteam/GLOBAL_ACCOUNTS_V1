@@ -177,16 +177,30 @@ export class AccountingReportsService {
       'YES'
     );
   }
-  GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string): Observable<any> {
+  // GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromDate', fromDate)
+  //     .set('todate', todate)
+  //     .set('pAccountId', AccountId.toString())
+  //     .set('AsOnDate', AsOnDate)
+  //     .set('BranchSchema', this._CommonService.getschemaname())
+  //     .set('Groupcode', groupcode);
+
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetLedgerSummary', params, 'YES');
+  // }
+  GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string,companyCode:any,branchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromDate)
       .set('todate', todate)
       .set('pAccountId', AccountId.toString())
       .set('AsOnDate', AsOnDate)
-      .set('BranchSchema', this._CommonService.getschemaname())
-      .set('Groupcode', groupcode);
+      .set('BranchSchema', this._CommonService.getbranchname())
+      .set('Groupcode', groupcode)
+      .set('companyCode', companyCode)
+      .set('branchCode', branchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetLedgerSummary', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetLedgerSummary', params, 'YES');
   }
 
   getPartyDetails(loanTypeId: string | number): Observable<any> {
