@@ -77,7 +77,8 @@ export class PaymentVoucherViewComponent implements OnInit {
   groups: any[] = [];
   bankbookBalance: any;
   bankbarnchdummy: any;
-  ;
+  psubledgerid1: any;
+  
   bankpassbookBalance: any;;
   ledgerBalance: any;;
   subledgerBalance: any;;
@@ -943,39 +944,7 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     }
   }
 
-  // GetSubLedgerData(pledgerid) {
-
-  //   this._AccountingTransactionsService.GetSubLedgerData(pledgerid).subscribe(json => {
-
-  //     //console.log(json)
-  //     if (json != null) {
-
-  //       this.subledgeraccountslist = json;
-
-  //       let subLedgerControl = <FormGroup>this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'];
-  //       if (this.subledgeraccountslist.length > 0) {
-  //         this.showsubledger = true;
-  //         subLedgerControl.setValidators(Validators.required);
-  //       }
-  //       else {
-  //         subLedgerControl.clearValidators();
-  //         this.showsubledger = false;
-  //         this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgerid'].setValue(pledgerid);
-  //         this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue(this.paymentVoucherForm.get('ppaymentsslistcontrols').get('pledgername').value);
-  //         this.formValidationMessages['psubledgername'] = '';
-  //       }
-  //       subLedgerControl.updateValueAndValidity();
-  //       //this.lstLoanTypes = json
-  //       //this.titleDetails = json as string
-  //       //this.titleDetails = eval("(" + this.titleDetails + ')');
-  //       //this.titleDetails = this.titleDetails.FT;
-  //     }
-  //   },
-  //     (error) => {
-
-  //       this._commonService.showErrorMessage(error);
-  //     });
-  // }
+  
   GetSubLedgerData(pledgerid: any): void {
     debugger
 
@@ -997,12 +966,13 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
             if (!json) {
               return;
             }
-
+this.psubledgerid1=json[0].psubledgerid
             // this.subledgeraccountslist = json;
 
           this.subledgeraccountslist = json.map((item: any) => item.psubledgername)
             console.log('subledgeraccountslist :', this.subledgeraccountslist);
-            const subLedgerControl = group?.get('psubledgername');
+            // const subLedgerControl = group?.get('psubledgerid');
+            const subLedgerControl =this.psubledgerid1;
 
             if (this.subledgeraccountslist.length > 0) {
               this.showsubledger = true;
@@ -1028,42 +998,24 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
         });
   }
 
-  // subledger_Change($event) {
-  //   let psubledgerid;
-  //   if ($event != undefined) {
-  //     psubledgerid = $event.psubledgerid;
-  //   }
-  //   this.subledgerBalance = '';
-  //   if (psubledgerid && psubledgerid != '') {
-  //     const subledgername = $event.psubledgername;
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue(subledgername);
-  //     let data = this.subledgeraccountslist.filter(function (ledger) {
-  //       return ledger.psubledgerid == psubledgerid;
-  //     })[0];
-  //     this.setBalances('SUBLEDGER', data.accountbalance);
-
-  //   }
-  //   else {
-
-  //     this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['psubledgername'].setValue('');
-  //     this.setBalances('SUBLEDGER', 0);
-  //   }
-  //   this.GetValidationByControl(this.paymentVoucherForm, 'psubledgername', true);
-  // }
+  
 
   subledger_Change($event: any): void {
-
+debugger
     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
-    const psubledgerid = $event?.psubledgerid;
+    // const psubledgerid = $event?.psubledgerid;
+    const psubledgerid = $event;
+    // this.psubledgerid1 = $event?.psubledgerid;
 
     this.subledgerBalance = '';
 
     if (psubledgerid) {
 
-      const subledgername = $event.psubledgername;
+      // const subledgername = $event.psubledgername;
 
-      group?.get('psubledgername')?.setValue(subledgername);
+      // group?.get('psubledgername')?.setValue(subledgername);
+      group?.get('psubledgerid')?.setValue(psubledgerid);
 
       const data = this.subledgeraccountslist.find(
         (ledger: { psubledgerid: any; accountbalance: number }) =>
@@ -1086,16 +1038,7 @@ gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}(
     );
   }
 
-  // upiName_Change($event: any): void {
-  //   debugger;
-  //   const upiname = $event.target.value;
-  //   this.upiidlist = this.upinameslist.filter(res => {
-  //     return res.pUpiname == upiname;
-  //   })
 
-
-  //   this.GetValidationByControl(this.paymentVoucherForm, 'pUpiname', true);
-  // }
 
 
   upiName_Change($event: any): void {
@@ -1135,133 +1078,7 @@ getBankBranchName(pbankid: any) {
   this.setBalances('PASSBOOK', bank.pbankpassbookbalance);
 }
 
-  // setenableordisabletdsgst(ppartyname, changetype) {
-
-
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pistdsapplicable'].setValue(false);
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pisgstapplicable'].setValue(false);
-  //   let data = this.paymentslist.filter(x => x.ppartyname == ppartyname);
-  //   if (data != null) {
-  //     if (data.length > 0) {
-
-  //       this.disablegst = true;
-  //       this.disabletds = true;
-
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pistdsapplicable'].setValue(data[0].pistdsapplicable);
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pisgstapplicable'].setValue(data[0].pisgstapplicable);
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pgstcalculationtype'].setValue(data[0].pgstcalculationtype)
-  //       this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['ptdscalculationtype'].setValue(data[0].ptdscalculationtype)
-  //     }
-  //     else {
-  //       this.disablegst = false;
-  //       this.disabletds = false;
-  //     }
-  //   }
-  //   else {
-  //     this.disablegst = false;
-  //     this.disabletds = false;
-  //   }
-  //   if (changetype = 'PARTYCHANGE') {
-  //     this.isgstapplicableChange();
-  //     this.istdsapplicableChange();
-  //   }
-  // }
-
-//   setenableordisabletdsgst(ppartyname: any, changetype: string) {
-//     debugger
-//     const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
-
-//     // reset GST/TDS
-//     group?.get('pistdsapplicable')?.setValue(false);
-//     group?.get('pisgstapplicable')?.setValue(false);
-
-//     // const data = this.paymentslist.find(
-//     //   (x: { ppartyname: any; pistdsapplicable: boolean; pisgstapplicable: boolean; pgstcalculationtype: any; ptdscalculationtype: any }) =>
-//     //     x.ppartyname === ppartyname
-//     // );
-
-// console.log('list',this.paymentslist);
-
-//  let data = this.paymentslist.filter((x:any) => x.ppartyname == ppartyname);
-
-//     if (data) {
-//       this.disablegst = true;
-//       this.disabletds = true;
-
-//       group?.get('pistdsapplicable')?.setValue(data.pistdsapplicable);
-//       group?.get('pisgstapplicable')?.setValue(data.pisgstapplicable);
-//       group?.get('pgstcalculationtype')?.setValue(data.pgstcalculationtype);
-//       group?.get('ptdscalculationtype')?.setValue(data.ptdscalculationtype);
-
-//     } else {
-//       this.disablegst = false;
-//       this.disabletds = false;
-//     }
-
-//     if (changetype === 'PARTYCHANGE') {
-//       this.isgstapplicableChange();
-//       this.istdsapplicableChange();
-//     }
-//   }
-
-
-
-// setenableordisabletdsgst(ppartyname: any, changetype: string) {
-//   if (!this.paymentslist || this.paymentslist.length === 0) {
-//     console.warn('paymentslist is empty, cannot match party');
-//     return;
-//   }
-
-//   const group = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-
-//   // reset GST/TDS
-//   group.patchValue({
-//     pistdsapplicable: false,
-//     pisgstapplicable: false,
-//     pgstcalculationtype: '',
-//     ptdscalculationtype: ''
-//   });
-
-//   const data = this.paymentslist.find((x: any) =>
-//     (x.ppartyname ?? '').trim().toLowerCase() === (ppartyname ?? '').trim().toLowerCase()
-//   );
-
-//   console.log('Searching party:', ppartyname, 'Found:', data);
-
-//   if (data) {
-//     this.disablegst = !data.pisgstapplicable;
-//     this.disabletds = !data.pistdsapplicable;
-
-//     group.patchValue({
-//       pistdsapplicable: data.pistdsapplicable,
-//       pisgstapplicable: data.pisgstapplicable,
-//       pgstcalculationtype: data.pgstcalculationtype,
-//       ptdscalculationtype: data.ptdscalculationtype
-//     });
-//   } else {
-//     this.disablegst = false;
-//     this.disabletds = false;
-//   }
-
-//   if (changetype === 'PARTYCHANGE') {
-//     this.isgstapplicableChange();
-//     this.istdsapplicableChange();
-//   }
-// }
-
-
-  // tdsSection_Change($event: any): void {
-
-  //   const ptdssection = $event.target.value;
-  //   this.tdspercentagelist = [];
-  //   this.paymentVoucherForm['controls']['ppaymentsslistcontrols']['controls']['pTdsPercentage'].setValue('');
-  //   if (ptdssection && ptdssection != '') {
-
-  //     this.gettdsPercentage(ptdssection);
-
-  //   }
-  //   this.GetValidationByControl(this.paymentVoucherForm, 'pTdsSection', true);
-  // }
+ 
 
   tdsSection_Change(event: any): void {
 debugger
@@ -1351,7 +1168,7 @@ debugger
     this.tdspercentagelist = [];
     this.paymentslist1 = [];
     this.partyjournalentrylist = [];
-    this.paymentslist = [];
+   // this.paymentslist = [];
     this.partyBalance = '';
 
     group?.get('pStateId')?.setValue('');
@@ -1645,140 +1462,7 @@ setenableordisabletdsgst(ppartyname: any, changetype: string) {
 
 
 
-//   claculategsttdsamounts(): void {
-//     try {
-//       const group = this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
-//       // Paid amount
-//       let paidamount: number = parseFloat(this._commonService.removeCommasInAmount(group?.get('pactualpaidamount')?.value ?? '0'));
-//       if (isNaN(paidamount)) paidamount = 0;
-
-//       let actualpaidamount = paidamount;
-
-//       // GST details
-//       const isgstapplicable = group?.get('pisgstapplicable')?.value;
-//       const gsttype = group?.get('pgsttype')?.value;
-//       const gstcalculationtype = group?.get('pgstcalculationtype')?.value;
-
-//       let igstpercentage = parseFloat(group?.get('pigstpercentage')?.value ?? '0');
-//       let cgstpercentage = parseFloat(group?.get('pcgstpercentage')?.value ?? '0');
-//       let sgstpercentage = parseFloat(group?.get('psgstpercentage')?.value ?? '0');
-//       let utgstpercentage = parseFloat(group?.get('putgstpercentage')?.value ?? '0');
-
-//       igstpercentage = isNaN(igstpercentage) ? 0 : igstpercentage;
-//       cgstpercentage = isNaN(cgstpercentage) ? 0 : cgstpercentage;
-//       sgstpercentage = isNaN(sgstpercentage) ? 0 : sgstpercentage;
-//       utgstpercentage = isNaN(utgstpercentage) ? 0 : utgstpercentage;
-
-//       // Initialize amounts
-//       let gstamount = 0, igstamount = 0, cgstamount = 0, sgstamount = 0, utgstamount = 0, totalamount = 0;
-
-//       // if (isgstapplicable) {
-//       //   if (gstcalculationtype === 'INCLUDE') {
-//       //     gstamount = parseFloat(((paidamount * igstpercentage) / (100 + igstpercentage)).toFixed(2));
-
-//       //     if (gsttype === 'IGST') {
-//       //       igstamount = Math.ceil(gstamount);
-//       //       actualpaidamount -= igstamount;
-//       //     } else if (gsttype === 'CGST,SGST') {
-//       //       cgstamount = Math.ceil(gstamount) / 2;
-//       //       sgstamount = Math.ceil(gstamount) / 2;
-//       //       actualpaidamount -= (cgstamount + sgstamount);
-//       //     } else if (gsttype === 'CGST,UTGST') {
-//       //       cgstamount = Math.ceil(gstamount) / 2;
-//       //       utgstamount = Math.ceil(gstamount) / 2;
-//       //       actualpaidamount -= (cgstamount + utgstamount);
-//       //     }
-//       //   } else if (gstcalculationtype === 'EXCLUDE') {
-//       //     gstamount = parseFloat(((paidamount * igstpercentage) / 100).toFixed(2));
-//       //     if (gsttype === 'IGST') igstamount = Math.ceil(gstamount);
-//       //     else if (gsttype === 'CGST,SGST') { cgstamount = Math.ceil(gstamount) / 2; sgstamount = Math.ceil(gstamount) / 2; }
-//       //     else if (gsttype === 'CGST,UTGST') { cgstamount = Math.ceil(gstamount) / 2; utgstamount = Math.ceil(gstamount) / 2; }
-//       //   }
-//       // }
-
-
-//       if (isgstapplicable) {
-
-//   let totalGstPercentage = 0;
-
-//   if (gsttype === 'IGST') {
-//     totalGstPercentage = igstpercentage;
-//   } 
-//   else if (gsttype === 'CGST,SGST') {
-//     totalGstPercentage = cgstpercentage + sgstpercentage;
-//   } 
-//   else if (gsttype === 'CGST,UTGST') {
-//     totalGstPercentage = cgstpercentage + utgstpercentage;
-//   }
-
-//   if (gstcalculationtype === 'INCLUDE') {
-
-//     gstamount = parseFloat(
-//       ((paidamount * totalGstPercentage) / (100 + totalGstPercentage)).toFixed(2)
-//     );
-
-//     actualpaidamount -= gstamount;
-
-//   } 
-//   else if (gstcalculationtype === 'EXCLUDE') {
-
-//     gstamount = parseFloat(
-//       ((paidamount * totalGstPercentage) / 100).toFixed(2)
-//     );
-//   }
-
-//   // Split amounts properly
-//   if (gsttype === 'IGST') {
-//     igstamount = gstamount;
-//   }
-//   else if (gsttype === 'CGST,SGST') {
-//     cgstamount = gstamount / 2;
-//     sgstamount = gstamount / 2;
-//   }
-//   else if (gsttype === 'CGST,UTGST') {
-//     cgstamount = gstamount / 2;
-//     utgstamount = gstamount / 2;
-//   }
-// }
-
-//       // TDS details
-//       const istdsapplicable = group?.get('pistdsapplicable')?.value;
-//       const tdscalculationtype = group?.get('ptdscalculationtype')?.value;
-//       let tdspercentage = parseFloat(group?.get('pTdsPercentage')?.value ?? '0');
-//       if (isNaN(tdspercentage)) tdspercentage = 0;
-
-//       let tdsamount = 0;
-
-//       if (istdsapplicable) {
-//         if (tdscalculationtype === 'INCLUDE') {
-//           tdsamount = Math.ceil((actualpaidamount * tdspercentage) / (gstcalculationtype === 'INCLUDE' ? (100 + tdspercentage) : (100 + tdspercentage)));
-//           actualpaidamount -= tdsamount;
-//         } else if (tdscalculationtype === 'EXCLUDE') {
-//           tdsamount = Math.ceil((actualpaidamount * tdspercentage) / (gstcalculationtype === 'INCLUDE' ? 100 : 100));
-//           actualpaidamount -= tdsamount;
-//         }
-//       }
-
-//       gstamount = sgstamount + igstamount + cgstamount + utgstamount;
-//       totalamount = actualpaidamount + gstamount;
-
-//       // Update form controls
-//       group?.get('pamount')?.setValue(actualpaidamount > 0 ? actualpaidamount : '');
-//       group?.get('pgstamount')?.setValue(gstamount);
-//       group?.get('pigstamount')?.setValue(igstamount);
-//       group?.get('pcgstamount')?.setValue(cgstamount);
-//       group?.get('psgstamount')?.setValue(sgstamount);
-//       group?.get('putgstamount')?.setValue(utgstamount);
-//       group?.get('ptdsamount')?.setValue(tdsamount);
-//       group?.get('ptotalamount')?.setValue(parseFloat(totalamount.toFixed(2)));
-
-//       this.formValidationMessages['pamount'] = '';
-
-//     } catch (e) {
-//       this._commonService.showErrorMessage(e);
-//     }
-//   }
 
   
 claculategsttdsamounts(): void {
@@ -1903,8 +1587,9 @@ claculategsttdsamounts(): void {
       isValid = this.checkValidations(group, isValid);
 
       const ledgername = group?.get('pledgername')?.value;
-      const subledgername = group?.get('psubledgername')?.value;
-      const subledgerid = group?.get('psubledgerid')?.value;
+      // const subledgername = group?.get('psubledgername')?.value;
+      const subledgername = group?.get('psubledgerid')?.value;
+      const subledgerid = this.psubledgerid1;
       const partyid = group?.get('ppartyid')?.value;
 
       const griddata = this.paymentslist;
@@ -1961,7 +1646,8 @@ claculategsttdsamounts(): void {
     }
 
     const accountheadid = control.get('pledgerid')?.value;
-    const subcategoryid = control.get('psubledgerid')?.value;
+    // const subcategoryid = control.get('psubledgerid')?.value;
+    const subcategoryid = this.psubledgerid1;
     let paidamount = parseFloat(this._commonService.removeCommasInAmount(control.get('pactualpaidamount')?.value ?? '0'));
     // let paidamount = parseFloat(
     //   this._commonService.removeCommasInAmount(
@@ -1974,7 +1660,8 @@ claculategsttdsamounts(): void {
       this._commonService.getschemaname(),this._commonService.getCompanyCode(),this._commonService.getBranchCode()
 
 
-    ).subscribe(result => {
+    ).subscribe(
+      result => {
       const balancecheckstatus = result?.balancecheckstatus;
       const balanceamount = parseFloat(result?.balanceamount ?? '0');
 
@@ -1993,7 +1680,8 @@ claculategsttdsamounts(): void {
       const data = {
         ppartyname: control.get('ppartyname')?.value,
         pledgername: control.get('pledgername')?.value,
-        psubledgername: control.get('psubledgername')?.value,
+        psubledgerid: control.get('psubledgerid')?.value,
+        // psubledgername: control.get('psubledgername')?.value,
         ptotalamount: parseFloat(this._commonService.removeCommasInAmount(control.get('ptotalamount')?.value ?? '0')),
         pamount: parseFloat(this._commonService.removeCommasInAmount(control.get('pamount')?.value ?? '0')),
         pgstcalculationtype: control.get('pgstcalculationtype')?.value,
@@ -2138,15 +1826,7 @@ getPaymentListColumnWisetotals() {
           let cashvalue = this.cashBalance.split('D')[0];
 
           cashvalue = (this._commonService.removeCommasInAmount(cashvalue));
-          // let paidvalue = this.paymentVoucherForm.controls['ptotalpaidamount'].value;
-          // if (!isNullOrEmptyString(paidvalue))
-          //   paidvalue = parseFloat(paidvalue.toString());
-          // else
-          //   paidvalue = 0;
-          // if (parseFloat(paidvalue) > parseFloat(cashvalue)) {
-          //   this._commonService.showWarningMessage('Insufficient Cash Balance');
-          //   isValid = false;
-          // }
+          
 
           let paidvalue = this.paymentVoucherForm.controls['ptotalpaidamount'].value;
 
@@ -2368,110 +2048,7 @@ getPaymentListColumnWisetotals() {
 
 
 
-  // getpartyJournalEntryData() {
-  //   debugger;
-  //   try {
-  //     const tdsJournalEntries: any[] = [];
-  //     const ledgerNames = [...new Set(this.paymentslist.map((item: any) => item.pledgername))];
-  //     this.partyjournalentrylist = [];
-  //     let journalIndex = 1;
-
-  //     // Process each ledger
-  //     for (const ledger of ledgerNames) {
-  //       const ledgerPayments = this.paymentslist.filter((p: any) => p.pledgername === ledger);
-
-  //       // Total debit amount for the ledger (payment + TDS)
-  //       const ledgerDebit = ledgerPayments.reduce(
-  //         (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.pamount) + this._commonService.removeCommasInAmount(p.ptdsamount),
-  //         0
-  //       );
-
-  //       // Push ledger debit entry
-  //       this.partyjournalentrylist.push({
-  //         type: 'Payment Voucher',
-  //         accountname: ledger,
-  //         debitamount: ledgerDebit,
-  //         creditamount: ''
-  //       });
-
-  //       // Process TDS per section
-  //       const tdsSections = [...new Set(ledgerPayments.map((p: any) => p.pTdsSection))];
-  //       for (const section of tdsSections) {
-  //         const tdsAmount = ledgerPayments
-  //           .filter((p: any) => p.pTdsSection === section)
-  //           .reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
-
-  //         if (tdsAmount > 0) {
-  //           tdsJournalEntries.push({
-  //             type: `Journal Voucher${journalIndex}`,
-  //             accountname: `TDS-${section} RECEIVABLE`,
-  //             debitamount: tdsAmount,
-  //             creditamount: ''
-  //           });
-  //         }
-  //       }
-
-  //       // Ledger credit for total TDS
-  //       const totalTDS = ledgerPayments.reduce(
-  //         (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount),
-  //         0
-  //       );
-  //       if (totalTDS > 0) {
-  //         tdsJournalEntries.push({
-  //           type: `Journal Voucher${journalIndex}`,
-  //           accountname: ledger,
-  //           debitamount: '',
-  //           creditamount: totalTDS
-  //         });
-  //       }
-
-  //       journalIndex++;
-  //     }
-
-  //     // Add GST entries if present
-  //     const gstTypes = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
-  //     const gstNames = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
-
-  //     gstTypes.forEach((key, idx) => {
-  //       const totalGST = this.paymentslist.reduce(
-  //         (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p[key]),
-  //         0
-  //       );
-  //       if (totalGST > 0) {
-  //         this.partyjournalentrylist.push({
-  //           type: 'Payment Voucher',
-  //           accountname: gstNames[idx],
-  //           debitamount: totalGST,
-  //           creditamount: ''
-  //         });
-  //       }
-  //     });
-
-  //     // Total paid amount
-  //     const totalPaid = this.paymentslist.reduce(
-  //       (sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptotalamount),
-  //       0
-  //     );
-  //     if (totalPaid > 0) {
-  //       this.paymentVoucherForm.controls['ptotalpaidamount'].setValue(totalPaid);
-
-  //       const accountName = this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH' ? 'CASH ON HAND' : 'BANK';
-  //       this.partyjournalentrylist.push({
-  //         type: 'Payment Voucher',
-  //         accountname: accountName,
-  //         debitamount: '',
-  //         creditamount: totalPaid.toFixed(2)
-  //       });
-  //     }
-
-  //     // Append TDS journal entries
-  //     this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
-
-  //     this.loadgrid();
-  //   } catch (e) {
-  //     this._commonService.showErrorMessage(e);
-  //   }
-  // }
+  
 
   getpartyJournalEntryData() {
   try {

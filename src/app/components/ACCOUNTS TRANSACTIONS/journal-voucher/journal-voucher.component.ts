@@ -150,7 +150,8 @@ export class JournalVoucherComponent implements OnInit {
       pjvdate: ['', Validators.required],
       ptotalpaidamount: [''],
       pnarration: ['', Validators.required],
-      pmodofpayment: ['CASH'],
+      // pmodofpayment: ['CASH'],
+      pmodofpayment: ['M'],
       pbankname: [''],
       pbranchname: [''],
       ptranstype: [''],
@@ -2180,10 +2181,13 @@ calculateTotals() {
       mode_of_transaction: this.paymentVoucherForm.value.pmodofpayment,
       reference_no: '',
 
-      branch_id: 0,
-      created_by: 0,
+      // branch_id: 0,
+      branch_id: 1,
+      // created_by: 0,--sessonstronge
+      created_by: 1,
       ip_address: this._commonService.getIpAddress(),
-      form_name: 'Journal Voucher',
+      // form_name: 'Journal Voucher',
+      form_name: 'LEGAL EXPENSES JV',
 
       journal_voucher_details: this.paymentslist.map((item: any) => ({
 

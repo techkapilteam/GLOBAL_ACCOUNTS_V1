@@ -279,10 +279,11 @@
           <div class="input-group d-block">
             <label id="psubledgername" class="required-field" title="Sub Ledger">Sub Ledger</label>
             <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
-              formControlName="psubledgerid" bindLabel="psubledgername" bindValue="psubledgerid" [multiple]=false
+              formControlName="psubledgerid" bindLabel="psubledgername" [multiple]=false
               placeholder="Select" [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
               (change)="subledger_Change($event)">
             </ng-select>
+            <!--  bindValue="psubledgerid" -->
             <!--<div class="input-group-append">
                 <button class="btn btn-lg-icon rounded-right px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
               </div>-->
@@ -619,78 +620,7 @@
   <div class="row">
     <div class="col-md-12 col-xl-12" style="height: 400;">
       <div class="section-content mt-2">
-        <!-- <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
-          [footerHeight]="50" [rowHeight]="50" [limit]="5" [scrollbarH]="true">
-          <ngx-datatable-column name="Actions" prop="" frozenLeft="True">
-            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row"
-              let-group="group">
-            
-              <label for="delete{{ rowIndex }}">
-                <div id="icon-delete" (click)="removeHandler(rowIndex)"></div>
-              </label>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Party Name" prop="ppartyname" [cellClass]="'cell-left'"
-            [headerClass]="'header-left'">
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Ledger Name" prop="pledgername" [cellClass]="'cell-left'"
-            [headerClass]="'header-left'"></ngx-datatable-column>
-          <ngx-datatable-column name="Sub Ledger Name" prop="psubledgername" [cellClass]="'cell-left'">
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Total Paid Amount" prop="ptotalamount" [cellClass]="'cell-right'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span
-                title="{{currencySymbol}} {{row.ptotalamount |  currency:currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}}
-                {{row.ptotalamount | currency:currencyCode:'symbol':'1.2-2'}}</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Paid Amount" prop="pamount" [cellClass]="'cell-right'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span
-                title="{{currencySymbol}} {{row.pamount |  currency:currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}}
-                {{row.pamount | currency:currencyCode:'symbol':'1.2-2'}}</span>
-
-
-
-
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="GST Type" prop="pgstcalculationtype" [cellClass]="'cell-center'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.pgstcalculationtype==''">-- NA --</div>
-              <div *ngIf="row.pgstcalculationtype!=''" title="{{row.pgstcalculationtype}}">
-                {{row.pgstcalculationtype}}</div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="TDS Section" prop="pTdsSection" [cellClass]="'cell-left'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.pTdsSection==''">-- NA --</div>
-              <div *ngIf="row.pTdsSection!=''" title="{{row.pTdsSection}}">{{row.pTdsSection}}</div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="GST Percentage" prop="pgstpercentage" [cellClass]="'cell-center'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.pgstpercentage==0">-- NA --</div>
-              <div *ngIf="row.pgstpercentage!=0" title="{{row.pgstpercentage}}">{{row.pgstpercentage}}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="TDS Amount" prop="ptdsamount" [cellClass]="'cell-right'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.ptdsamount==0">-- NA --</div>
-              <div *ngIf="row.ptdsamount!=0"
-                title="{{currencySymbol}} {{row.ptdsamount |  currency:currencyCode:'symbol':'1.2-2'}}">
-                {{currencySymbol}} {{row.ptdsamount | currency:currencyCode:'symbol':'1.2-2'}}</div>
-
-            </ng-template>
-
-
-
-
-
-          </ngx-datatable-column>
-        </ngx-datatable> -->
-
+       
 
 
 
@@ -720,7 +650,7 @@
               </td>
               <td>{{rowData.ppartyname || '-- NA --'}}</td>
               <td>{{rowData.pledgername || '-- NA --'}}</td>
-              <td>{{rowData.psubledgername || '-- NA --'}}</td>
+              <td>{{rowData.psubledgerid || '-- NA --'}}</td>
               <td class="text-right">{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2'
                 }}</td>
               <td class="text-right">{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}
