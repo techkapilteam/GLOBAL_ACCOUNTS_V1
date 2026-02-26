@@ -406,16 +406,18 @@ dte:boolean=false;
 
     let debitamount = '';
     let paycreditamt = '';
+    
 
     if (element.prcptdebitamount !== 0) {
-      debitamount = this.commonService.currencyformat(parseFloat(element.prcptdebitamount));
-      debitamount = this.commonService.convertAmountToPdfFormat(debitamount);
+      // debitamount = this.commonService.currencyformat(parseFloat(element.prcptdebitamount));
+      debitamount = this.commonService.convertAmountToPdfFormat(parseFloat(element.prcptdebitamount));
     }
 
     if (element.pcreditamount !== 0) {
-      paycreditamt = this.commonService.currencyformat(element.pcreditamount);
-      paycreditamt = this.commonService.convertAmountToPdfFormat(paycreditamt);
+      // paycreditamt = this.commonService.currencyformat(element.pcreditamount);
+      paycreditamt = this.commonService.convertAmountToPdfFormat(parseFloat(element.pcreditamount));
     }
+    
 
     // let temp: any[];
 
@@ -468,30 +470,27 @@ dte:boolean=false;
     let debitamt = '';
     let creditamt = '';
     let closingbal = '';
+    
+    const openingVal = parseFloat(element.popeningbal);
+  if (!isNaN(openingVal) && openingVal !== 0) {
+    openingbal = this.commonService.convertAmountToPdfFormat(openingVal);
+  }
 
-    if (Number(element.popeningbal) > 0 || Number(element.popeningbal) < 0) {
-      openingbal =
-        this.commonService.convertAmountToPdfFormat(String(Number(element.popeningbal))) +
-        (element.pBalanceType ?? '');
-    }
+  if (Number(element.pdebitamount) > 0) {
+    debitamt = this.commonService.convertAmountToPdfFormat(
+      parseFloat(element.pdebitamount)
+    );
+  }
 
-    if (Number(element.pdebitamount) > 0) {
-      debitamt = this.commonService.convertAmountToPdfFormat(
-    String(Number(element.pdebitamount))
-  );
-    }
+  if (Number(element.pcreditamount) > 0) {
+    creditamt = this.commonService.convertAmountToPdfFormat(
+      parseFloat(element.pcreditamount)
+    );
+  }
 
-    if (Number(element.pcreditamount) > 0) {
-      creditamt = this.commonService.convertAmountToPdfFormat(
-    String(Number(element.pcreditamount))
-  );
-    }
-
-    if (Number(element.pclosingbal) > 0 || Number(element.pclosingbal) < 0) {
-      closingbal =
-        this.commonService.convertAmountToPdfFormat(String(Number(element.pclosingbal))) +
-        (element.pFormName ?? '');
-    }
+    if (element.pclosingbal && element.pclosingbal !== '') {
+    closingbal = element.pclosingbal;
+  }
 
     const temp = [
       element.paccountname ??'',
@@ -537,7 +536,8 @@ GetChequeonHandDetails(): void {
   this.loading = true;
 
   this.reportTransService
-    .GetChequesOnHand(today)
+    // .GetChequesOnHand(today)
+    .GetChequesOnHand(today,'accounts','global','KAPILCHITS','KLC01')
     .pipe(finalize(() => this.loading = false))
     .subscribe({
       next: (res: any[]) => {

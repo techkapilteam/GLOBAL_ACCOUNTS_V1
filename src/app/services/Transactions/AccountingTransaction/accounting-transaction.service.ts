@@ -388,9 +388,13 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('LocalSchema', this._CommonService.getschemaname()).set('Formname', formname).set('Fromdate', fromdate).set('Todate', todate)
     return this._CommonService.getAPI('/Notice/PSInfo/ZPDBidPaybleAdjust', params, 'YES');
   }
-  GetChequesOnHand(strToDate: any) {
-    const params = new HttpParams().set('Ason', strToDate).set('BranchSchema', this._CommonService.getschemaname());
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequesonHandData', params, 'YES');
+  // GetChequesOnHand(strToDate: any) {
+  //   const params = new HttpParams().set('Ason', strToDate).set('BranchSchema', this._CommonService.getschemaname());
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetChequesonHandData', params, 'YES');
+  // }
+  GetChequesOnHand(strToDate: any,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any) {
+    const params = new HttpParams().set('Ason', strToDate).set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/ChequesonHandData', params, 'YES');
   }
 
   getBranchType() {

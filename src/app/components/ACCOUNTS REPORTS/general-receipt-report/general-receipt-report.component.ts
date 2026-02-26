@@ -47,7 +47,7 @@ getTotalAmount(list: any[]): number {
   if (!list || list.length === 0) return 0;
 
   return list.reduce((total: number, item: any) => {
-    return total + (Number(item?.pLedgeramount) || 0);
+    return total + (Number(item?.ledger_amount) || 0);
   }, 0);
 }
 
@@ -111,10 +111,34 @@ getTotalAmount(list: any[]): number {
       // .GetGeneralReceiptbyId(id, this.schemaName)
       .GetGeneralReceiptbyId(id,'accounts','KAPILCHITS','KLC01','global')
       .subscribe((res: any) => {
-        this.GeneralReceiptServiceData = res;
-        const receiptDate = this.datePipe.transform(res?.[0].pReceiptdate, 'ddMMyyyy');
-        const today = this.datePipe.transform(new Date(), 'ddMMyyyyhmmssa');
-        this.printFileName = `GR_${res?.[0].pReceiptId}_RD_${receiptDate}_PD_${today}`;
+        // this.GeneralReceiptServiceData = res;
+        // const receiptDate = this.datePipe.transform(res?.[0].pReceiptdate, 'ddMMyyyy');
+        // const today = this.datePipe.transform(new Date(), 'ddMMyyyyhmmssa');
+        // this.printFileName = `GR_${res?.[0].pReceiptId}_RD_${receiptDate}_PD_${today}`;
+        if (!res || res.length === 0) return;
+
+      // Group flat rows by receiptid
+      const grouped = res.reduce((acc: any, row: any) => {
+        const key = row.receiptid;
+        if (!acc[key]) {
+          acc[key] = {
+            ...row,
+            pGeneralReceiptSubDetailsList: []
+          };
+        }
+        acc[key].pGeneralReceiptSubDetailsList.push({
+          account_name: row.account_name,
+          ledger_amount: row.ledger_amount
+        });
+        return acc;
+      }, {});
+
+      this.GeneralReceiptServiceData = Object.values(grouped);
+
+      const first = res[0];
+      const receiptDate = this.datePipe.transform(first.receipt_date, 'ddMMyyyy');
+      const today = this.datePipe.transform(new Date(), 'ddMMyyyyhmmssa');
+      this.printFileName = `GR_${first.receiptid}_RD_${receiptDate}_PD_${today}`;
       });
   }
 
@@ -185,17 +209,34 @@ getTotalAmount(list: any[]): number {
         " Only.";
 
       const content = `
-Received With Thanks From : ${data.pContactname}
+Received With Thanks From : ${data.account_name}
 Amount In Words : ${amountInWords}
-Narration : ${data.narration}
+Narration : ${data.narration?.narration || ''}
 Mode Of Payment : ${data.typeofpayment}
       `;
 
-      doc.text(content, 15, finalY);
+      // doc.text(content, 15, finalY);
+      const textLines = doc.splitTextToSize(content, 180);
 
-      doc.text('(Approved By)', 25, 260);
-      doc.text('(Verified By)', 90, 260);
-      doc.text('(Posted By)', 160, 260);
+doc.text(textLines, 15, finalY);
+
+const afterContentY = finalY + (textLines.length * 5);
+
+      // doc.text('(Approved By)', 25, 260);
+      // doc.text('(Verified By)', 90, 260);
+      // doc.text('(Posted By)', 160, 260);
+      const pageHeight = doc.internal.pageSize.height;
+
+let signY = afterContentY + 25;
+
+// prevent going outside page
+if (signY > pageHeight - 20) {
+  signY = pageHeight - 20;
+}
+
+doc.text('(Approved By)', 25, signY);
+doc.text('(Verified By)', 90, signY);
+doc.text('(Posted By)', 160, signY);
 
       if (index < this.GeneralReceiptServiceData.length - 1) {
         doc.addPage();

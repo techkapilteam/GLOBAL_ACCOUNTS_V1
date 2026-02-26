@@ -15,8 +15,12 @@ export class TDSReportService {
 
   constructor(private _commonservice: CommonService) { }
 
-  public getTDSSectionDetails() {
-    return this._commonservice.getAPI('/ChitTransactions/ChitReports/getTDSSectionDetails', "params", 'No');
+  public getTDSSectionDetails(GlobalSchema:any,CompanyCode:any,BranchCode:any) {
+    const params = new HttpParams()
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
+    return this._commonservice.getAPI('/Accounts/GetTDSSectionDetails', params, 'YES');
   }
 
 
