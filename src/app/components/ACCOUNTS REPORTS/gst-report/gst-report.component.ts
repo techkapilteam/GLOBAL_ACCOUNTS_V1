@@ -175,7 +175,7 @@ export class GstReportComponent implements OnInit {
     this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
 
     this.tdsReportService
-      .getGstReportDetails(from, to, 'GST REPORT', ledgername)
+      .getGstReportDetails('accounts',from, to, 'GST REPORT', ledgername,'global','KLC01','KAPILCHITS')
       .subscribe({
         next: (res: any[]) => {
 
@@ -269,7 +269,7 @@ click_GstSummary(): void {
   this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
 
   this.tdsReportService
-    .getGstReportDetails(from, to, 'GST SUMMARY', ledgername)
+    .getGstReportDetails('accounts',from, to, 'GST SUMMARY', ledgername,'global','KLC01','KAPILCHITS')
     .subscribe((res: any[]) => {
 
       this.GstSummaryDetails = res ?? [];

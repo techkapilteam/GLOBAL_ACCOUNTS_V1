@@ -20,7 +20,9 @@
     "@angular/router": "^20.3.16",
     "@ng-select/ng-select": "^20.4.0",
     "@primeuix/themes": "^2.0.3",
-    "@progress/kendo-angular-grid": "^22.0.1",
+    "@progress/kendo-angular-common": "^23.0.1",
+    "@progress/kendo-angular-excel-export": "^23.0.1",
+    "@progress/kendo-angular-grid": "^23.0.1",
     "@progress/kendo-data-query": "^1.7.3",
     "@swimlane/ngx-datatable": "^22.0.0",
     "bootstrap": "^5.3.8",
@@ -40,7 +42,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.3.14",
+    "@angular-devkit/build-angular": "^20.3.16",
     "@angular/cli": "^20.3.14",
     "@angular/compiler-cli": "^20.3.16",
     "@types/file-saver": "^2.0.7",

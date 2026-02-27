@@ -218,7 +218,8 @@ ngOnInit(): void {
   });
 
   this._accountingtransaction
-    .GetBanksList(this._commonService.getschemaname())
+    .GetBanksntList(this._commonService.getbranchname(),this._commonService.getschemaname()
+      ,this._commonService.getCompanyCode(),this._commonService.getBranchCode())
     .subscribe({
       next: (banks: any) => {
         this.BanksList = banks || [];
