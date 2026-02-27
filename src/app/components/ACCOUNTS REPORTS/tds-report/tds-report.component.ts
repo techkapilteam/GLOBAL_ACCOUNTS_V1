@@ -110,14 +110,14 @@ export class TdsReportComponent implements OnInit{
     this.tdsreportdata = [];
   }
 
-  // getTDSSectionDetails(): void {
-  //   this.tdsreportservice.getTDSSectionDetails()
-  //     .subscribe(res => this.tdssectiondata = res || []);
-  // }
   getTDSSectionDetails(): void {
-    this.tdsservice.getTdsSectionDetails('taxes','KAPILCHITS','KLC01')
-      .subscribe((res: never[]) => this.tdssectiondata = res || []);
+    this.tdsreportservice.getTDSSectionDetails('taxes','KAPILCHITS','KLC01')
+      .subscribe((res:never[]) => this.tdssectiondata = res || []);
   }
+  // getTDSSectionDetails(): void {
+  //   this.tdsservice.getTdsSectionDetails('taxes','KAPILCHITS','KLC01')
+  //     .subscribe((res: never[]) => this.tdssectiondata = res || []);
+  // }
 
   onsectionidchange(event: any): void {
     if (!event) {
@@ -126,8 +126,8 @@ export class TdsReportComponent implements OnInit{
     }
 
     this.TdsReportForm.patchValue({
-      sectionid: event.tbl_mst_tds_id,
-      sectionname: event.section_name
+      sectionid: event.sectionName,
+      sectionname: event.sectionName
     });
 
     this.tdsreportdata = [];

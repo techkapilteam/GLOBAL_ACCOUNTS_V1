@@ -17,12 +17,10 @@ export class GeneralReceiptComponent implements OnInit {
   allGridView: any[] = [];
 
   pageCriteria = {
-    footerPageHeight: 50,
     pageSize: 10,
     pageNumber: 1,
     TotalPages: 1,
-    totalrows: 0,
-    offset: 0
+    totalrows: 0
   };
 
   currencySymbol: string = '₹';
@@ -45,10 +43,10 @@ export class GeneralReceiptComponent implements OnInit {
     this.accountingTransactionsService
       .GetGeneralReceiptsData(
         'global',
-        this.commonService.getbranchname(),
+        'accounts',
         'taxes',
-        this.commonService.getCompanyCode(),
-        this.commonService.getBranchCode()
+       'KAPILCHITS',
+        'KLC01'
       )
       .subscribe({
         next: (data: any[]) => {
@@ -56,14 +54,10 @@ export class GeneralReceiptComponent implements OnInit {
           this.loading = false;
 
           if (!data || data.length === 0) {
-            this.gridView = [];
-            this.allGridView = [];
-            this.pageCriteria.totalrows = 0;
-            this.pageCriteria.TotalPages = 0;
+            this.resetGrid();
             return;
           }
-
-          this.gridView = data.map(item => ({
+          this.allGridView = data.map(item => ({
             ...item,
             preceiptdate:
               this.commonService.getFormatDateGlobal(item.preceiptdate) || '--',
@@ -74,49 +68,79 @@ export class GeneralReceiptComponent implements OnInit {
             pnarration: item.pnarration || ''
           }));
 
-          this.allGridView = [...this.gridView];
-
-          this.pageCriteria.totalrows = this.gridView.length;
+          this.pageCriteria.totalrows = this.allGridView.length;
           this.pageCriteria.TotalPages = Math.ceil(
-            this.gridView.length / this.pageCriteria.pageSize
+            this.allGridView.length / this.pageCriteria.pageSize
           );
+
+          this.updatePagedData();
         },
         error: (error) => {
           this.loading = false;
-          this.gridView = [];
-          this.allGridView = [];
-          this.pageCriteria.totalrows = 0;
-          this.pageCriteria.TotalPages = 1;
+          this.resetGrid();
           this.commonService.showErrorMessage(error);
         }
       });
   }
+  onFooterPageChange(event: any): void {
 
+    this.pageCriteria.pageNumber = event.page + 1;
+    this.pageCriteria.pageSize = event.rows;
+
+    this.updatePagedData();
+  }
+
+  updatePagedData(): void {
+
+    const startIndex =
+      (this.pageCriteria.pageNumber - 1) * this.pageCriteria.pageSize;
+
+    const endIndex =
+      startIndex + this.pageCriteria.pageSize;
+
+    this.gridView = this.allGridView.slice(startIndex, endIndex);
+  }
   filterDatatable(event: any): void {
+
     const value = (event.target.value || '').toLowerCase();
 
-    this.gridView = this.allGridView.filter(d =>
+    if (!value) {
+      this.pageCriteria.pageNumber = 1;
+      this.pageCriteria.totalrows = this.allGridView.length;
+      this.pageCriteria.TotalPages = Math.ceil(
+        this.allGridView.length / this.pageCriteria.pageSize
+      );
+      this.updatePagedData();
+      return;
+    }
+
+    const filtered = this.allGridView.filter(d =>
       (d.preceiptdate?.toLowerCase() || '').includes(value) ||
       (d.preceiptid?.toString().toLowerCase() || '').includes(value) ||
       (d.pmodofreceipt?.toLowerCase() || '').includes(value) ||
       (d.pnarration?.toLowerCase() || '').includes(value)
     );
 
-    this.pageCriteria.totalrows = this.gridView.length;
-    this.pageCriteria.TotalPages = Math.ceil(
-      this.gridView.length / this.pageCriteria.pageSize
-    );
     this.pageCriteria.pageNumber = 1;
-  }
+    this.pageCriteria.totalrows = filtered.length;
+    this.pageCriteria.TotalPages = Math.ceil(
+      filtered.length / this.pageCriteria.pageSize
+    );
 
-  onFooterPageChange(event: any): void {
-    this.pageCriteria.pageNumber = event.page + 1;
+    this.gridView = filtered.slice(0, this.pageCriteria.pageSize);
   }
-
   viewRow(row: any): void {
+
     const receipt = btoa(
       `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
     );
+
     window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
+  }
+  private resetGrid(): void {
+    this.gridView = [];
+    this.allGridView = [];
+    this.pageCriteria.totalrows = 0;
+    this.pageCriteria.TotalPages = 1;
   }
 }

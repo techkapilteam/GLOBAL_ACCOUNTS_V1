@@ -15,8 +15,12 @@ export class TDSReportService {
 
   constructor(private _commonservice: CommonService) { }
 
-  public getTDSSectionDetails() {
-    return this._commonservice.getAPI('/ChitTransactions/ChitReports/getTDSSectionDetails', "params", 'No');
+  public getTDSSectionDetails(GlobalSchema:any,CompanyCode:any,BranchCode:any) {
+    const params = new HttpParams()
+      .set('GlobalSchema', GlobalSchema)
+      .set('CompanyCode', CompanyCode)
+      .set('BranchCode', BranchCode);
+    return this._commonservice.getAPI('/Accounts/GetTDSSectionDetails', params, 'YES');
   }
 
 
@@ -30,10 +34,19 @@ export class TDSReportService {
     return this._commonservice.getAPI('/ChitTransactions/ChitReports/getTDSReportDiffDetails', params, 'YES');
   }
 
-  getGstReportDetails(fromdate:any, todate:any, reporttype:any,ledgername:any) :any{
+  // getGstReportDetails(fromdate:any, todate:any, reporttype:any,ledgername:any) :any{
+  //   try {
+  //     const params = new HttpParams().set('localSchema', this._commonservice.getschemaname()).set('fromdate', fromdate).set('todate', todate).set('reporttype', reporttype).set('ledgername', ledgername);
+  //     return this._commonservice.getAPI('/ChitTransactions/ChitReports/getGstReport', params, 'YES');
+  //   }
+  //   catch (errormssg:any) {
+  //     this._commonservice.showErrorMessage(errormssg);
+  //   }
+  // }
+  getGstReportDetails(localSchema:any,fromdate:any, todate:any, reporttype:any,ledgername:any,GlobalSchema:any,branchcode:any,companycode:any) :any{
     try {
-      const params = new HttpParams().set('localSchema', this._commonservice.getschemaname()).set('fromdate', fromdate).set('todate', todate).set('reporttype', reporttype).set('ledgername', ledgername);
-      return this._commonservice.getAPI('/ChitTransactions/ChitReports/getGstReport', params, 'YES');
+      const params = new HttpParams().set('localSchema', localSchema).set('fromdate', fromdate).set('todate', todate).set('reporttype', reporttype).set('ledgername', ledgername).set('GlobalSchema', GlobalSchema).set('branchcode', branchcode).set('companycode', companycode);
+      return this._commonservice.getAPI('/Accounts/getGstReport1', params, 'YES');
     }
     catch (errormssg:any) {
       this._commonservice.showErrorMessage(errormssg);

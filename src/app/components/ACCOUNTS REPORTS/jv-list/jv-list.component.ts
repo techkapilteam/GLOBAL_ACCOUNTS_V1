@@ -152,8 +152,9 @@ export class JvListComponent implements OnInit {
     const todate =
       this.commonService.getFormatDateNormal(this.endDate) || '';
 
+    
     this.jvReportService
-      .GetJvListReportGroup(fromdate, todate, this.jvtype)
+      .GetJvListReportGroup(fromdate, todate, this.jvtype,'accounts','global','KAPILCHITS','KLC01')
       .subscribe({
         next: (res: any[]) => {
           this.jvlistDataa = res.map(data => ({
@@ -164,10 +165,12 @@ export class JvListComponent implements OnInit {
                 ? parseFloat(data.pdebitamount).toFixed(2)
                 : data.pdebitamount
           }));
+          // this.narrrationSepFn();
         },
         error: err => this.showErrorMessage(err)
       });
 
+      
     this.jvReportService
       .GetJvListReport(fromdate, todate, this.jvtype,'accounts','KAPILCHITS','KLC01','global')
       .pipe(finalize(() => {
@@ -188,6 +191,7 @@ export class JvListComponent implements OnInit {
         },
         error: err => this.showErrorMessage(err)
       });
+
   }
 
   narrrationSepFn(): void {
@@ -210,6 +214,7 @@ export class JvListComponent implements OnInit {
         pdebitamount: 0,
         pcreditamount: 0
       });
+      
     });
   }
 
