@@ -336,9 +336,10 @@ export class AccountingTransactionsService {
     return this._CommonService.postAPI('/AccountingTransactions/SavePettyCash', data)
   }
 
-  saveGeneralReceipt(data: any) {
-    return this._CommonService.postAPI('/AccountingTransactions/SaveGeneralReceipt', data)
-  }
+  saveGeneralReceipt(data: any, branchSchema: string, globalSchema: string) {const params = new HttpParams()
+    .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
+  return this._CommonService.postAPI('/Accounts/savegeneralreceipt', data);
+}
   saveJournalVoucher(data: any) {
     return this._CommonService.postAPI('/accountingtransactions/SaveJournalVoucher', data)
   }

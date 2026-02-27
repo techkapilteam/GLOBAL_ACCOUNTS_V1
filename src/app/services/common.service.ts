@@ -22,6 +22,9 @@ import { environment } from '../envir/environment';
   providedIn: 'root',
 })
 export class CommonService {
+  getUserId(): any {
+      throw new Error('Method not implemented.');
+  }
   addWrappedText({
   text,
   textWidth,

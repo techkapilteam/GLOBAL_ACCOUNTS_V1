@@ -1,8 +1,12 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div class="screen-header">
+      <h2>General Receipt New</h2>
+    </div>
 <form [formGroup]="GeneralReceiptForm" autocomplete="off">
   <div class="section-content">
     <div class="row">
       <div class="col-md-12 col-xl-12">
-        <h2>General Receipt New</h2>
       </div>
       <div class="card shadow-sm mb-3">
         <div class="card-body">
@@ -191,7 +195,7 @@
       </div>
     </div>
   </div>
-  <div class="section-content mt-2">
+  <div class="section-content mt-2"  style="padding-left:25px;">
     <div class="row">
       <div class="col-md-6 col-xl-5">
         <div class="form-group row align-items-center">
@@ -240,17 +244,19 @@
           </div>
           <div class="form-group">
             <label class="required-field">Amount Received</label>
-            <input class="form-control border-warning text-end font-weight-bold" formControlName="pactualpaidamount"
-              appRoundecimal="12@2" appMycurrencyFormatter (blur)="pamount_change()" inputmode="decimal"
-              (keypress)="allowIndianAmount($event)"
+            <input class="form-control border-warning text-end font-weight-bold w-65" style="width: 65%;"
+              formControlName="pactualpaidamount" appRoundecimal="12@2" appMycurrencyFormatter (blur)="pamount_change()"
+              inputmode="decimal" (keypress)="allowIndianAmount($event)"
               [ngClass]="{ 'is-invalid': formValidationMessages.pactualpaidamount }">
             <app-validation-message [messgae]="formValidationMessages?.pactualpaidamount"></app-validation-message>
           </div>
+
         </div>
       </div>
       <div class="col-md-6 col-xl-6 offset-xl-1">
-        <div class="border rounded p-3">
-          <div class="d-flex align-items-center mb-3" formGroupName="preceiptslist">
+        <div class="border rounded p-3" formGroupName="preceiptslist">
+
+          <div class="d-flex align-items-center mb-3">
             <span class="mr-3 font-weight-bold">GST</span>
             <div class="material-switch">
               <input id="gst-switch" type="checkbox" formControlName="pisgstapplicable"
@@ -259,120 +265,173 @@
             </div>
           </div>
 
-          <div *ngIf="showgst" formGroupName="preceiptslist">
+          
+          <div *ngIf="showgst">
+
+            <!-- Include / Exclude -->
             <div class="mb-3">
               <div class="form-check form-check-inline" *ngIf="TempgstshowInclude">
                 <input type="radio" formControlName="pgstcalculationtype" value="INCLUDE"
                   (change)="claculategsttdsamounts()">
                 <label class="ml-1">Include</label>
               </div>
+
               <div class="form-check form-check-inline" *ngIf="TempgstshowExclude">
                 <input type="radio" formControlName="pgstcalculationtype" value="EXCLUDE"
                   (change)="claculategsttdsamounts()">
                 <label class="ml-1">Exclude</label>
               </div>
-              <app-validation-message [messgae]="formValidationMessages?.pgstcalculationtype"></app-validation-message>
+
+              <app-validation-message [messgae]="formValidationMessages?.pgstcalculationtype">
+              </app-validation-message>
             </div>
+
+            <!-- State / GST No / GST % -->
             <div class="row">
               <div class="col-md-4">
                 <label class="required-field">State</label>
                 <ng-select [items]="statelist" bindLabel="pState" bindValue="pStateId" formControlName="pStateId"
-                  placeholder="Select" (change)="state_change($event)">
+                  placeholder="Select" (change)="state_change($event)"
+                  [ngClass]="{ 'is-invalid': formValidationMessages?.pStateId }">
                 </ng-select>
               </div>
+
               <div class="col-md-4" *ngIf="showgstno">
                 <label>GST No.</label>
                 <input class="form-control" formControlName="pgstno" readonly>
               </div>
+
               <div class="col-md-4">
                 <label class="required-field">GST (%)</label>
                 <ng-select [items]="gstlist" bindLabel="pgstpercentage" bindValue="pgstpercentage"
                   formControlName="pgstpercentage" placeholder="Select" (change)="gst_Change($event)"
-                  [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage }">
+                  [ngClass]="{ 'is-invalid': formValidationMessages?.pgstpercentage }">
                 </ng-select>
-                <app-validation-message [messgae]="formValidationMessages?.pgstpercentage"></app-validation-message>
+                <app-validation-message [messgae]="formValidationMessages?.pgstpercentage">
+                </app-validation-message>
               </div>
             </div>
-            <div class="row" *ngIf="isStateSelected">
-
+            <!-- <div class="row" *ngIf="isStateSelected"> -->
               <div class="form-group col-md-8" *ngIf="showgstamount">
                 <label>Amount</label>
-                <label class="form-control col-md-12 text-end pt-2">
+                <label class="form-control text-end pt-2">
                   {{ currencySymbol }}
-                  {{
-                  (GeneralReceiptForm.get('preceiptslist.pgstamount')?.value || 0)
-                  | number:'1.2-2'
-                  }}
+                  {{ GeneralReceiptForm.get('preceiptslist.pgstamount')?.value || 0 | number:'1.2-2' }}
                 </label>
               </div>
-
-              <!-- IGST -->
               <div class="form-group col-md-6" *ngIf="showigst">
                 <label>
                   IGST ({{ GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.value }}%)
                 </label>
-                <label class="col-md-12 p-0 text-end">
+                <label class="text-end d-block">
                   {{ currencySymbol }}
-                  {{
-                  (GeneralReceiptForm.get('preceiptslist.pigstamount')?.value || 0)
-                  | number:'1.2-2'
-                  }}
+                  {{ GeneralReceiptForm.get('preceiptslist.pigstamount')?.value || 0 | number:'1.2-2' }}
                 </label>
               </div>
-
-              <!-- CGST -->
               <div class="form-group col-md-6" *ngIf="showcgst">
                 <label>
                   CGST ({{ GeneralReceiptForm.get('preceiptslist.pcgstpercentage')?.value }}%)
                 </label>
-                <label class="col-md-12 p-0 text-end">
+                <label class="text-end d-block">
                   {{ currencySymbol }}
-                  {{
-                  (GeneralReceiptForm.get('preceiptslist.pcgstamount')?.value || 0)
-                  | number:'1.2-2'
-                  }}
+                  {{ GeneralReceiptForm.get('preceiptslist.pcgstamount')?.value || 0 | number:'1.2-2' }}
                 </label>
               </div>
-
-              <!-- SGST -->
               <div class="form-group col-md-6" *ngIf="showsgst">
                 <label>
                   SGST ({{ GeneralReceiptForm.get('preceiptslist.psgstpercentage')?.value }}%)
                 </label>
-                <label class="col-md-12 p-0 text-end">
+                <label class="text-end d-block">
                   {{ currencySymbol }}
-                  {{
-                  (GeneralReceiptForm.get('preceiptslist.psgstamount')?.value || 0)
-                  | number:'1.2-2'
-                  }}
+                  {{ GeneralReceiptForm.get('preceiptslist.psgstamount')?.value || 0 | number:'1.2-2' }}
                 </label>
               </div>
-
-              <!-- UTGST -->
               <div class="form-group col-md-6" *ngIf="showutgst">
                 <label>
                   UTGST ({{ GeneralReceiptForm.get('preceiptslist.putgstpercentage')?.value }}%)
                 </label>
-                <label class="col-md-12 p-0 text-end">
+                <label class="text-end d-block">
                   {{ currencySymbol }}
-                  {{
-                  (GeneralReceiptForm.get('preceiptslist.putgstamount')?.value || 0)
-                  | number:'1.2-2'
-                  }}
+                  {{ GeneralReceiptForm.get('preceiptslist.putgstamount')?.value || 0 | number:'1.2-2' }}
                 </label>
               </div>
-
             </div>
-          </div>
+          <!-- </div> -->
         </div>
         <div class="d-flex justify-content-end mt-4">
-          <button class="btn btn-dark mr-3" (click)="clearPaymentDetails()">Clear</button>
-          <button class="btn btn-primary" (click)="addPaymentDetails()">Add</button>
+          <button class="btn btn-dark mr-3" type="button" (click)="clearPaymentDetails()">Clear</button>
+          <button class="btn btn-primary" type="button" (click)="addPaymentDetails()">+ Add</button>
         </div>
       </div>
+      <hr class="light">
     </div>
     <div class="row mt-4" *ngIf="gridshowhide">
       <div class="col-12">
+
+        <p-table [value]="paymentslist1" [paginator]="true" [rows]="5" responsiveLayout="scroll"
+          styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Actions</th>
+              <th>Ledger Name</th>
+              <th>Sub Ledger Name</th>
+              <th class="text-right">Amount</th>
+              <th class="text-center">GST Calc Type</th>
+              <th class="text-center">GST Type</th>
+              <th class="text-center">GST(%)</th>
+              <th class="text-right">GST Amount</th>
+              <th class="text-right">Total Amount</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+            <tr>
+              <td>
+                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                  (click)="editHandler($event, row, rowIndex)">
+                </button>
+
+                <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger"
+                  (click)="removeHandler(row, rowIndex)">
+                </button>
+              </td>
+              <td>{{ row.pledgername }}</td>
+              <td>{{ row.psubledgername }}</td>
+              <td class="text-right">
+                {{ currencySymbol }} {{ (row.pamount || 0) | number:'1.2-2' }}
+              </td>
+              <td class="text-center">
+                {{ row.pisgstapplicable ? row.pgstcalculationtype : '-- NA --' }}
+              </td>
+              <td class="text-center">
+                {{ row.pisgstapplicable ? row.pgsttype : '-- NA --' }}
+              </td>
+              <td class="text-center">
+                {{ row.pisgstapplicable ? row.pgstpercentage : '-- NA --' }}
+              </td>
+              <td class="text-right">
+                {{ currencySymbol }} {{ (row.pgstamount || 0) | number:'1.2-2' }}
+              </td>
+              <td class="text-right">
+                {{ currencySymbol }} {{ (row.ptotalamount || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="3" class="text-right font-weight-bold">Total</td>
+              <td class="text-right font-weight-bold">
+                {{ currencySymbol }} {{ getSum('pamount') | number:'1.2-2' }}
+              </td>
+              <td colspan="3"></td>
+              <td class="text-right font-weight-bold">
+                {{ currencySymbol }} {{ getSum('pgstamount') | number:'1.2-2' }}
+              </td>
+              <td class="text-right font-weight-bold">
+                {{ currencySymbol }} {{ getSum('ptotalamount') | number:'1.2-2' }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   </div>
@@ -440,7 +499,6 @@
                     | currency: currencyCode:'symbol':'1.2-2'}}
                   </label>
                 </div>
-
               </div>
             </div>
           </div>
@@ -525,3 +583,5 @@
     </div>
   </div>
 </form>
+ </div>
+  </div>

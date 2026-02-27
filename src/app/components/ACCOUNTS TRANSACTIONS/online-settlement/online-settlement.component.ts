@@ -163,10 +163,6 @@ export class OnlineSettlementComponent implements OnInit {
     ];
   }
 
-  // ==================================================
-  // DUMMY GRID DATA
-  // ==================================================
-
   private loadDummyGrid(): void {
 
     this.originalGridData = [
