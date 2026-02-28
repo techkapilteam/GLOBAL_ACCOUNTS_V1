@@ -23,7 +23,7 @@
               <ng-select
                 [items]="tdssectiondata"
                 bindLabel="sectionId"
-                bindValue="sectionName"
+                bindValue="tdsId"
                 placeholder="Select"
                 [multiple]="false"
                 [searchable]="true"
@@ -181,7 +181,7 @@
       <ng-template pTemplate="body" let-row>
         <tr>
 
-          <td *ngIf="!summary">{{ row.paid_to || '--NA--' }}</td>
+          <td *ngIf="!summary">{{ row.paid_to | json }}</td>
 
           <td>{{ row.pannumber || '--NA--' }}</td>
 
