@@ -22,6 +22,12 @@ import { environment } from '../envir/environment';
   providedIn: 'root',
 })
 export class CommonService {
+  NPSPledgeDetails1(reportname: string, rows: any[], gridheaders: string[], FirstcolWidthHeight: any, arg4: string, arg5: string, fromdate: any, toDate: string, printorpdf: string) {
+    throw new Error('Method not implemented.');
+  }
+  getUserId(): any {
+      throw new Error('Method not implemented.');
+  }
   addWrappedText({
   text,
   textWidth,
