@@ -176,7 +176,7 @@
 
                                 <ng-template pTemplate="body" let-row>
                                     <tr>
-                                        <td>{{ row.pissuedate | date:'dd-MMM-yyyy' }}</td>
+                                        <td>{{ _CommonService.getDateObjectFromDataBase(row.pissuedate) | date:'dd-MMM-yyyy' }}</td>
                                         <td>{{ row.ptransactionno }}</td>
                                         <td>{{ row.preferencenumber }}</td>
                                         <td>{{ currencysymbol }} {{ row.ptotalamount | number:'1.2-2' }}</td>

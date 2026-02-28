@@ -296,6 +296,7 @@ setPageModel(): void {
     this.isLoading = true;
     this.Showhide=false
     this.savebutton = 'Processing';
+    this.startDate=new Date(this.BRStatmentForm.value.fromDate)
 
     const fromDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.fromDate)??'';
     const toDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.toDate)??'';

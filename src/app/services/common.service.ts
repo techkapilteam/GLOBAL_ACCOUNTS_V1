@@ -3224,11 +3224,13 @@ export class CommonService {
           doc.setFontSize(10);
           doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 50);
 
-          if (betweenorason === 'Between') {
+          if (betweenorason === 'Between' && fromdate && todate) {
             doc.text('Between : ' + fromdate + ' And ' + todate, 15, 50);
           } else if (betweenorason === 'As On' && fromdate) {
             doc.text('As on : ' + fromdate, 15, 50);
-          }
+          } else if (fromdate && todate) {
+  doc.text('Between : ' + fromdate + ' And ' + todate, 15, 50);
+}
 
           pdfInMM = 233;
           doc.line(10, 53, pdfInMM - lMargin - rMargin, 53);

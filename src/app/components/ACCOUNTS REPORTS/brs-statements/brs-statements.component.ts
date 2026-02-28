@@ -162,7 +162,7 @@ get f() { return this.BrsStatementsReport.controls; }
     private datePipe: DatePipe,
     private router: Router,
     private fb: FormBuilder,
-    private _CommonService: CommonService,
+    public _CommonService: CommonService,
     private _bankBookService: BankBookService,
     private _accountingReportsservice: AccountingReportsService
   ) {
@@ -356,19 +356,21 @@ get f() { return this.BrsStatementsReport.controls; }
       let ptotalamount = this._CommonService.convertAmountToPdfFormat(element.ptotalamount);
 
       if (element.pissuedate) {
-        this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
-        this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+        // this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
+        // this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+        const dateObj = this._CommonService.getDateObjectFromDataBase(element.pissuedate);
+this.pissuedate = this._CommonService.getFormatDateGlobal(dateObj);
       }
       else {
         this.pissuedate = "--NA--";
       }
-      if (element.pissuedate) {
-        this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
-        this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
-      }
-      else {
-        this.pissuedate = "--NA--";
-      }
+      // if (element.pissuedate) {
+      //   this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
+      //   this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+      // }
+      // else {
+      //   this.pissuedate = "--NA--";
+      // }
 
 
       if (element.pclearDate !='[object Object]') {
@@ -416,7 +418,7 @@ get f() { return this.BrsStatementsReport.controls; }
      
       if (element.pissuedate) {
         this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
-        this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+        // this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
       }
       else {
         this.pissuedate = "--NA--";

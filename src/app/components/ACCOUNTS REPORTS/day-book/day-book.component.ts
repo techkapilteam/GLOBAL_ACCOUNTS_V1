@@ -385,6 +385,14 @@ dte:boolean=false;
   const formattodate = this.dayBookForm.controls['dtodate'].value;
   const toDate = this.commonService.getFormatDateGlobal(formattodate);
 
+  if (fromDate && toDate) {
+    this.showdate = 'Between';
+  } else if (fromDate && !toDate) {
+    this.showdate = 'As On';
+  } else {
+    this.showdate = '';
+  }
+
   const FirstcolWidthHeight: any = {
     0: { cellWidth: 'auto', halign: 'center' },
     1: { cellWidth: 'auto', halign: 'left' },
@@ -432,6 +440,7 @@ dte:boolean=false;
         '',
         ''
       ]);
+      return;
     }
 
     const temp = [
