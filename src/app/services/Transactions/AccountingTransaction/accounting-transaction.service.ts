@@ -516,6 +516,10 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
   SaveForemanDetails(data: any) {
     return this._CommonService.postAPI('/accountingtransactions/SaveForemanDetails', data)
   }
+  getBanklist(GlobalSchema: 'global',BranchSchema: 'accounts', BranchCode: 'KLC01', CompanyName: 'KAPILCHITS'): Observable<any> {
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('BranchCode', BranchCode).set('CompanyName', CompanyName);
+    return this._CommonService.getAPI('/Accounts/getBankTransferDetails', params, 'YES');
+  }
   getBankTransferDetails(BranchSchema: any, todate: any, banktransferid: any): Observable<any> {
     const params = new HttpParams().set('BranchSchema', BranchSchema).set('banktransferid', banktransferid).set('todate', todate);
     return this._CommonService.getAPI('/accountingtransactions/getBankTransferDetails', params, 'YES');
@@ -524,9 +528,9 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
     const params = new HttpParams().set('Branchschema', Branchschema).set('debitledger', debitledger).set('todate', todate);
     return this._CommonService.getAPI('/AccountingTransactions/GetPayrollJVDetailsforwelfare', params, 'YES');
   }
-  GetBankTransferTypes(BranchSchema: any) {
-    const params = new HttpParams().set('branchSchema', BranchSchema);
-    return this._CommonService.getAPI('/accountingtransactions/GetBankTransferTypes', params, 'YES');
+  GetBankTransferTypes(BranchSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
+    const params = new HttpParams().set('branchSchema', BranchSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetBankTransferTypes', params, 'YES');
 
   }
 
