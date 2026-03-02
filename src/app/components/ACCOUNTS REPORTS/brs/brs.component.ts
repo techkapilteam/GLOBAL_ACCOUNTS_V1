@@ -296,6 +296,7 @@ setPageModel(): void {
     this.isLoading = true;
     this.Showhide=false
     this.savebutton = 'Processing';
+    this.startDate=new Date(this.BRStatmentForm.value.fromDate)
 
     const fromDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.fromDate)??'';
     const toDate = this.commonService.getFormatDateNormal(this.BRStatmentForm.value.toDate)??'';
@@ -310,6 +311,27 @@ setPageModel(): void {
           this.loading = false;
           this.isLoading = false;
           this.savebutton = 'Generate Report';
+          const selectedBank = this.bankData.find(
+    b => b.bankAccountId == this.BRStatmentForm.value.bankAccountId
+  );
+  this.bankname = selectedBank ? selectedBank.bankName : '';
+          this.pBankBookBalance = parseFloat(res[0]?.pbankbalance) || 0;
+
+  this.chequesdepositedbutnotcredited = res
+    .filter(r => r.pGroupType === 'CHEQUES DEPOSITED BUT NOT CREDITED')
+    .reduce((sum, r) => sum + (r.ptotalreceivedamount || 0), 0);
+
+  this.CHEQUESISSUEDBUTNOTCLEARED = res
+    .filter(r => r.pGroupType === 'CHEQUES ISSUED BUT NOT CLEARED')
+    .reduce((sum, r) => sum + (r.ptotalreceivedamount || 0), 0);
+
+  this.Balanceasperbankbook = this.pBankBookBalance
+    - this.chequesdepositedbutnotcredited
+    + this.CHEQUESISSUEDBUTNOTCLEARED;
+
+  this.BRStatmentForm.patchValue({
+    pbankbalance: this.Balanceasperbankbook
+  });
         },
         error: (err: any) => {
           this.commonService.showErrorMessage(err);
@@ -379,10 +401,10 @@ setPageModel(): void {
       "As On",
       this.commonService.getFormatDateGlobal(this.BRStatmentForm.value.fromDate),
       new Date().toLocaleDateString(),
-      '',
-      '',
-      '',
-      '',
+      this.commonService.convertAmountToPdfFormat(this.pBankBookBalance),           
+    this.commonService.convertAmountToPdfFormat(this.chequesdepositedbutnotcredited), 
+    this.commonService.convertAmountToPdfFormat(this.CHEQUESISSUEDBUTNOTCLEARED),     
+    this.commonService.convertAmountToPdfFormat(this.Balanceasperbankbook),           
       type,
       this.bankname
     );

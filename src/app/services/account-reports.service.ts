@@ -15,7 +15,15 @@ export class AccountReportsService {
   }
   GetBankBalance(bankid: any) {
     const params = new HttpParams().set('brstodate', '09-01-2026').set('_recordid', bankid).set('BranchSchema', this._CommonService.getbranchname()).set('branchCode', this._CommonService.getBranchCode()).set('companyCode', this._CommonService.getCompanyCode());
-    return this._CommonService.getAPI('/ChequesOnHand/GetBankBalance', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
+  }
+  Getgstvocuherprint(Branchschema: any, Gstvoucherno: any): Observable<any> {
+    const params = new HttpParams().set('branchSchema', Branchschema).set('Gstvoucherno', Gstvoucherno).set('globalSchema', this._CommonService.getschemaname()).set('companyCode', this._CommonService.getCompanyCode()).set('branchCode', this._CommonService.getBranchCode());
+    return this._CommonService.getAPI('/Accounts/Getgstvocuherprint', params, 'YES')
+  }
+  public getTDSReportDetails(localSchema:any, sectionid:any, fromdate:any, todate:any, grouptype:any,reporttype:any) {
+    const params = new HttpParams().set("localSchema", localSchema).set("sectionid", sectionid).set("fromdate", fromdate).set("todate", todate).set("grouptype", grouptype).set("reporttype", reporttype).set("globalSchema", this._CommonService.getschemaname()).set("companyCode", this._CommonService.getCompanyCode()).set("branchCode", this._CommonService.getBranchCode());
+    return this._CommonService.getAPI('/Accounts/getTDSReportDetails', params, 'YES');
   }
   
 }

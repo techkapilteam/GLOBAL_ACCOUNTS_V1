@@ -39,7 +39,16 @@ today = new Date();
   ledgeraccountslist: any[] = [];
   subledgeraccountslist: any[] = [];
   gridView: any[] = [];
-
+  expandedGroups: { [key: string]: boolean } = {};
+  toggleGroup(date: string) {
+  this.expandedGroups[date] =
+    !this.expandedGroups[date];
+}
+pageCriteria = {
+  pageSize: 10
+};
+currencysymbol = '₹';
+branchName: string = 'KLC01';
   isLoading = false;
   isNarrationChecked = false;
 
@@ -47,13 +56,6 @@ today = new Date();
   totalcreditamount = 0;
   totalbalanceamount = 0;
   dpConfig: Partial<BsDatepickerConfig> = {};
-
-  // ledgeraccountslist = [
-  //   { pledgerid: 1, pledgername: 'BANK CHARGES' }
-  // ];
-  // subledgeraccountslist = [
-  //   { psubledgerid: 11, psubledgername: 'ICICI Bank', pledgerid: 1 }
-  // ];
 
   filteredSubLedgers: any[] = [];
 
@@ -178,6 +180,7 @@ today = new Date();
   //   ];
   // }
   generateReport(): void {
+    debugger
 
     if (this.accountLedgerForm.invalid) {
       this.accountLedgerForm.markAllAsTouched();
@@ -185,6 +188,11 @@ today = new Date();
     }
 
     const { pledgerid, psubledgerid, fromDate, toDate } = this.accountLedgerForm.value;
+    const selectedLedger = this.ledgeraccountslist.find(x => x.pledgerid === pledgerid);
+this.LedgerName = selectedLedger?.pledgername || '';
+
+const selectedSub = this.subledgeraccountslist.find(x => x.psubledgerid === psubledgerid);
+this.SubLedgerName = selectedSub?.psubledgername || '';
 
     this.isLoading = true;
 
@@ -204,6 +212,7 @@ today = new Date();
       next: (res) => {
         this.gridView = res ?? [];
         this.calculateTotals();
+        this.showReport = true;
         this.isLoading = false;
       },
       error: () => this.isLoading = false
@@ -223,14 +232,6 @@ today = new Date();
     this.isNarrationChecked = event.target.checked;
   }
 
-
-  // pdfOrPrint(type: 'Pdf' | 'Print') {
-  //   if (type === 'Print') {
-  //     window.print();
-  //   } else {
-  //     alert('PDF export not implemented in demo mode');
-  //   }
-  // }
   pdfOrPrint(printOrPdf: 'Print' | 'Pdf'): void {
   debugger;
 
@@ -282,26 +283,49 @@ today = new Date();
       group
     } = element;
 
-    const formattedOpeningBal =
-      this.commonService.convertAmountToPdfFormat(
-        this.commonService.currencyformat(popeningbal)
-      ) + ` ${pBalanceType}`;
+//     const formattedOpeningBal =
+//       this.commonService.convertAmountToPdfFormat(
+//         this.commonService.currencyformat(parseFloat(popeningbal)|| 0)
+// ) + ` ${pBalanceType}`;
 
-    const debitAmt =
-      pdebitamount && pdebitamount !== 0
-        ? this.commonService.convertAmountToPdfFormat(
-            this.commonService.currencyformat(pdebitamount)
-          )
-        : '';
+//     const debitAmt =
+//       pdebitamount && pdebitamount !== 0
+//         ? this.commonService.convertAmountToPdfFormat(
+//             this.commonService.currencyformat(parseFloat(pdebitamount) || 0)
+//           )
+//         : '';
 
-    const creditAmt =
-      pcreditamount && pcreditamount !== 0
-        ? this.commonService.convertAmountToPdfFormat(
-            this.commonService.currencyformat(
-              parseFloat(pcreditamount).toFixed(2)
-            )
-          )
-        : '';
+//     const creditAmt =
+//       pcreditamount && pcreditamount !== 0
+//         ? this.commonService.convertAmountToPdfFormat(
+//             this.commonService.currencyformat(
+//               parseFloat(pcreditamount).toFixed(2)
+//             )
+//           )
+//         : '';
+const safeParseFloat = (val: any): number => {
+  const parsed = parseFloat(val);
+  return isNaN(parsed) ? 0 : parsed;
+};
+
+const formattedOpeningBal =
+  this.commonService.convertAmountToPdfFormat(
+    safeParseFloat(popeningbal)
+  ) + ` ${pBalanceType}`;
+
+const debitAmt =
+  safeParseFloat(pdebitamount) !== 0
+    ? this.commonService.convertAmountToPdfFormat(
+        safeParseFloat(pdebitamount)
+      )
+    : '';
+
+const creditAmt =
+  safeParseFloat(pcreditamount) !== 0
+    ? this.commonService.convertAmountToPdfFormat(
+        safeParseFloat(pcreditamount)
+      )
+    : '';
 
     return group !== undefined
       ? [group, ptransactionno, pparticulars, debitAmt, creditAmt, formattedOpeningBal]
@@ -323,10 +347,6 @@ today = new Date();
   );
 }
 
-
-  // exportExcel() {
-  //   alert('Excel export not implemented in demo mode');
-  // }
   exportToExcel(): void {
     const rows = this.gridView.map(x => ({
       "Transaction Date": this.commonService.getFormatDateGlobal(x.ptransactiondate),

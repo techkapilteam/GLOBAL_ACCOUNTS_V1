@@ -385,6 +385,14 @@ dte:boolean=false;
   const formattodate = this.dayBookForm.controls['dtodate'].value;
   const toDate = this.commonService.getFormatDateGlobal(formattodate);
 
+  if (fromDate && toDate) {
+    this.showdate = 'Between';
+  } else if (fromDate && !toDate) {
+    this.showdate = 'As On';
+  } else {
+    this.showdate = '';
+  }
+
   const FirstcolWidthHeight: any = {
     0: { cellWidth: 'auto', halign: 'center' },
     1: { cellWidth: 'auto', halign: 'left' },
@@ -432,6 +440,7 @@ dte:boolean=false;
         '',
         ''
       ]);
+      return;
     }
 
     const temp = [
@@ -547,9 +556,9 @@ GetChequeonHandDetails(): void {
           this.gridDataCheques = res;
 
           this.ChequesAmount = this.gridDataCheques
-            .reduce((sum, c) => sum + Number(c.ptotalreceivedamount || 0), 0);
+            .reduce((sum, c) => sum + Number(c.receiptAmount || 0), 0);
 
-          // this.pdfOrprintChequesOnHand('Pdf');
+          this.pdfOrprintChequesOnHand('Pdf');
 
         } else {
           alert('No Data To Display');
@@ -560,5 +569,81 @@ GetChequeonHandDetails(): void {
       }
     });
 
+}
+pdfOrprintChequesOnHand(printOrPdf: 'Print' | 'Pdf'): void {
+
+  const rows: any[] = [];
+  const reportName = 'Cheques On Hand';
+
+  const gridHeaders: string[] = [
+    'Receipt Date',
+    'Received From',
+    'Cheque No.',
+    'Cheque Amount',
+    'Cheque Date',
+    'Bank Name',
+    'Receipt Amount'
+  ];
+
+  const today = new Date();
+  const fromDate = this.commonService.getFormatDateGlobal(
+  this.dayBookForm.get('dfromdate')?.value 
+);
+
+  const toDate =
+    this.commonService.getFormatDateGlobal(
+      this.dayBookForm.get('dtodate')?.value
+    );
+
+  const colWidthHeight = {
+    0: { cellWidth: 22 },
+    1: { cellWidth: 70 },
+    2: { cellWidth: 38 },
+    3: { cellWidth: 35, halign: 'left' },
+    4: { cellWidth: 22 },
+    5: { cellWidth: 48 },
+    6: { cellWidth: 35, halign: 'left' }
+  };
+  this.ChequesAmount = 0;
+
+  this.gridDataCheques?.forEach((element: any) => {
+  const clearDate = this.commonService.getFormatDateGlobal(element?.chitReceiptDate);
+  const chequeDate = element?.chequeDate
+    ? this.commonService.getFormatDateGlobal(element.chequeDate)
+    : '';
+
+  // let 
+  const chequeAmt = this.commonService.currencyformat(element?.receiptAmount);
+  // chequeAmt = this.commonService.convertAmountToPdfFormat(chequeAmt);
+
+  const receiptAmt = this.commonService.currencyformat(element?.totalReceivedAmount);
+this.ChequesAmount += element?.receiptAmount || 0;
+  rows.push([
+    clearDate,
+    element?.name,
+    element?.referenceNumber,
+    chequeAmt,
+    chequeDate,
+    element?.bankName,
+    receiptAmt
+  ]);
+});
+  const chequesAmt =
+    // this.commonService.convertAmountToPdfFormat(
+      this.commonService.currencyformat(this.ChequesAmount)
+    // );
+
+  this.commonService._downloadChequesOnHandReportsPdf(
+    reportName,
+    rows,
+    gridHeaders,
+    colWidthHeight,
+    'landscape',
+    'As On',
+    fromDate,
+    toDate,
+    printOrPdf,
+    chequesAmt
+  );
 }
 }
