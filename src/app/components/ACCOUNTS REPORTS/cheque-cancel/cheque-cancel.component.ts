@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CommonService } from '../../../services/common.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
@@ -70,10 +70,26 @@ export class ChequeCancelComponent implements OnInit {
     this.FrmChequeCancel = this.fb.group({
       fromdate: [new Date(), Validators.required],
       todate: [new Date(), Validators.required]
-    });
+    }, { validators: this.dateRangeValidator() });
 
     this.setPageModel();
   }
+  dateRangeValidator(): ValidatorFn {
+return (group: AbstractControl): ValidationErrors | null => {
+
+const from = group.get('fromdate')?.value;
+const to = group.get('todate')?.value;
+
+if (!from || !to) return null;
+
+const fromTime = new Date(from).setHours(0, 0, 0, 0);
+const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+return fromTime > toTime
+? { dateRangeInvalid: true }
+: null;
+};
+}
 
   get f() {
     return this.FrmChequeCancel.controls;
@@ -112,6 +128,10 @@ export class ChequeCancelComponent implements OnInit {
   }
 
   GetChequeCancelDetails() {
+    if (this.FrmChequeCancel.errors?.['dateRangeInvalid']) {
+alert('From Date should not be greater than To Date');
+return;
+}
     if (this.validation) return;
     this.updateDates();
 

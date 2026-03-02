@@ -774,6 +774,8 @@ export class CommonService {
   getFormatDateGlobal(date: any): string {
     if (!date) return '';
 
+    if (typeof date === 'object' && !(date instanceof Date)) return '';
+
     const storedFormat = sessionStorage.getItem('dateformat') ?? '';
 
     let format = 'dd/MM/yyyy';

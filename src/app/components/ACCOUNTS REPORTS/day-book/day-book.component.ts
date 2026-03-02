@@ -206,6 +206,8 @@ ChequesAmount: number = 0;
   loginBranchschema!: string;
 kgms: boolean = false;
 dte:boolean=false;
+  EndDate!: string | null;
+  StartDate!: string | null;
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
@@ -236,13 +238,22 @@ dte:boolean=false;
       dfromdate: [new Date()],
       dtodate: [new Date()],
       branch_code: ['']
-    });
+    }, { validators: this.dateRangeValidator });
 
     this.loginBranchschema = sessionStorage.getItem('loginBranchSchemaname') ?? '';
 
     this.loadBranches();
     this.setPageModel();
   }
+  private dateRangeValidator(group: FormGroup) {
+const from = group.get('dfromdate')?.value;
+const to = group.get('dtodate')?.value;
+
+if (from && to && new Date(from) > new Date(to)) {
+return { dateRangeInvalid: true };
+}
+return null;
+}
 
   private loadBranches(): void {
     // this.chitService
@@ -252,6 +263,13 @@ dte:boolean=false;
       .getCAOBranchlist('accounts','global','KAPILCHITS','KLC01')
       .subscribe((res: any[]) => this.kgmsBranchList = res || []);
   }
+  get f() {
+    return this.dayBookForm.controls;
+  }
+  updateFormattedDates() {
+    this.StartDate = this.datePipe.transform(this.f['dfromdate'].value, 'dd-MMM-yyyy');
+    this.EndDate = this.datePipe.transform(this.f['dtodate'].value, 'dd-MMM-yyyy');
+  }
 
   private setPageModel(): void {
     this.pageCriteria.pageSize = this.commonService.pageSize;
@@ -260,6 +278,7 @@ dte:boolean=false;
   }
 
   getDayBookData(): void {
+    this.updateFormattedDates();
 
     const fromDate = this.commonService.getFormatDateNormal(
       this.dayBookForm.get('dfromdate')?.value 

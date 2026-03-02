@@ -196,17 +196,29 @@ get f() { return this.BrsStatementsReport.controls; }
 
     this.setPageModel();
 
-    this.BrsStatementsReport = this.fb.group({
+   this.BrsStatementsReport = this.fb.group({
   fromDate: this.fb.control<Date | null>(this.today),
   toDate: this.fb.control<Date | null>(this.today),
   pbankname: this.fb.control<string | null>(null),
   branchschema: this.fb.control<string | null>(null),
-  Bank: this.fb.control<string | null>('CREDIT')
+  Bank: this.fb.control<string>('CREDIT')
+},
+{
+  validators: this.dateRangeValidator
 });
-
     this.bankBookDetails();
     this.relesechange('CREDIT');
   }
+  private dateRangeValidator(group: FormGroup) {
+    debugger
+const from = group.get('fromDate')?.value;
+const to = group.get('toDate')?.value;
+
+if (from && to && new Date(from) > new Date(to)) {
+return { dateRangeInvalid: true };
+}
+return null;
+}
 
   bankBookDetails(): void {
     this._bankBookService.GetBankNames(this._CommonService.getschemaname(),
@@ -221,6 +233,7 @@ get f() { return this.BrsStatementsReport.controls; }
   }
 
   ToDateChange(event: any): void {
+    debugger
     this.dpConfig1 = {
       ...this.dpConfig1,
       minDate: event

@@ -8,6 +8,7 @@ import { CommonModule, DatePipe, DecimalPipe, TitleCasePipe } from '@angular/com
 import { CompanyDetailsService } from '../../../services/company-details.service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-payment-voucher-report',
@@ -72,7 +73,7 @@ export class PaymentVoucherReportComponent implements OnInit {
       'dd-MMM-yyyy h:mm:ss a'
     );
 
-    this.activatedroute.queryParams.subscribe(params => {
+    this.activatedroute.queryParams.pipe(take(1)).subscribe(params => {
 
       const routeParams = atob(params['id'].replace(/\s/g, '+'));
       const splitData = routeParams.split(',');
@@ -147,8 +148,12 @@ export class PaymentVoucherReportComponent implements OnInit {
       .GetPaymentVoucherbyId(id, 'accounts', 'KAPILCHITS', 'KLC01', 'global')
       .subscribe({
         next: (res: any) => {
-
-          this.tempPaymentData = res;
+          const unique = res.filter(
+            (item: any, index: number, self: any[]) =>
+              index === self.findIndex((t: any) => t.ppaymentid === item.ppaymentid)
+          );
+          // this.tempPaymentData = res;
+           this.tempPaymentData = unique;
 
           this.tempPaymentData.forEach((x: any) => {
 
@@ -157,6 +162,7 @@ export class PaymentVoucherReportComponent implements OnInit {
                 s + i.pLedgeramount - i.ptdsamount + i.pcgstamount,
               0
             );
+             x.totvalue = tot;
 
             const gst = x.ppaymentslist.reduce(
               (s: number, i: any) =>
@@ -188,6 +194,11 @@ export class PaymentVoucherReportComponent implements OnInit {
       .GetPettyCashbyId(id, 'accounts', 'KAPILCHITS', 'KLC01', 'global')
       .subscribe({
         next: (res: any) => {
+          this.tempPaymentData = res.filter(
+            (item: any, index: number, self: any[]) =>
+              index === self.findIndex((t: any) => t.ppaymentid === item.ppaymentid)
+          );
+
 
           this.tempPaymentData = res;
 
@@ -234,8 +245,13 @@ export class PaymentVoucherReportComponent implements OnInit {
             this.tempPaymentData = [];
             return;
           }
+          const unique = res.filter(
+            (item: any, index: number, self: any[]) =>
+              index === self.findIndex((t: any) => t.ppaymentid === item.ppaymentid)
+          );
 
           const data = res[0];
+          this.tempPaymentData = unique;
 
           data.ppaymentslist = [{
             pLedgeramount: data?.transaction_amount ?? 0,
