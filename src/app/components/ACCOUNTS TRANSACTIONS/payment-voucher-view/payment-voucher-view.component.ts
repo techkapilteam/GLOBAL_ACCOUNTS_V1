@@ -2274,8 +2274,19 @@ getPaymentListColumnWisetotals() {
 
     let trans_date = this.paymentVoucherForm.controls['ppaymentdate'].value;
     trans_date = this._commonService.getFormatDateNormal(trans_date);
+//  accountIds, trans_date
+    this._AccountingTransactionsService.GetCashAmountAccountWise(
+      "PAYMENT VOUCHER",
 
-    this._AccountingTransactionsService.GetCashAmountAccountWise("PAYMENT VOUCHER", accountIds, trans_date)
+
+
+
+      this._commonService.getbranchname(),
+            
+                 accountIds,
+                 trans_date,this._commonService.getschemaname(),this._commonService.getCompanyCode(),
+                 this._commonService.getBranchCode()
+    )
       .subscribe(result => {
         debugger;
 
