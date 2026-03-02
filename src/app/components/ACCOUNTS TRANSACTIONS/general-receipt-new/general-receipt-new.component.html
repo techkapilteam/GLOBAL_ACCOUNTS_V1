@@ -368,7 +368,7 @@
     <div class="row mt-4" *ngIf="gridshowhide">
       <div class="col-12">
 
-        <p-table [value]="paymentslist1" [paginator]="true" [rows]="5" responsiveLayout="scroll"
+        <p-table [value]="paymentslist" [paginator]="true" [rows]="5" responsiveLayout="scroll"
           styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
@@ -471,22 +471,28 @@
                   <ng-select class="form-control" [items]="tdssectionlist" bindLabel="pTdsSection"
                     bindValue="pTdsSection" formControlName="pTdsSection" (change)="tdsSection_Change($event)"
                     [clearable]="false" placeholder="Select" [trackByFn]="trackByFn"
-                    [ngClass]="{ 'is-invalid': formValidationMessages.pTdsSection }">
+                   >
                   </ng-select>
-                  <app-validation-message [messgae]="formValidationMessages?.pTdsSection">
-                  </app-validation-message>
+                  <!-- <app-validation-message [messgae]="formValidationMessages?.pTdsSection">
+                  </app-validation-message> 
+                    [ngClass]="{ 'is-invalid': formValidationMessages.pTdsSection }"-->
                 </div>
                 <div class="col-md-4 col-xl-4">
                   <label id="pTdsPercentage" class="required-field" title="Percentage">
                     Percentage
                   </label>
-                  <ng-select class="form-control" id="pTdsPercentage" title="Percentage"
+                  <!-- <ng-select class="form-control" id="pTdsPercentage" title="Percentage"
                     formControlName="pTdsPercentage" (change)="tds_Change()"
                     [ngClass]="{ 'is-invalid': formValidationMessages.pTdsPercentage }">
                     <ng-option value="">Select</ng-option>
                     <ng-option *ngFor="let tds of tdspercentagelist; trackBy: trackByFn" [value]="tds.pTdsPercentage">
                       {{tds.pTdsPercentage}}
                     </ng-option>
+                  </ng-select> -->
+                  <ng-select class="form-control" [items]="tdspercentagelist" bindLabel="pTdsPercentage"
+                    bindValue="pTdsPercentage" formControlName="pTdsPercentage" 
+                    [clearable]="false" placeholder="Select" [trackByFn]="trackByFn"
+                    [ngClass]="{ 'is-invalid': formValidationMessages.pTdsPercentage }">
                   </ng-select>
                   <app-validation-message [messgae]="formValidationMessages?.pTdsPercentage">
                   </app-validation-message>
@@ -570,18 +576,28 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <div class="d-flex justify-content-end align-items-center mt-3">
-        <a (click)="ClearGenerealReceipt()" class="btn btn-g-icon mr-4 px-3 border-0 d-flex align-items-center">
-          <img src="assets/images/icon-cancel-white.svg" width="20" height="20" class="mr-3">Clear</a>
-        <button type="button" (click)="saveGenerealReceipt()"
-          class="btn btn-s-icon px-3 border-0 d-flex align-items-center" [disabled]="disablesavebutton">
-          <img src="assets/images/icon-check-white.svg" class="mr-3" width="20" height="20" *ngIf="!disablesavebutton">
-          <i class="fa mr-2" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
-          {{savebutton}}
-        </button>
-      </div>
-    </div>
-  </div>
+  <div class="d-flex justify-content-end align-items-center mt-3">
+
+  <button 
+    type="button"
+    (click)="ClearGenerealReceipt()"
+    class="btn btn-g-icon mr-4 px-3 border-0 d-flex align-items-center">
+
+    <img src="assets/images/icon-cancel-white.svg"
+         width="20"
+         height="20"
+         class="mr-3">Clear</button>
+
+  <button type="button"(click)="saveGenerealReceipt()"class="btn btn-s-icon px-3 border-0 d-flex align-items-center"
+    [disabled]="disablesavebutton">
+
+    <img src="assets/images/icon-check-white.svg"class="mr-3"width="20"height="20"
+         *ngIf="!disablesavebutton"><i class="fa mr-2"
+         [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>{{savebutton}}
+  </button>
+</div>
+</div>
+</div>
 </form>
- </div>
-  </div>
+</div>
+</div>

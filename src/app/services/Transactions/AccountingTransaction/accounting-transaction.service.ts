@@ -445,17 +445,18 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
     set('BranchCode', this._CommonService.getBranchCode()).set('CompanyCode', this._CommonService.getCompanyCode()).set('GlobalSchema', 'global').set('TaxSchema', 'taxes');
     return this._CommonService.getAPI('/Accounts/getPartyDetailsbyid',params,'YES');
 }
-  GetCashAmountAccountWise(formname: any, account_id: any, transaction_date: any): Observable<any> {
-    const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname()).set('account_id', account_id).set('transaction_date', transaction_date);
-    return this._CommonService.getAPI('/AccountingTransactions/GetCashAmountAccountWise', params, 'YES')
+  GetCashAmountAccountWise(formname: any, BranchSchema: any , account_id: any, transaction_date: any,
+    GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema)
+    .set('account_id', account_id).set('transaction_date', transaction_date)
+    .set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetCashAmountAccountWise', params, 'YES')
   }
-
   GettdsLedgerAccountsList(formname: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/AccountingTransactions/GetLedgerAccountList', params, 'YES');
   }
-
   GettdsLedgerAccountsList1(formname: any, BranchSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
