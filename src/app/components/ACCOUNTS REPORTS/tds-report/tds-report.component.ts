@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe, formatDate } from '@angular/common';
 import { Component,inject,OnInit } from '@angular/core';
-import { FormsModule,FormBuilder, FormGroup,Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule,FormBuilder, FormGroup,Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
@@ -9,6 +9,7 @@ import { TdsService } from '../../../services/tds.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { TDSReportService } from '../../../services/Reports/tds-report.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AccountReportsService } from 'src/app/services/account-reports.service';
 
 
 @Component({
@@ -52,6 +53,7 @@ export class TdsReportComponent implements OnInit{
   amount = 0;
   tdsamount = 0;
   reportpaidamount = 0;
+ private reportservice=inject(AccountReportsService);
 
   constructor(
     private fb: FormBuilder,
@@ -90,8 +92,24 @@ export class TdsReportComponent implements OnInit{
       fromdate: [new Date()],
       todate: [new Date()],
       reportType: ['']
-    });
+    }, { validators: this.dateRangeValidator() });
   }
+  dateRangeValidator(): ValidatorFn {
+return (group: AbstractControl): ValidationErrors | null => {
+
+const from = group.get('fromdate')?.value;
+const to = group.get('todate')?.value;
+
+if (!from || !to) return null;
+
+const fromTime = new Date(from).setHours(0, 0, 0, 0);
+const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+return fromTime > toTime
+? { dateRangeInvalid: true }
+: null;
+};
+}
 
   setPageModel(): void {
     this.pageCriteria.pageSize = this.commonService.pageSize;
@@ -111,13 +129,9 @@ export class TdsReportComponent implements OnInit{
   }
 
   getTDSSectionDetails(): void {
-    this.tdsreportservice.getTDSSectionDetails('taxes','KAPILCHITS','KLC01')
-      .subscribe((res:never[]) => this.tdssectiondata = res || []);
+    this.tdsreportservice.getTDSSectionDetails('global','KAPILCHITS','KLC01')
+      .subscribe((res:never[]) => { this.tdssectiondata = res || []});
   }
-  // getTDSSectionDetails(): void {
-  //   this.tdsservice.getTdsSectionDetails('taxes','KAPILCHITS','KLC01')
-  //     .subscribe((res: never[]) => this.tdssectiondata = res || []);
-  // }
 
   onsectionidchange(event: any): void {
     if (!event) {
@@ -126,7 +140,7 @@ export class TdsReportComponent implements OnInit{
     }
 
     this.TdsReportForm.patchValue({
-      sectionid: event.sectionName,
+      sectionid: event.tdsId,
       sectionname: event.sectionName
     });
 
@@ -156,7 +170,12 @@ export class TdsReportComponent implements OnInit{
   }
 
   Show(): void {
-    if (this.TdsReportForm.invalid) return;
+    debugger
+    // if (this.TdsReportForm.invalid) return;
+    if (this.TdsReportForm.errors?.['dateRangeInvalid']) {
+alert('From Date should not be greater than To Date');
+return;
+}
 
     this.tdsreportdata = [];
     this.disablesavebutton = true;
@@ -168,8 +187,9 @@ export class TdsReportComponent implements OnInit{
     const reporttype = this.summary ? 'Summary' : 'Detail';
 
     if (!this.mismatchInfo) {
-      this.tdsreportservice.getTDSReportDetails(
-        this.commonService.getschemaname(),
+      this.reportservice.getTDSReportDetails(
+        // this.commonService.getschemaname(),
+        this.commonService.getbranchname(),
         sectionid,
         fromdate,
         todate,
@@ -256,6 +276,9 @@ export class TdsReportComponent implements OnInit{
     this.reportpaidamount = this.tdsreportdata.reduce((s, x) => s + (x.paidamount || 0), 0);
 
     this.tdsreportdata.forEach(e => {
+      const paidTo = (e.paid_to && Object.keys(e.paid_to).length > 0) 
+  ? JSON.stringify(e.paid_to) 
+  : '';
       const pannumber = e.pannumber || '--NA--';
       const branch = e.subscriberbranchname || '--NA--';
       const panstatus = e.panstatus || '--NA--';
@@ -267,7 +290,7 @@ export class TdsReportComponent implements OnInit{
       if (this.summary) {
         rows.push([e.agentName, e.referalcode, pannumber, paid, tds, ledger]);
       } else {
-        rows.push([e.paid_to, pannumber, panstatus, e.agentName, e.referalcode, transactiondate, paid, tds, ledger, e.effectedjvid, branch]);
+        rows.push([paidTo, pannumber, panstatus, e.agentName, e.referalcode, transactiondate, paid, tds, ledger, e.effectedjvid, branch]);
       }
     });
 

@@ -177,16 +177,30 @@ export class AccountingReportsService {
       'YES'
     );
   }
-  GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string): Observable<any> {
+  // GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string): Observable<any> {
+  //   const params = new HttpParams()
+  //     .set('fromDate', fromDate)
+  //     .set('todate', todate)
+  //     .set('pAccountId', AccountId.toString())
+  //     .set('AsOnDate', AsOnDate)
+  //     .set('BranchSchema', this._CommonService.getschemaname())
+  //     .set('Groupcode', groupcode);
+
+  //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetLedgerSummary', params, 'YES');
+  // }
+  GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string,companyCode:any,branchCode:any,GlobalSchema:any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromDate)
       .set('todate', todate)
       .set('pAccountId', AccountId.toString())
       .set('AsOnDate', AsOnDate)
-      .set('BranchSchema', this._CommonService.getschemaname())
-      .set('Groupcode', groupcode);
+      .set('BranchSchema', this._CommonService.getbranchname())
+      .set('Groupcode', groupcode)
+      .set('companyCode', companyCode)
+      .set('branchCode', branchCode)
+      .set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/Accounting/AccountingReports/GetLedgerSummary', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetLedgerSummary', params, 'YES');
   }
 
   getPartyDetails(loanTypeId: string | number): Observable<any> {
@@ -902,69 +916,69 @@ export class AccountingReportsService {
     const today = this._CommonService.pdfProperties('Date');
     const kapil_logo = this._CommonService.getKapilGroupLogo();
 
-    //   doc.autoTable({
-    //     columns: gridheaders,
-    //     body: gridData,
-    //     theme: 'grid',
-    //     headStyles: {
-    //       fillColor: this._CommonService.pdfProperties('Header Color'),
-    //       halign: this._CommonService.pdfProperties('Header Alignment'),
-    //       fontSize: this._CommonService.pdfProperties('Header Fontsize')
-    //     },
-    //     styles: {
-    //       cellPadding: 1,
-    //       fontSize: this._CommonService.pdfProperties('Cell Fontsize'),
-    //       cellWidth: 'wrap',
-    //       overflow: 'linebreak'
-    //     },
-    //     columnStyles: {
-    //       0: { halign: 'center' },
-    //       1: { cellWidth: isNarrationChecked ? 60 : 'auto', halign: 'left' },
-    //       2: { halign: 'right' },
-    //       3: { halign: 'right' },
-    //       4: { halign: 'right' }
-    //     },
-    //     startY: 64,
-    //     didDrawPage: (data:any) => {
-    //       const pageHeight = doc.internal.pageSize.getHeight();
-    //       const pageWidth = doc.internal.pageSize.getWidth();
+      autoTable(doc,{
+        columns: gridheaders,
+        body: gridData,
+        theme: 'grid',
+        headStyles: {
+          fillColor: this._CommonService.pdfProperties('Header Color'),
+          halign: this._CommonService.pdfProperties('Header Alignment') as 'left' | 'center' | 'right',
+          fontSize: Number(this._CommonService.pdfProperties('Header Fontsize'))
+        },
+        styles: {
+          cellPadding: 1,
+          fontSize:Number(this._CommonService.pdfProperties('Cell Fontsize')),
+          cellWidth: 'wrap',
+          overflow: 'linebreak'
+        },
+        columnStyles: {
+          0: { halign: 'center' },
+          1: { cellWidth: isNarrationChecked ? 60 : 'auto', halign: 'left' },
+          2: { halign: 'right' },
+          3: { halign: 'right' },
+          4: { halign: 'right' }
+        },
+        startY: 64,
+        didDrawPage: (data:any) => {
+          const pageHeight = doc.internal.pageSize.getHeight();
+          const pageWidth = doc.internal.pageSize.getWidth();
 
-    //       doc.setFont(undefined, 'normal');
+          doc.setFont('helvetica', 'normal');
 
-    //       if (doc.internal.getNumberOfPages() === 1) {
-    //         doc.addImage(kapil_logo, 'JPEG', 10, 15);
-    //         doc.setFontSize(15);
-    //         doc.text(Companyreportdetails.pCompanyName, 60, 15);
-    //         doc.setFontSize(9);
-    //         doc.text(address, 32, 20);
-    //         doc.setFontSize(14);
-    //         doc.text(reportName, 90, 38);
+          if (doc.getNumberOfPages() === 1) {
+            doc.addImage(kapil_logo, 'JPEG', 10, 15,20,20);
+            doc.setFontSize(15);
+            doc.text(Companyreportdetails?.pCompanyName??'', 60, 15);
+            doc.setFontSize(9);
+            doc.text(address, 32, 20);
+            doc.setFontSize(14);
+            doc.text(reportName, 90, 38);
 
-    //         const lines = doc.splitTextToSize(subreportname, 180);
-    //         doc.text(lines, 30, 45);
+            const lines = doc.splitTextToSize(subreportname, 180);
+            doc.text(lines, 30, 45);
 
-    //         doc.setFontSize(10);
-    //         doc.text('Branch : ' + Companyreportdetails.pBranchname, 163, 57);
+            doc.setFontSize(10);
+            doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 57);
 
-    //         if (betweenorason === 'Between') {
-    //           doc.text(`Between : ${fromdate} And ${todate}`, 15, 57);
-    //         } else if (fromdate) {
-    //           doc.text(`As on : ${fromdate}`, 15, 52);
-    //         }
+            if (betweenorason === 'Between') {
+              doc.text(`Between : ${fromdate} And ${todate}`, 15, 57);
+            } else if (fromdate) {
+              doc.text(`As on : ${fromdate}`, 15, 52);
+            }
 
-    //         doc.line(10, 59, pageWidth - 10, 59);
-    //       }
+            doc.line(10, 59, pageWidth - 10, 59);
+          }
 
-    //       let page = 'Page ' + doc.internal.getNumberOfPages();
-    //       if (typeof doc.putTotalPages === 'function') {
-    //         page += ' of ' + totalPagesExp;
-    //       }
+          let page = 'Page ' + doc.getNumberOfPages();
+          if (typeof doc.putTotalPages === 'function') {
+            page += ' of ' + totalPagesExp;
+          }
 
-    //       doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
-    //       doc.text('Printed on : ' + today, 15, pageHeight - 5);
-    //       doc.text(page, pageWidth - 30, pageHeight - 5);
-    //     }
-    //   });
+          doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+          doc.text('Printed on : ' + today, 15, pageHeight - 5);
+          doc.text(page, pageWidth - 30, pageHeight - 5);
+        }
+      });
 
     if (typeof doc.putTotalPages === 'function') doc.putTotalPages(totalPagesExp);
     if (printorpdf === 'Pdf') doc.save(`${reportName}.pdf`);

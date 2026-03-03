@@ -104,6 +104,8 @@ export class BankBookComponent implements OnInit {
   private reportService = inject(AccountingReportsService);
   private destroyRef = inject(DestroyRef);
   private _AccountingTransactionsService = inject(AccountingTransactionsService);
+  bankName=''
+
 
   bankBookForm = this.fb.nonNullable.group({
     fromDate: [new Date(), Validators.required],
@@ -130,6 +132,8 @@ export class BankBookComponent implements OnInit {
   bankData: any[] = [];
   selectedBankName = '';
   showReport = false;
+  EndDate!: string | null;
+  StartDate!: string | null;
 
   pageCriteria = new PageCriteria();
   dpConfig: Partial<BsDatepickerConfig> = {
@@ -182,6 +186,13 @@ export class BankBookComponent implements OnInit {
   //   }
   // 
   // }
+  get f() {
+    return this.bankBookForm.controls;
+  }
+  updateFormattedDates() {
+    this.StartDate = this.datePipe.transform(this.f['fromDate'].value, 'dd-MMM-yyyy');
+    this.EndDate = this.datePipe.transform(this.f['toDate'].value, 'dd-MMM-yyyy');
+  }
 
   onBankChange(event: Event): void {
 
@@ -195,6 +206,9 @@ export class BankBookComponent implements OnInit {
       this.bankBookForm.markAllAsTouched();
       return;
     }
+   const selectedBank = this.bankData.find(b => b.bankAccountId == this.bankBookForm.get('pbankname')?.value);
+this.bankName = selectedBank?.bankName ?? '';
+this.updateFormattedDates();
 
     const { fromDate, toDate, pbankname = '' } = this.bankBookForm.value;
     if (this.bankBookForm.errors?.['dateRangeInvalid']) {

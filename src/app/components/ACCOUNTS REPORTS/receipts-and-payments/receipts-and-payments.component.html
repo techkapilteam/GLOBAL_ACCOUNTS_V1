@@ -55,6 +55,9 @@
                 FormReceiptsandPaymentsGroup.get('todate')?.touched">
                 To Date is required
               </div>
+              <small class="text-danger" *ngIf="FormReceiptsandPaymentsGroup.errors?.['dateRangeInvalid']">
+From Date cannot be greater than To Date
+</small>
             </div>
           </div>
 

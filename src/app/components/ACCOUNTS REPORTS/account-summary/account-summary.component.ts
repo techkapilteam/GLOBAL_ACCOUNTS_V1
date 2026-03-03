@@ -152,12 +152,16 @@ export class AccountSummaryComponent {
 
   loading = false;
   selectedDateMode = true;   
-  asOnDateFlag = 'T';
+  // asOnDateFlag = 'T';
+  betweendates: 'As On' | 'Between' = 'As On';;
+betweenfrom: string = '';
+betweento: string = '';
+inbetween: string = '';
 
   totalDebit = 0;
   totalCredit = 0;
-  AsOnDate!: string;
-  betweendates: any;
+  AsOnDate: string='T';
+  // betweendates: any;
 
   constructor(
     private fb: FormBuilder,
@@ -176,6 +180,10 @@ export class AccountSummaryComponent {
       ledgerId: ['', Validators.required],
       asOn: [true]
     });
+    this.betweendates = 'As On';
+  this.betweenfrom  = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
+  this.betweento    = '';
+  this.inbetween    = '';
 
     this.loadLedgerAccounts();
   }
@@ -199,7 +207,9 @@ export class AccountSummaryComponent {
 
   onDateModeChange(): void {
     this.selectedDateMode = this.accountSummaryForm.value.asOn;
-    this.asOnDateFlag = this.selectedDateMode ? 'T' : 'F';
+    this.AsOnDate = this.selectedDateMode ? 'T' : 'F';
+    this.betweendates = this.selectedDateMode ? 'As On' : 'Between';
+this.inbetween    = this.selectedDateMode ? '' : 'And';
 
     if (this.selectedDateMode) {
       this.accountSummaryForm.patchValue({
@@ -223,9 +233,13 @@ export class AccountSummaryComponent {
     const toDate = this.commonService.getFormatDateNormal(
       this.selectedDateMode ? formValue.fromDate : formValue.toDate
     )??'';
+    this.betweenfrom = this.datePipe.transform(formValue.fromDate, 'dd-MMM-yyyy') ?? '';
+this.betweento   = this.selectedDateMode 
+  ? '' 
+  : (this.datePipe.transform(formValue.toDate, 'dd-MMM-yyyy') ?? '');
 
     this.reportService
-      .GetLedgerSummary(fromDate, toDate, formValue.ledgerId, this.asOnDateFlag, '')
+      .GetLedgerSummary(fromDate, toDate, formValue.ledgerId, this.AsOnDate, 'MM220221P65','KAPILCHITS','KLC01','global')
       .subscribe({
         next: (res) => {
           this.gridData = res ?? [];
@@ -281,6 +295,7 @@ export class AccountSummaryComponent {
 
     this.commonService.exportAsExcelFile(rows, 'Account_Summary');
   }
+  
   pdfOrprint(printOrPdf: 'Pdf' | 'Print'): void {
 
   const reportName = 'Account Summary';
@@ -304,8 +319,10 @@ export class AccountSummaryComponent {
   const rows: any[] = [];
   const rowsAsOn: any[] = [];
 
-  const fromDateRaw = this.accountSummaryForm.get('dfromdate')?.value;
-  const toDateRaw = this.accountSummaryForm.get('dtodate')?.value;
+  const fromDateRaw = this.accountSummaryForm.get('fromDate')?.value;
+  const toDateRaw = this.accountSummaryForm.get('toDate')?.value;
+  
+  
 
   const fromDate = fromDateRaw
     ? this.commonService.getFormatDateGlobal(fromDateRaw)
@@ -330,72 +347,64 @@ export class AccountSummaryComponent {
     let closingBal = '';
     let transactionDate = '';
 
-    if (element.popeningbal) {
-      openingBal =
-        this.commonService.convertAmountToPdfFormat(
-          element.popeningbal
-        ) + element.pFormName;
+  const formatBalance = (val: any): string => {
+  if (val === null || val === undefined || val === '') return '';
+
+  let num: number;
+  let suffix: string;
+
+  if (typeof val === 'string') {
+    suffix = val.includes('Cr') ? ' Cr' : val.includes('Dr') ? ' Dr' : '';
+    const cleaned = val.replace(/[₹$€£,\s]/g, '').replace(/Cr|Dr/g, '').trim();
+    num = parseFloat(cleaned);
+  } else {
+    suffix = val < 0 ? ' Cr' : ' Dr';
+    num = Math.abs(val);
+  }
+
+  if (isNaN(num)) return '';
+
+  const fixed = num.toFixed(2);
+  const [intPart, decPart] = fixed.split('.');
+  const lastThree = intPart.slice(-3);
+  const otherNumbers = intPart.slice(0, -3);
+  const formattedInt = otherNumbers
+    ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree
+    : lastThree;
+
+  return `${formattedInt}.${decPart}${suffix}`;
+};
+
+  if (element.group !== undefined) {
+    rows.push([element.group]);
+  rowsAsOn.push([element.group]);
+  return;
+  } else {
+
+    if (element.popeningbal !== null && element.popeningbal !== undefined) {
+      openingBal = formatBalance(element.popeningbal);
+    }
+
+    if (element.pclosingbal !== null && element.pclosingbal !== undefined) {
+      closingBal = formatBalance(element.pclosingbal);
     }
 
     if (element.pdebitamount) {
-      debitAmt =
-        this.commonService.convertAmountToPdfFormat(
-          this.commonService.currencyformat(element.pdebitamount)
-        );
+      debitAmt = this.commonService.convertAmountToPdfFormat(element.pdebitamount);
     }
 
     if (element.pcreditamount) {
-      creditAmt =
-        this.commonService.convertAmountToPdfFormat(
-          this.commonService.currencyformat(
-            Number(element.pcreditamount)
-          )
-        );
-    }
-
-    if (element.pclosingbal) {
-      closingBal =
-        this.commonService.convertAmountToPdfFormat(
-          element.pclosingbal
-        ) + element.pBalanceType;
+      creditAmt = this.commonService.convertAmountToPdfFormat(element.pcreditamount);
     }
 
     if (element.ptransactiondate) {
-      transactionDate =
-        this.commonService.getFormatDateGlobal(
-          element.ptransactiondate
-        );
+      transactionDate = this.commonService.getFormatDateGlobal(element.ptransactiondate);
     }
-
-    let row: any[];
-    let rowAsOn: any[];
-
-    if (element.group !== undefined) {
-      row = [element.group];
-      rowAsOn = [element.group];
-    } else {
-      row = [
-        element.paccountname,
-        transactionDate,
-        openingBal,
-        debitAmt,
-        creditAmt,
-        closingBal
-      ];
-
-      rowAsOn = [
-        element.paccountname,
-        transactionDate,
-        debitAmt,
-        creditAmt
-      ];
-    }
-
-    rows.push(row);
-    rowsAsOn.push(rowAsOn);
+      rows.push([element.paccountname, transactionDate, openingBal, debitAmt, creditAmt, closingBal]);
+  rowsAsOn.push([element.paccountname, transactionDate, debitAmt, creditAmt]);
+  }
   });
-
-  // Column configuration
+  
   let columnStyles: any;
 
   if (this.AsOnDate === 'T') {
@@ -492,4 +501,47 @@ export class AccountSummaryComponent {
 }
   
 
+  //   if (element.popeningbal) {
+  //     // openingBal =
+  //     //   this.commonService.convertAmountToPdfFormat(
+  //     //     element.popeningbal
+  //     //   ) + element.pFormName;
+  //     openingBal = this.commonService.convertAmountToPdfFormat(
+  //   this.commonService.currencyformat(Number(element.popeningbal))
+  // ) + (element.pBalanceType ?? '');
+  //   }
+
+  //   if (element.pdebitamount) {
+  //     debitAmt =
+  //       this.commonService.convertAmountToPdfFormat(
+  //         // this.commonService.currencyformat(element.pdebitamount)
+  //          Number(element.pdebitamount)
+  //       );
+  //   }
+
+  //   if (element.pcreditamount) {
+  //     creditAmt =
+  //       this.commonService.convertAmountToPdfFormat(
+  //         // this.commonService.currencyformat(
+  //           Number(element.pcreditamount)
+  //         // )
+  //       );
+  //   }
+
+  //   if (element.pclosingbal) {
+  //     // closingBal =
+  //     //   this.commonService.convertAmountToPdfFormat(
+  //     //     element.pclosingbal
+  //     //   ) + element.pBalanceType;
+  //     closingBal = this.commonService.convertAmountToPdfFormat(
+  //   this.commonService.currencyformat(Number(element.pclosingbal))
+  // ) + (element.pBalanceType ?? '');
+  //   }
+
+    // if (element.ptransactiondate) {
+    //   transactionDate =
+    //     this.commonService.getFormatDateGlobal(
+    //       element.ptransactiondate
+    //     );
+    // }
 }

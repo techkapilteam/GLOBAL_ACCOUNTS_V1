@@ -1,39 +1,47 @@
 <form [formGroup]="ChequesInBankForm">
-    <div class="section-content">
-        <div class="screen-header">
+    <div class="section-content"
+        style="background: white; border-radius: 8px; border: 1px solid #e2e5e8; box-shadow: 0 2px 4px rgba(0,0,0,0.02); padding: 20px;">
+        <div class="screen-header" style="display: none;">
             <h2>Cheques In Bank</h2>
         </div>
-        <div class="screen-content">
-            <div class="row">
+        <div class="screen-content" style="padding: 0;">
+            <div class="row align-items-center"
+                style="border: 2px solid #e1e9fb; border-radius: 8px; padding: 15px; margin: 0; background-color: #f8faff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                 <div class="col-md-2 col-xl-2">
-                    <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
-                        <label class="required-field"> Transaction Date</label>
+                    <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName" style="margin-bottom: 0;">
+                        <label class="required-field"
+                            style="font-weight: 500; color: #495057; font-size: 13px;">Transaction Date <span
+                                style="color: red;">*</span></label>
                         <fieldset [disabled]="!disabletransactiondate">
                             <input class="form-control" type="text" title="Date" id="ptransactiondate"
                                 formControlName="ptransactiondate" [bsConfig]="ptransactiondateConfig"
                                 #dp="bsDatepicker" readonly bsDatepicker placement="bottom"
-                                [ngClass]="{ 'is-invalid': ChequesInBankValidation.ptransactiondate }">
+                                [ngClass]="{ 'is-invalid': ChequesInBankValidation.ptransactiondate }"
+                                style="height: 36px; padding: 6px 12px; font-size: 14px; border: 1px solid #ced4da;">
                         </fieldset>
                     </div>
                 </div>
                 <div class="col-md-2 col-xl-2">
-                    <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
-                        <label class="required-field">Cheque Clear Date</label>
+                    <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName" style="margin-bottom: 0;">
+                        <label class="required-field" style="font-weight: 500; color: #495057; font-size: 13px;">Cheque
+                            Clear Date <span style="color: red;">*</span></label>
                         <input class="form-control" type="text" title="Cheque Clear Date" id="pchequecleardate"
                             formControlName="pchequecleardate" [bsConfig]="pchequecleardateConfig" #dp="bsDatepicker"
                             readonly bsDatepicker placement="bottom"
                             [ngClass]="{ 'is-invalid': ChequesInBankValidation.pchequecleardate }"
-                            (ngModelChange)="change_date($event)">
+                            (ngModelChange)="change_date($event)"
+                            style="height: 36px; padding: 6px 12px; font-size: 14px; border: 1px solid #ced4da;">
                         <app-validation-message [messgae]="ChequesInBankValidation?.pchequecleardate">
                         </app-validation-message>
                     </div>
                 </div>
                 <div class="col-md-3 col-xl-3">
-                    <div class="form-group">
-                        <label>Bank</label>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 500; color: #495057; font-size: 13px;">Bank</label>
                         <select class="form-control" (change)="SelectBank($event)" id="bankname"
                             formControlName="bankname" title="Bank"
-                            [ngClass]="{ 'is-invalid': ChequesInBankValidation.bankname }">
+                            [ngClass]="{ 'is-invalid': ChequesInBankValidation.bankname }"
+                            style="height: 36px; padding: 6px 12px; font-size: 14px; border: 1px solid #ced4da;">
                             <option value="">Select</option>
                             <option *ngFor="let bank of BanksList" [value]="bank.pdepositbankname">
                                 {{bank.pdepositbankname}}
@@ -44,15 +52,21 @@
                 </div>
 
                 <div class="col-md-5 col-xl-5">
-                    <div class="border rounded  shadow-sm bg-light p-3">
+                    <div class="border rounded shadow-sm bg-light"
+                        style="background-color: #fff !important; border-color: #b8cff5 !important; padding: 12px 16px; border-width: 2px !important;">
                         <span *ngIf="banknameshowhide" class="sec-head-bold mt-0 font-15 overflow-hidden">{{bankname}}
                             <hr class="mt-0 mb-0">
                         </span>
-                        <div class="form-group mb-0">
-                            <h4 style="color: #26408A;"><u>Cheques in Bank</u></h4>
+                        <div class="form-group mb-1">
+                            <h4
+                                style="color: #0d6efd; margin: 0; font-size: 1.1rem; text-decoration: underline; font-weight: 700;">
+                                Cheques in Bank</h4>
                         </div>
-                        <div class="form-group mb-0">
-                            <label>Balance: </label> <label class="sec-head-bold ml-2">
+                        <div class="form-group mb-0"
+                            style="display: flex; align-items: center; color: #495057; font-size: 13px;">
+                            <label style="margin-bottom: 0; font-weight: 700; color: #000;">Balance: </label>
+                            <label class="sec-head-bold ml-1"
+                                style="margin-bottom: 0; display: inline-flex; color: #212529; font-weight: 800; font-size: 14px;">
                                 <div *ngIf="bankbalancetype=='Dr'">{{currencySymbol}} {{bankbalance | currency:
                                     currencyCode:'symbol':'1.2-2'}}
                                     {{bankbalancetype}}
@@ -63,35 +77,49 @@
                                 </div>
                                 <div *ngIf="bankbalancetype==''">{{currencySymbol}} 0.00</div>
                             </label>
-                            <label class="ml-4">BRS Date: </label> <label class="sec-head-bold ml-2">{{brsdate}}</label>
+                            <label class="ml-4"
+                                style="margin-bottom: 0; margin-left: 20px; font-weight: 700; color: #000;">BRS Date:
+                            </label>
+                            <label class="sec-head-bold ml-1"
+                                style="margin-bottom: 0; color: #212529; font-weight: 800; font-size: 14px;">{{brsdate}}</label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="section-content mt-2">
-            <div class="row">
+        <div class="section-content mt-4" style="padding: 0; border-top: 1px solid #e9ecef; padding-top: 20px;">
+            <div class="row align-items-center mb-0">
 
 
                 <div class="col-md-4 col-xl-4 mb-3">
-                    <div class="form-group custom-search">
+                    <div class="form-group custom-search m-0" style="position: relative;">
+                        <span
+                            style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6c757d; pointer-events: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg>
+                        </span>
                         <input type="text" formControlName="searchtext" #search id="searchtext" class="form-control"
-                            placeholder="Search" aria-label="Search" (input)="onSearch($event.target.value)">
+                            placeholder="Search" aria-label="Search" (input)="onSearch($event.target.value)"
+                            style="height: 36px; border-radius: 4px; padding-left: 32px !important;">
                     </div>
                 </div>
 
 
-                <div class="col-md-2 col-md-2">
-                    <button (click)="showSearchText('search')" class="btn btn-primary btn-s-icon px-3 border-0"
-                        [disabled]="searchloading">
+                <div class="col-md-2 col-xl-2 mb-3">
+                    <button (click)="showSearchText('search')" class="btn btn-primary btn-s-icon border-0"
+                        [disabled]="searchloading"
+                        style="height: 36px; padding: 0 20px; font-weight: 500; border-radius: 4px;">
                         {{gridData.length > 0 ? 'Search' : 'Show'}}
                     </button>
                 </div>
 
 
-                <div class="col-md-6 col-xl-6">
-                    <div class="d-flex justify-content-end mr-3 mt-4" *ngIf="showicons">
+                <div class="col-md-6 col-xl-6 mb-3">
+                    <div class="d-flex justify-content-end mr-3" *ngIf="showicons">
                         <ul class="temp-ul d-flex flex-row list-unstyled mb-0">
                             <li class="temp-ico ml-2">
                                 <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
@@ -109,12 +137,11 @@
                     </div>
                 </div>
 
-              
-                <ul class="nav nav-tabs mb-4" *ngIf="tabsShowOrHideBasedOnfromFormName">
+                <!-- <ul class="nav nav-tabs mb-4" *ngIf="tabsShowOrHideBasedOnfromFormName">
 
                     <li class="nav-item me-3">
                         <a id="allcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='all'}"
-                            (click)="selectedTab='all'; All(); $event.preventDefault()">
+                            (click)="All(); $event.preventDefault()">
                             All <span class="badge bg-warning ms-2">{{all}}</span>
                         </a>
                     </li>
@@ -122,7 +149,7 @@
                     <li class="nav-item me-3">
                         <a id="chequesdepositedcss" href="#" class="nav-link"
                             [ngClass]="{'active': selectedTab==='chequesDeposited'}"
-                            (click)="selectedTab='chequesDeposited'; ChequesDeposited(); $event.preventDefault()">
+                            (click)="ChequesDeposited(); $event.preventDefault()">
                             Cheques Deposited <span class="badge bg-secondary ms-2">{{chequesdeposited}}</span>
                         </a>
                     </li>
@@ -130,22 +157,94 @@
                     <li class="nav-item me-3">
                         <a id="onlinereceiptscss" href="#" class="nav-link"
                             [ngClass]="{'active': selectedTab==='onlinereceipts'}"
-                            (click)="selectedTab='onlinereceipts'; OnlineReceipts(); $event.preventDefault()">
+                            (click)="OnlineReceipts(); $event.preventDefault()">
                             Online Receipts <span class="badge bg-primary ms-2">{{onlinereceipts}}</span>
                         </a>
                     </li>
 
                     <li class="nav-item me-3">
                         <a id="clearedcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='cleared'}"
-                            (click)="selectedTab='cleared'; Cleared(); $event.preventDefault()">
+                            (click)="Cleared(); $event.preventDefault()">
                             Cleared <span class="badge bg-success ms-2">{{cleared}}</span>
                         </a>
                     </li>
 
                     <li class="nav-item me-3">
                         <a id="returnedcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='returned'}"
-                            (click)="selectedTab='returned'; Returned(); $event.preventDefault()">
+                            (click)="Returned(); $event.preventDefault()">
                             Returned <span class="badge bg-danger ms-2">{{returned}}</span>
+                        </a>
+                    </li>
+
+                </ul> -->
+
+                <ul class="nav nav-tabs mb-3" *ngIf="tabsShowOrHideBasedOnfromFormName"
+                    style="border-bottom: none; gap: 10px; flex-wrap: wrap; margin-top: 15px; margin-bottom: 15px; padding-left: 0;">
+
+                    <li class="nav-item">
+                        <a id="allcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='all'}"
+                            (click)="selectedTab='all'; All(); $event.preventDefault()"
+                            [style.border]="selectedTab === 'all' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+                            [style.background-color]="selectedTab === 'all' ? 'var(--bs-primary)' : '#fff'"
+                            [style.color]="selectedTab === 'all' ? '#fff' : '#495057'"
+                            style="border-radius: 4px; padding: 6px 12px; font-weight: 500; display: flex; align-items: center; text-decoration: none;">
+                            All <span class="badge bg-warning ms-2"
+                                style="border-radius: 4px; padding: 4px 6px; font-size: 10px; margin-left: 8px; color: #000;">{{all
+                                || 0}}</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="chequesdepositedcss" href="#" class="nav-link"
+                            [ngClass]="{'active': selectedTab==='chequesDeposited'}"
+                            (click)="selectedTab='chequesDeposited'; ChequesDeposited(); $event.preventDefault()"
+                            [style.border]="selectedTab === 'chequesDeposited' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+                            [style.background-color]="selectedTab === 'chequesDeposited' ? 'var(--bs-primary)' : '#fff'"
+                            [style.color]="selectedTab === 'chequesDeposited' ? '#fff' : '#495057'"
+                            style="border-radius: 4px; padding: 6px 12px; font-weight: 500; display: flex; align-items: center; text-decoration: none;">
+                            Cheques Deposited <span class="badge bg-secondary ms-2"
+                                style="border-radius: 4px; padding: 4px 6px; font-size: 10px; margin-left: 8px;">{{chequesdeposited
+                                || 0}}</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="onlinereceiptscss" href="#" class="nav-link"
+                            [ngClass]="{'active': selectedTab==='onlinereceipts'}"
+                            (click)="selectedTab='onlinereceipts'; OnlineReceipts(); $event.preventDefault()"
+                            [style.border]="selectedTab === 'onlinereceipts' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+                            [style.background-color]="selectedTab === 'onlinereceipts' ? 'var(--bs-primary)' : '#fff'"
+                            [style.color]="selectedTab === 'onlinereceipts' ? '#fff' : '#495057'"
+                            style="border-radius: 4px; padding: 6px 12px; font-weight: 500; display: flex; align-items: center; text-decoration: none;">
+                            Online Receipts <span class="badge bg-primary ms-2"
+                                style="border-radius: 4px; padding: 4px 6px; font-size: 10px; margin-left: 8px;">{{onlinereceipts
+                                || 0}}</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="clearedcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='cleared'}"
+                            (click)="selectedTab='cleared'; Cleared(); $event.preventDefault()"
+                            [style.border]="selectedTab === 'cleared' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+                            [style.background-color]="selectedTab === 'cleared' ? 'var(--bs-primary)' : '#fff'"
+                            [style.color]="selectedTab === 'cleared' ? '#fff' : '#495057'"
+                            style="border-radius: 4px; padding: 6px 12px; font-weight: 500; display: flex; align-items: center; text-decoration: none;">
+                            Cleared <span class="badge bg-success ms-2"
+                                style="border-radius: 4px; padding: 4px 6px; font-size: 10px; margin-left: 8px;">{{cleared
+                                || 0}}</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="returnedcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='returned'}"
+                            (click)="selectedTab='returned'; Returned(); $event.preventDefault()"
+                            [style.border]="selectedTab === 'returned' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+                            [style.background-color]="selectedTab === 'returned' ? 'var(--bs-primary)' : '#fff'"
+                            [style.color]="selectedTab === 'returned' ? '#fff' : '#495057'"
+                            style="border-radius: 4px; padding: 6px 12px; font-weight: 500; display: flex; align-items: center; text-decoration: none;">
+                            Returned <span class="badge bg-danger ms-2"
+                                style="border-radius: 4px; padding: 4px 6px; font-size: 10px; margin-left: 8px;">{{returned
+                                || 0}}</span>
                         </a>
                     </li>
 
@@ -153,42 +252,38 @@
 
 
 
-                <div *ngIf="brsdateshowhidecleared" class="row">
+                <div *ngIf="brsdateshowhidecleared" class="row mb-3 align-items-center">
 
-                    <div class="col-md-6 col-xl-4">
-                        <div class="form-group">
-                            <label>BRS From Date</label>
-                            <input class="form-control w-auto" type="text" formControlName="pfrombrsdate"
-                                title="frombrsdate" placeholder="Select From Date" readonly [bsConfig]="brsfromConfig"
-                                #dp="bsDatepicker" bsDatepicker placement="bottom">
+                    <div class="col-md-3 col-xl-3">
+                        <div class="form-group mb-0">
+                            <label style="font-weight: 500; font-size: 13px;">BRS From Date</label>
+                            <input class="form-control" type="text" formControlName="pfrombrsdate" title="frombrsdate"
+                                placeholder="Select From Date" readonly [bsConfig]="brsfromConfig" #dp="bsDatepicker"
+                                bsDatepicker placement="bottom" style="height: 36px; border-radius: 4px;">
                         </div>
                     </div>
-                    
 
-                    <div class="col-md-6 col-xl-4">
-                        <div class="form-group">
-                            <label>BRS To Date</label>
+
+                    <div class="col-md-4 col-xl-4">
+                        <div class="form-group mb-0">
+                            <label style="font-weight: 500; font-size: 13px;">BRS To Date</label>
                             <div class="d-flex align-items-center">
-                                <input class="form-control w-auto" type="text" formControlName="ptobrsdate"
-                                    title="tobrsdate" placeholder="Select To Date" readonly [bsConfig]="brstoConfig"
-                                    #dp="bsDatepicker" bsDatepicker placement="bottom">
+                                <input class="form-control" type="text" formControlName="ptobrsdate" title="tobrsdate"
+                                    placeholder="Select To Date" readonly [bsConfig]="brstoConfig" #dp="bsDatepicker"
+                                    bsDatepicker placement="bottom" style="height: 36px; border-radius: 4px;">
 
-                                <a (click)="ShowBrsClear()" class="btn btn-b-icon ms-3" role="tab" aria-controls="hot"
-                                    aria-selected="false">
+                                <a (click)="ShowBrsClear()" class="btn ms-3" role="tab" aria-controls="hot"
+                                    aria-selected="false"
+                                    style="background-color: #0d6efd; color: white; height: 36px; padding: 6px 20px; font-weight: 500; border-radius: 4px; text-decoration: none; cursor: pointer; display: flex; align-items: center;">
                                     Show
                                 </a>
                             </div>
 
-                            <div *ngIf="validatebrsdateclear" style="color:red; margin-top: 4px;">
+                            <div *ngIf="validatebrsdateclear" style="color:red; margin-top: 4px; font-size: 12px;">
                                 Brs To Date Should Be Greater Than From Date
                             </div>
                         </div>
                     </div>
-
-
-
-
-
 
                 </div>
                 <!-- 
@@ -289,30 +384,33 @@
                     </div>
                 </form> -->
 
-                
-                <form [formGroup]="BrsDateForm">
-                    <div *ngIf="brsdateshowhidereturned" class="row">
 
-                        <div class="col-md-6 col-xl-4">
-                            <div class="form-group">
-                                <label>BRS From Date</label>
-                                <input class="form-control w-auto" type="text" placeholder="Select From Date" readonly
-                                    bsDatepicker [bsConfig]="brsfromConfig" formControlName="frombrsdate">
+                <form [formGroup]="BrsDateForm">
+                    <div *ngIf="brsdateshowhidereturned" class="row mb-3 align-items-center">
+
+                        <div class="col-md-3 col-xl-3">
+                            <div class="form-group mb-0">
+                                <label style="font-weight: 500; font-size: 13px;">BRS From Date</label>
+                                <input class="form-control" type="text" placeholder="Select From Date" readonly
+                                    bsDatepicker [bsConfig]="brsfromConfig" formControlName="frombrsdate"
+                                    style="height: 36px; border-radius: 4px;">
                             </div>
                         </div>
-                        <div class="col-md-6 col-xl-4">
-                            <div class="form-group">
-                                <label>BRS To Date</label>
+                        <div class="col-md-4 col-xl-4">
+                            <div class="form-group mb-0">
+                                <label style="font-weight: 500; font-size: 13px;">BRS To Date</label>
                                 <div class="d-flex align-items-center">
-                                    <input class="form-control w-auto" type="text" placeholder="Select To Date" readonly
-                                        bsDatepicker [bsConfig]="brstoConfig" formControlName="tobrsdate">
+                                    <input class="form-control" type="text" placeholder="Select To Date" readonly
+                                        bsDatepicker [bsConfig]="brstoConfig" formControlName="tobrsdate"
+                                        style="height: 36px; border-radius: 4px;">
 
-                                    <button type="button" class="btn btn-b-icon ms-3" (click)="ShowBrsReturn()">
+                                    <button type="button" class="btn btn-b-icon ms-3" (click)="ShowBrsReturn()"
+                                        style="background-color: #0d6efd; color: white; height: 36px; padding: 0 20px; font-weight: 500; border-radius: 4px; border: 0; display: flex; align-items: center;">
                                         Show
                                     </button>
                                 </div>
 
-                                <div *ngIf="validatebrsdatereturn" style="color:red; margin-top: 4px;">
+                                <div *ngIf="validatebrsdatereturn" style="color:red; margin-top: 4px; font-size: 12px;">
                                     BRS To Date Should Be Greater Than From Date
                                 </div>
                             </div>
@@ -352,33 +450,59 @@
                                                 <!-- HEADER -->
                                                 <ng-template pTemplate="header">
                                                     <tr>
-                                                        <th style="width:60px" *ngIf="chequeboxshoworhide">
+                                                        <th style="width:60px; background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                            *ngIf="chequeboxshoworhide">
                                                             <input type="checkbox" [checked]="preferdrows"
                                                                 (change)="preferedselection($event)" />
                                                         </th>
-                                                        <th style="width:60px" class="cell-center header-center"
+                                                        <th style="width:60px; background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                            class="cell-center header-center"
                                                             *ngIf="!showhidegridcolumns">
                                                             Clear
                                                         </th>
-                                                        <th style="width:60px" class="cell-center header-center"
+                                                        <th style="width:60px; background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                            class="cell-center header-center"
                                                             *ngIf="!showhidegridcolumns2">
                                                             Return
                                                         </th>
                                                         <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             *ngIf="!showhidegridcolumns">
                                                             Reference no</th>
-                                                        <th class="cell-center header-center">Cheque/Reference No.</th>
-                                                        <th class="cell-left header-left">Branch Name</th>
-                                                        <th class="cell-right header-right">Amount</th>
-                                                        <th class="cell-left header-left">Party</th>
-                                                        <th class="cell-center header-center">Receipt Date</th>
-                                                        <th class="cell-center header-center">Deposited Date</th>
-                                                        <th class="cell-center header-center" *ngIf="!hiddendate">
+                                                        <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Cheque/Reference No.</th>
+                                                        <th class="cell-left header-left"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Branch Name</th>
+                                                        <th class="cell-right header-right"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Amount</th>
+                                                        <th class="cell-left header-left"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Party</th>
+                                                        <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Receipt Date</th>
+                                                        <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Deposited Date</th>
+                                                        <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                            *ngIf="!hiddendate">
                                                             {{datetitle}}</th>
-                                                        <th class="cell-center header-center">Receipt Id</th>
-                                                        <th class="cell-center header-center">Transaction Mode</th>
-                                                        <th class="cell-left header-left">Cheque Bank Name</th>
-                                                        <th class="cell-left header-left">Cheque Branch Name</th>
+                                                        <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Receipt Id</th>
+                                                        <th class="cell-center header-center"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Transaction Mode</th>
+                                                        <th class="cell-left header-left"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Cheque Bank Name</th>
+                                                        <th class="cell-left header-left"
+                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            Cheque Branch Name</th>
                                                     </tr>
                                                 </ng-template>
 
@@ -459,19 +583,21 @@
                     </div> -->
                     </div>
 
-                    <div class=" d-flex justify-content-end mt-3" *ngIf="saveshowhide">
-                        <a (click)="Clear()" data-toggle="tab" class="btn btn-primary mr-4 px-3 border-0" role="tab"
-                            aria-controls="hot" aria-selected="false"><img src="assets/images/icon-cancel-white.svg"
-                                class="mr-3" width="20px" height="20px">Clear</a>
-                        <div>
-                            <button (click)="Save()" class="btn btn-secondary px-3 border-0 ml-3"
-                                [disabled]="disablesavebutton">
-                                <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                                    *ngIf="!disablesavebutton">
-                                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
-                                {{buttonname}}
-                            </button>
-                        </div>
+                    <div class="d-flex justify-content-end mt-4 mb-2" *ngIf="saveshowhide">
+                        <a (click)="Clear()" data-toggle="tab" class="btn btn-primary mr-3 border-0" role="tab"
+                            aria-controls="hot" aria-selected="false"
+                            style="background-color: #212529 !important; border-color: #212529 !important; color: white; padding: 8px 24px; border-radius: 4px; display: inline-flex; align-items: center; text-decoration: none;"><img
+                                src="assets/images/icon-cancel-white.svg" class="mr-2" width="16px"
+                                height="16px">Clear</a>
+
+                        <button (click)="Save()" class="btn btn-secondary border-0" [disabled]="disablesavebutton"
+                            style="background-color: #0d6efd !important; border-color: #0d6efd !important; color: white; padding: 8px 24px; border-radius: 4px; display: inline-flex; align-items: center; margin-left: 12px;">
+                            <img src="assets/images/icon-check-white.svg" class="mr-2" width="16px" height="16px"
+                                *ngIf="!disablesavebutton">
+                            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"
+                                *ngIf="disablesavebutton" style="margin-right: 8px;"></i>
+                            {{buttonname}}
+                        </button>
                     </div>
                     <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
                         <div class="modal-dialog" style="margin-right:0px !important; ">
@@ -497,4 +623,6 @@
                     </div>
                 </div>
             </div>
-            
+<!-- apps-fileview.texmex_20260225.11_p1
+cheques-inbank.component.html
+Displaying cheques-inbank.component.html. -->

@@ -461,8 +461,8 @@ pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
 
   export(): void {
     const rows = this.gridData.map(e => ({
-      'Comparision Name': e.parentaccountName,
-      'Particulars': e.accountName,
+      'Comparision Name': e.parentaccountname,
+      'Particulars': e.accountname,
       'Debit': e.debitamount1,
       'Credit': e.creditamount1,
       'Debit 2': e.debitamount2,

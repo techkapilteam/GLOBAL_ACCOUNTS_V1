@@ -150,6 +150,10 @@ export class GstReportComponent implements OnInit {
   }
 
   click_GstReport(): void {
+    if (this.GstReportForm.errors?.['dateRangeInvalid']) {
+alert('From Date should not be greater than To Date');
+return;
+}
 
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
@@ -220,6 +224,10 @@ private cleanObjectValues(data: any[]): void {
   });
 }
 private loadGstPayments(): void {
+  if (this.GstReportForm.errors?.['dateRangeInvalid']) {
+alert('From Date should not be greater than To Date');
+return;
+}
 
   this.disablesavebutton = true;
   this.savebutton = 'Processing';
@@ -245,6 +253,10 @@ private loadGstPayments(): void {
     });
 }
 click_GstSummary(): void {
+  if (this.GstReportForm.errors?.['dateRangeInvalid']) {
+alert('From Date should not be greater than To Date');
+return;
+}
 
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];

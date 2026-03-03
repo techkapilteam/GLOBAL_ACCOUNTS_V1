@@ -350,13 +350,11 @@ export class ChequesInbankComponent implements OnInit {
     this.ChequesInBankValidation = {};
 
     // ---------- API Calls ----------
-    this._accountingtransaction
-      .GetBanksntList(this._commonService.getbranchname(),this._commonService.getschemaname()
-      ,this._commonService.getCompanyCode(),this._commonService.getBranchCode()
-    )
-      .subscribe(bankslist => {
-        this.BanksList = bankslist;
-      });
+    // this._accountingtransaction
+    //   .GetBanksList(this._commonService.getschemaname())
+    //   .subscribe((bankslist: any[]) => {
+    //     this.BanksList = bankslist;
+    //   });
 
     this.setPageModel();
     this.setPageModel2();
@@ -3531,12 +3529,6 @@ getChequeReturnCharges() {
 
     
   }
-
-
-
-
-
-
 
 
 }
