@@ -103,7 +103,7 @@ export class AccountingReportsService {
   //     'YES'
   //   );
   // }
-  GetLedgerReport(fromDate: string, toDate: string, pAccountId: string | number, pSubAccountId: string | number,BranchSchema:any,GlobalSchema:any,BranchCode:any,CompanyCode:any): Observable<any> {
+  GetLedgerReport(fromDate: string, toDate: string, pAccountId: string | number, pSubAccountId: string | number, BranchSchema: any, GlobalSchema: any, BranchCode: any, CompanyCode: any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromDate)
       .set('toDate', toDate)
@@ -164,7 +164,7 @@ export class AccountingReportsService {
   //     'YES'
   //   );
   // }
-  GetDayBook(fromdate: string, todate: string, Ason: string,BranchSchema:any,branchCode:any,companyCode:any,GlobalSchema:any): Observable<any> {
+  GetDayBook(fromdate: string, todate: string, Ason: string, BranchSchema: any, branchCode: any, companyCode: any, GlobalSchema: any): Observable<any> {
     const params = new HttpParams()
       .set('fromdate', fromdate)
       .set('todate', todate)
@@ -188,7 +188,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetLedgerSummary', params, 'YES');
   // }
-  GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string,companyCode:any,branchCode:any,GlobalSchema:any): Observable<any> {
+  GetLedgerSummary(fromDate: string, todate: string, AccountId: string | number, AsOnDate: string, groupcode: string, companyCode: any, branchCode: any, GlobalSchema: any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromDate)
       .set('todate', todate)
@@ -248,7 +248,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/AccountingTransactions/GetgeneralreceiptReportData', params, 'YES');
   // }
-  GetGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+  GetGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     const params = new HttpParams()
       .set('ReceiptId', ReceiptId.toString())
       .set('BranchSchema', BranchSchema)
@@ -296,7 +296,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/AccountingTransactions/GetRePrintInterBranchGeneralReceiptCount', params, 'YES');
   // }
-  GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string,CompanyCode:any,BranchCode:any): Observable<any> {
+  GetRePrintInterBranchGeneralReceiptbyId(ReceiptId: string | number, BranchSchema: string, CompanyCode: any, BranchCode: any): Observable<any> {
     const params = new HttpParams()
       .set('ReceiptId', ReceiptId.toString())
       .set('BranchSchema', BranchSchema)
@@ -312,7 +312,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/AccountingTransactions/GetPaymentVoucherReportData', params, 'YES');
   // }
-  GetPaymentVoucherbyId(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+  GetPaymentVoucherbyId(paymentId: string | number, LocalSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
       .set('LocalSchema', LocalSchema)
@@ -330,7 +330,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/AccountingTransactions/GetChitPaymentReportData', params, 'YES');
   // }
-  GetChitPaymentReportData(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+  GetChitPaymentReportData(paymentId: string | number, LocalSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
       .set('LocalSchema', LocalSchema)
@@ -348,7 +348,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/AccountingTransactions/GetPettyCashReportData', params, 'YES');
   // }
-  GetPettyCashbyId(paymentId: string | number,LocalSchema:any,CompanyCode:any,BranchCode:any,GlobalSchema:any): Observable<any> {
+  GetPettyCashbyId(paymentId: string | number, LocalSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     const params = new HttpParams()
       .set('paymentId', paymentId.toString())
       .set('LocalSchema', LocalSchema)
@@ -366,7 +366,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/accountingtransactions/GetJournalVoucherReportData', params, 'YES');
   // }
-  GetJvReport(Jvnumber: string | number,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+  GetJvReport(Jvnumber: string | number, BranchSchema: any, GlobalSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     const params = new HttpParams()
       .set('Jvnumber', Jvnumber.toString())
       .set('BranchSchema', BranchSchema)
@@ -385,7 +385,7 @@ export class AccountingReportsService {
 
   //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetComparisionTB', params, 'YES');
   // }
-  GetComparisionTB(fromdate: string, todate: string,BranchSchema:any,GlobalSchema:any,company_code:any,branch_code:any): Observable<any> {
+  GetComparisionTB(fromdate: string, todate: string, BranchSchema: any, GlobalSchema: any, company_code: any, branch_code: any): Observable<any> {
     const params = new HttpParams()
       .set('fromDate', fromdate)
       .set('todate', todate)
@@ -503,7 +503,7 @@ export class AccountingReportsService {
 
     return this._CommonService.getAPI('/Accounts/GetJvListDetails', params, 'YES');
   }
-  GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+  GetJvListReportGroup(fromdate: any, todate: any, pmodeoftransaction: string, BranchSchema: any, GlobalSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     const params = new HttpParams()
       .set('fromdate', fromdate)
       .set('todate', todate)
@@ -573,13 +573,25 @@ export class AccountingReportsService {
 
           if (pagetype === 'a4') {
             // doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
-            doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
-            doc.setFontSize(10);
-            doc.text(address, 40, 27);
+            // doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
+            // doc.setFontSize(10);
+            // doc.text(address, 40, 27);
 
-            if (Companyreportdetails?.pCinNo ?? '') {
-              doc.text('CIN : ' + Companyreportdetails.pCinNo, 85, 32);
-            }
+            // if (Companyreportdetails?.pCinNo ?? '') {
+            //   doc.text('CIN : ' + Companyreportdetails.pCinNo, 85, 32);
+            // }
+            doc.setFontSize(15);
+            doc.setFont('helvetica', 'bold');
+            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text(
+              'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+              105,
+              21,
+              { align: 'center' }
+            );
+            doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
 
             doc.setFontSize(14);
             doc.text(reportName, 90, 42);
@@ -753,8 +765,11 @@ export class AccountingReportsService {
     const pageHeight = doc.internal.pageSize.getHeight();
     const usableWidth = pageWidth - margin * 2;
     let currentY = 12;
+    const kapil_logo = this._CommonService.getKapilGroupLogo();
+
 
     doc.setFont('helvetica', 'bold');
+    doc.addImage(kapil_logo, 'JPEG', 10, 15, 30, 20);
     doc.setFontSize(16);
     doc.text(
       'KAPIL CHITS (HYDERABAD) PVT. LTD.',
@@ -794,7 +809,8 @@ export class AccountingReportsService {
     }
 
     doc.setFontSize(10);
-    doc.text(`Generated On: ${new Date().toLocaleDateString()}`, margin, currentY);
+    doc.text(`Between : ${fromdate} And ${todate}`, margin, currentY);
+    // doc.text(`Between : ${fromdate} And ${todate}`, 15, 57);
 
     currentY += 6;
 
@@ -916,69 +932,85 @@ export class AccountingReportsService {
     const today = this._CommonService.pdfProperties('Date');
     const kapil_logo = this._CommonService.getKapilGroupLogo();
 
-      autoTable(doc,{
-        columns: gridheaders,
-        body: gridData,
-        theme: 'grid',
-        headStyles: {
-          fillColor: this._CommonService.pdfProperties('Header Color'),
-          halign: this._CommonService.pdfProperties('Header Alignment') as 'left' | 'center' | 'right',
-          fontSize: Number(this._CommonService.pdfProperties('Header Fontsize'))
-        },
-        styles: {
-          cellPadding: 1,
-          fontSize:Number(this._CommonService.pdfProperties('Cell Fontsize')),
-          cellWidth: 'wrap',
-          overflow: 'linebreak'
-        },
-        columnStyles: {
-          0: { halign: 'center' },
-          1: { cellWidth: isNarrationChecked ? 60 : 'auto', halign: 'left' },
-          2: { halign: 'right' },
-          3: { halign: 'right' },
-          4: { halign: 'right' }
-        },
-        startY: 64,
-        didDrawPage: (data:any) => {
-          const pageHeight = doc.internal.pageSize.getHeight();
-          const pageWidth = doc.internal.pageSize.getWidth();
+    autoTable(doc, {
+      columns: gridheaders,
+      body: gridData,
+      theme: 'grid',
+      headStyles: {
+        fillColor: this._CommonService.pdfProperties('Header Color'),
+        halign: this._CommonService.pdfProperties('Header Alignment') as 'left' | 'center' | 'right',
+        fontSize: Number(this._CommonService.pdfProperties('Header Fontsize'))
+      },
+      styles: {
+        cellPadding: 1,
+        fontSize: Number(this._CommonService.pdfProperties('Cell Fontsize')),
+        cellWidth: 'wrap',
+        overflow: 'linebreak'
+      },
+      columnStyles: {
+        0: { halign: 'center' },
+        1: { cellWidth: isNarrationChecked ? 60 : 'auto', halign: 'left' },
+        2: { halign: 'right' },
+        3: { halign: 'right' },
+        4: { halign: 'right' }
+      },
+      startY: 64,
+      didDrawPage: (data: any) => {
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const pageWidth = doc.internal.pageSize.getWidth();
 
+        doc.setFont('helvetica', 'normal');
+
+        if (doc.getNumberOfPages() === 1) {
+          doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
+          // doc.setFontSize(15);
+          // doc.text(Companyreportdetails?.pCompanyName??'', 60, 15);
+          // doc.setFontSize(9);
+          // doc.text(address, 32, 20);
+          doc.setFontSize(15);
+          doc.setFont('helvetica', 'bold');
+          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+          doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
+          doc.text(
+            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            105,
+            21,
+            { align: 'center' }
+          );
+          doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
 
-          if (doc.getNumberOfPages() === 1) {
-            doc.addImage(kapil_logo, 'JPEG', 10, 15,20,20);
-            doc.setFontSize(15);
-            doc.text(Companyreportdetails?.pCompanyName??'', 60, 15);
-            doc.setFontSize(9);
-            doc.text(address, 32, 20);
-            doc.setFontSize(14);
-            doc.text(reportName, 90, 38);
+          doc.setFontSize(14);
+          doc.text(reportName, 90, 38);
 
-            const lines = doc.splitTextToSize(subreportname, 180);
-            doc.text(lines, 30, 45);
+          const lines = doc.splitTextToSize(subreportname, 90);
+          doc.text(lines, 30, 45);
 
-            doc.setFontSize(10);
-            doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 57);
+          // doc.setFontSize(10);
+          // doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 57);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.text('Branch : CA-HYDERABAD-CO', 160, 57);
 
-            if (betweenorason === 'Between') {
-              doc.text(`Between : ${fromdate} And ${todate}`, 15, 57);
-            } else if (fromdate) {
-              doc.text(`As on : ${fromdate}`, 15, 52);
-            }
-
-            doc.line(10, 59, pageWidth - 10, 59);
+          if (betweenorason === 'Between') {
+            doc.text(`Between : ${fromdate} And ${todate}`, 15, 57);
+          } else if (fromdate) {
+            doc.text(`As on : ${fromdate}`, 15, 52);
           }
 
-          let page = 'Page ' + doc.getNumberOfPages();
-          if (typeof doc.putTotalPages === 'function') {
-            page += ' of ' + totalPagesExp;
-          }
-
-          doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
-          doc.text('Printed on : ' + today, 15, pageHeight - 5);
-          doc.text(page, pageWidth - 30, pageHeight - 5);
+          doc.line(10, 59, pageWidth - 10, 59);
         }
-      });
+
+        let page = 'Page ' + doc.getNumberOfPages();
+        if (typeof doc.putTotalPages === 'function') {
+          page += ' of ' + totalPagesExp;
+        }
+
+        doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+        doc.text('Printed on : ' + today, 15, pageHeight - 5);
+        doc.text(page, pageWidth - 30, pageHeight - 5);
+      }
+    });
 
     if (typeof doc.putTotalPages === 'function') doc.putTotalPages(totalPagesExp);
     if (printorpdf === 'Pdf') doc.save(`${reportName}.pdf`);
@@ -1020,11 +1052,24 @@ export class AccountingReportsService {
           doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
         }
 
-        doc.setFontSize(15);
-        doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
+        // doc.setFontSize(15);
+        // doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        // doc.text(Companyreportdetails?.pCompanyName ?? '', 150, 20, { align: 'center' });
+        doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 150, 20, { align: 'center' });
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        // doc.text(address ?? '', 150, 27, { align: 'center' });
+        doc.text('Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.', 150, 27, { align: 'center' });
+
+        // doc.text('CIN : ' + (Companyreportdetails?.pCIN ?? ''), 150, 33, { align: 'center' });
+        doc.text('CIN : ' + 'CIN : U65992TG2008PTC060803', 150, 33, { align: 'center' });
 
         doc.setFontSize(14);
-        doc.text(reportName ?? '', 85, 42);
+        doc.text(reportName ?? '', 125, 42);
+        
       },
       didDrawCell: (data: any) => {
         if (
@@ -1045,6 +1090,51 @@ export class AccountingReportsService {
     if (printorpdf === 'Print') this.setiFrameForPrint(doc);
   }
 
+  // _ChequeReturnCancelReportsPdf(
+  //   reportName: string,
+  //   gridData: any[],
+  //   gridheaders: any[],
+  //   colWidthHeight: any,
+  //   pagetype: any,
+  //   betweenorason: string,
+  //   fromdate: string,
+  //   todate: string,
+  //   printorpdf: string
+  // ) {
+  //   const address = this._CommonService.getcompanyaddress();
+  //   const Companyreportdetails = this._CommonService._getCompanyDetails();
+  //   const doc = new jsPDF(pagetype);
+  //   const today = this._CommonService.pdfProperties('Date');
+  //   const kapil_logo = this._CommonService.getKapilGroupLogo();
+  //   const currencyformat = this._CommonService.currencysymbol;
+  //   const totalPagesExp = '{total_pages_count_string}';
+
+  //   autoTable(doc, {
+  //     head: [gridheaders],
+  //     body: gridData,
+  //     startY: 53,
+  //     theme: 'grid',
+  //     didDrawPage: () => {
+  //       doc.setFont('helvetica', 'normal');
+  //       doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
+  //       doc.setFontSize(15);
+  //       doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
+  //       doc.setFontSize(14);
+  //       doc.text(reportName, 85, 42);
+  //     },
+  //     didDrawCell: (data: any) => {
+  //       if (data.column.index === 2 && currencyformat === '₹') {
+  //         const textPos = data.cell.textPos;
+  //         const rupeeImg = this._CommonService._getRupeeSymbol();
+  //         doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+  //       }
+  //     }
+  //   });
+
+  //   if (typeof doc.putTotalPages === 'function') doc.putTotalPages(totalPagesExp);
+  //   if (printorpdf === 'Pdf') doc.save(`${reportName}.pdf`);
+  //   if (printorpdf === 'Print') this.setiFrameForPrint(doc);
+  // }
   _ChequeReturnCancelReportsPdf(
     reportName: string,
     gridData: any[],
@@ -1058,8 +1148,10 @@ export class AccountingReportsService {
   ) {
     const address = this._CommonService.getcompanyaddress();
     const Companyreportdetails = this._CommonService._getCompanyDetails();
-    const doc = new jsPDF(pagetype);
-    const today = this._CommonService.pdfProperties('Date');
+    // const branch = this._CommonService.getBranch();
+    const doc = new jsPDF({ orientation: 'landscape' });
+
+    const todayDateTime = this._CommonService.pdfProperties('DateTime');
     const kapil_logo = this._CommonService.getKapilGroupLogo();
     const currencyformat = this._CommonService.currencysymbol;
     const totalPagesExp = '{total_pages_count_string}';
@@ -1067,26 +1159,87 @@ export class AccountingReportsService {
     autoTable(doc, {
       head: [gridheaders],
       body: gridData,
-      startY: 53,
+      startY: 85,
       theme: 'grid',
-      didDrawPage: () => {
+
+      didDrawPage: function (data) {
+
+        doc.addImage(kapil_logo, 'JPEG', 15, 15, 25, 25);
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        // doc.text(Companyreportdetails?.pCompanyName ?? '', 150, 20, { align: 'center' });
+        doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 150, 20, { align: 'center' });
+
         doc.setFont('helvetica', 'normal');
-        doc.addImage(kapil_logo, 'JPEG', 10, 15, 20, 20);
-        doc.setFontSize(15);
-        doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 20);
+        doc.setFontSize(10);
+        // doc.text(address ?? '', 150, 27, { align: 'center' });
+        doc.text('Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.', 150, 27, { align: 'center' });
+
+        // doc.text('CIN : ' + (Companyreportdetails?.pCIN ?? ''), 150, 33, { align: 'center' });
+        doc.text('CIN : ' + 'CIN : U65992TG2008PTC060803', 150, 33, { align: 'center' });
+
         doc.setFontSize(14);
-        doc.text(reportName, 85, 42);
+        doc.setFont('helvetica', 'bold');
+        doc.text(reportName, 150, 45, { align: 'center' });
+
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+
+        let dateText = '';
+        if (betweenorason === 'Between' && fromdate && todate) {
+          dateText = 'Between : ' + fromdate + ' And ' + todate;
+        } else if (betweenorason === 'As On' && fromdate) {
+          dateText = 'As On : ' + fromdate;
+        }
+
+        // doc.text(dateText, 15, 55);
+        // doc.text('Branch : ' + (branch ?? ''), 230, 55);
+        doc.text(dateText, 15, 55);
+        doc.text('Branch : CA-HYDERABAD-CO', 230, 55);
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('Cheque Details', 15, 70);
+        doc.text('Receipt Details', 200, 70);
+
+        const pageSize = doc.internal.pageSize;
+        const pageHeight = pageSize.height
+          ? pageSize.height
+          : pageSize.getHeight();
+
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+
+        doc.text(
+          'Printed on : ' + todayDateTime,
+          15,
+          pageHeight - 10
+        );
+
+        const pageStr = 'Page ' + doc.getNumberOfPages();
+        doc.text(pageStr, pageSize.width - 40, pageHeight - 10);
       },
+
       didDrawCell: (data: any) => {
         if (data.column.index === 2 && currencyformat === '₹') {
           const textPos = data.cell.textPos;
           const rupeeImg = this._CommonService._getRupeeSymbol();
-          doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+          doc.addImage(
+            rupeeImg,
+            'JPEG',
+            textPos.x - data.cell.contentWidth,
+            textPos.y + 0.5,
+            1.7,
+            1.7
+          );
         }
       }
     });
 
-    if (typeof doc.putTotalPages === 'function') doc.putTotalPages(totalPagesExp);
+    if (typeof doc.putTotalPages === 'function') {
+      doc.putTotalPages(totalPagesExp);
+    }
+
     if (printorpdf === 'Pdf') doc.save(`${reportName}.pdf`);
     if (printorpdf === 'Print') this.setiFrameForPrint(doc);
   }
@@ -1274,7 +1427,7 @@ export class AccountingReportsService {
   //         doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
   //       }
   //     }
-      
+
   //   });
 
   //   if (typeof (doc as any).putTotalPages === 'function') {
@@ -1290,114 +1443,130 @@ export class AccountingReportsService {
   //   }
   // }
   _ComparisionTBReportsPdf(
-  reportName: string,
-  gridData: any[],
-  gridheaders: any[],
-  colWidthHeight: any,
-  pagetype: any,
-  betweenorason: string,
-  fromdate: string,
-  todate: string,
-  printorpdf: string
-) {
-  const Companyreportdetails = this._CommonService._getCompanyDetails();
-  const doc = new jsPDF({
-    orientation: 'landscape',
-    format: 'a4'
-  });
+    reportName: string,
+    gridData: any[],
+    gridheaders: any[],
+    colWidthHeight: any,
+    pagetype: any,
+    betweenorason: string,
+    fromdate: string,
+    todate: string,
+    printorpdf: string
+  ) {
+    const Companyreportdetails = this._CommonService._getCompanyDetails();
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      format: 'a4'
+    });
 
-  const today = this._CommonService.pdfProperties('Date');
-  const kapil_logo = this._CommonService.getKapilGroupLogo();
-  const currencyformat = this._CommonService.currencysymbol;
-  const totalPagesExp = '{total_pages_count_string}';
+    const today = this._CommonService.pdfProperties('Date');
+    const kapil_logo = this._CommonService.getKapilGroupLogo();
+    const currencyformat = this._CommonService.currencysymbol;
+    const totalPagesExp = '{total_pages_count_string}';
 
-  const columnStyles: any = {
-    0: { cellWidth: 82 },             
-    1: { cellWidth: 28, halign: 'right' }, 
-    2: { cellWidth: 28, halign: 'right' }, 
-    3: { cellWidth: 28, halign: 'right' }, 
-    4: { cellWidth: 28, halign: 'right' }, 
-    5: { cellWidth: 28, halign: 'right' }, 
-    6: { cellWidth: 28, halign: 'right' }, 
-  };
+    const columnStyles: any = {
+      0: { cellWidth: 82 },
+      1: { cellWidth: 28, halign: 'right' },
+      2: { cellWidth: 28, halign: 'right' },
+      3: { cellWidth: 28, halign: 'right' },
+      4: { cellWidth: 28, halign: 'right' },
+      5: { cellWidth: 28, halign: 'right' },
+      6: { cellWidth: 28, halign: 'right' },
+    };
 
-  autoTable(doc, {
-    head: [gridheaders],
-    body: gridData,
-    startY: 55,
-    theme: 'grid',
-    columnStyles: columnStyles,  
-    tableWidth: 250,
-    margin: { left: 10, right: 10 },
-    styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
-    headStyles: { fillColor: [0, 168, 168], textColor: 255, fontSize: 8 },
-    didParseCell: (data: any) => {
-    if (data.row.raw?.isSubtotal === true) {
-      data.cell.styles.fillColor = '#ffffb3';
-      data.cell.styles.halign = data.column.index === 0 ? 'left' : 'right';
-      data.cell.styles.fontStyle = 'bold';
-    }
-  },
-    didDrawPage: () => {
-      const pageHeight = doc.internal.pageSize.getHeight();
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const currentPage = (doc as any).internal.getCurrentPageInfo().pageNumber;
-if (currentPage === 1) {
-      doc.setFont('helvetica', 'normal');
-      if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
+    autoTable(doc, {
+      head: [gridheaders],
+      body: gridData,
+      startY: 55,
+      theme: 'grid',
+      columnStyles: columnStyles,
+      tableWidth: 250,
+      margin: { left: 10, right: 10 },
+      styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
+      headStyles: { fillColor: [0, 168, 168], textColor: 255, fontSize: 8 },
+      didParseCell: (data: any) => {
+        if (data.row.raw?.isSubtotal === true) {
+          data.cell.styles.fillColor = '#ffffb3';
+          data.cell.styles.halign = data.column.index === 0 ? 'left' : 'right';
+          data.cell.styles.fontStyle = 'bold';
+        }
+      },
+      didDrawPage: () => {
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const currentPage = (doc as any).internal.getCurrentPageInfo().pageNumber;
+        if (currentPage === 1) {
+          doc.setFont('helvetica', 'normal');
+          if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
 
-      doc.setFontSize(15);
-      doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
+          // doc.setFontSize(15);
+          // doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);
+          doc.setFontSize(15);
+          doc.setFont('helvetica', 'bold');
+          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', pageWidth / 2, 15, { align: 'center' });
+          doc.setFontSize(9);
+          doc.setFont('helvetica', 'normal');
+          doc.text(
+            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            pageWidth / 2, 22,
+            { align: 'center' }
+          );
+          doc.text('CIN : U65992TG2008PTC060803', pageWidth / 2, 27, { align: 'center' });
 
-      doc.setFontSize(14);
-      doc.text(String(reportName ?? ''), pageWidth / 2, 30, { align: 'center' });
+          doc.setFontSize(14);
+          doc.text(String(reportName ?? ''), pageWidth / 2, 35, { align: 'center' });
 
-      if (betweenorason === 'Between') {
-        doc.setFontSize(11);
-        doc.text(`Between : ${fromdate ?? ''} And ${todate ?? ''}`, 15, 42);
+          if (betweenorason === 'Between') {
+            doc.setFontSize(11);
+            doc.text(`Between : ${fromdate ?? ''} And ${todate ?? ''}`, 15, 45);
+          }
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.text('Branch : CA-HYDERABAD-CO', pageWidth - 70, 45);
+        }
+
+
+
+        const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
+        let page = 'Page ' + String(pageNo);
+        if (typeof (doc as any).putTotalPages === 'function') {
+          page += ' of ' + totalPagesExp;
+        }
+
+        doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
+        doc.setFontSize(10);
+        doc.text('Printed on : ' + today, 15, pageHeight - 5);
+        doc.text(page, pageWidth - 30, pageHeight - 5);
+      },
+      didDrawCell: (data: any) => {
+        if (
+          data.cell.section === 'body' &&
+          data.column.index > 0 &&
+          data.cell.raw !== 0 &&
+          data.cell.raw !== '' &&
+          currencyformat === '₹'
+        ) {
+          const rupeeImg = this._CommonService._getRupeeSymbol();
+          const textPos = data.cell.textPos;
+          doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
+        }
       }
+    });
+
+    if (typeof (doc as any).putTotalPages === 'function') {
+      (doc as any).putTotalPages(totalPagesExp);
     }
 
-      const pageNo = (doc as any).internal.getNumberOfPages?.() ?? 1;
-      let page = 'Page ' + String(pageNo);
-      if (typeof (doc as any).putTotalPages === 'function') {
-        page += ' of ' + totalPagesExp;
-      }
-
-      doc.line(5, pageHeight - 10, pageWidth - 5, pageHeight - 10);
-      doc.setFontSize(10);
-      doc.text('Printed on : ' + today, 15, pageHeight - 5);
-      doc.text(page, pageWidth - 30, pageHeight - 5);
-    },
-    didDrawCell: (data: any) => {
-      if (
-        data.cell.section === 'body' &&
-        data.column.index > 0 &&
-        data.cell.raw !== 0 &&
-        data.cell.raw !== '' &&
-        currencyformat === '₹'
-      ) {
-        const rupeeImg = this._CommonService._getRupeeSymbol();
-        const textPos = data.cell.textPos;
-        doc.addImage(rupeeImg, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
-      }
+    if (printorpdf === 'Pdf') {
+      doc.save(`${reportName ?? 'report'}.pdf`);
     }
-  });
 
-  if (typeof (doc as any).putTotalPages === 'function') {
-    (doc as any).putTotalPages(totalPagesExp);
+    if (printorpdf === 'Print') {
+      this.setiFrameForPrint(doc);
+    }
   }
 
-  if (printorpdf === 'Pdf') {
-    doc.save(`${reportName ?? 'report'}.pdf`);
-  }
 
-  if (printorpdf === 'Print') {
-    this.setiFrameForPrint(doc);
-  }
-}
-  
-  
   setiFrameForPrint(doc: any) {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
@@ -1438,7 +1607,7 @@ if (currentPage === 1) {
 
   //   return this._CommonService.getAPI('/Accounting/AccountingReports/GetTrnastype', params, 'YES');
   // }
-  GetTransTypeDetails(formname: string,BranchSchema:any,GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+  GetTransTypeDetails(formname: string, BranchSchema: any, GlobalSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     const params = new HttpParams()
       .set('formname', formname)
       .set('BranchSchema', BranchSchema)
