@@ -48,18 +48,18 @@
                   <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm"
                     (click)="removeHandler($event, row)"></button>
                 </td>
-                <td class="text-left">{{ row.ppaymentdate }}</td>
-                <td class="text-center">{{ row.ppaymentid }}</td>
+                <td class="text-left">{{ row.paymentDate }}</td>
+                <td class="text-center">{{ row.paymentId }}</td>
                 <td class="text-left">
                   <ng-container *ngIf="row.pmodofPayment === 'CASH'">
-                    {{ row.pmodofPayment }}
+                    {{ row.modeOfPayment }}
                   </ng-container>
                   <ng-template #chequeDetails>
-                    {{ row.pmodofPayment }} ({{ row.ptypeofpayment }} - {{ row.pChequenumber }})
+                    {{ row.modeOfPayment }} ({{ row.typeOfPayment }} - {{ row.pChequenumber }})
                   </ng-template>
                 </td>
-                <td class="text-left">{{ row.pBankName ? row.pBankName : '-- NA --' }}</td>
-                <td class="text-right">{{ formatCurrency(row.ptotalpaidamount) }}</td>
+                <td class="text-left">{{ row.bankName ? row.bankName : '-- NA --' }}</td>
+                <td class="text-right">{{ formatCurrency(row.totalPaidAmount) }}</td>
               </tr>
             </ng-template>
 

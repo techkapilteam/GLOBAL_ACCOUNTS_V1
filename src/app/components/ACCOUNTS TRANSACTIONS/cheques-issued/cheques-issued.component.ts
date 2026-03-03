@@ -322,12 +322,18 @@ GetChequesIssued_Load(bankid: number) {
       ''
     ),
     this._accountingtransaction.GetChequesRowCount(
-      bankid,
-      this._searchText,
-      '',
-      '',
-      'CHEQUESISSUED',
-      this.modeofreceipt
+      // bankid,
+      // this._searchText,
+      // '',
+      // '',
+      // 'CHEQUESISSUED',
+      // this.modeofreceipt
+
+
+   bankid,this._commonService.getschemaname(), this._commonService.getbranchname(),this._searchText,this.fromdate,this.todate,
+   'CHEQUESISSUED',this.modeofreceipt
+    ,this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+
     )
   ]).subscribe({
     next: ([data, count]: any) => {
@@ -1034,7 +1040,12 @@ GetDataOnBrsDates(frombrsdate: any, tobrsdate: any, bankid: any) {
   );
 
   const count$ = this._accountingtransaction.GetChequesRowCount(
-    this.bankid, this._searchText, frombrsdate, tobrsdate, 'CHEQUESISSUED', ''
+    // this.bankid, this._searchText, frombrsdate, tobrsdate,, ''
+
+
+     this.bankid,this._commonService.getschemaname(), this._commonService.getbranchname(),this._searchText,frombrsdate,tobrsdate, 'CHEQUESISSUED',
+    '',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+   
   );
 
   forkJoin([data$, count$]).subscribe({

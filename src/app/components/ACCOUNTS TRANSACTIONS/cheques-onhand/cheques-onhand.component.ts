@@ -328,8 +328,20 @@ export class ChequesOnhandComponent implements OnInit {
   GetChequesOnHand_Load(bankid: any) {
     debugger;
     this.gridLoading = true;
-    let GetChequesOnHandData = this._accountingtransaction.GetChequesOnHandData(bankid, this.startindex, this.endindex, this.modeofreceipt, this._searchText, "");
-    let getchequescount = this._accountingtransaction.GetChequesRowCount(bankid, this._searchText, "", "", "CHEQUESONHAND", '');
+    let brsfromdate=this.BrsDateForm.controls['frombrsdate'].value;
+    let brstodate=this.BrsDateForm.controls['ptobrsdate'].value;
+    let GetChequesOnHandData = this._accountingtransaction.GetChequesOnHandData(
+bankid,
+brsfromdate,brstodate,this._commonService.getschemaname(),this._commonService.getbranchname(),
+       this.startindex, this.endindex,  this._searchText, "",this._commonService.getCompanyCode(),this._commonService.getBranchCode());
+    let getchequescount = this._accountingtransaction.GetChequesRowCount(
+      
+      bankid,
+      this._commonService.getschemaname(),this._commonService.getbranchname(), this._searchText, brsfromdate, brstodate, "CHEQUESONHAND", '',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+      
+      
+      
+      );
     // this._accountingtransaction.GetChequesOnHandData(bankid)
     forkJoin(GetChequesOnHandData, getchequescount)
       .subscribe((data: any) => {
@@ -401,7 +413,11 @@ export class ChequesOnhandComponent implements OnInit {
   GetChequesOnHand(bankid: any, startindex: any, endindex: any, searchText: any) {
     debugger;
     this.gridLoading = true;
-    this._accountingtransaction.GetChequesOnHandData(bankid, startindex, endindex, this.modeofreceipt, this._searchText, "").subscribe(data => {
+    this._accountingtransaction.GetChequesOnHandData(
+      bankid, this.BrsDateForm,this.brsdate,this._commonService.getschemaname(),this._commonService.getbranchname()
+      ,startindex, endindex, this._searchText,'',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+   
+    ).subscribe(data => {
       debugger;
       console.log(data)
       this.gridLoading = false;
@@ -793,12 +809,19 @@ export class ChequesOnhandComponent implements OnInit {
     this.gridDatatemp = [];
 
     this._accountingtransaction.GetChequesOnHandData(
-      this.bankid,
-      this.startindex,
-      this.endindex,
-      this.modeofreceipt,
-      this._searchText,
-      ""
+      // this.bankid,
+      // this.startindex,
+      // this.endindex,
+      // this.modeofreceipt,
+      // this._searchText,
+      // ""
+
+
+ this.bankid, this.BrsDateForm,this.brsdate,this._commonService.getschemaname(),this._commonService.getbranchname()
+      ,this.startindex, this.endindex, this._searchText,'',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+   
+
+
     ).subscribe((res: any) => {
 
       this.ChequesOnHandData = res.pchequesOnHandlist || [];
@@ -921,12 +944,17 @@ export class ChequesOnhandComponent implements OnInit {
     this.gridDatatemp = [];
 
     this._accountingtransaction.GetChequesOnHandData(
-      this.bankid,
-      this.startindex,
-      this.endindex,
-      this.modeofreceipt,
-      this._searchText,
-      ""
+      // this.bankid,
+      // this.startindex,
+      // this.endindex,
+      // this.modeofreceipt,
+      // this._searchText,
+      // ""
+
+
+       this.bankid, this.BrsDateForm,this.brsdate,this._commonService.getschemaname(),this._commonService.getbranchname()
+      ,this.startindex, this.endindex, this._searchText,'',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+   
     ).subscribe((res: any) => {
 
       this.ChequesOnHandData = res.pchequesOnHandlist || [];
@@ -1504,7 +1532,12 @@ export class ChequesOnhandComponent implements OnInit {
 
     this.Totalamount = 0;
 
-    const GetChequesInBankData = this._accountingtransaction.GetChequesOnHandData(this.bankid,0,999999,this.modeofreceipt,this._searchText,"PDF");
+    const GetChequesInBankData = this._accountingtransaction.GetChequesOnHandData(
+      // this.bankid,0,999999,this.modeofreceipt,this._searchText,"PDF"
+     this.bankid, this.BrsDateForm,this.brsdate,this._commonService.getschemaname(),this._commonService.getbranchname()
+      ,this.startindex,this. endindex, this._searchText,'',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+   
+    );
 
     const ChequesClearReturnData = this._accountingtransaction.DataFromBrsDatesChequesOnHand(this.fromdate,this.todate,this.bankid,this.modeofreceipt,this._searchText,0,99999);
 
@@ -1851,7 +1884,10 @@ export class ChequesOnhandComponent implements OnInit {
   GetDataOnBrsDates(frombrsdate: any, tobrsdate: any, bankid: any) {
     this.ChequesClearReturnDataBasedOnBrs = [];
     let DataFromBrsDatesChequesOnHand = this._accountingtransaction.DataFromBrsDatesChequesOnHand(frombrsdate, tobrsdate, bankid, this.modeofreceipt, this._searchText, this.startindex, this.endindex);
-    let GetChequesRowCount = this._accountingtransaction.GetChequesRowCount(this.bankid, this._searchText, frombrsdate, tobrsdate, "CHEQUESONHAND", '');
+    let GetChequesRowCount = this._accountingtransaction.GetChequesRowCount(
+      this.bankid,
+      this._commonService.getschemaname(),this._commonService.getbranchname(), this._searchText, frombrsdate, tobrsdate, "CHEQUESONHAND", '',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+    );
 
     // this._accountingtransaction.DataFromBrsDatesChequesOnHand(frombrsdate, tobrsdate, bankid)
     forkJoin(DataFromBrsDatesChequesOnHand, GetChequesRowCount)
@@ -2201,7 +2237,11 @@ export class ChequesOnhandComponent implements OnInit {
 
   export(): void {
     const GetChequesInBankData = this._accountingtransaction.GetChequesOnHandData(
-      this.bankid, 0, 999999, this.modeofreceipt, this._searchText, "PDF"
+      // this.bankid, 0, 999999, this.modeofreceipt, this._searchText, "PDF"
+
+       this.bankid, this.BrsDateForm,this.brsdate,this._commonService.getschemaname(),this._commonService.getbranchname()
+      ,this.startindex, this.endindex, this._searchText,'',this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+   
     );
 
     const ChequesClearReturnData = this._accountingtransaction.DataFromBrsDatesChequesOnHand(
