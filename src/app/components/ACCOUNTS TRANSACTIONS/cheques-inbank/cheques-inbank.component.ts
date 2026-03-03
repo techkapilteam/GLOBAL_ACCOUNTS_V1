@@ -689,7 +689,8 @@ export class ChequesInbankComponent implements OnInit {
   GetChequesInBank(bankid: any, startindex: any, endindex: any, searchText: string) {
     debugger;
     this.gridLoading = true;
-    this._accountingtransaction.GetChequesInBankData(bankid, startindex, endindex, this.modeofreceipt, this._searchText, "").
+    this._accountingtransaction.GetChequesInBankData(
+      bankid, startindex, endindex, this.modeofreceipt, this._searchText, "").
       //forkJoin(GetChequesInBankData,getchequescount).
       subscribe(data => {
         console.log(data)
