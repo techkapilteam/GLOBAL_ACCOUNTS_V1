@@ -108,6 +108,30 @@
 
 
 <div *ngIf="showhidetable" class="mt-4">
+  <div class="text-center mb-1 fw-bold fs-5">
+        KAPIL CHITS (HYDERABAD) PVT. LTD.
+      </div>
+
+      <div class="text-center mb-1">
+        Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old N.K-07, Kamarreddy
+      </div>
+
+      <div class="text-center mb-2 fw-semibold">
+        CIN: U65992TG2008PTC060803
+      </div>
+      <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
+        <h5 class="m-0 fw-bold">Trial Balance</h5>
+      </div>
+      <div class="row mt-2">
+  <div class="col-md-6">
+    <span class="font-weight-bold">{{ betweendates }} :</span>
+    <label class="ml-2">
+      {{ betweenfrom }}
+      <span *ngIf="inbetween"> {{ inbetween }} </span>
+      {{ betweento }}
+    </label>
+  </div>
+</div>
 
   <p-table
     [value]="Trialbalancelst"

@@ -21,11 +21,11 @@ export class HrmsemployeeattendanceService {
   constructor(private _CommonService: CommonService) { }
 
 
-  GetCalendarYear(): Observable<any> {
+  GetCalendarYear(GlobalSchema:any): Observable<any> {
 
-    const params = new HttpParams().set('Branchschema', this._CommonService.getschemaname());
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/Transactions/HRMSTransaction/GetCalendarYear', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetCalendarYear', params, 'YES');
 
   }
 
@@ -37,11 +37,11 @@ export class HrmsemployeeattendanceService {
 
   }
 
-  GetTDSJVCalendarYearMonth(CalendarId:any): Observable<any> {
+  GetTDSJVCalendarYearMonth(CalendarId:any,GlobalSchema:any): Observable<any> {
 
-    const params = new HttpParams().set('Branchschema', this._CommonService.getschemaname()).set('CalendarId', CalendarId);
+    const params = new HttpParams().set('CalendarId', CalendarId).set('GlobalSchema', GlobalSchema);
 
-    return this._CommonService.getAPI('/Transactions/HRMSTransaction/GetTDSJVCalendarYearMonth', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetTDSJVCalendarYearMonth', params, 'YES');
 
   }
 

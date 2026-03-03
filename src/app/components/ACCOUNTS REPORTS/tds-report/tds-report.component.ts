@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe, formatDate } from '@angular/common';
 import { Component,inject,OnInit } from '@angular/core';
-import { FormsModule,FormBuilder, FormGroup,Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule,FormBuilder, FormGroup,Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
@@ -92,8 +92,24 @@ export class TdsReportComponent implements OnInit{
       fromdate: [new Date()],
       todate: [new Date()],
       reportType: ['']
-    });
+    }, { validators: this.dateRangeValidator() });
   }
+  dateRangeValidator(): ValidatorFn {
+return (group: AbstractControl): ValidationErrors | null => {
+
+const from = group.get('fromdate')?.value;
+const to = group.get('todate')?.value;
+
+if (!from || !to) return null;
+
+const fromTime = new Date(from).setHours(0, 0, 0, 0);
+const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+return fromTime > toTime
+? { dateRangeInvalid: true }
+: null;
+};
+}
 
   setPageModel(): void {
     this.pageCriteria.pageSize = this.commonService.pageSize;
@@ -114,7 +130,7 @@ export class TdsReportComponent implements OnInit{
 
   getTDSSectionDetails(): void {
     this.tdsreportservice.getTDSSectionDetails('global','KAPILCHITS','KLC01')
-      .subscribe((res:never[]) => { console.log('Raw API Response:', res);this.tdssectiondata = res || []});
+      .subscribe((res:never[]) => { this.tdssectiondata = res || []});
   }
 
   onsectionidchange(event: any): void {
@@ -155,7 +171,11 @@ export class TdsReportComponent implements OnInit{
 
   Show(): void {
     debugger
-    if (this.TdsReportForm.invalid) return;
+    // if (this.TdsReportForm.invalid) return;
+    if (this.TdsReportForm.errors?.['dateRangeInvalid']) {
+alert('From Date should not be greater than To Date');
+return;
+}
 
     this.tdsreportdata = [];
     this.disablesavebutton = true;

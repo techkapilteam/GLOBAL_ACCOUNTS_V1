@@ -36,6 +36,10 @@ export class TrialBalanceComponent {
   difference = 0;
   savebutton = 'Generate Report';
   withgrouping = false;
+  betweendates: 'As On' | 'Between' = 'As On';
+betweenfrom: string = '';
+betweento: string = '';
+inbetween: string = '';
 
   fromdate!: Date;
   todate!: Date;
@@ -50,7 +54,8 @@ export class TrialBalanceComponent {
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
-    private accountingService: AccountingReportsService
+    private accountingService: AccountingReportsService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -85,8 +90,13 @@ export class TrialBalanceComponent {
       todate: [this.todate],
       grouptype: ['BETWEEN']
     });
+     this.betweendates = 'As On';
+  const today = new Date();
+this.betweenfrom = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
+  this.betweento    = '';
+  this.inbetween    = '';
 
-    this.GetTrialBalance(this.fromdate, this.todate, this.groupType);
+    // this.GetTrialBalance(this.fromdate, this.todate, this.groupType);
   }
 
   checkboxChecked(event: any) {
@@ -94,10 +104,15 @@ export class TrialBalanceComponent {
       this.groupType = 'ASON';
       this.showhideason = false;
       this.datelabel = 'Date';
+      this.betweendates = 'As On';
+    this.inbetween    = '';
+    this.betweento    = '';
     } else {
       this.groupType = 'BETWEEN';
       this.showhideason = true;
       this.datelabel = 'From Date';
+      this.betweendates = 'Between';
+    this.inbetween    = 'And';
     }
 
     this.TrialBalanceForm.patchValue({
@@ -127,6 +142,11 @@ export class TrialBalanceComponent {
       this.groupType === 'ASON'
         ? fromdate
         : this.TrialBalanceForm.value.todate;
+
+        this.betweenfrom = this.datePipe.transform(fromdate, 'dd-MMM-yyyy') ?? '';
+  this.betweento = this.groupType === 'ASON'
+    ? ''
+    : (this.datePipe.transform(todate, 'dd-MMM-yyyy') ?? '');
 
     this.GetTrialBalance(fromdate, todate, this.groupType);
   }

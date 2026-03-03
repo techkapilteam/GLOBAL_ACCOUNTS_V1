@@ -7,238 +7,225 @@
     <div class="screen-content">
       <form [formGroup]="dayBookForm">
 
-    <div class="row align-items-end">
+        <div class="row align-items-end">
 
-      <div class="col-xl-2 col-md-3 d-flex align-items-center">
-        <div class="form-check">
-          <input class="form-check-input"
-                 type="checkbox"
-                 id="asdate"
-                 formControlName="date"
-                 (change)="dte = !dte">
-          <label class="form-check-label ms-2" for="asdate">
-            Date :
-          </label>
+          <div class="col-xl-2 col-md-3 d-flex align-items-center">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="asdate" formControlName="date" (change)="dte = !dte">
+              <label class="form-check-label ms-2" for="asdate">
+                Date :
+              </label>
+            </div>
+          </div>
+          <div class="col-xl-2 col-md-3" *ngIf="dte">
+            <label class="form-label">Date</label>
+            <input type="text" class="form-control" readonly [bsConfig]="dpConfig" formControlName="dfromdate"
+              bsDatepicker>
+          </div>
+
+          <div class="col-xl-2 col-md-3" *ngIf="!dte">
+            <label class="form-label">From Date</label>
+            <input type="text" class="form-control" readonly [bsConfig]="dpConfig" formControlName="dfromdate"
+              bsDatepicker>
+          </div>
+
+          <div class="col-xl-2 col-md-3" *ngIf="!dte">
+            <label class="form-label">To Date</label>
+            <input type="text" class="form-control" readonly [bsConfig]="dppConfig" formControlName="dtodate"
+              bsDatepicker>
+              <small class="text-danger d-block mt-1" *ngIf="dayBookForm.errors?.['dateRangeInvalid']">
+      From Date cannot be greater than To Date
+    </small>
+          </div>        
+
+          <div class="col-xl-3 col-md-3">
+            <button type="button" class="btn btn-primary w-100" (click)="getDayBookData()" [disabled]="loading">
+              <i class="pi pi-spin pi-spinner me-2" *ngIf="loading"></i>
+              Generate Report
+            </button>
+          </div>
+
+          <div class="col-xl-3 col-md-3">
+            <button type="button" class="btn btn-primary w-100" (click)="GetChequeonHandDetails()">
+              Cheques On Hand
+            </button>
+          </div>
+
+        </div>
+
+        <div class="row mt-4 align-items-end">
+
+          <div class="col-xl-2 col-md-3 d-flex align-items-center">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="kgms" (change)="kgms = !kgms">
+              <label class="form-check-label ms-2" for="kgms">
+                KGMS :
+              </label>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-md-4" *ngIf="kgms">
+            <label class="form-label">Branch</label>
+            <ng-select [items]="kgmsBranchList" bindLabel="branchName" bindValue="branchCode"
+              formControlName="branch_code" [searchable]="true" [clearable]="false" appendTo="body">
+            </ng-select>
+          </div>
+
+          <div class="col-xl-3 col-md-3">
+            <button type="button" class="btn btn-success w-100" (click)="getSummaryReport()" [disabled]="!kgms">
+              KGMS Summary Report
+            </button>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+
+    <div class="section-content mt-4" *ngIf="gridData?.length">
+
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-outline-danger btn-sm me-2" (click)="pdfOrprint('Pdf')">
+          <i class="pi pi-file-pdf"></i> PDF
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('Print')">
+          <i class="pi pi-print"></i> Print
+        </button>
+      </div>
+
+      <div class="text-center mb-1 fw-bold fs-5">
+        KAPIL CHITS (HYDERABAD) PVT. LTD.
+      </div>
+
+      <div class="text-center mb-1">
+        Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old N.K-07, Kamarreddy
+      </div>
+
+      <div class="text-center mb-2 fw-semibold">
+        CIN: U65992TG2008PTC060803
+      </div>
+      <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
+        <h5 class="m-0 fw-bold">Day Book</h5>
+      </div>
+      <div class="row mt-3">
+                <div class="col-md-6">
+                  <strong>Between:</strong>
+                  <span class="ms-2">
+                    {{ StartDate | date:'dd-MMM-yyyy' }} And {{ EndDate | date:'dd-MMM-yyyy' }}
+                  </span>
+                </div>
+              </div>
+      <div class="row mt-3 fw-semibold text-primary">
+            <div class="col-md-7 text-center">Receipts</div>
+            <div class="col-md-5 text-center">Payments</div>
+          </div>
+
+      <p-table #myTable [value]="gridData" sortField="prcpttransactiondate" rowGroupMode="subheader"
+        groupRowsBy="prcpttransactiondate" [scrollable]="true" scrollHeight="450px" styleClass="p-datatable-gridlines">
+
+        <ng-template pTemplate="rowgroupheader" let-rowData>
+          <tr>
+            <td colspan="8" class="bg-light fw-bold">
+              {{ rowData.prcpttransactiondate | date:'dd-MMM-yyyy' }}
+            </td>
+          </tr>
+        </ng-template>
+
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Transaction No.</th>
+            <th>Particulars</th>
+            <th>Type</th>
+            <th class="text-end">Amount</th>
+            <th>Transaction No.</th>
+            <th>Particulars</th>
+            <th>Type</th>
+            <th class="text-end">Amount</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.prcpttransactionno }}</td>
+            <td>{{ row.prcptparticulars }}</td>
+            <td>{{ row.prcptaccountname }}</td>
+
+            <td class="text-end">
+              <ng-container *ngIf="row.prcptdebitamount">
+                {{ currencysymbol }} {{ row.prcptdebitamount | number:'1.2-2' }}
+              </ng-container>
+            </td>
+
+            <td>{{ row.ptransactionno }}</td>
+            <td>{{ row.pparticulars }}</td>
+            <td>{{ row.paccountname }}</td>
+
+            <td class="text-end">
+              <ng-container *ngIf="row.pcreditamount">
+                {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
+              </ng-container>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+      <div class="row mt-3">
+        <div class="col-md-6 text-end fw-bold text-danger">
+          Received Amount:
+          {{ currencysymbol }} {{ receiptsAmount | number:'1.2-2' }}
+        </div>
+        <div class="col-md-6 text-end fw-bold text-danger">
+          Paid Amount:
+          {{ currencysymbol }} {{ paymentsAmount | number:'1.2-2' }}
         </div>
       </div>
-      <div class="col-xl-2 col-md-3" *ngIf="dte">
-  <label class="form-label">Date</label>
-  <input type="text"
-         class="form-control"
-         readonly
-         [bsConfig]="dpConfig"
-         formControlName="dfromdate"
-         bsDatepicker>
-</div>
 
-      <div class="col-xl-2 col-md-3" *ngIf="!dte">
-        <label class="form-label">From Date</label>
-        <input type="text"
-               class="form-control"
-               readonly
-               [bsConfig]="dpConfig"
-               formControlName="dfromdate"
-               bsDatepicker>
-      </div>
+      <p-table [value]="totalBalanceGrid" [scrollable]="true" scrollHeight="300px"
+        styleClass="p-datatable-gridlines mt-4">
 
-      <div class="col-xl-2 col-md-3" *ngIf="!dte">
-        <label class="form-label">To Date</label>
-        <input type="text"
-               class="form-control"
-               readonly
-               [bsConfig]="dppConfig"
-               formControlName="dtodate"
-               bsDatepicker>
-      </div>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Bank Name</th>
+            <th class="text-end">Opening Balance</th>
+            <th class="text-end">Receipts</th>
+            <th class="text-end">Payments</th>
+            <th class="text-end">Closing Balance</th>
+          </tr>
+        </ng-template>
 
-      <div class="col-xl-3 col-md-3">
-        <button type="button"
-                class="btn btn-primary w-100"
-                (click)="getDayBookData()"
-                [disabled]="loading">
-          <i class="pi pi-spin pi-spinner me-2" *ngIf="loading"></i>
-          Generate Report
-        </button>
-      </div>
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>{{ row.paccountname }}</td>
 
-      <div class="col-xl-3 col-md-3">
-        <button type="button"
-                class="btn btn-primary w-100"
-                (click)="GetChequeonHandDetails()">
-          Cheques On Hand
-        </button>
-      </div>
+            <td class="text-end">
+              <ng-container *ngIf="row.popeningbal">
+                {{ currencysymbol }} {{ row.popeningbal }}
+              </ng-container>
+            </td>
 
-    </div>
+            <td class="text-end">
+              <ng-container *ngIf="row.pdebitamount">
+                {{ currencysymbol }} {{ row.pdebitamount | number:'1.2-2' }}
+              </ng-container>
+            </td>
 
-    <div class="row mt-4 align-items-end">
+            <td class="text-end">
+              <ng-container *ngIf="row.pcreditamount">
+                {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
+              </ng-container>
+            </td>
 
-      <div class="col-xl-2 col-md-3 d-flex align-items-center">
-        <div class="form-check">
-          <input class="form-check-input"
-                 type="checkbox"
-                 id="kgms"
-                 (change)="kgms = !kgms">
-          <label class="form-check-label ms-2" for="kgms">
-            KGMS :
-          </label>
-        </div>
-      </div>
+            <td class="text-end">
+              <ng-container *ngIf="row.pclosingbal">
+                {{ currencysymbol }} {{ row.pclosingbal }}
+              </ng-container>
+            </td>
+          </tr>
+        </ng-template>
 
-      <div class="col-xl-4 col-md-4" *ngIf="kgms">
-        <label class="form-label">Branch</label>
-        <ng-select
-          [items]="kgmsBranchList"
-          bindLabel="branchName"
-          bindValue="branchCode"
-          formControlName="branch_code"
-          [searchable]="true"
-          [clearable]="false"
-          appendTo="body">
-        </ng-select>
-      </div>
-
-      <div class="col-xl-3 col-md-3">
-        <button type="button"
-                class="btn btn-success w-100"
-                (click)="getSummaryReport()"
-                [disabled]="!kgms">
-          KGMS Summary Report
-        </button>
-      </div>
-
-    </div>
-
-  </form>
-</div>
-
-<div class="section-content mt-4" *ngIf="gridData?.length">
-
-  <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-outline-danger btn-sm me-2" (click)="pdfOrprint('Pdf')">
-      <i class="pi pi-file-pdf"></i> PDF
-    </button>
-    <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('Print')">
-      <i class="pi pi-print"></i> Print
-    </button>
-  </div>
-
-  <p-table
-    #myTable
-    [value]="gridData"
-    sortField="prcpttransactiondate"
-    rowGroupMode="subheader"
-    groupRowsBy="prcpttransactiondate"
-    [scrollable]="true"
-    scrollHeight="450px"
-    styleClass="p-datatable-gridlines">
-
-    <ng-template pTemplate="rowgroupheader" let-rowData>
-      <tr>
-        <td colspan="8" class="bg-light fw-bold">
-          {{ rowData.prcpttransactiondate | date:'dd-MMM-yyyy' }}
-        </td>
-      </tr>
-    </ng-template>
-
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Transaction No.</th>
-        <th>Particulars</th>
-        <th>Type</th>
-        <th class="text-end">Amount</th>
-        <th>Transaction No.</th>
-        <th>Particulars</th>
-        <th>Type</th>
-        <th class="text-end">Amount</th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td>{{ row.prcpttransactionno }}</td>
-        <td>{{ row.prcptparticulars }}</td>
-        <td>{{ row.prcptaccountname }}</td>
-
-        <td class="text-end">
-          <ng-container *ngIf="row.prcptdebitamount">
-            {{ currencysymbol }} {{ row.prcptdebitamount | number:'1.2-2' }}
-          </ng-container>
-        </td>
-
-        <td>{{ row.ptransactionno }}</td>
-        <td>{{ row.pparticulars }}</td>
-        <td>{{ row.paccountname }}</td>
-
-        <td class="text-end">
-          <ng-container *ngIf="row.pcreditamount">
-            {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
-          </ng-container>
-        </td>
-      </tr>
-    </ng-template>
-
-  </p-table>
-
-  <div class="row mt-3">
-    <div class="col-md-6 text-end fw-bold text-danger">
-      Received Amount:
-      {{ currencysymbol }} {{ receiptsAmount | number:'1.2-2' }}
-    </div>
-    <div class="col-md-6 text-end fw-bold text-danger">
-      Paid Amount:
-      {{ currencysymbol }} {{ paymentsAmount | number:'1.2-2' }}
-    </div>
-  </div>
-
-  <p-table
-    [value]="totalBalanceGrid"
-    [scrollable]="true"
-    scrollHeight="300px"
-    styleClass="p-datatable-gridlines mt-4">
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Bank Name</th>
-        <th class="text-end">Opening Balance</th>
-        <th class="text-end">Receipts</th>
-        <th class="text-end">Payments</th>
-        <th class="text-end">Closing Balance</th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td>{{ row.paccountname }}</td>
-
-        <td class="text-end">
-          <ng-container *ngIf="row.popeningbal">
-            {{ currencysymbol }} {{ row.popeningbal }}
-          </ng-container>
-        </td>
-
-        <td class="text-end">
-          <ng-container *ngIf="row.pdebitamount">
-            {{ currencysymbol }} {{ row.pdebitamount | number:'1.2-2' }}
-          </ng-container>
-        </td>
-
-        <td class="text-end">
-          <ng-container *ngIf="row.pcreditamount">
-            {{ currencysymbol }} {{ row.pcreditamount | number:'1.2-2' }}
-          </ng-container>
-        </td>
-
-        <td class="text-end">
-          <ng-container *ngIf="row.pclosingbal">
-            {{ currencysymbol }} {{ row.pclosingbal }}
-          </ng-container>
-        </td>
-      </tr>
-    </ng-template>
-
-  </p-table>
+      </p-table>
     </div>
   </div>
 </div>

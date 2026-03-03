@@ -218,10 +218,19 @@ private datePipe = inject(DatePipe);
     bankAccountId: ['', Validators.required],
     pbankbalance: [0, [Validators.required, Validators.min(0)]],
     pFilename: ['']
-  });
+  }, { validators: this.dateRangeValidator });
 
   this.initializeDatePicker();
   this.bankBookDetails();
+}
+private dateRangeValidator(group: FormGroup) {
+const from = group.get('fromDate')?.value;
+const to = group.get('toDate')?.value;
+
+if (from && to && new Date(from) > new Date(to)) {
+return { dateRangeInvalid: true };
+}
+return null;
 }
 private initializeDatePicker(): void {
 

@@ -17,6 +17,7 @@ import { AddressComponent } from '../../../common/address/address/address.compon
 import { TableModule } from 'primeng/table';
 import { ValidationMessageComponent } from '../../../common/validation-message/validation-message.component';
 import { routes } from '../../../app.routes';
+import { Logger } from 'html2canvas/dist/types/core/logger';
 @Component({
   selector: 'app-bank-config',
   standalone: true,
@@ -222,7 +223,7 @@ export class BankConfigComponent implements OnInit {
   debitcardhideandshow: any;
   bankupihideandshow: any;
   isDebitCardOpen = false;
-precordid1=1;
+  precordid1 = 1;
   isUpiOpen = false;
   bankOpen = false;
 
@@ -300,7 +301,7 @@ precordid1=1;
         pBankdate: [''],
         pAcctountype: ['', Validators.required],
         pBankID: [''],
-        pBankname: ['', Validators.required],
+        bankName: ['', Validators.required],
         pBankbranch: [''],
         pAccountnumber: ['', Validators.required],
         pIfsccode: [''],
@@ -367,47 +368,47 @@ precordid1=1;
     //   this.upiname = data
     // })
 
- this._accountingmasterserive.GetBankUPIDetails(
-      this._commonService.getschemaname(), 
+    this._accountingmasterserive.GetBankUPIDetails(
+      this._commonService.getschemaname(),
       this._commonService.getBranchCode(),
       this._commonService.getCompanyCode(),
-      
-      )
-       .subscribe({
-      next: (res: any) => {
-        // bankName
-        console.log('data',res);
-        
-        this.upiname = res;
 
-        console.log('SUCCESS:', res);
-       
-      },
-      error: (err: any) => {
-        console.log('ERROR:', err);
-        alert('API Error');
-      }
-    });
+    )
+      .subscribe({
+        next: (res: any) => {
+          // bankName
+          console.log('data', res);
+
+          this.upiname = res;
+
+          console.log('SUCCESS:', res);
+
+        },
+        error: (err: any) => {
+          console.log('ERROR:', err);
+          alert('API Error');
+        }
+      });
     debugger;
     this._accountingmasterserive.GetGlobalBanks(
 
-      this._commonService.getschemaname(), 
-      )
-       .subscribe({
-      next: (res: any) => {
-        // bankName
-        console.log('data',res);
-        
-        this.banksList = res;
+      this._commonService.getschemaname(),
+    )
+      .subscribe({
+        next: (res: any) => {
+          // bankName
+          console.log('data', res);
 
-        console.log('SUCCESS:', res);
-        
-      },
-      error: (err: any) => {
-        console.log('ERROR:', err);
-        alert('API Error');
-      }
-    });
+          this.banksList = res;
+
+          console.log('SUCCESS:', res);
+
+        },
+        error: (err: any) => {
+          console.log('ERROR:', err);
+          alert('API Error');
+        }
+      });
 
 
 
@@ -418,24 +419,25 @@ precordid1=1;
       debugger;
       this.editdata = this._accountingmasterserive.editbankdetails();
       this.bankdetails = this._accountingmasterserive.editbankdetails1();
-      console.log(this.bankdetails)
+      console.log('bank', this.bankdetails)
       this.loading = true;
       this._accountingmasterserive.viewbank(this.editdata,
-this._commonService.getschemaname(),
-this._commonService.getbranchname(),
-this._commonService.getCompanyCode(),
-this._commonService.getBranchCode()
+        this._commonService.getschemaname(),
+        this._commonService.getbranchname(),
+        this._commonService.getCompanyCode(),
+        this._commonService.getBranchCode()
 
       ).subscribe(data => {
         debugger;
-        console.log(data)
+        console.log('datatobind', data)
 
         this.datatobind = data
         this.buttonname = "Update"
         this.disable = true;
         this.loading = false;
-        this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.pBankdate))
-        console.log(this.datatobind.pBankdate);
+        // this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.bank_date))
+        this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.bankInfo.bank_date))
+        console.log('DATE', this.datatobind.bankInfo.bank_date);
 
         // this.bankmasterform.controls['pBankID'].setValue(this.datatobind.pBankID)
         // this.bankmasterform.controls['pBankID'].setValue(this.datatobind.pBankID)
@@ -447,50 +449,53 @@ this._commonService.getBranchCode()
           this.banksetup = true
         }
 
-        this.bankmasterform.controls['pBankname'].setValue(this.datatobind.pBankname)
-        this.bankmasterform.controls['pBankbranch'].setValue(this.datatobind.pBankbranch)
-        this.bankmasterform.controls['pRecordid'].setValue(this.datatobind.pRecordid);
-        if (this.datatobind.pAccountnumber != '' && this.datatobind.pAccountnumber != null) {
+        this.bankmasterform.controls['bankName'].setValue(this.datatobind[0].bank_name)
+        this.bankmasterform.controls['pBankbranch'].setValue(this.datatobind[0].bank_branch)
+        this.bankmasterform.controls['pRecordid'].setValue(this.datatobind[0].recordid);
+        if (this.datatobind[0].account_number != '' && this.datatobind[0].account_number != null) {
           this.accountno = true;
-          this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind.pAccountnumber)
+          this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind[0].account_number)
         }
         else {
           this.bankmasterform.controls['pAccountnumber'].setValue('')
         }
-        this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind.pAccountnumber)
-        this.bankmasterform.controls['pIfsccode'].setValue(this.datatobind.pIfsccode)
-        this.bankmasterform.controls['pAccountname'].setValue(this.datatobind.pAccountname)
+        this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind[0].account_number)
+
+        this.bankmasterform.controls['pIfsccode'].setValue(this.datatobind[0].ifsccode)
+        // this.bankmasterform.controls['pAccountname'].setValue(this.datatobind.pAccountname)
+        this.bankmasterform.controls['account_name'].setValue(this.datatobind[0].account_name)
         this.bankmasterform.controls['ptypeofoperation'].setValue("UPDATE");
-        this.bankmasterform.controls['pOverdraft'].setValue(this._commonService.currencyformat(this.datatobind.pOverdraft))
-        this.bankmasterform.controls['pAcctountype'].setValue(this.datatobind.pAcctountype)
-        this.bankmasterform.controls['pOpeningBalance'].setValue(this._commonService.currencyformat(this.datatobind.pOpeningBalance))
-        this.bankmasterform.controls['popeningjvno'].setValue(this.datatobind.popeningjvno)
-        if (this.datatobind.pOpeningBalanceType == "") {
+        this.bankmasterform.controls['pOverdraft'].setValue(this._commonService.currencyformat(this.datatobind[0].overdraft))
+        this.bankmasterform.controls['pAcctountype'].setValue(this.datatobind[0].account_type)
+        this.bankmasterform.controls['pOpeningBalance'].setValue(this._commonService.currencyformat(this.datatobind[0].openingbalance))
+        this.bankmasterform.controls['popeningjvno'].setValue(this.datatobind[0].opening_jvno)
+        if (this.datatobind[0].openingBalanceType == "") {
           this.bankmasterform.controls['pOpeningBalanceType'].setValue('D')
         }
         else {
-          this.bankmasterform.controls['pOpeningBalanceType'].setValue(this.datatobind.pOpeningBalanceType)
+          this.bankmasterform.controls['pOpeningBalanceType'].setValue(this.datatobind[0].openingBalanceType)
         }
 
 
 
-        if (this.datatobind.pIsupiapplicable == true) {
-          this.bankmasterform.controls['pIsupiapplicable'].setValue(this.datatobind.pIsupiapplicable)
+        if (this.datatobind[0].is_upi_applicable == true) {
+          this.bankmasterform.controls['pIsupiapplicable'].setValue(this.datatobind[0].is_upi_applicable)
           this.bankupihideandshow = true;
           this.bankupidetails = true;
-          this.gridData = this.datatobind.lstBankUPI
+          this.gridData = this.datatobind[0].lstBankUPI
         }
 
-        if (this.datatobind.pIsdebitcardapplicable == true) {
-          this.bankmasterform.controls['pIsdebitcardapplicable'].setValue(this.datatobind.pIsdebitcardapplicable)
+        if (this.datatobind[0].is_debitcard_applicable == true) {
+          this.bankmasterform.controls['pIsdebitcardapplicable'].setValue(this.datatobind[0].is_debitcard_applicable)
           this.debitcardhideandshow = true
           this.debitcarddetails = true;
+          console.log('databind 1', this.datatobind.lstBankdebitcarddtlsDTO);
 
 
-          if (this.datatobind.lstBankdebitcarddtlsDTO.length > 0) {
-            if (this.datatobind.lstBankdebitcarddtlsDTO[0].pCardNo != '' && this.datatobind.lstBankdebitcarddtlsDTO[0].pCardNo != null) {
+          if (this.datatobind[0].lstBankdebitcarddtlsDTO.length > 0) {
+            if (this.datatobind[0].lstBankdebitcarddtlsDTO[0].pCardNo != '' && this.datatobind[0].lstBankdebitcarddtlsDTO[0].pCardNo != null) {
               this.cardno = true;
-              this.bankmasterform.controls['pCardNo'].patchValue(this.datatobind.lstBankdebitcarddtlsDTO[0].pCardNo)
+              this.bankmasterform.controls['pCardNo'].patchValue(this.datatobind[0].lstBankdebitcarddtlsDTO[0].pCardNo)
             }
             else {
               this.bankmasterform.controls['pCardNo'].patchValue('')
@@ -508,6 +513,8 @@ this._commonService.getBranchCode()
         }
         if (this.datatobind.lstBankInformationAddressDTO != 0) {
           debugger;
+          console.log('edit data', this.datatobind.lstBankInformationAddressDTO);
+
           this.addressdetails.editdata(this.datatobind.lstBankInformationAddressDTO, 'Bank')
         }
         //console.log(this.bankmasterform.value)
@@ -786,72 +793,72 @@ this._commonService.getBranchCode()
 
 
   addtogrid() {
-  this.submitted = true;
-  debugger;
+    this.submitted = true;
+    debugger;
 
-  if (this.validateupi()) {
+    if (this.validateupi()) {
 
-    const newUpi: any = {
-      pUpiid: this.bankmasterform.value.pUpiid,
-      pUpiname: this.bankmasterform.value.upiname,
-      pCreatedby: this.bankmasterform.value.pCreatedby,
-      // pStatusname: this.bankmasterform.value.pStatusname,
-      pStatusname: this.bankmasterform.value.pIsupiapplicable,
-      ptypeofoperation: "CREATE"
-    };
+      const newUpi: any = {
+        pUpiid: this.bankmasterform.value.pUpiid,
+        pUpiname: this.bankmasterform.value.upiname,
+        pCreatedby: this.bankmasterform.value.pCreatedby,
+        // pStatusname: this.bankmasterform.value.pStatusname,
+        pStatusname: this.bankmasterform.value.pIsupiapplicable,
+        ptypeofoperation: "CREATE"
+      };
 
-    this.gridData.push(newUpi);
-    console.log("Grid after add:", this.gridData);
+      this.gridData.push(newUpi);
+      console.log("Grid after add:", this.gridData);
 
-    // clear form controls
-    this.bankmasterform.patchValue({
-      pUpiid: "",
-      pUpiname: ""
-    });
+      // clear form controls
+      this.bankmasterform.patchValue({
+        pUpiid: "",
+        pUpiname: ""
+      });
 
-    this.submitted = false;
-    this.bankmastervalidations.pUpiid = "";
-    this.bankmastervalidations.pUpiname = "";
+      this.submitted = false;
+      this.bankmastervalidations.pUpiid = "";
+      this.bankmastervalidations.pUpiname = "";
 
+    }
   }
-}
 
   validateupi(): boolean {
-  let isValid = true;
+    let isValid = true;
 
-  const upiid = this.bankmasterform.value.pUpiid;
-  const upiname = this.bankmasterform.value.upiname;
+    const upiid = this.bankmasterform.value.pUpiid;
+    const upiname = this.bankmasterform.value.upiname;
 
-  // required fields
-  if (!upiid) {
-    this.upigridvalidation = true;
-    this.bankmastervalidations.pUpiid = "UPI ID Required";
-    isValid = false;
+    // required fields
+    if (!upiid) {
+      this.upigridvalidation = true;
+      this.bankmastervalidations.pUpiid = "UPI ID Required";
+      isValid = false;
+    }
+
+    if (!upiname) {
+      this.upigridvalidation = true;
+      this.bankmastervalidations.pUpiname = "UPI Link with Required";
+      isValid = false;
+    }
+
+    // check duplicates
+    const duplicateId = this.gridData.find((d: any) => d.pUpiid === upiid);
+    if (duplicateId) {
+      this.bankmastervalidations.pUpiid = "UPI ID already exists!";
+      isValid = false;
+    }
+
+    const duplicateName = this.gridData.find((d: any) => d.pUpiname === upiname);
+    if (duplicateName) {
+      this.bankmastervalidations.pUpiname = "UPI Link already exists!";
+      isValid = false;
+    }
+
+    this.upigridvalidation = !isValid;
+
+    return isValid;
   }
-
-  if (!upiname) {
-    this.upigridvalidation = true;
-    this.bankmastervalidations.pUpiname = "UPI Link with Required";
-    isValid = false;
-  }
-
-  // check duplicates
-  const duplicateId = this.gridData.find((d: any) => d.pUpiid === upiid);
-  if (duplicateId) {
-    this.bankmastervalidations.pUpiid = "UPI ID already exists!";
-    isValid = false;
-  }
-
-  const duplicateName = this.gridData.find((d: any) => d.pUpiname === upiname);
-  if (duplicateName) {
-    this.bankmastervalidations.pUpiname = "UPI Link already exists!";
-    isValid = false;
-  }
-
-  this.upigridvalidation = !isValid;
-
-  return isValid;
-}
 
 
   getapi() {

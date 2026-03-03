@@ -173,7 +173,15 @@ ngOnInit(): void {
     });
 }
 removeHandler(event: any, row: any): void {
-  console.log('Remove clicked for row:', row);
+debugger
+  if (!row?.paymentId) {
+    console.error('Invalid row data');
+    return;
+  }
+
+  const receipt = btoa(`${row.paymentId},Payment Voucher`);
+
+  window.open(`/#/PaymentVoucherReport?id=${receipt}`, '_blank');
 }
 formatCurrency(amount: number): string {
     return this.currencyPipe.transform(amount, 'INR', 'symbol', '1.2-2') || '';
