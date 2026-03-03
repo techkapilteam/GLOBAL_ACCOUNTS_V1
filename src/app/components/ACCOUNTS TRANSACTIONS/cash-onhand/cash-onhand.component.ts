@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DataBindingDirective, SelectableSettings } from '@progress/kendo-angular-grid';
 import { GroupDescriptor } from '@progress/kendo-data-query';
@@ -10,6 +10,7 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { CommonService } from '../../../services/common.service';
+import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 declare var $: any;
 @Component({
   selector: 'app-cash-onhand',
@@ -31,10 +32,12 @@ declare var $: any;
 
 export class CashOnhandComponent implements OnInit {
   @ViewChild(DataBindingDirective, { static: true }) dataBinding!: DataBindingDirective;
+  // @ViewChild('search', { static: false }) searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('search') searchInput?: ElementRef<HTMLInputElement>;
   showhidegridcolumns = false;
   gridData: any = [];
   //  public gridView: DataResult;
-  gridDatatemp = [];
+  gridDatatemp:any[] = [];
   BanksList: any[] = [];
   BankNamesList: any[] = [];
   amounttotal: any;
@@ -70,6 +73,7 @@ export class CashOnhandComponent implements OnInit {
   pdfstatus = "All";
   count = 0;
   pcashonhandbalance: any;
+  currencyCode!:'INR';
   // cancel = false;
   // bankselection = false;
   hiddendate = true;
@@ -158,7 +162,11 @@ export class CashOnhandComponent implements OnInit {
       // SearchClear: [''],
       schemaname: [this._commonService.getschemaname()],
       fromdate: [new Date()],
-      todate: [new Date()],
+      // todate: [new Date()],
+       todate: [{ value: new Date(), disabled: true }],
+
+
+      
       asondate: ['']
     })
     this.companydetails = this._commonService._getCompanyDetails();
@@ -171,7 +179,7 @@ export class CashOnhandComponent implements OnInit {
     this.bankid = 0;
     this.banknameshowhide = false;
     this.CashOnHandValidation = {};
-    //this.GetBankBalance(this.bankid);
+    // this.GetBankBalance(this.bankid);
     this.GetCashonhandBalance();
 
     // this._accountingtransaction.GetCAOBranchList(this._commonService.getschemaname()).subscribe(bankslist => {
@@ -209,7 +217,8 @@ export class CashOnhandComponent implements OnInit {
   
   ).subscribe(res => {
       debugger;
-      this.BankNamesList = res;
+      // this.BankNamesList = res;
+      this.BankNamesList = res.banklist;
 
 
 
@@ -240,13 +249,15 @@ export class CashOnhandComponent implements OnInit {
 
 
   GetCashonhandBalance() {
+    debugger
     this._accountingtransaction.GetCashonhandBalance(
       this._commonService.getschemaname(),this._commonService.getbranchname(),this._commonService.getBranchCode()
       ,this._commonService.getCompanyCode()
     ).subscribe(data => {
-      console.log(data);
-      this.pcashonhandbalance = data;
-      if (parseFloat(this.pcashonhandbalance) != 0) {
+      console.log('BALCE',data);
+      this.pcashonhandbalance = data[0].balance;
+      // if (parseFloat(this.pcashonhandbalance) != 0) {
+      if (parseFloat(this.pcashonhandbalance) == 0) {
         this.buttonname = "Update";
         this.GetChequesOnHand("");
       } else {
@@ -256,7 +267,11 @@ export class CashOnhandComponent implements OnInit {
   }
   GetBankBalance(bankid: any) {
     debugger;
-    this._accountingtransaction.GetBankBalance(bankid).subscribe(bankdetails => {
+    this._accountingtransaction.GetBankBalance(
+            '29-02-2024',
+      bankid,
+      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
+    ).subscribe(bankdetails => {
       debugger
       this.bankbalancedetails = bankdetails;
       if (this.bankid == 0) {
@@ -290,11 +305,12 @@ export class CashOnhandComponent implements OnInit {
     this.gridLoading = true;
     let fromdate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['fromdate'].value);
     let todate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['todate'].value);
-    let caobarnch=this.CashOnHandForm.controls['bankname'].value;
+    // let asOnDate = this._commonService.getFormatDateNormal(this.CashOnHandForm.controls['asondate'].value);
+    // let caobarnch=this.CashOnHandForm.controls['bankname'].value;
     this.disableShowbutton = true;
     this.showbuttontext = "Processing"
     // this._accountingtransaction.GetCashOnHandData(bankid).subscribe(data => {
-    this._accountingtransaction.GetCashOnHandData_(this._commonService.getbranchname(),caobarnch,
+    this._accountingtransaction.GetCashOnHandData_(this._commonService.getbranchname(),
        fromdate, todate, this.AsOnDate,this._commonService.getCompanyCode(),this._commonService.getBranchCode(),this._commonService.getschemaname()).subscribe(data => {
       debugger;
       console.log(data)
@@ -368,14 +384,17 @@ export class CashOnhandComponent implements OnInit {
       this.SelectBankData = event.target.value;
       this.banknameshowhide = true;
       for (let i = 0; i < this.BanksList.length; i++) {
-        if (event.target.value == this.BanksList[i].branch_name) {
+        if (event.target.value == this.BanksList[i].branchName) {
           this.bankdetails = this.BanksList[i];
           break;
         }
       }
-      this.bankid = this.bankdetails.branch_code;
-      this.bankname = this.bankdetails.branch_name;
-      this.caobranchid = this.bankdetails.branch_config_id;
+      // this.bankid = this.bankdetails.branch_code;
+      this.bankid = this.bankdetails.branchCode;
+      // this.bankname = this.bankdetails.branch_name;
+      this.bankname = this.bankdetails.branchName;
+      this.caobranchid = this.bankdetails.branchConfigurationId;
+      // this.caobranchid = this.bankdetails.branch_config_id;
       //   if (this.bankdetails.pbankbalance < 0) {
       //       this.bankbalance = Math.abs(this.bankdetails.pbankbalance)
       //       this.bankbalancetype = "Cr";
@@ -611,36 +630,64 @@ export class CashOnhandComponent implements OnInit {
     //   }
   }
 
-  All() {
-    $('#search').val("");
-    this.gridData = [];
-    this.gridDatatemp = [];
-    // this.dataTemp = [];
-    this.GridColumnsShow();
-    this.status = "all";
-    this.pdfstatus = "All"
-    this.gridData = JSON.parse(JSON.stringify(this.ChequesOnHandData));
-    this.gridDatatemp = this.gridData;
-    // this.dataTemp = JSON.parse(JSON.stringify(this.ChequesOnHandData))
-    this.gridData = this.ChequesOnHandData;
+  // All() {
+  //   this.CashOnHandForm
+  //   $('#search').val("");
+  //   this.gridData = [];
+  //   this.gridDatatemp = [];
+  //   // this.dataTemp = [];
+  //   this.GridColumnsShow();
+  //   this.status = "all";
+  //   this.pdfstatus = "All"
+  //   this.gridData = JSON.parse(JSON.stringify(this.ChequesOnHandData));
+  //   this.gridDatatemp = this.gridData;
+  //   // this.dataTemp = JSON.parse(JSON.stringify(this.ChequesOnHandData))
+  //   this.gridData = this.ChequesOnHandData;
 
-    console.log(this.gridData);
-    this.amounttotal = 0;
+  //   console.log(this.gridData);
+  //   this.amounttotal = 0;
 
-    //this.amounttotal = parseFloat(this.gridData.reduce((sum, c) => sum + c.ptotalreceivedamount, 0));
-    // custom page navigation
-    this.pageCriteria.totalrows = this.gridData.length;
-    this.pageCriteria.TotalPages = 1;
-    if (this.pageCriteria.totalrows > this.pageCriteria.pageSize)
-      this.pageCriteria.TotalPages = parseInt((this.pageCriteria.totalrows / this.pageCriteria.pageSize).toString()) + 1;
-    if (this.gridData.length < this.pageCriteria.pageSize) {
-      this.pageCriteria.currentPageRows = this.gridData.length;
-    }
-    else {
-      this.pageCriteria.currentPageRows = this.pageCriteria.pageSize;
-    }
+  //   //this.amounttotal = parseFloat(this.gridData.reduce((sum, c) => sum + c.ptotalreceivedamount, 0));
+  //   // custom page navigation
+  //   this.pageCriteria.totalrows = this.gridData.length;
+  //   this.pageCriteria.TotalPages = 1;
+  //   if (this.pageCriteria.totalrows > this.pageCriteria.pageSize)
+  //     this.pageCriteria.TotalPages = parseInt((this.pageCriteria.totalrows / this.pageCriteria.pageSize).toString()) + 1;
+  //   if (this.gridData.length < this.pageCriteria.pageSize) {
+  //     this.pageCriteria.currentPageRows = this.gridData.length;
+  //   }
+  //   else {
+  //     this.pageCriteria.currentPageRows = this.pageCriteria.pageSize;
+  //   }
+  // }
+
+
+
+All() {
+
+  // Clear search safely
+  if (this.searchInput?.nativeElement) {
+    this.searchInput.nativeElement.value = '';
   }
 
+  this.gridData = [...this.ChequesOnHandData];
+  this.gridDatatemp = [...this.gridData];
+
+  this.status = "all";
+  this.pdfstatus = "All";
+
+  this.amounttotal = 0;
+
+  this.pageCriteria.totalrows = this.gridData.length;
+  this.pageCriteria.TotalPages = Math.ceil(
+    this.pageCriteria.totalrows / this.pageCriteria.pageSize
+  );
+
+  this.pageCriteria.currentPageRows =
+    Math.min(this.gridData.length, this.pageCriteria.pageSize);
+
+  console.log(this.gridData);
+}
 
   pdfOrprint(printorpdf: any) {
     debugger;
@@ -814,9 +861,12 @@ export class CashOnhandComponent implements OnInit {
               chequsonhanddata.ptransactiondate = this._commonService.getFormatDateNormal(chequsonhanddata.ptransactiondate);
               chequsonhanddata.fromdate = this._commonService.getFormatDateNormal(chequsonhanddata.fromdate);
               chequsonhanddata.todate = this._commonService.getFormatDateNormal(chequsonhanddata.todate);
-              chequsonhanddata.pcaobranchcode = this.bankdetails.branch_code;
-              chequsonhanddata.pcaobranchname = this.bankdetails.branch_name;
-              chequsonhanddata.pcaobranchid = this.bankdetails.branch_config_id;
+              chequsonhanddata.pcaobranchcode = this.bankdetails.branchCode;
+              // chequsonhanddata.pcaobranchcode = this.bankdetails.branch_code;
+              // chequsonhanddata.pcaobranchname = this.bankdetails.branch_name;
+              chequsonhanddata.pcaobranchname = this.bankdetails.branchName;
+              chequsonhanddata.pcaobranchid = this.bankdetails.branchConfigurationId;
+              // chequsonhanddata.pcaobranchid = this.bankdetails.branch_config_id;
               chequsonhanddata.pCreatedby = this._commonService.getCreatedBy();
               chequsonhanddata.banknameForLegal = this.selectedBankid;
               let form = JSON.stringify(chequsonhanddata);
@@ -919,23 +969,50 @@ export class CashOnhandComponent implements OnInit {
     }
   }
 
-  Clear() {
-    $('#search').val("");
-    this.CashOnHandValidation = {};
-    this.CashOnHandForm.reset();
-    this.ngOnInit();
-    this.count = 0;
-    this.DataForSaving = [];
-    this.gridData = [];
-    //  $("#bankselection").val("");
-    //   this.ShowBankErrorMsg = false;
-    this.SelectBankData = "";
-    this.jvlistDatanew = [];
-    this.allrowsSelected = false;
-    this.selectedtotal = 0;
-    //    document.getElementById('bankselection').style.border = "";
+  // Clear() {
+  //   debugger
+  //   $('#search').val("");
+  //   this.CashOnHandValidation = {};
+  //   this.CashOnHandForm.reset();
+  //   this.ngOnInit();
+  //   this.count = 0;
+  //   this.DataForSaving = [];
+  //   this.gridData = [];
+  //   //  $("#bankselection").val("");
+  //   //   this.ShowBankErrorMsg = false;
+  //   this.SelectBankData = "";
+  //   this.jvlistDatanew = [];
+  //   this.allrowsSelected = false;
+  //   this.selectedtotal = 0;
+  //   //    document.getElementById('bankselection').style.border = "";
 
+  // }
+  Clear() {
+
+  debugger;
+
+  // ✅ Clear search box safely
+  if (this.searchInput?.nativeElement) {
+    this.searchInput.nativeElement.value = '';
   }
+
+  // Reset validation object
+  this.CashOnHandValidation = {};
+
+  // Reset reactive form properly
+  this.CashOnHandForm.reset();
+
+  // DO NOT call ngOnInit() manually ❌
+  // this.ngOnInit();  <-- remove this line
+
+  this.count = 0;
+  this.DataForSaving = [];
+  this.gridData = [];
+  this.SelectBankData = "";
+  this.jvlistDatanew = [];
+  this.allrowsSelected = false;
+  this.selectedtotal = 0;
+}
 
   ShowBrsDeposit() {
     debugger;
@@ -1360,26 +1437,59 @@ this._commonService._JvListdownloadReportsPdf(
       }
     }
   }
-  asOnChange($event: any) {
-    debugger
-    console.log($event);
-    this.fromdate.maxDate = new Date();
-    this.todate.maxDate = new Date();
-    this.CashOnHandForm.controls['fromdate'].setValue(new Date());
-    this.CashOnHandForm.controls['todate'].setValue(new Date());
-    if ($event.target.checked) {
-      this.fromdatevisible = false;
-      this.CashOnHandForm.controls['fromdate'].setValue(this.CashOnHandForm.controls['todate'].value);
-      this.datelable = "Date";
-      this.AsOnDate = "T";
-      $("#todate").prop("disabled", false);
-    } else {
-      this.fromdatevisible = true;
-      this.datelable = "To Date";
-      this.AsOnDate = "F";
-      $("#todate").prop("disabled", true);
-    }
+  // asOnChange($event: any) {
+  //   debugger
+  //   console.log($event);
+  //   this.fromdate.maxDate = new Date();
+  //   this.todate.maxDate = new Date();
+  //   this.CashOnHandForm.controls['fromdate'].setValue(new Date());
+  //   this.CashOnHandForm.controls['todate'].setValue(new Date());
+  //   if ($event.target.checked) {
+  //     this.fromdatevisible = false;
+  //     this.CashOnHandForm.controls['fromdate'].setValue(this.CashOnHandForm.controls['todate'].value);
+  //     this.datelable = "Date";
+  //     this.AsOnDate = "T";
+  //     $("#todate").prop("disabled", false);
+  //   } else {
+  //     this.fromdatevisible = true;
+  //     this.datelable = "To Date";
+  //     this.AsOnDate = "F";
+  //     $("#todate").prop("disabled", true);
+  //   }
+  // }
+  asOnChange(event: any) {
+  console.log(event);
+
+  const today = new Date();
+
+  this.fromdate.maxDate = today;
+  this.todate.maxDate = today;
+
+  this.CashOnHandForm.controls['fromdate'].setValue(today);
+  this.CashOnHandForm.controls['todate'].setValue(today);
+
+  if (event.target.checked) {
+    this.fromdatevisible = false;
+    this.datelable = "Date";
+    this.AsOnDate = "T";
+
+    // enable todate properly
+    this.CashOnHandForm.get('todate')?.enable();
+
+    // set same value
+    this.CashOnHandForm.get('fromdate')?.setValue(
+      this.CashOnHandForm.get('todate')?.value
+    );
+
+  } else {
+    this.fromdatevisible = true;
+    this.datelable = "To Date";
+    this.AsOnDate = "F";
+
+    // disable todate properly
+    this.CashOnHandForm.get('todate')?.disable();
   }
+}
   getCashOnHandData() {
     debugger
     // if(this.checkValidations(this.CashOnHandForm,true)){
@@ -1390,10 +1500,18 @@ this._commonService._JvListdownloadReportsPdf(
       this.CashOnHandValidation['bankname'] = "Bank Name Required";
     }
   }
-  fromdateChange($event: any) {
-    if ($event != undefined) {
-      this.todate.minDate = new Date($event);
-      $("#todate").prop("disabled", false);
-    }
+  // fromdateChange($event: any) {
+  //   if ($event != undefined) {
+  //     this.todate.minDate = new Date($event);
+  //     $("#todate").prop("disabled", false);
+  //   }
+  // }
+
+
+  fromdateChange(event: any) {
+  if (event) {
+    this.todate.minDate = new Date(event);
+    this.CashOnHandForm.get('todate')?.enable();
   }
+}
 }

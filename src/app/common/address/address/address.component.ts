@@ -224,7 +224,8 @@ export class AddressComponent implements OnInit {
     }
     else if (this.Form == "Bank") {
       debugger;
-      this.addressForm.controls['pRecordid'].setValue(data[0].pRecordid)
+      // this.addressForm.controls['pRecordid'].setValue(data[0].pRecordid)
+      this.addressForm.controls['pRecordid'].setValue(data[0].bank_id)
       this.bindingdata(data)
     }
   }

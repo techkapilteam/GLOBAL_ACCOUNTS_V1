@@ -278,11 +278,25 @@
         <div class="form-group" *ngIf="showsubledger">
           <div class="input-group d-block">
             <label id="psubledgername" class="required-field" title="Sub Ledger">Sub Ledger</label>
-            <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
-              formControlName="psubledgerid" bindLabel="psubledgername" bindValue="psubledgerid" [multiple]=false
+
+            <!-- <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
+              formControlName="psubledgerid" bindLabel="subledgername" bindValue="subledgername" [multiple]=false
               placeholder="Select" [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
               (change)="subledger_Change($event)">
+            </ng-select> -->
+
+            <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
+              formControlName="psubledgerid" bindLabel="subledgername" bindValue="subledgerid" [multiple]="false"
+              placeholder="Select" [searchable]="true" [clearable]="true" dropdownPosition="bottom"
+              [clearOnBackspace]="true" (change)="subledger_Change($event)">
             </ng-select>
+
+            <!-- <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
+              formControlName="psubledgerid" bindLabel="psubledgername" [multiple]=false
+              placeholder="Select" [searchable]=true [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
+              (change)="subledger_Change($event)">
+            </ng-select> -->
+            <!--  bindValue="psubledgerid" -->
             <!--<div class="input-group-append">
                 <button class="btn btn-lg-icon rounded-right px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
               </div>-->
@@ -375,36 +389,33 @@
                         </ng-select>
                       </div>
 
-                                 <div class="form-group col-md-4" *ngIf="showgstno">
-                                                <label>GST No.</label>
-                                                <input type="text" class="form-control col-md-12" maxlength="15"
-                                                    appAlphanumeric appUppercase id="pgstno" title="GST No."
-                                                    formControlName="pgstno" name="pgstno"
-                                                    
-                                                    (blur)="gsno_change()" />
+                      <div class="form-group col-md-4" *ngIf="showgstno">
+                        <label>GST No.</label>
+                        <input type="text" class="form-control col-md-12" maxlength="15" appAlphanumeric appUppercase
+                          id="pgstno" title="GST No." formControlName="pgstno" name="pgstno" (blur)="gsno_change()" />
 
-                                                <!-- <app-validation-message [messgae]="formValidationMessages?.pgstno">
+                        <!-- <app-validation-message [messgae]="formValidationMessages?.pgstno">
                                                 </app-validation-message>
                                                 [ngClass]="{ 'is-invalid': formValidationMessages.pgstno }" -->
 
-                                            </div>
+                      </div>
 
-                        <div class="form-group col-md-4">
-                          <label class="required-field">GST(%)</label>
-                          <ng-select class="form-control" id="pgstpercentage" title="GST(%)"
-                            formControlName="pgstpercentage" (change)="gst_Change($event)">
-                            <ng-option value="">Select</ng-option>
-                            <ng-option *ngFor="let gst of gstlist" [value]="gst.pgstpercentage">
-                              {{gst.pgstpercentage}}
-                            </ng-option>
-                          </ng-select>
-                        </div>
-                        <!-- 
+                      <div class="form-group col-md-4">
+                        <label class="required-field">GST(%)</label>
+                        <ng-select class="form-control" id="pgstpercentage" title="GST(%)"
+                          formControlName="pgstpercentage" (change)="gst_Change($event)">
+                          <ng-option value="">Select</ng-option>
+                          <ng-option *ngFor="let gst of gstlist" [value]="gst.pgstpercentage">
+                            {{gst.pgstpercentage}}
+                          </ng-option>
+                        </ng-select>
+                      </div>
+                      <!-- 
                         trackBy: trackByFn<app-validation-message
                                                     [messgae]="formValidationMessages?.pgstpercentage">
                                                 </app-validation-message>
                                                  [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage } -->
-                     
+
                     </div>
 
                     <div class="row">
@@ -619,77 +630,6 @@
   <div class="row">
     <div class="col-md-12 col-xl-12" style="height: 400;">
       <div class="section-content mt-2">
-        <!-- <ngx-datatable class="material expandable table" [rows]="paymentslist1" columnMode="force" [headerHeight]="50"
-          [footerHeight]="50" [rowHeight]="50" [limit]="5" [scrollbarH]="true">
-          <ngx-datatable-column name="Actions" prop="" frozenLeft="True">
-            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row"
-              let-group="group">
-            
-              <label for="delete{{ rowIndex }}">
-                <div id="icon-delete" (click)="removeHandler(rowIndex)"></div>
-              </label>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Party Name" prop="ppartyname" [cellClass]="'cell-left'"
-            [headerClass]="'header-left'">
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Ledger Name" prop="pledgername" [cellClass]="'cell-left'"
-            [headerClass]="'header-left'"></ngx-datatable-column>
-          <ngx-datatable-column name="Sub Ledger Name" prop="psubledgername" [cellClass]="'cell-left'">
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Total Paid Amount" prop="ptotalamount" [cellClass]="'cell-right'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span
-                title="{{currencySymbol}} {{row.ptotalamount |  currency:currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}}
-                {{row.ptotalamount | currency:currencyCode:'symbol':'1.2-2'}}</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="Paid Amount" prop="pamount" [cellClass]="'cell-right'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <span
-                title="{{currencySymbol}} {{row.pamount |  currency:currencyCode:'symbol':'1.2-2'}}">{{currencySymbol}}
-                {{row.pamount | currency:currencyCode:'symbol':'1.2-2'}}</span>
-
-
-
-
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="GST Type" prop="pgstcalculationtype" [cellClass]="'cell-center'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.pgstcalculationtype==''">-- NA --</div>
-              <div *ngIf="row.pgstcalculationtype!=''" title="{{row.pgstcalculationtype}}">
-                {{row.pgstcalculationtype}}</div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="TDS Section" prop="pTdsSection" [cellClass]="'cell-left'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.pTdsSection==''">-- NA --</div>
-              <div *ngIf="row.pTdsSection!=''" title="{{row.pTdsSection}}">{{row.pTdsSection}}</div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="GST Percentage" prop="pgstpercentage" [cellClass]="'cell-center'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.pgstpercentage==0">-- NA --</div>
-              <div *ngIf="row.pgstpercentage!=0" title="{{row.pgstpercentage}}">{{row.pgstpercentage}}
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="TDS Amount" prop="ptdsamount" [cellClass]="'cell-right'">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.ptdsamount==0">-- NA --</div>
-              <div *ngIf="row.ptdsamount!=0"
-                title="{{currencySymbol}} {{row.ptdsamount |  currency:currencyCode:'symbol':'1.2-2'}}">
-                {{currencySymbol}} {{row.ptdsamount | currency:currencyCode:'symbol':'1.2-2'}}</div>
-
-            </ng-template>
-
-
-
-
-
-          </ngx-datatable-column>
-        </ngx-datatable> -->
 
 
 
@@ -721,9 +661,9 @@
               <td>{{rowData.ppartyname || '-- NA --'}}</td>
               <td>{{rowData.pledgername || '-- NA --'}}</td>
               <td>{{rowData.psubledgername || '-- NA --'}}</td>
-              <td class="text-right">{{currencySymbol}}{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2'
+              <td class="text-right">{{ rowData.ptotalamount | currency:currencyCode:'symbol':'1.2-2'
                 }}</td>
-              <td class="text-right">{{currencySymbol}}{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}
+              <td class="text-right">{{ rowData.pamount | currency:currencyCode:'symbol':'1.2-2' }}
               </td>
               <td class="text-center">{{ rowData.pgstcalculationtype || '-- NA --' }}</td>
               <td>{{ rowData.pTdsSection || '-- NA --' }}</td>
@@ -786,7 +726,7 @@
           </ngx-datatable-column>
         </ngx-datatable> -->
 
-        <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="300px">
+        <!-- <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="300px">
 
           <ng-template pTemplate="header">
             <tr>
@@ -824,8 +764,37 @@
             </tr>
           </ng-template>
 
-        </p-table>
+        </p-table> -->
+        <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="300px">
 
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Particulars</th>
+              <th style="text-align:right">Dr</th>
+              <th style="text-align:right">Cr</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-rowData>
+            <tr>
+              <td>{{ rowData.accountname }}</td>
+
+              <td style="text-align:right">
+                <span *ngIf="rowData.debitamount > 0">
+                  {{ rowData.debitamount | currency:currencyCode:'symbol':'1.2-2' }}
+                </span>
+              </td>
+
+              <td style="text-align:right">
+                <span *ngIf="rowData.creditamount > 0">
+                  {{ rowData.creditamount | currency:currencyCode:'symbol':'1.2-2' }}
+                </span>
+              </td>
+
+            </tr>
+          </ng-template>
+
+        </p-table>
 
       </div>
 

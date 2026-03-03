@@ -479,8 +479,8 @@ export class CommonService {
   // datepipe: any;
   private apiHostUrl: string | null = null;
 
-  currencysymbol = sessionStorage.getItem("currencyformat");
-  // currencysymbol='₹'
+  // currencysymbol = sessionStorage.getItem("currencyformat");
+  currencysymbol='₹'
 
   constructor(private http: HttpClient, private toastr: ToastrService, private _CookieService: CookieService, private datepipe: DatePipe, @Inject(LOCALE_ID) private locale: string) {
     this.pCreatedby = 'admin'; // or from auth/user session
