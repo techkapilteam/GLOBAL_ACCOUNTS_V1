@@ -189,12 +189,21 @@ export class ReceiptsAndPaymentsComponent {
       groupcode: ['', Validators.required],
       fromdate: [new Date(), Validators.required],
       todate: [new Date(), Validators.required]
-    });
+    }, { validators: this.dateRangeValidator });
 
     this.FormReceiptsandPaymentsGroup1 = this.fb.group({
       extractcode: ['', Validators.required]
     });
   }
+  private dateRangeValidator(group: FormGroup) {
+const from = group.get('fromdate')?.value;
+const to = group.get('todate')?.value;
+
+if (from && to && new Date(from) > new Date(to)) {
+return { dateRangeInvalid: true };
+}
+return null;
+}
 
   getGroupcodes(): void {
     if (!this.caoschema) return;

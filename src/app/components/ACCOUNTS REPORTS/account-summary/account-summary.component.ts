@@ -152,12 +152,16 @@ export class AccountSummaryComponent {
 
   loading = false;
   selectedDateMode = true;   
-  asOnDateFlag = 'T';
+  // asOnDateFlag = 'T';
+  betweendates: 'As On' | 'Between' = 'As On';;
+betweenfrom: string = '';
+betweento: string = '';
+inbetween: string = '';
 
   totalDebit = 0;
   totalCredit = 0;
-  AsOnDate!: string;
-  betweendates: any;
+  AsOnDate: string='T';
+  // betweendates: any;
 
   constructor(
     private fb: FormBuilder,
@@ -176,6 +180,10 @@ export class AccountSummaryComponent {
       ledgerId: ['', Validators.required],
       asOn: [true]
     });
+    this.betweendates = 'As On';
+  this.betweenfrom  = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
+  this.betweento    = '';
+  this.inbetween    = '';
 
     this.loadLedgerAccounts();
   }
@@ -199,7 +207,9 @@ export class AccountSummaryComponent {
 
   onDateModeChange(): void {
     this.selectedDateMode = this.accountSummaryForm.value.asOn;
-    this.asOnDateFlag = this.selectedDateMode ? 'T' : 'F';
+    this.AsOnDate = this.selectedDateMode ? 'T' : 'F';
+    this.betweendates = this.selectedDateMode ? 'As On' : 'Between';
+this.inbetween    = this.selectedDateMode ? '' : 'And';
 
     if (this.selectedDateMode) {
       this.accountSummaryForm.patchValue({
@@ -223,9 +233,13 @@ export class AccountSummaryComponent {
     const toDate = this.commonService.getFormatDateNormal(
       this.selectedDateMode ? formValue.fromDate : formValue.toDate
     )??'';
+    this.betweenfrom = this.datePipe.transform(formValue.fromDate, 'dd-MMM-yyyy') ?? '';
+this.betweento   = this.selectedDateMode 
+  ? '' 
+  : (this.datePipe.transform(formValue.toDate, 'dd-MMM-yyyy') ?? '');
 
     this.reportService
-      .GetLedgerSummary(fromDate, toDate, formValue.ledgerId, this.asOnDateFlag, 'MM220221P65','KAPILCHITS','KLC01','global')
+      .GetLedgerSummary(fromDate, toDate, formValue.ledgerId, this.AsOnDate, 'MM220221P65','KAPILCHITS','KLC01','global')
       .subscribe({
         next: (res) => {
           this.gridData = res ?? [];
@@ -305,8 +319,8 @@ export class AccountSummaryComponent {
   const rows: any[] = [];
   const rowsAsOn: any[] = [];
 
-  const fromDateRaw = this.accountSummaryForm.get('dfromdate')?.value;
-  const toDateRaw = this.accountSummaryForm.get('dtodate')?.value;
+  const fromDateRaw = this.accountSummaryForm.get('fromDate')?.value;
+  const toDateRaw = this.accountSummaryForm.get('toDate')?.value;
   
   
 

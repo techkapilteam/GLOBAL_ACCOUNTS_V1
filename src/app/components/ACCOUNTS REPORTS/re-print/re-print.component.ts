@@ -13,6 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from 'primeng/table';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SubscriberjvService } from '../../../services/Transactions/subscriber/subscriberjv.service';
+import { AccountReportsService } from 'src/app/services/account-reports.service';
 
 @Component({
   selector: 'app-re-print',
@@ -57,6 +58,7 @@ export class RePrintComponent implements OnInit {
   currencysymbol: string = '';
 
   commencementgridPage = new PageCriteria();
+  private _AccountService=inject(AccountReportsService);
 
   constructor(
     private numbertowords: NumberToWordsPipe,
@@ -320,17 +322,16 @@ export class RePrintComponent implements OnInit {
         : this.pageCriteria.pageSize;
   }
   getduplicateReport(): void {
-    debugger
     // if (!this.validateSaveDeatails(this.ReprintRepotForm)) return;
     //  window.open('/GeneralReceiptReport','_blank')
     //  this.router.navigate(['/GeneralReceiptReport'])
     // this.router.navigate(['/dashboard/GeneralReceiptReport']);
     const transType = this.ReprintRepotForm.controls['TransType'].value;
     const transNo = this.ReprintRepotForm.controls['Transno'].value;
-    const schemaName = this._commonService.getschemaname();
+    // const schemaName = this._commonService.getschemaname();
+    const schemaName = this._commonService.getbranchname();
 
     if (transType === 'General Receipt') {
-      debugger;
       this._AccountingReportsService
         .GetRePrintInterBranchGeneralReceiptbyId(transNo, 'accounts', 'KAPILCHITS', 'KLC01')
         .subscribe(count => {
@@ -421,7 +422,6 @@ export class RePrintComponent implements OnInit {
     }
 
     if (transType === 'Journal Voucher') {
-      debugger;
       const receipt = btoa(`${transNo},Journal Voucher,Reprint`);
       this._AccountingReportsService.GetJvReport(transNo,'accounts','global','KAPILCHITS','KLC01').subscribe(res => {
         if (res){
@@ -489,7 +489,6 @@ export class RePrintComponent implements OnInit {
     }
 
     if (transType === 'Chit Payment') {
-      debugger;
       this._AccountingReportsService.GetChitPaymentReportData(transNo,'accounts','KAPILCHITS','KLC01','global').subscribe(res => {
         if (res) {
           const receipt = btoa(`${transNo},Chit Payment Voucher,Reprint`);
@@ -507,7 +506,7 @@ export class RePrintComponent implements OnInit {
     }
 
     if (transType === 'GST BILL') {
-      this._AccountingTransactionsService
+      this._AccountService
         .Getgstvocuherprint(schemaName, transNo)
         .subscribe(res => {
           this.gstvoucherprintdata = res ?? [];
@@ -518,6 +517,7 @@ export class RePrintComponent implements OnInit {
   }
 
   print(): void {
+    debugger
     let totaligstamt = 0;
     let totalamtBeforeTax = 0;
     let totalCGSTAmt = 0;
@@ -530,8 +530,8 @@ export class RePrintComponent implements OnInit {
     const gridrows: any[] = [];
 
     this.gstvoucherprintdata.forEach((e: any) => {
-      proundoff_amount = e.proundoff_amount;
-      tdsamount = e.invoice_tds_amount;
+      proundoff_amount = parseFloat(e.proundoff_amount)||0;
+      tdsamount = parseFloat(e.invoice_tds_amount)||0;
       totalamtBeforeTax += e.invoice_amount;
       totaldiscountAmt += e.product_discount;
       totalamtAfterTax += e.invoice_total_amount;

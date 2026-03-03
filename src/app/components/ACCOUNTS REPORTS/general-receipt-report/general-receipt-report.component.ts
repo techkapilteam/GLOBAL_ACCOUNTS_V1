@@ -177,7 +177,7 @@ getTotalAmount(list: any[]): number {
       subList.forEach((item: any, i: number) => {
         tableRows.push([
           i + 1,
-          item.pAccountname,
+          item.account_name,
           this.commonService.currencyFormat(item.ledger_amount)
         ]);
       });

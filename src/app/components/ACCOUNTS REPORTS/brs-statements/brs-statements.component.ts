@@ -162,7 +162,7 @@ get f() { return this.BrsStatementsReport.controls; }
     private datePipe: DatePipe,
     private router: Router,
     private fb: FormBuilder,
-    private _CommonService: CommonService,
+    public _CommonService: CommonService,
     private _bankBookService: BankBookService,
     private _accountingReportsservice: AccountingReportsService
   ) {
@@ -196,17 +196,29 @@ get f() { return this.BrsStatementsReport.controls; }
 
     this.setPageModel();
 
-    this.BrsStatementsReport = this.fb.group({
+   this.BrsStatementsReport = this.fb.group({
   fromDate: this.fb.control<Date | null>(this.today),
   toDate: this.fb.control<Date | null>(this.today),
   pbankname: this.fb.control<string | null>(null),
   branchschema: this.fb.control<string | null>(null),
-  Bank: this.fb.control<string | null>('CREDIT')
+  Bank: this.fb.control<string>('CREDIT')
+},
+{
+  validators: this.dateRangeValidator
 });
-
     this.bankBookDetails();
     this.relesechange('CREDIT');
   }
+  private dateRangeValidator(group: FormGroup) {
+    debugger
+const from = group.get('fromDate')?.value;
+const to = group.get('toDate')?.value;
+
+if (from && to && new Date(from) > new Date(to)) {
+return { dateRangeInvalid: true };
+}
+return null;
+}
 
   bankBookDetails(): void {
     this._bankBookService.GetBankNames(this._CommonService.getschemaname(),
@@ -221,6 +233,7 @@ get f() { return this.BrsStatementsReport.controls; }
   }
 
   ToDateChange(event: any): void {
+    debugger
     this.dpConfig1 = {
       ...this.dpConfig1,
       minDate: event
@@ -356,19 +369,21 @@ get f() { return this.BrsStatementsReport.controls; }
       let ptotalamount = this._CommonService.convertAmountToPdfFormat(element.ptotalamount);
 
       if (element.pissuedate) {
-        this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
-        this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+        // this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
+        // this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+        const dateObj = this._CommonService.getDateObjectFromDataBase(element.pissuedate);
+this.pissuedate = this._CommonService.getFormatDateGlobal(dateObj);
       }
       else {
         this.pissuedate = "--NA--";
       }
-      if (element.pissuedate) {
-        this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
-        this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
-      }
-      else {
-        this.pissuedate = "--NA--";
-      }
+      // if (element.pissuedate) {
+      //   this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
+      //   this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+      // }
+      // else {
+      //   this.pissuedate = "--NA--";
+      // }
 
 
       if (element.pclearDate !='[object Object]') {
@@ -416,7 +431,7 @@ get f() { return this.BrsStatementsReport.controls; }
      
       if (element.pissuedate) {
         this.pissuedate = String(this._CommonService.getDateObjectFromDataBase(element.pissuedate))
-        this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
+        // this.pissuedate = this._CommonService.getFormatDateGlobal(element.pissuedate);
       }
       else {
         this.pissuedate = "--NA--";

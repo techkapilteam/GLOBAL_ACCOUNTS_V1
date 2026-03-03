@@ -340,9 +340,10 @@ export class AccountingTransactionsService {
     return this._CommonService.postAPI('/AccountingTransactions/SavePettyCash', data)
   }
 
-  saveGeneralReceipt(data: any) {
-    return this._CommonService.postAPI('/AccountingTransactions/SaveGeneralReceipt', data)
-  }
+  saveGeneralReceipt(data: any, branchSchema: string, globalSchema: string) {const params = new HttpParams()
+    .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
+  return this._CommonService.postAPI('/Accounts/savegeneralreceipt', data);
+}
   saveJournalVoucher(data: any) {
     return this._CommonService.postAPI('/accountingtransactions/SaveJournalVoucher', data)
   }
@@ -444,17 +445,18 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
     set('BranchCode', this._CommonService.getBranchCode()).set('CompanyCode', this._CommonService.getCompanyCode()).set('GlobalSchema', 'global').set('TaxSchema', 'taxes');
     return this._CommonService.getAPI('/Accounts/getPartyDetailsbyid',params,'YES');
 }
-  GetCashAmountAccountWise(formname: any, account_id: any, transaction_date: any): Observable<any> {
-    const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname()).set('account_id', account_id).set('transaction_date', transaction_date);
-    return this._CommonService.getAPI('/AccountingTransactions/GetCashAmountAccountWise', params, 'YES')
+  GetCashAmountAccountWise(formname: any, BranchSchema: any , account_id: any, transaction_date: any,
+    GlobalSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
+    const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema)
+    .set('account_id', account_id).set('transaction_date', transaction_date)
+    .set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetCashAmountAccountWise', params, 'YES')
   }
-
   GettdsLedgerAccountsList(formname: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('formname', formname).set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/AccountingTransactions/GetLedgerAccountList', params, 'YES');
   }
-
   GettdsLedgerAccountsList1(formname: any, BranchSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode).set('GlobalSchema', GlobalSchema);
@@ -515,6 +517,10 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
   SaveForemanDetails(data: any) {
     return this._CommonService.postAPI('/accountingtransactions/SaveForemanDetails', data)
   }
+  getBanklist(GlobalSchema: 'global',BranchSchema: 'accounts', BranchCode: 'KLC01', CompanyName: 'KAPILCHITS'): Observable<any> {
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('BranchCode', BranchCode).set('CompanyName', CompanyName);
+    return this._CommonService.getAPI('/Accounts/getBankTransferDetails', params, 'YES');
+  }
   getBankTransferDetails(BranchSchema: any, todate: any, banktransferid: any): Observable<any> {
     const params = new HttpParams().set('BranchSchema', BranchSchema).set('banktransferid', banktransferid).set('todate', todate);
     return this._CommonService.getAPI('/accountingtransactions/getBankTransferDetails', params, 'YES');
@@ -523,9 +529,9 @@ GetPartyDetailsById(ppartyid: number): Observable<any> {
     const params = new HttpParams().set('Branchschema', Branchschema).set('debitledger', debitledger).set('todate', todate);
     return this._CommonService.getAPI('/AccountingTransactions/GetPayrollJVDetailsforwelfare', params, 'YES');
   }
-  GetBankTransferTypes(BranchSchema: any) {
-    const params = new HttpParams().set('branchSchema', BranchSchema);
-    return this._CommonService.getAPI('/accountingtransactions/GetBankTransferTypes', params, 'YES');
+  GetBankTransferTypes(BranchSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
+    const params = new HttpParams().set('branchSchema', BranchSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetBankTransferTypes', params, 'YES');
 
   }
 
