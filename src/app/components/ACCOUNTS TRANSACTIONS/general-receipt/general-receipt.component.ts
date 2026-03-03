@@ -41,18 +41,8 @@ export class GeneralReceiptComponent implements OnInit {
     this.loading = true;
 
     this.accountingTransactionsService
-      .GetGeneralReceiptsData(
-        'global',
-        'accounts',
-        'taxes',
-       'KAPILCHITS',
-        'KLC01'
-      )
-      .subscribe({
-        next: (data: any[]) => {
-
-          this.loading = false;
-
+      .GetGeneralReceiptsData('global', 'accounts', 'taxes', 'KAPILCHITS','KLC01' )
+      .subscribe({ next: (data: any[]) => { this.loading = false;
           if (!data || data.length === 0) {
             this.resetGrid();
             return;
