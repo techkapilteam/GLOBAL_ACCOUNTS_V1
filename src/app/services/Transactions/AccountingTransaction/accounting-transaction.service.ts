@@ -7,6 +7,7 @@ import { CommonService } from '../../common.service';
   providedIn: 'root'
 })
 export class AccountingTransactionsService {
+ 
 
   httpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -34,7 +35,11 @@ export class AccountingTransactionsService {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
   }
 
-
+GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt: any, searchtext: any, printorview: any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('depositedBankid', bankid).set('BranchSchema', this._CommonService.getschemaname()).set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext).set('printorview', printorview);
+    return this._CommonService.getAPI('/ChequesOnHand/GetChequesInBankData', params, 'YES')
+  }
   GetReceiptsandPaymentsLoadingDataPettyCash(): Observable<any> {
 
     const params = new HttpParams().set('formname', 'PETTYCASH').set('BranchSchema', 'accounts').set('companyCode', 'KAPILCHITS')
@@ -194,7 +199,9 @@ export class AccountingTransactionsService {
     return this._CommonService.getAPI('/Accounts/GetCAOBranchList', params, 'YES')
   }
 
-  GetChequesOnHandData(_BankId: any, BrsFromDate: any, BrsTodate: any, GlobalSchema: any, BranchSchema: any, startindex: any,endindex: any, _searchText: any, printorview: any, companyCode: any, branchCode: any): Observable<any> {
+  GetChequesOnHandData(_BankId: any, BrsFromDate: any, BrsTodate: any, GlobalSchema: any,
+     BranchSchema: any, startindex: any,endindex: any, _searchText: any, printorview: any, 
+     companyCode: any, branchCode: any): Observable<any> {
     const params = new HttpParams().set('_BankId', _BankId).set('BrsFromDate', BrsFromDate).set('BrsTodate', BrsTodate).set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('startindex', startindex).set('endindex', endindex).set('searchtext', _searchText).set('printorview', printorview).set('companyCode', companyCode).set('branchCode', branchCode);
     return this._CommonService.getAPI('/Accounts/GetChequesOnHandData', params, 'YES')
   }
@@ -277,6 +284,9 @@ export class AccountingTransactionsService {
     debugger;
     const params = new HttpParams().set('depositedBankid', bankid).set('BranchSchema', this._CommonService.getschemaname()).set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext).set('printorview', printorview).set('receiptDate', receiptDate).set('chequeintype', chequeintype);
     return this._CommonService.getAPI('/ChequesOnHand/GetUPIClearedData', params, 'YES')
+  }
+SaveChequesIssued(data: any) {
+    return this._CommonService.postAPI('/ChequesOnHand/SaveChequesIssued', data)
   }
 
   GetUPIClearedDataForTotalCount(bankid: any, startindex: any, endindex: any, modeofreceipt: any, searchtext: any, printorview: any, receiptDate: any, chequeintype: any): Observable<any> {

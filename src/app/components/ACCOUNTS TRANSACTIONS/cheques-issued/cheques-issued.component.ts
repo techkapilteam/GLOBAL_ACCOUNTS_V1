@@ -1283,7 +1283,7 @@ Save() {
       this.buttonname = 'Save';
       this.disablesavebutton = false;
     },
-    error: (err) => {
+    error: (err: any) => {
       this._commonService.showErrorMessage(err);
       this.buttonname = 'Save';
       this.disablesavebutton = false;
