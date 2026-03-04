@@ -373,6 +373,7 @@ SaveChequesIssued(data: any) {
       .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
     return this._CommonService.postAPI('api/Accounts/savegeneralreceipt', data);
   }
+  
   saveJournalVoucher(data: any) {
     return this._CommonService.postAPI('/accountingtransactions/SaveJournalVoucher', data)
   }

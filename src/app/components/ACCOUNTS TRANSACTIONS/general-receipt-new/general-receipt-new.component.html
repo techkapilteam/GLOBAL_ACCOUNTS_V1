@@ -41,7 +41,55 @@
                 Bank - {{currencySymbol}} {{bankBalance}}
               </label>
             </div>
+            <div class="form-check form-check-inline radio-btn " hidden>
+                <input class="form-check-input" type="radio" name="pmodofreceipt" formControlName="pmodofreceipt"
+                  id="wallet" value="wallet">
+                <label class="mt-1 w-m-100 text-center" (click)="Paymenttype('Wallet')" for="wallet"> Wallet -
+                  {{WalletBalance }}</label>
+            </div>
           </div>
+            <div class="wallet" *ngIf="walletshowhide">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="form-group">
+
+                    <label>Select Wallet </label>
+                    <div class="input-group">
+                      <select class="form-control ">
+                        <option data-toggle="collapse" data-target="#wallet1">PayTM</option>
+                        <option data-toggle="collapse" data-target="#icici-bal">Phone Pay</option>
+                        <option data-toggle="collapse" data-target="#icici-bal">Airtel Money</option>
+                      </select>
+                      <div class="input-group-append">
+                        <button class="btn btn-lg-icon px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class=""
+                            width="20px" height="20px"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3  ">
+                  <div class="form-group">
+                    <label>Reference No.</label>
+                    <input class="form-control" type="text" placeholder="Reference No ">
+                  </div>
+                </div>
+                <div class="col-md-3  ">
+                  <div class="form-group">
+                    <label>Transaction Date</label>
+                    <input class="form-control" type="text" placeholder="Transaction Date">
+                  </div>
+                </div>
+
+
+                <div class="col-md-12 col-xl-12 mb-2">
+                  <div id="sbi-bal" class="collapse">
+                    <span class="badge-success badge p-1 font-weight-light ">Bank Book - 60,000 Dr </span>
+                    <span class="badge-warning badge p-1 font-weight-light">Pass Book - 1,00,000 Dr </span>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
         <div *ngIf="bankshowhide" class="card p-3 mb-3">
           <div class="border rounded p-2 mb-3 bg-light d-flex gap-4">
@@ -66,9 +114,150 @@
               <label>Credit Card</label>
             </div>
           </div>
+              <div class="debit" *ngIf="DebitShowhide">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pCardNumber" class="required-field" title="Debit Card">Debit Card </label>
+                          <!-- <input type="text" class="form-control" mask="[00]\[000]" placeholder="XXXX XXXX XXXX 3066"
+                          maxlength="12"> -->
+                          <input class="form-control" type="text" placeholder="XXXX XXXX XXXX 3066" appNumbersonly
+                            maxlength="16" (blur)="CardNoChange()" formControlName="pCardNumber"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pCardNumber }">
+                          <!-- <span class=" position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
+                          <app-validation-message [messgae]="formValidationMessages?.pCardNumber">
+                          </app-validation-message>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pbankname" title="Bank / Financial Services">Bank / Financial Services</label>
+                          <!-- <input class="form-control" type="text" placeholder="SBI-Master Card"> -->
+                          <input class="form-control" type="text" placeholder="SBI-Master Card"
+                            (blur)="BankNameChange()" appCharactersonly appTitlecaseword maxlength="30"
+                            formControlName="pbankname" appCharactersonly appTitlecaseword maxlength="30"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pbankname }">
+                          <app-validation-message [messgae]="formValidationMessages?.pbankname">
+                          </app-validation-message>
+                        </div>
+                      </div>
+                    
+                      <div class="col-md-4  ">
+                        <div class="form-group">
+                          <label id="pChequenumber" class="required-field" title="Reference No">Reference No.</label>
+                          <!-- <input class="form-control" type="text" placeholder="Cheque No"> -->
+                          <input class="form-control" type="text" placeholder="Reference No" maxlength="100"
+                            appNumbersonly (blur)="ChequeNoChange()" formControlName="pChequenumber"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }">
+                          <!-- <span class=" position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
+                          <app-validation-message [messgae]="formValidationMessages?.pChequenumber">
+                          </app-validation-message>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pdepositbankid" class="required-field" title="Deposited Bank Name">Deposited Bank
+                            Name</label>
+                          <select class="form-control" (change)="typeofDepositBank($event)"
+                            formControlName="pdepositbankid" [attr.disabled]="DepositBankDisable? '' : null"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pdepositbankid }">
+                            <option value="" disabled>Select</option>
+                            <option *ngFor="let bank of banklist;trackBy: trackByFn" [value]="bank.pbankid">
+                              {{bank.pbankname}}</option>
+                          </select>
+                          <app-validation-message [messgae]="formValidationMessages?.pdepositbankid">
+                          </app-validation-message>
+                        </div>
+
+
+                      </div>
+                      <div class="col-md-12 col-xl-12 mb-2">
+                        <div id="sbi-bal">
+                          <span class="badge-success badge p-1 font-weight-light ">Bank Book -
+                            {{bankbookBalance || 0 }} </span>
+                          <span class="badge-warning badge p-1 font-weight-light">Pass Book -
+                            {{bankpassbookBalance || 0 }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                   <div class="credit" *ngIf="creditShowhide">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pCardNumber" class="required-field" title="Credit Card">Credit Card </label>
+                          <!-- <input type="text" class="form-control" placeholder="XXXX XXXX XXXX 3066"> -->
+                          <input class="form-control" type="text" placeholder="XXXX XXXX XXXX 3066" appNumbersonly
+                            maxlength="16" (blur)="CardNoChange()" formControlName="pCardNumber"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pCardNumber }">
+                          <!-- <span class=" position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
+                          <app-validation-message [messgae]="formValidationMessages?.pCardNumber">
+                          </app-validation-message>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pbankname" title="Bank / Financial Services">Bank / Financial Services</label>
+                          <!-- <input class="form-control" type="text" placeholder="SBI-Master Card"> -->
+                          <input class="form-control" type="text" placeholder="SBI-Master Card"
+                            (blur)="BankNameChange()" appCharactersonly appTitlecaseword maxlength="30"
+                            formControlName="pbankname" appCharactersonly appTitlecaseword maxlength="30"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pbankname }">
+                          <!-- <span class=" position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
+                          <app-validation-message [messgae]="formValidationMessages?.pbankname">
+                          </app-validation-message>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pChequenumber" class="required-field" title="Reference No">Reference No.</label>
+                          <!-- <input class="form-control" type="text" placeholder="Cheque No"> -->
+                          <input class="form-control" type="text" placeholder="Reference No" maxlength="100"
+                            appNumbersonly (blur)="ChequeNoChange()" formControlName="pChequenumber"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }">
+                          <!-- <span class=" position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
+                          <app-validation-message [messgae]="formValidationMessages?.pChequenumber">
+                          </app-validation-message>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label id="pdepositbankid" class="required-field" title="Deposited Bank Name">Deposited Bank
+                            Name</label>
+                          <select class="form-control" (change)="typeofDepositBank($event)"
+                            formControlName="pdepositbankid" [attr.disabled]="DepositBankDisable? '' : null"
+                            [ngClass]="{ 'is-invalid': formValidationMessages.pdepositbankid }">
+                            <option value="" disabled>Select</option>
+                            <option *ngFor="let bank of banklist;trackBy: trackByFn" [value]="bank.pbankid">
+                              {{bank.pbankname}}</option>
+                          </select>
+                          <!-- <span class=" position-absolute font-italic" style="right:-70px; top:10px;">{{partyBalance}}</span> -->
+                          <app-validation-message [messgae]="formValidationMessages?.pdepositbankid">
+                          </app-validation-message>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-xl-12 mb-2">
+                        <div id="sbi-bal">
+                          <span class="badge-success badge p-1 font-weight-light ">Bank Book -
+                            {{bankbookBalance || 0 }} </span>
+                          <span class="badge-warning badge p-1 font-weight-light">Pass Book -
+                            {{bankpassbookBalance || 0 }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
           <div *ngIf="chequeshowhide">
             <div class="row">
               <div class="col-md-3">
+                <!-- <div class="form-group">
+                          <label id="pbankname" title="Bank Name" class="required-field">Bank Name</label>
+                          <input class="form-control" type="text" placeholder="Bank Name" (blur)="BankNameChange()"
+                            appCharactersonly appTitlecaseword maxlength="30" formControlName="pbankname" [ngClass]="{ 'is-invalid': formValidationMessages.pbankname }">
+                          <app-validation-message [messgae]="formValidationMessages?.pbankname"></app-validation-message>
+                        </div> -->
                 <label>Bank Name</label>
                 <ng-select [items]="banklist" bindLabel="pbankname" bindValue="pbankid" formControlName="pbankid"
                   placeholder="Select" (change)="BankIdChange($event)"
@@ -80,7 +269,7 @@
                 <label>Branch Name</label>
                 <input class="form-control" formControlName="pbranchname" placeholder="Branch Name"
                   [ngClass]="{ 'is-invalid': formValidationMessages.pbranchname }">
-                <app-validation-message [messgae]="formValidationMessages?.pbranchname"></app-validation-message>
+                <app-validation-message [messgae]="formValidationMessages?.pbranchname"></app-validation-message>   
               </div>
               <div class="col-md-3">
                 <label>Account Number</label>

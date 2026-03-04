@@ -214,7 +214,7 @@ export class GeneralReceiptNewComponent implements OnInit {
             ptdscalculationtype: [''],
             ppartypannumber: [''],
             pbankname: [''],
-            pbranchname: [''],
+            pbranchname: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
             schemaname: [this._commonService.getschemaname()],
             ptranstype: [''],
             //ptypeofpayment: [''],
@@ -250,7 +250,6 @@ export class GeneralReceiptNewComponent implements OnInit {
             pDocStorePath: ['']
         });
 
-
         this.GeneralReceiptForm.get('pTdsPercentage')
             ?.valueChanges.subscribe(() => this.claculateTDSamount());
 
@@ -278,6 +277,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         // Use a unique identifier from your item, e.g., pBankId
         return item?.pBankId || index;
     }
+    
 
     preceiptslist(): FormGroup {
         return this._FormBuilder.group({
@@ -1272,11 +1272,11 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.savebutton = 'Processing';
 
 
-        if (!this.validatesaveGeneralReceipt()) {
-            this.disablesavebutton = false;
-            this.savebutton = 'Save';
-            return;
-        }
+        // if (!this.validatesaveGeneralReceipt()) {
+        //     this.disablesavebutton = false;
+        //     this.savebutton = 'Save';
+        //     return;
+        // }
 
         const accountIds = this.paymentslist
             .map((x: any) => x.psubledgerid)
@@ -1301,7 +1301,7 @@ export class GeneralReceiptNewComponent implements OnInit {
                 (result: any[]) => {
 
                     if (
-                        this.GeneralReceiptForm.controls['pmodofreceipt'].value === "CASH" &&
+                        this.GeneralReceiptForm.controls['pmodofreceipt'].value === "C" &&
                         this.bankexists === false
                     ) {
 
