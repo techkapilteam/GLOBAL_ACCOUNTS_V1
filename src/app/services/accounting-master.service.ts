@@ -41,35 +41,11 @@ export class AccountingMasterService {
 
 
 
-  // GetBankDetails(): Observable<any> {
-  //   const params = new HttpParams()
-  //     .set('BranchSchema', this._CommonService.getschemaname());
-
-  //   return this._CommonService.getAPI(
-  //     '/Accounting/Configuration/GetBankDetails',
-  //     params,
-  //     'YES'
-  //   );
-  // }
-
-
   GetBankDetails(GlobalSchema: any, BranchCode: any, CompanyCode: any,): Observable<any> {
     debugger;
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode);
     return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
   }
-
-
-  // GetBankUPIDetails(): Observable<any> {
-  //   const params = new HttpParams()
-  //     .set('BranchSchema', this._CommonService.getschemaname());
-
-  //   return this._CommonService.getAPI(
-  //     '/BankInformation/GetBankUPIDetails',
-  //     params,
-  //     'YES'
-  //   );
-  // }
 
 
 
@@ -79,27 +55,7 @@ export class AccountingMasterService {
     return this._CommonService.getAPI('/Accounts/GetBankUPIDetails', params, 'YES');
   }
 
-  // GetExistingChequeCount(
-  //   BankId: any,
-  //   ChqFromNo: any,
-  //   ChqToNo: any
-  // ): Observable<any> {
-  //   const params = new HttpParams()
-  //     .set('BranchSchema', this._CommonService.getschemaname())
-  //     .set('BankId', BankId)
-  //     .set('ChqFromNo', ChqFromNo)
-  //     .set('ChqToNo', ChqToNo);
-
-  //   return this._CommonService.getAPI(
-  //     '/Accounting/Configuration/GetExistingChequeCount',
-  //     params,
-  //     'YES'
-  //   );
-  // }
-
-
-
-
+ 
   GetExistingChequeCount(
     bankId: any,
     chqFromNo: any,
@@ -170,7 +126,7 @@ export class AccountingMasterService {
       .set('BranchSchema', BranchSchema) .set('CompanyCode', CompanyCode) .set('BranchCode', BranchCode)
 
     return this._CommonService.getAPI(
-      '/Accounts/GetViewBankInformation',
+      '/Accounts/ViewBankInformation',
       
       params,
       'Yes'
@@ -207,18 +163,6 @@ export class AccountingMasterService {
     );
   }
 
-
-
-  // GetBanks(GlobalSchema:any,AccountsSchema:any,CompanyCode:any,BranchCode:any): Observable<any> {
-  //   debugger
-  // const params = new HttpParams().set('GlobalSchema',GlobalSchema).set('AccountsSchema',AccountsSchema).set('CompanyCode',CompanyCode).set('BranchCode',BranchCode);
-
-  // return this._CommonService.getAPI(
-  //   '/Accounts/BankName',
-  //   params,
-  //   'YES'
-  // );
-  // }
 
 
 

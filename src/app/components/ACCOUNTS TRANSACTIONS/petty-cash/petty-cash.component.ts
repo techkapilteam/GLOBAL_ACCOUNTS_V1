@@ -1014,12 +1014,7 @@ debugger
 
   getPartyDetailsbyid(ppartyid: any, pStateId: any): void {
     this._AccountingTransactionsService.getPartyDetailsbyid(
-      ppartyid, 
-         this._commonService.getbranchname(),
-       this._commonService.getBranchCode(),
-       this._commonService.getCompanyCode(),
-       this._commonService.getschemaname(),
-       'texas'
+      ppartyid, 'accounts', 'KLC01','KAPILCHITS', 'global', 'texas'
     ).subscribe(
         (json: any) => {
           if (!json) return;

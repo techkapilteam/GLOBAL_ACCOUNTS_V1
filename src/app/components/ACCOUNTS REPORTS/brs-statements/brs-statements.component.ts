@@ -204,21 +204,27 @@ get f() { return this.BrsStatementsReport.controls; }
   Bank: this.fb.control<string>('CREDIT')
 },
 {
-  validators: this.dateRangeValidator
+  validators: this.dateRangeValidator()
 });
     this.bankBookDetails();
     this.relesechange('CREDIT');
   }
-  private dateRangeValidator(group: FormGroup) {
-    debugger
-const from = group.get('fromDate')?.value;
-const to = group.get('toDate')?.value;
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
 
-if (from && to && new Date(from) > new Date(to)) {
-return { dateRangeInvalid: true };
-}
-return null;
-}
+      const from = group.get('fromDate')?.value;
+      const to = group.get('toDate')?.value;
+
+      if (!from || !to) return null;
+
+      const fromTime = new Date(from).setHours(0, 0, 0, 0);
+      const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+      return fromTime > toTime
+        ? { dateRangeInvalid: true }
+        : null;
+    };
+  }
 
   bankBookDetails(): void {
     this._bankBookService.GetBankNames(this._CommonService.getschemaname(),
@@ -269,6 +275,10 @@ return null;
 
   Show(): void {
     debugger
+    if (this.BrsStatementsReport.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
 
     this.disablesavebutton = true;
     this.savebutton = 'Processing';

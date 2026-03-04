@@ -54,39 +54,30 @@ export class PettyCashViewComponent implements OnInit {
   }
 
 
-  getLoadData(): void {
+ getLoadData(): void {let GlobalSchema = 'global'; let BranchSchema = 'accounts';
+  let CompanyCode = 'KAPILCHITS'; let Branchcode = 'KLC01';
 
+  console.log('API Params:', GlobalSchema, BranchSchema, CompanyCode, Branchcode
+  );
   this._AccountingTransactionsService
-    .GetPettyCashExistingData()
-    .subscribe({
-      next: (json: any[]) => {
-
+    .GetPettyCashExistingData( GlobalSchema, BranchSchema, CompanyCode, Branchcode
+    )
+    .subscribe({ next: (json: any[]) => {
         if (!json || json.length === 0) {
-          this.gridData = [];
-          this.gridView = [];
-          this.filteredData = [];
-          this.pageCriteria.totalrows = 0;
+          this.gridData = [];this.gridView = []; this.filteredData = []; this.pageCriteria.totalrows = 0;
           this.pageCriteria.TotalPages = 0;
           return;
         }
-
-        this.gridData = json;
-        this.gridView = [...json];
-        this.list = json;
-
-        this.gridView.forEach((data: any) => {
+        this.gridData = json; this.gridView = [...json]; this.list = json; this.gridView.forEach((data: any) => {
           data.preceiptdate =
             this._commonService.getFormatDateGlobal(data.preceiptdate);
         });
-
         this.filteredData = [...this.gridView];
-
-        this.columnsWithSearch =
-          this.gridView.length > 0 ? Object.keys(this.gridView[0]) : [];
+        this.columnsWithSearch = this.gridView.length > 0 ? Object.keys(this.gridView[0]) : [];
 
         this.pageCriteria.totalrows = this.gridView.length;
         this.pageCriteria.TotalPages = Math.ceil(
-          this.pageCriteria.totalrows / this.pageCriteria.pageSize
+        this.pageCriteria.totalrows / this.pageCriteria.pageSize
         );
 
         this.pageCriteria.currentPageRows =

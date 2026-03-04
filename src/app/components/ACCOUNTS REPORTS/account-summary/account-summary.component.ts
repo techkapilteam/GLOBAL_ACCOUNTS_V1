@@ -179,13 +179,22 @@ inbetween: string = '';
       toDate: [today],
       ledgerId: ['', Validators.required],
       asOn: [true]
-    });
+    }, { validators: this.dateRangeValidator });
     this.betweendates = 'As On';
   this.betweenfrom  = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
   this.betweento    = '';
   this.inbetween    = '';
 
     this.loadLedgerAccounts();
+  }
+  private dateRangeValidator(group: FormGroup) {
+    const from = group.get('fromDate')?.value;
+    const to = group.get('toDate')?.value;
+
+    if (from && to && new Date(from) > new Date(to)) {
+      return { dateRangeInvalid: true };
+    }
+    return null;
   }
 
   // loadLedgerAccounts(): void {

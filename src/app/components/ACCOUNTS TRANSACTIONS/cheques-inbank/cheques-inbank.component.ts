@@ -485,7 +485,12 @@ export class ChequesInbankComponent implements OnInit {
 
 
   GetBankBalance(bankid: any) {
-    this._accountingtransaction.GetBankBalance(bankid).subscribe(bankdetails => {
+    this._accountingtransaction.GetBankBalance(
+            '29-02-2024',
+      bankid,
+      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
+
+    ).subscribe(bankdetails => {
 
       this.bankbalancedetails = bankdetails;
       if (this.bankid == 0) {
@@ -513,7 +518,15 @@ export class ChequesInbankComponent implements OnInit {
     this.gridLoading = true;
     this.brsdateshowhidecleared = false;
     let GetChequesInBankData = this._accountingtransaction.GetChequesInBankData(bankid, this.startindex, this.endindex, this.modeofreceipt, this._searchText, "");
-    let getchequescount = this._accountingtransaction.GetChequesRowCount(bankid, this._searchText, "", "", "CHEQUESINBANK", this.modeofreceipt);
+    let getchequescount = this._accountingtransaction.GetChequesRowCount(
+      
+      // bankid, this._searchText, "", "", "CHEQUESINBANK", this.modeofreceipt
+    
+          
+      bankid,this._commonService.getschemaname(),this._commonService.getbranchname(), this._searchText,this.fromdate,this.todate, "CHEQUESINBANK", this.modeofreceipt,
+      this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+    
+    );
     
     forkJoin(GetChequesInBankData, getchequescount).
       subscribe(data => {
@@ -676,7 +689,8 @@ export class ChequesInbankComponent implements OnInit {
   GetChequesInBank(bankid: any, startindex: any, endindex: any, searchText: string) {
     debugger;
     this.gridLoading = true;
-    this._accountingtransaction.GetChequesInBankData(bankid, startindex, endindex, this.modeofreceipt, this._searchText, "").
+    this._accountingtransaction.GetChequesInBankData(
+      bankid, startindex, endindex, this.modeofreceipt, this._searchText, "").
       //forkJoin(GetChequesInBankData,getchequescount).
       subscribe(data => {
         console.log(data)
@@ -2029,7 +2043,14 @@ export class ChequesInbankComponent implements OnInit {
 
   GetDataOnBrsDates(frombrsdate: any, tobrsdate: any, bankid: any) {
     let DataFromBrsDatesChequesInBank = this._accountingtransaction.DataFromBrsDatesChequesInBank(frombrsdate, tobrsdate, bankid, this.modeofreceipt, this._searchText, this.startindex, this.endindex);
-    let GetChequesRowCount = this._accountingtransaction.GetChequesRowCount(this.bankid, this._searchText, frombrsdate, tobrsdate, "CHEQUESINBANK", this.modeofreceipt);
+    let GetChequesRowCount = this._accountingtransaction.GetChequesRowCount(
+      // this.bankid, this._searchText, frombrsdate, tobrsdate, "CHEQUESINBANK", this.modeofreceipt
+    
+    
+          
+      this.bankid,this._commonService.getschemaname(),this._commonService.getbranchname(), this._searchText,frombrsdate,tobrsdate, "CHEQUESINBANK", this.modeofreceipt,
+      this._commonService.getCompanyCode(),this._commonService.getBranchCode()
+    );
 
     //this._accountingtransaction.DataFromBrsDatesChequesInBank(frombrsdate, tobrsdate, bankid,this.modeofreceipt,this._searchText)
     forkJoin(DataFromBrsDatesChequesInBank, GetChequesRowCount)
@@ -3351,7 +3372,15 @@ getChequeReturnCharges() {
     debugger;
     this.gridLoading = true;
     let GetChequesInBankData = this._accountingtransaction.GetChequesInBankData(bankid, startindex, endindex, this.modeofreceipt, this._searchText, "");
-    let getchequescount = this._accountingtransaction.GetChequesRowCount(bankid, this._searchText, "", "", "CHEQUESINBANK", this.modeofreceipt);
+    let getchequescount = this._accountingtransaction.GetChequesRowCount(
+      
+      
+      
+      bankid,this._commonService.getschemaname(),this._commonService.getbranchname(), this._searchText,this.fromdate,this.todate, "CHEQUESINBANK", this.modeofreceipt,
+      this._commonService.getCompanyCode(),this._commonService.getBranchCode())
+      
+      
+      
     forkJoin(GetChequesInBankData, getchequescount).
       subscribe(data => {
         console.log(data)
