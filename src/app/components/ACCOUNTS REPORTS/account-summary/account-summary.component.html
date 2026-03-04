@@ -37,6 +37,9 @@
              [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY',containerClass: 'theme-dark-blue' }"
              formControlName="toDate"
              readonly />
+              <small class="text-danger" *ngIf="accountSummaryForm.errors?.['dateRangeInvalid']">
+                  From Date cannot be greater than To Date
+                </small>
     </div>
 
     <!-- Ledger Multi Select -->

@@ -254,6 +254,17 @@ return { dateRangeInvalid: true };
 }
 return null;
 }
+onDateToggle(): void {
+  if (this.dte) {
+    this.dayBookForm.patchValue({
+      dtodate: null
+    });
+  } else {
+    this.dayBookForm.patchValue({
+      dtodate: new Date()
+    });
+  }
+}
 
   private loadBranches(): void {
     // this.chitService
@@ -278,22 +289,36 @@ return null;
   }
 
   getDayBookData(): void {
+    debugger
     this.updateFormattedDates();
 
     const fromDate = this.commonService.getFormatDateNormal(
       this.dayBookForm.get('dfromdate')?.value 
     )?? '';
 
-    const toDate = this.commonService.getFormatDateNormal(
-      this.dayBookForm.value.dtodate
-    )?? '';
+    // const toDate = this.commonService.getFormatDateNormal(
+    //   this.dayBookForm.value.dtodate
+    // )?? '';
+    const toDateControl = this.dayBookForm.get('dtodate')?.value;
+
+let toDate: string;
+  let asOnFlag: string;
+
+  if (toDateControl) {
+    toDate =
+      this.commonService.getFormatDateNormal(toDateControl) || '';
+    asOnFlag = 'F';
+  } else {
+    toDate = fromDate;     
+    asOnFlag = 'T';
+  }
 
     this.loading = true;
     this.receiptsAmount = 0;
     this.paymentsAmount = 0;
 
     this.reportService
-      .GetDayBook(fromDate, toDate, 'F','accounts','KLC01','KAPILCHITS','global')
+      .GetDayBook(fromDate, toDate, asOnFlag,'accounts','KLC01','KAPILCHITS','global')
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (res: any) => {
@@ -404,13 +429,18 @@ return null;
   const formattodate = this.dayBookForm.controls['dtodate'].value;
   const toDate = this.commonService.getFormatDateGlobal(formattodate);
 
-  if (fromDate && toDate) {
-    this.showdate = 'Between';
-  } else if (fromDate && !toDate) {
-    this.showdate = 'As On';
-  } else {
-    this.showdate = '';
-  }
+  // if (fromDate && toDate) {
+  //   this.showdate = 'Between';
+  // } else if (fromDate && !toDate) {
+  //   this.showdate = 'As On';
+  // } else {
+  //   this.showdate = '';
+  // }
+  if (this.dte) {
+  this.showdate = 'As On';
+} else {
+  this.showdate = 'Between';
+}
 
   const FirstcolWidthHeight: any = {
     0: { cellWidth: 'auto', halign: 'center' },
