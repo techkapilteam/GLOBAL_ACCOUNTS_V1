@@ -182,6 +182,7 @@ getTotalAmount(list: any[]): number {
       this.getKapilGroupLogo();
 
     const doc = new jsPDF('p', 'mm', 'a4');
+    const Companyreportdetails = this.commonService._getCompanyDetails();
 
     this.GeneralReceiptServiceData.forEach((data, index) => {
       doc.addImage(
@@ -191,19 +192,24 @@ getTotalAmount(list: any[]): number {
               5, 20, 20
             );
 
+      const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
+
       const pageSize = doc.internal.pageSize;
       const pageWidth = pageSize.getWidth();
       doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
       doc.setFontSize(12);
       doc.text(reportname, 105, 35, { align: 'center' });

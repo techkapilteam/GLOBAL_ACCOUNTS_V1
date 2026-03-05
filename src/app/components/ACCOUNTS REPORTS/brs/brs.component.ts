@@ -227,13 +227,19 @@ private datePipe = inject(DatePipe);
   this.bankBookDetails();
 }
 private dateRangeValidator(group: FormGroup) {
-const from = group.get('fromDate')?.value;
-const to = group.get('toDate')?.value;
+const fromControl = group.get('fromDate');
+const toControl  = group.get('toDate');
+const from = fromControl?.value;
+  const to = toControl?.value;
+  if (!fromControl?.touched && !toControl?.touched) {
+    return null;
+  }
 
 if (from && to && new Date(from) > new Date(to)) {
-return { dateRangeInvalid: true };
-}
-return null;
+    return { dateRangeInvalid: true };
+  }
+
+  return null;
 }
 private initializeDatePicker(): void {
 
