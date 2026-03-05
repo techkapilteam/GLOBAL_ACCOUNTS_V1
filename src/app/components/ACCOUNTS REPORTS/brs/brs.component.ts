@@ -9,11 +9,12 @@ import { CommonService } from '../../../services/common.service';
 import { BankBookService } from '../../../services/Transactions/AccountingReports/bank-book.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { BrStatementService } from '../../../services/br-statement.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-brs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, BsDatepickerModule, TableModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, BsDatepickerModule, TableModule,CompanyDetailsComponent],
   templateUrl: './brs.component.html',
   styleUrls: ['./brs.component.css'],
   providers: [DatePipe]
@@ -147,6 +148,8 @@ private datePipe = inject(DatePipe);
     loading = false;
   BRStatmentForm!: FormGroup;
   submitted = false;
+  printedDate: boolean = true;
+  
 
   dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
@@ -160,7 +163,7 @@ private datePipe = inject(DatePipe);
   startDate!: Date;
   bankname = '';
 
-  @Output() printedDate = new EventEmitter<boolean>();
+  // @Output() printedDate = new EventEmitter<boolean>();
   @ViewChild('myTable') table: any;
 
   pBankBookBalance: any;
@@ -208,7 +211,7 @@ private datePipe = inject(DatePipe);
   this.dbdate = sessionStorage.getItem('Dbtime');
   this.roleid = sessionStorage.getItem('roleid') || '';
 
-  this.printedDate.emit(true);
+  // this.printedDate.emit(true);
 
   this.setPageModel();
 

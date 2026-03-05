@@ -7,6 +7,7 @@ import { NumberToWordsPipe } from '../re-print/number-to-words.pipe';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { CompanyDetailsService } from '../../../services/company-details.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-general-receipt-report',
@@ -27,18 +28,22 @@ export class GeneralReceiptReportComponent {
   private datePipe = inject(DatePipe);
   private numberToWords = inject(NumberToWordsPipe);
 
-  // @ViewChild(CompanyDetailsComponent) companyDetailsComponent!: CompanyDetailsComponent;
+  @ViewChild(CompanyDetailsComponent) companyDetailsComponent!: CompanyDetailsComponent;
 
   GeneralReceiptServiceData: any[] = [];
   generalreceiptID!: string;
   receiptName!: string;
   schemaName!: string;
-  pBranchname: string ='CA-Hyderabad';
-  pCinNo!: string;
+  // pBranchname: string ='CA-Hyderabad';
+  // pCinNo!: string;
+  companyName!:string;
+  cinNumber!:string;
   todayDate!: string;
   printFileName!: string;
-  pCompanyName: string = '';
-  pAddress1: string = '';
+  // pCompanyName: string = '';
+  // pAddress1: string = '';
+  branchName!:string;
+  registrationAddress!:string;
   printedon: string = '';
   currencySymbol: string = '₹';
   cancelled: boolean = false;
@@ -98,12 +103,21 @@ getTotalAmount(list: any[]): number {
   }
 
   loadCompanyDetails() {
-    // this.companyService.GetCompanyData().subscribe(() => {
+    this.companyService.GetCompanyData().subscribe((response: any) => {
+      
     //   this.commonService._setCompanyDetails();
     //   const company = this.commonService.comapnydetails;
-    //   this.pCinNo = company?.pCinNo;
-    //   this.pBranchname = company?.pBranchname;
-    // });
+    //   this.cinNumber = company?.cinNumber;
+    //   this.branchName = company?.branchName;
+    //   this.companyName = company?.companyName;         
+    // this.registrationAddress = company?.registrationAddress;
+    const company = response[0];
+    
+    this.cinNumber = company?.cinNumber;
+    this.branchName = company?.uniqueBranchName;  
+    this.companyName = company?.companyName;
+    this.registrationAddress = company?.registrationAddress;
+    });
   }
 
   getGeneralreceiptDatabyId(id: string) {

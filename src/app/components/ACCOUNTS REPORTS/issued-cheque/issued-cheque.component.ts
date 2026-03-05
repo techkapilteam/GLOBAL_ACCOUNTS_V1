@@ -10,10 +10,11 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from 'primeng/table';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-issued-cheque',
-  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, NgSelectModule,NgxDatatableModule],
+  imports: [TableModule, FormsModule, CommonModule, ReactiveFormsModule, NgSelectModule,NgxDatatableModule,CompanyDetailsComponent],
   templateUrl: './issued-cheque.component.html',
   styleUrl: './issued-cheque.component.css',
 })
@@ -42,6 +43,7 @@ export class IssuedChequeComponent implements OnInit {
   savebutton = 'Submit';
   isSubmited = false;
   disablesavebutton = false;
+  printedDate: boolean = true;
 
   _BankId: any;
   _ChqBookId: any;

@@ -36,8 +36,11 @@
             <label class="form-label required-field">Ledger</label>
             <ng-select [items]="ledgeraccountslist" formControlName="pledgerid" bindLabel="pledgername"
               bindValue="pledgername" [searchable]="true" [clearable]="false" appendTo="body" placeholder="Select"
-              (change)="ledgerName_Change($event)">
+              (change)="ledgerName_Change($event)" [ngClass]="{ 'is-invalid': f['pledgerid'].errors && submitted }">
             </ng-select>
+            <div class="invalid-feedback d-block" *ngIf="submitted && f['pledgerid'].errors?.['required']">
+  Ledger is required
+</div>
           </div>
 
           <div class="col-md-3" *ngIf="showreceipts">

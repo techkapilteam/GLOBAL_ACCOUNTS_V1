@@ -6,6 +6,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { Table, TableModule } from 'primeng/table';
 import { CommonService } from '../../../services/common.service';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-trial-balance',
@@ -14,7 +15,7 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
     CommonModule,
     ReactiveFormsModule,
     BsDatepickerModule,
-    NgxDatatableModule, TableModule
+    NgxDatatableModule, TableModule,CompanyDetailsComponent
   ],
   providers: [DatePipe],
   templateUrl: './trial-balance.component.html',
@@ -40,6 +41,7 @@ export class TrialBalanceComponent {
 betweenfrom: string = '';
 betweento: string = '';
 inbetween: string = '';
+printedDate: boolean = true;
 
   fromdate!: Date;
   todate!: Date;

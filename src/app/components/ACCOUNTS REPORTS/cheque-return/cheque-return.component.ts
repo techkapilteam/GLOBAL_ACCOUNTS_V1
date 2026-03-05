@@ -9,11 +9,12 @@ import { BsDatepickerConfig, BsDatepickerModule } from 'ngx-bootstrap/datepicker
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { TableModule } from 'primeng/table';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-cheque-return',
   standalone: true,
-  imports: [FormsModule, CommonModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule, TableModule],
+  imports: [FormsModule, CommonModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule, TableModule,CompanyDetailsComponent],
   templateUrl: './cheque-return.component.html',
   styleUrl: './cheque-return.component.css',
 })

@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -199,7 +199,7 @@ get f() { return this.BrsStatementsReport.controls; }
    this.BrsStatementsReport = this.fb.group({
   fromDate: this.fb.control<Date | null>(this.today),
   toDate: this.fb.control<Date | null>(this.today),
-  pbankname: this.fb.control<string | null>(null),
+  pbankname: this.fb.control<string | null>('', Validators.required),
   branchschema: this.fb.control<string | null>(null),
   Bank: this.fb.control<string>('CREDIT')
 },
@@ -274,7 +274,11 @@ get f() { return this.BrsStatementsReport.controls; }
   }
 
   Show(): void {
-    debugger
+    this.submitted = true;
+    if (this.BrsStatementsReport.invalid) {
+    this.BrsStatementsReport.markAllAsTouched();
+    return;
+  }
     if (this.BrsStatementsReport.errors?.['dateRangeInvalid']) {
     alert('From Date should not be greater than To Date');
     return;

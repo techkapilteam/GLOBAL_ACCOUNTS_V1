@@ -54,6 +54,7 @@ export class TdsReportComponent implements OnInit{
   tdsamount = 0;
   reportpaidamount = 0;
  private reportservice=inject(AccountReportsService);
+  submitted: boolean=false;
 
   constructor(
     private fb: FormBuilder,
@@ -168,10 +169,11 @@ return fromTime > toTime
   mismatchcheckInfo(event: any): void {
     this.mismatchInfo = event.target.checked;
   }
+  get f() { return this.TdsReportForm.controls; }
 
   Show(): void {
-    debugger
-    // if (this.TdsReportForm.invalid) return;
+    this.submitted = true;
+    if (this.TdsReportForm.invalid) return;
     if (this.TdsReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;

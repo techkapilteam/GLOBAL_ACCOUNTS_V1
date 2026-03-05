@@ -250,7 +250,7 @@
 
         <img src="assets/images/print-icon-blue.svg" width="20" style="cursor:pointer" (click)="pdfOrprint('Print')" />
       </div>
-      <div class="text-center mb-1 fw-bold fs-5">
+      <!-- <div class="text-center mb-1 fw-bold fs-5">
               KAPIL CHITS (HYDERABAD) PVT. LTD.
             </div>
             <div class="text-center mb-1">
@@ -258,7 +258,8 @@
             </div>
             <div class="text-center mb-2 fw-semibold">
               CIN : U65992TG2008PTC060803
-            </div>
+            </div> -->
+            <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details>
             <hr>
 
       <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">

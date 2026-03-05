@@ -670,16 +670,21 @@ export class CommonService {
     if (!companyDetails) {
       return '';
     }
-    let address = '';
+    // let address = '';
 
-    if (companyDetails.pAddress1?.trim()) {
-      address = companyDetails.pAddress1.trim();
-    }
+    // if (companyDetails.pAddress1?.trim()) {
+    //   address = companyDetails.pAddress1.trim();
+    // }
+    const address = companyDetails.branchAddress?.trim() ?? '';
     return address ? `${address.replace(/,\s*$/, '')}.` : '';
   }
   _getCompanyDetails(): any | null {
-    let raw = sessionStorage.getItem('companydetails');
-    return raw ? JSON.parse(raw) : null;
+    let raw = sessionStorage.getItem('CompanyDetails');
+    // return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+ 
+  const parsed = JSON.parse(raw);
+  return Array.isArray(parsed) ? parsed[0] : parsed;
   }
 
   // showErrorMessage(errormsg: string) {
@@ -1389,6 +1394,7 @@ export class CommonService {
         ) {
 
           const textPos = data.cell.textPos;
+           if (!textPos) return;
 
           if (data.row.index === gridData.length - 1) {
             doc.setFont('helvetica', 'bold');
@@ -1999,6 +2005,7 @@ export class CommonService {
         if ((data.column.index === 1 || data.column.index === 2) && data.cell.section === 'body') {
           if (currencySymbol === '₹' && data.cell.raw !== 0) {
             const textPos = data.cell.textPos;
+             if (!textPos) return;
             // doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
             doc.addImage(
               rupeeImage,
@@ -2196,15 +2203,28 @@ export class CommonService {
           currencyformat === '₹' &&
           data.cell.raw !== ''
         ) {
-          const pos = data.cell.textPos;
-          doc.setFont('helvetica', 'normal');
-          doc.addImage(
-            rupeeImage,
-            pos.x - data.cell.contentWidth,
-            pos.y + 0.5,
-            1.5,
-            1.5
-          );
+          // const pos = data.cell.textPos;
+          // doc.setFont('helvetica', 'normal');
+          // doc.addImage(
+          //   rupeeImage,
+          //   pos.x - data.cell.contentWidth,
+          //   pos.y + 0.5,
+          //   1.5,
+          //   1.5
+          // );
+          const padding = data.cell.padding;
+        let paddingLeft = 2;
+        if (typeof padding === 'number') {
+          paddingLeft = padding;
+        } else if (padding && typeof padding === 'object') {
+          paddingLeft = (padding as any).left ?? 2;
+        }
+
+        const x = data.cell.x + paddingLeft;
+        const y = data.cell.y + data.cell.height / 2 - 1;
+
+        doc.setFont('helvetica', 'normal');
+        doc.addImage(rupeeImage, 'PNG', x, y, 1.5, 1.5);
         }
       }
     });
@@ -2936,10 +2956,28 @@ export class CommonService {
     const rMargin = 15;
 
     const totalPagesExp = '{total_pages_count_string}';
+    const cleanedGridData = gridData.map(row => {
+    const cleaned = { ...row };
+    Object.keys(cleaned).forEach(key => {
+      if (typeof cleaned[key] === 'string') {
+        cleaned[key] = cleaned[key].replace(/₹/g, '').trim();
+      }
+    });
+    return cleaned;
+  });
+
+  const mergedColumnStyles = {
+      ...colWidthHeight,
+      3: {
+        ...colWidthHeight[3],
+        cellPadding: { top: 1, bottom: 1, left: 6, right: 1 }, // left padding > rupee image width (2.5mm) + gap
+      },
+    };
 
     autoTable(doc, {
       columns: gridheaders,
-      body: gridData,
+      // body: gridData,
+      body: cleanedGridData,
       theme: 'grid',
       headStyles: {
         fillColor: this.pdfProperties('Header Color'),
@@ -2952,7 +2990,8 @@ export class CommonService {
         overflow: 'linebreak',
         rowPageBreak: 'avoid',
       } as any,
-      columnStyles: colWidthHeight,
+      // columnStyles: colWidthHeight,
+      columnStyles: mergedColumnStyles,
       startY: 48,
       showHead: 'everyPage',
       showFoot: 'lastPage',
@@ -2961,11 +3000,11 @@ export class CommonService {
         const pageWidth = pageSize.width;
         const pageHeight = pageSize.height;
         const centerX = pageWidth / 2;
-        // Header (only on first page)
+
         if (doc.getNumberOfPages() === 1) {
           doc.setFontSize(15);
           if (kapil_logo) {
-            doc.addImage(kapil_logo, 'JPEG', lMargin, 8, 30, 18);
+            doc.addImage(kapil_logo, 'JPEG', 10,5, 20, 20);
           }
 
           doc.setTextColor('black');
@@ -2995,7 +3034,10 @@ export class CommonService {
 
 
           doc.setFontSize(14);
-          doc.text(reportName, 90, 30);
+          // doc.text(reportName, 90, 30);
+          doc.setFont('helvetica', 'bold');
+          doc.text(reportName, centerX, 33, { align: 'center' });
+          doc.setFont('helvetica', 'normal');
 
           // const branchName = Companyreportdetails?.pBranchname ?? '';
           // if (branchName) {
@@ -3009,7 +3051,7 @@ export class CommonService {
           doc.text(
             'Branch : CA-HYDERABAD-CO',
             pageWidth - rMargin,
-            42,
+            40,
             { align: 'right' }
           );
 
@@ -3038,7 +3080,9 @@ export class CommonService {
 
         doc.text(`Printed on: ${today}, User: ${username.pEmployeeName || ''}`, lMargin, pageHeight - 5);
 
-        doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
+        // doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
+        doc.text(pageStr, pageWidth - rMargin, pageHeight - 5, { align: 'right' });
+     
       },
       willDrawCell: (data) => {
         // Bold last row for PS List
@@ -3047,28 +3091,60 @@ export class CommonService {
           doc.setFont('helvetica', 'bold');
         }
       },
+      // didDrawCell: (data) => {
+      //   const td = data.cell.raw;
+      //   // const rupeeColumns = [1, 2, 3, 4, 5, 6, 12]; 
+      //   const rupeeColumns = [3];
+
+      //   if (td && currencyformat === '₹' && rupeeColumns.includes(data.column.index)) {
+      //     if (rupeeImage) {
+       
+      //       // let paddingLeft = 2;
+      //       // if (typeof data.cell.padding === 'number') {
+      //       //   const x = data.cell.x + paddingLeft;
+      //       // } else if (typeof data.cell.padding === 'function') {
+      //       //   paddingLeft = data.cell.padding('left');
+      //       // }
+      //       let paddingLeft = 2;
+      // const padding = data.cell.padding;
+      // if (typeof padding === 'number') {
+      //   paddingLeft = padding;
+      // } else if (padding && typeof padding === 'object') {
+      //   paddingLeft = (padding as any).left ?? 2;
+      // }
+
+      //       const x = data.cell.x + paddingLeft;
+      //       const y = data.cell.y + data.cell.height / 2 - 0.5; // vertically center
+      //       const size = 2.5; // image size in mm
+
+      //       // Add rupee image
+      //       doc.addImage(rupeeImage, 'PNG', x, y, size, size);
+      //     }
+      //   }
+      // },
       didDrawCell: (data) => {
-        const td = data.cell.raw;
-        const rupeeColumns = [1, 2, 3, 4, 5, 6, 12]; // adjust based on your report
+        const rupeeColumns = [3];
 
-        if (td && currencyformat === '₹' && rupeeColumns.includes(data.column.index)) {
-          if (rupeeImage) {
-            // Compute left padding safely
-            let paddingLeft = 2; // default
-            if (typeof data.cell.padding === 'number') {
-              const x = data.cell.x + paddingLeft;
-            } else if (typeof data.cell.padding === 'function') {
-              paddingLeft = data.cell.padding('left');
-            }
+        if (
+          data.cell.raw &&
+          currencyformat === '₹' &&
+          rupeeColumns.includes(data.column.index) &&
+          rupeeImage
+        ) {
 
-            // Coordinates for the image
-            const x = data.cell.x + paddingLeft;
-            const y = data.cell.y + data.cell.height / 2 - 0.5; // vertically center
-            const size = 2.5; // image size in mm
-
-            // Add rupee image
-            doc.addImage(rupeeImage, 'PNG', x, y, size, size);
+          let paddingLeft = 2;
+          const padding = data.cell.padding;
+          if (typeof padding === 'number') {
+            paddingLeft = padding;
+          } else if (padding && typeof padding === 'object') {
+            paddingLeft = (padding as any).left ?? 2;
           }
+
+          const size = 2.5; 
+          const x = data.cell.x + paddingLeft;
+          const y = data.cell.y + (data.cell.height - size) / 2; 
+
+          doc.addImage(rupeeImage, 'PNG', x, y, size, size);
         }
       },
 
@@ -3901,19 +3977,32 @@ export class CommonService {
         ) {
 
           const cellValue = data.cell.raw;
+          if (!cellValue || currencySymbol !== '₹') return;
 
-          if (cellValue && currencySymbol === '₹') {
+          // if (cellValue && currencySymbol === '₹') {
 
-            const textPos = data.cell.textPos;
+          //   const textPos = data.cell.textPos;
 
-            doc.addImage(
-              rupeeImage,
-              textPos.x - data.cell.contentWidth,
-              textPos.y + 0.5,
-              1.5,
-              1.5
-            );
-          }
+          //   doc.addImage(
+          //     rupeeImage,
+          //     textPos.x - data.cell.contentWidth,
+          //     textPos.y + 0.5,
+          //     1.5,
+          //     1.5
+          //   );
+          // }
+           const padding = data.cell.padding;
+        let paddingLeft = 2;
+        if (typeof padding === 'number') {
+          paddingLeft = padding;
+        } else if (padding && typeof padding === 'object') {
+          paddingLeft = (padding as any).left ?? 2;
+        }
+
+        const x = data.cell.x + paddingLeft;
+        const y = data.cell.y + data.cell.height / 2 - 1;
+
+        doc.addImage(rupeeImage, 'PNG', x, y, 1.5, 1.5);
         }
       }
 
@@ -4026,6 +4115,7 @@ export class CommonService {
           }
 
           if (pageType === 'landscape') {
+            const centerX = pageWidth / 2;
 
             doc.addImage(kapilLogo, 'JPEG', 10, 5, 20, 20);
             // doc.setFontSize(15);
@@ -4040,16 +4130,16 @@ export class CommonService {
             // }
             doc.setFontSize(15);
             doc.setFont('helvetica', 'bold');
-            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', centerX, 15, { align: 'center' });
             doc.setFontSize(9);
             doc.setFont('helvetica', 'normal');
             doc.text(
               'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
-              105,
+              centerX,
               21,
               { align: 'center' }
             );
-            doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
+            doc.text('CIN : U65992TG2008PTC060803', centerX, 26, { align: 'center' });
 
 
             doc.setFontSize(14);
@@ -4106,19 +4196,36 @@ export class CommonService {
 
         if (!cellValue || currencySymbol !== '₹') return;
 
-        const textPos = data.cell.textPos;
+        // const textPos = data.cell.textPos;
 
-        const isLastRow = data.row.index === gridData.length - 1;
+        // const isLastRow = data.row.index === gridData.length - 1;
 
-        doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
+        // doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
 
-        doc.addImage(
-          rupeeImage,
-          textPos.x - data.cell.contentWidth + (isLastRow ? 3 : 0),
-          textPos.y + (isLastRow ? 0.7 : 0.5),
-          isLastRow ? 2 : 1.5,
-          isLastRow ? 2 : 1.5
-        );
+        // doc.addImage(
+        //   rupeeImage,
+        //   textPos.x - data.cell.contentWidth + (isLastRow ? 3 : 0),
+        //   textPos.y + (isLastRow ? 0.7 : 0.5),
+        //   isLastRow ? 2 : 1.5,
+        //   isLastRow ? 2 : 1.5
+        // );
+        const padding = data.cell.padding;
+  let paddingLeft = 2;
+  if (typeof padding === 'number') {
+    paddingLeft = padding;
+  } else if (padding && typeof padding === 'object') {
+    paddingLeft = (padding as any).left ?? 2;
+  }
+
+  const x = data.cell.x + paddingLeft;
+  const y = data.cell.y + data.cell.height / 2 - 1;
+
+  const isLastRow = data.row.index === gridData.length - 1;
+
+  doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
+
+  const size = isLastRow ? 2 : 1.5;
+  doc.addImage(rupeeImage, 'PNG', x, y, size, size);
       }
 
     });
@@ -4136,8 +4243,9 @@ export class CommonService {
     }
   }
   _setCompanyDetails() {
-
-    this.comapnydetails = JSON.parse(sessionStorage.getItem("companydetails") ?? '');
+    // this.comapnydetails = JSON.parse(sessionStorage.getItem("companydetails") ?? '');
+    const raw = sessionStorage.getItem("CompanyDetails");
+  this.comapnydetails = raw ? JSON.parse(raw) : {};
   }
   _downloadGridPdf1(
     reportName: any,
