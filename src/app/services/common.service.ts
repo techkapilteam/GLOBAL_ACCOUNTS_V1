@@ -626,27 +626,40 @@ export class CommonService {
         }));
   }
 
+  // postAPI(apiPath: string, data: any): Observable<any> {
+  //   const urldata = environment.apiURL;
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Cache-Control': 'no-cache'
+  //   });
+
+  //   return this.http.get<any[]>(urldata).pipe(
+  //     mergeMap(json => {
+  //       const apiUrl = json[0].ApiHostUrl + apiPath;
+
+  //       return this.http.post(apiUrl, data, { headers }).pipe(
+  //         map(this.extractData),
+  //         catchError(this.handleError)
+  //       );
+  //     }),
+  //     catchError(this.handleError)
+  //   );
+  // }
+
   postAPI(apiPath: string, data: any): Observable<any> {
-    const urldata = environment.apiURL;
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache'
-    });
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache'
+  });
 
-    return this.http.get<any[]>(urldata).pipe(
-      mergeMap(json => {
-        const apiUrl = json[0].ApiHostUrl + apiPath;
+  const apiUrl = environment.apiURL + apiPath;
 
-        return this.http.post(apiUrl, data, { headers }).pipe(
-          map(this.extractData),
-          catchError(this.handleError)
-        );
-      }),
-      catchError(this.handleError)
-    );
-  }
-
+  return this.http.post(apiUrl, data, { headers }).pipe(
+    map(this.extractData),
+    catchError(this.handleError)
+  );
+}
   postAPI1(apiPath: string, data: any): Observable<any> {
     const urldata = environment.apiURL;
 
