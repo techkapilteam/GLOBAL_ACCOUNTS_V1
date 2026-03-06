@@ -4,6 +4,9 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { TableModule } from 'primeng/table';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AccountingTransactionsService } from 'src/app/services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { CommonService } from 'src/app/services/common.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-online-settlement',
@@ -32,9 +35,9 @@ export class OnlineSettlementComponent implements OnInit {
   PaytmList: any[] = [];
 
   currencySymbol = '₹';
-  bankbalance = 125000.75;
-  bankbalancetype = 'Cr';
-  brsdate = '23-Feb-2026';
+  bankbalance = 0;
+  bankbalancetype = '';
+  brsdate = '';
 
   dpConfig: Partial<BsDatepickerConfig> = {};
   ptransactiondateConfig: Partial<BsDatepickerConfig> = {};
@@ -42,10 +45,8 @@ export class OnlineSettlementComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private datePipe = inject(DatePipe);
-
-  // ==================================================
-  // INIT
-  // ==================================================
+  private _Accountservice = inject(AccountingTransactionsService);
+  private _CommonService = inject(CommonService);
 
   ngOnInit(): void {
 
@@ -70,36 +71,129 @@ export class OnlineSettlementComponent implements OnInit {
     this.ptransactiondateConfig = this.dpConfig;
     this.pchequecleardateConfig = this.dpConfig;
 
-    this.loadDummyBanks();
-    this.loadDummyGrid();
+    this.loadBankList();
+    this.loadUPIList();
+    this.loadChequeReturnCharges();
+    this.loadGridData();
+
     this.setupDependencies();
   }
 
-  // ==================================================
-  // DEPENDENCY LOGIC
-  // ==================================================
+  loadBankList(): void {
 
-  setupDependencies(): void {
+    const BranchSchema = this._CommonService.getbranchname();
+    const GlobalSchema = this._CommonService.getschemaname();
+    const CompanyCode = this._CommonService.getCompanyCode();
+    const BranchCode = this._CommonService.getBranchCode();
 
-    // Bank → Enable Online Account
-    this.ChequesInBankForm.get('bankname')?.valueChanges.subscribe(value => {
-      if (value) {
-        this.ChequesInBankForm.get('paytmname')?.enable();
-      } else {
-        this.ChequesInBankForm.get('paytmname')?.disable();
-        this.ChequesInBankForm.get('paytmname')?.setValue('');
-      }
-    });
+    this._Accountservice.GetBankntList(
+      BranchSchema,
+      GlobalSchema,
+      CompanyCode,
+      BranchCode
+    ).subscribe((res: any) => {
 
-    // Radio Filter
-    this.ChequesInBankForm.get('chequeintype')?.valueChanges.subscribe(type => {
-      this.applyRadioFilter(type);
+      this.bankList = res || [];
+
     });
   }
 
-  // ==================================================
-  // RADIO FILTER
-  // ==================================================
+  loadUPIList(): void {
+
+    const GlobalSchema = this._CommonService.getschemaname();
+    const CompanyCode = this._CommonService.getCompanyCode();
+    const BranchCode = this._CommonService.getBranchCode();
+
+    this._Accountservice.GetBankUPIDetails(
+      GlobalSchema,
+      BranchCode,
+      CompanyCode
+    ).subscribe((res: any) => {
+
+      this.PaytmList = res || [];
+
+    });
+  }
+
+  loadGridData(): void {
+
+    const payload = {
+      transactiondate: this.formatDate(
+        this.ChequesInBankForm.value.ptransactiondate
+      ),
+      branchcode: this._CommonService.getBranchCode(),
+      companycode: this._CommonService.getCompanyCode(),
+      globalschema: this._CommonService.getschemaname()
+    };
+
+    this._Accountservice.GetOnlineSettlementList(payload)
+      .subscribe((res: any) => {
+
+        this.originalGridData = res || [];
+        this.gridData = [...this.originalGridData];
+
+      });
+  }
+
+  loadChequeReturnCharges(): void {
+
+    const GlobalSchema = this._CommonService.getschemaname();
+    const CompanyCode = this._CommonService.getCompanyCode();
+    const BranchCode = this._CommonService.getBranchCode();
+
+    this._Accountservice.getchequereturncharges(
+      GlobalSchema,
+      CompanyCode,
+      BranchCode
+    ).subscribe();
+  }
+
+  setupDependencies(): void {
+
+    this.ChequesInBankForm.get('bankname')?.valueChanges.subscribe(value => {
+
+      if (value) {
+
+        this.ChequesInBankForm.get('paytmname')?.enable();
+
+        const brstodate = this.formatDate(
+          this.ChequesInBankForm.value.ptransactiondate
+        );
+
+        const BranchSchema = this._CommonService.getbranchname();
+        const BranchCode = this._CommonService.getBranchCode();
+        const CompanyCode = this._CommonService.getCompanyCode();
+
+        this._Accountservice.GetBankBalance(
+          brstodate,
+          value,
+          BranchSchema,
+          BranchCode,
+          CompanyCode
+        ).subscribe((res: any) => {
+
+          this.bankbalance = res?.bankbalance || 0;
+          this.bankbalancetype = res?.bankbalancetype || '';
+          this.brsdate = res?.brsdate || '';
+
+        });
+
+      }
+      else {
+
+        this.ChequesInBankForm.get('paytmname')?.disable();
+        this.ChequesInBankForm.get('paytmname')?.setValue('');
+
+      }
+
+    });
+
+    this.ChequesInBankForm.get('chequeintype')?.valueChanges.subscribe(type => {
+      this.applyRadioFilter(type);
+    });
+
+  }
+
 
   applyRadioFilter(type: string): void {
 
@@ -116,16 +210,11 @@ export class OnlineSettlementComponent implements OnInit {
     this.selected = [];
   }
 
-  // ==================================================
-  // SEARCH (WITH RADIO SUPPORT)
-  // ==================================================
-
   onSearch(value: string): void {
 
     let filteredData = [...this.originalGridData];
     const type = this.ChequesInBankForm.value.chequeintype;
 
-    // Apply radio filter first
     if (type === 'D') {
       filteredData = filteredData.filter(x => x.pCleardate);
     }
@@ -133,7 +222,6 @@ export class OnlineSettlementComponent implements OnInit {
       filteredData = filteredData.filter(x => !x.pCleardate);
     }
 
-    // Apply search filter
     if (value) {
       const search = value.toLowerCase();
       filteredData = filteredData.filter(item =>
@@ -143,76 +231,6 @@ export class OnlineSettlementComponent implements OnInit {
 
     this.gridData = filteredData;
   }
-
-  // ==================================================
-  // DUMMY DROPDOWN DATA
-  // ==================================================
-
-  private loadDummyBanks(): void {
-
-    this.bankList = [
-      { paccountid: 1, pdepositbankname: 'SBI - 1234567890' },
-      { paccountid: 2, pdepositbankname: 'HDFC - 9876543210' },
-      { paccountid: 3, pdepositbankname: 'ICICI - 4567891230' }
-    ];
-
-    this.PaytmList = [
-      { paccountid: 101, pdepositbankname: 'Paytm Wallet' },
-      { paccountid: 102, pdepositbankname: 'PhonePe UPI' },
-      { paccountid: 103, pdepositbankname: 'Google Pay' }
-    ];
-  }
-
-  private loadDummyGrid(): void {
-
-    this.originalGridData = [
-      {
-        preceiptid: 1001,
-        chitReceiptNo: 'CR001',
-        pChequenumber: 'CHQ12345',
-        pbranchname: 'Hyderabad',
-        ptotalreceivedamount: 15000,
-        ppartyname: 'Ramesh Kumar',
-        preceiptdate: '20-Feb-2026',
-        pdepositeddate: '21-Feb-2026',
-        pCleardate: '22-Feb-2026',
-        ptypeofpayment: 'Cheque',
-        cheque_bank: 'SBI'
-      },
-      {
-        preceiptid: 1002,
-        chitReceiptNo: 'CR002',
-        pChequenumber: 'CHQ56789',
-        pbranchname: 'Warangal',
-        ptotalreceivedamount: 25000,
-        ppartyname: 'Suresh Babu',
-        preceiptdate: '19-Feb-2026',
-        pdepositeddate: '20-Feb-2026',
-        pCleardate: '',
-        ptypeofpayment: 'UPI',
-        cheque_bank: 'PhonePe'
-      },
-      {
-        preceiptid: 1003,
-        chitReceiptNo: 'CR003',
-        pChequenumber: 'CHQ99887',
-        pbranchname: null,
-        ptotalreceivedamount: 10000,
-        ppartyname: 'Lakshmi Devi',
-        preceiptdate: '18-Feb-2026',
-        pdepositeddate: '19-Feb-2026',
-        pCleardate: '',
-        ptypeofpayment: 'Cheque',
-        cheque_bank: 'HDFC'
-      }
-    ];
-
-    this.gridData = [...this.originalGridData];
-  }
-
-  // ==================================================
-  // HELPERS
-  // ==================================================
 
   getSelectedTotal(): number {
     return this.selected.reduce(
