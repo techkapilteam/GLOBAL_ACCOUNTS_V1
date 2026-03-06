@@ -7,7 +7,7 @@ import { CommonService } from '../../common.service';
   providedIn: 'root'
 })
 export class AccountingTransactionsService {
- 
+
 
   httpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -24,7 +24,10 @@ export class AccountingTransactionsService {
   }
 
 
-
+  GetOnlineSettlementList(payload: { transactiondate: string; branchcode: string; companycode: string; globalschema: string; }): Observable<any>  {
+    throw new Error('Method not implemented.');
+  }
+ 
 
   deletePaymentVoucher(id: number) {
     const params = new HttpParams().set('id', id).set('BranchSchema', this._CommonService.getschemaname());
@@ -229,10 +232,14 @@ GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt:
     const params = new HttpParams().set('BrsFromDate', frombrsdate).set('BrsTodate', tobrsdate).set('_BankId', bankid).set('BranchSchema', this._CommonService.getschemaname()).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext).set('startindex', startindex).set('endindex', endindex);
     return this._CommonService.getAPI('/ChequesOnHand/GetChequesOnHandData_New', params, 'YES');
   }
-  getbankntlist( BranchSchema: any, GlobalSchema: any, CompanyCode: any, BranchCode: any) {
+  GetBankntList( BranchSchema: any, GlobalSchema: any, CompanyCode: any, BranchCode: any) {
    const params = new HttpParams().set('BranchSchema', BranchSchema).set('globalSchema', GlobalSchema)
    .set('companyCode', CompanyCode).set('branchCode', BranchCode)
     return this._CommonService.getAPI('/Accounts/GetBankntList', params, 'YES')
+  }
+  GetBankUPIDetails( GlobalSchema: any, BranchCode: any, CompanyCode: any) {
+   const params = new HttpParams().set('globalSchema', GlobalSchema).set('companyCode', CompanyCode).set('branchCode', BranchCode)
+    return this._CommonService.getAPI('/Accounts/GetBankUPIDetails', params, 'YES')
   }
 
   GetBankBalance(brstodate:any,_recordid:any,BranchSchema:any,branchCode:any,companyCode:any) {
@@ -368,9 +375,9 @@ SaveChequesIssued(data: any) {
     return this._CommonService.postAPI('/AccountingTransactions/SavePettyCash', data)
   }
 
-  saveGeneralReceipt(branchSchema: string, globalSchema: string, data: any) {
-    const params = new HttpParams()
-      .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
+  saveGeneralReceipt( data: any) {
+    const params = new HttpParams();
+      // .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
     return this._CommonService.postAPI('api/Accounts/savegeneralreceipt', data);
   }
   

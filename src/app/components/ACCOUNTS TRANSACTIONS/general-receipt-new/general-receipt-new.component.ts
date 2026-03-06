@@ -277,7 +277,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         // Use a unique identifier from your item, e.g., pBankId
         return item?.pBankId || index;
     }
-    
+
 
     preceiptslist(): FormGroup {
         return this._FormBuilder.group({
@@ -345,20 +345,50 @@ export class GeneralReceiptNewComponent implements OnInit {
 
     gst_Change($event: any) {
         debugger;
-        const gstpercentage = $event.pgstpercentage;
+
+        // If gst cleared
+        if (!$event) {
+
+            this.GeneralReceiptForm.get('preceiptslist.pgstpercentage')?.setValue('');
+
+            this.GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.setValue('');
+            this.GeneralReceiptForm.get('preceiptslist.pcgstpercentage')?.setValue('');
+            this.GeneralReceiptForm.get('preceiptslist.psgstpercentage')?.setValue('');
+            this.GeneralReceiptForm.get('preceiptslist.putgstpercentage')?.setValue('');
+
+            this.GeneralReceiptForm.get('preceiptslist.pgstamount')?.setValue(0);
+            this.GeneralReceiptForm.get('preceiptslist.pigstamount')?.setValue(0);
+            this.GeneralReceiptForm.get('preceiptslist.pcgstamount')?.setValue(0);
+            this.GeneralReceiptForm.get('preceiptslist.psgstamount')?.setValue(0);
+            this.GeneralReceiptForm.get('preceiptslist.putgstamount')?.setValue(0);
+
+            return;
+        }
+
+        // get selected gst %
+        const gstpercentage = $event.pgstpercentage ? $event.pgstpercentage : $event;
+
+        // reset percentages first
         this.GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.setValue('');
         this.GeneralReceiptForm.get('preceiptslist.pcgstpercentage')?.setValue('');
-        this.GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.setValue('');
-        this.GeneralReceiptForm.get('preceiptslist.pigstpercentage')?.setValue('');
+        this.GeneralReceiptForm.get('preceiptslist.psgstpercentage')?.setValue('');
+        this.GeneralReceiptForm.get('preceiptslist.putgstpercentage')?.setValue('');
 
-        // this.GeneralReceiptForm['controls']['preceiptslist']['controls']['pigstpercentage'].setValue('');
-        //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['pcgstpercentage'].setValue('');
-        //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['psgstpercentage'].setValue('');
-        //this.GeneralReceiptForm['controls']['preceiptslist']['controls']['putgstpercentage'].setValue('');
-        if (gstpercentage && gstpercentage != '') {
+        // reset amounts
+        this.GeneralReceiptForm.get('preceiptslist.pgstamount')?.setValue(0);
+        this.GeneralReceiptForm.get('preceiptslist.pigstamount')?.setValue(0);
+        this.GeneralReceiptForm.get('preceiptslist.pcgstamount')?.setValue(0);
+        this.GeneralReceiptForm.get('preceiptslist.psgstamount')?.setValue(0);
+        this.GeneralReceiptForm.get('preceiptslist.putgstamount')?.setValue(0);
+
+        // call calculation
+        if (gstpercentage && gstpercentage !== '') {
             this.getgstPercentage(gstpercentage);
         }
 
+        // recalculate totals
+        this.claculategsttdsamounts();
+        this.claculateTDSamount();
     }
     allowIndianAmount(event: KeyboardEvent) {
 
@@ -461,6 +491,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.claculategsttdsamounts();
     }
     partyName_Change($event: any): void {
+        debugger
         this.availableAmount = 0
         this.tempState = '';
         this.tempgstno = '';
@@ -1265,18 +1296,13 @@ export class GeneralReceiptNewComponent implements OnInit {
         return isValid;
     }
 
-    saveGeneralReceipt() {
+    saveGeneralReceipt(): void {
+
         debugger;
+
         let count = 0;
         this.disablesavebutton = true;
         this.savebutton = 'Processing';
-
-
-        // if (!this.validatesaveGeneralReceipt()) {
-        //     this.disablesavebutton = false;
-        //     this.savebutton = 'Save';
-        //     return;
-        // }
 
         const accountIds = this.paymentslist
             .map((x: any) => x.psubledgerid)
@@ -1287,192 +1313,318 @@ export class GeneralReceiptNewComponent implements OnInit {
             this.GeneralReceiptForm.controls['preceiptdate'].value
         );
 
-        this._Accountservice
-            .GetCashAmountAccountWise(
-                "GENERAL RECEIPT",
-                this._CommonService.getbranchname(),
-                accountIds,
-                trans_date,
-                this._CommonService.getschemaname(),
-                this._CommonService.getCompanyCode(),
-                this._CommonService.getBranchCode()
-            )
-            .subscribe(
-                (result: any[]) => {
+        this._Accountservice.GetCashAmountAccountWise(
+            "GENERAL RECEIPT",
+            this._CommonService.getbranchname(),
+            accountIds,
+            trans_date,
+            this._CommonService.getschemaname(),
+            this._CommonService.getCompanyCode(),
+            this._CommonService.getBranchCode()
+        )
+            .subscribe((result: any[]) => {
 
-                    if (
-                        this.GeneralReceiptForm.controls['pmodofreceipt'].value === "C" &&
-                        this.bankexists === false
-                    ) {
+                if (
+                    this.GeneralReceiptForm.controls['pmodofreceipt'].value === "C" &&
+                    this.bankexists === false
+                ) {
 
-                        for (let i = 0; i < this.paymentslist.length; i++) {
+                    for (let i = 0; i < this.paymentslist.length; i++) {
 
-                            const amount = Number(
-                                this._commonService.removeCommasInAmount(
-                                    this.paymentslist[i].ptotalamount || 0
-                                )
-                            );
-
-                            for (let j = 0; j < result.length; j++) {
-
-                                if (
-                                    this.paymentslist[i].psubledgerid ==
-                                    result[j].psubledgerid
-                                ) {
-
-                                    const balance = Number(result[j].accountbalance || 0);
-                                    const finalAmount = balance + amount;
-
-                                    if (
-                                        Number(this.cashRestrictAmount || 0) <= finalAmount
-                                    ) {
-                                        count = 1;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (count === 1) break;
-                        }
-                    }
-
-
-
-                    if (count !== 0) {
-
-                        this._commonService.showWarningMessage(
-                            'Subledger per day Cash transactions limit below ' +
-                            this._commonService.currencysymbol +
-                            this._commonService.currencyformat(this.cashRestrictAmount)
+                        const amount = Number(
+                            this._commonService.removeCommasInAmount(
+                                this.paymentslist[i].ptotalamount || 0
+                            )
                         );
 
-                        this.disablesavebutton = false;
-                        this.savebutton = 'Save';
-                        return;
-                    }
+                        for (let j = 0; j < result.length; j++) {
 
-                    if (!confirm("Do You Want to Save ?")) {
-                        this.disablesavebutton = false;
-                        this.savebutton = 'Save';
-                        return;
-                    }
+                            if (this.paymentslist[i].psubledgerid == result[j].psubledgerid) {
 
-                    const totalamount = Number(
-                        this._commonService.removeCommasInAmount(
-                            this.paymentlistcolumnwiselist?.ptotalamount || 0
-                        )
+                                const balance = Number(result[j].accountbalance || 0);
+                                const finalAmount = balance + amount;
+
+                                if (Number(this.cashRestrictAmount || 0) <= finalAmount) {
+                                    count = 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (count === 1) break;
+                    }
+                }
+
+                if (count !== 0) {
+
+                    this._commonService.showWarningMessage(
+                        'Subledger per day Cash transactions limit below ' +
+                        this._commonService.currencysymbol +
+                        this._commonService.currencyformat(this.cashRestrictAmount)
                     );
 
-                    const payload = {
+                    this.disablesavebutton = false;
+                    this.savebutton = 'Save';
+                    return;
+                }
 
-                        branch_id: Number(this._commonService.getbrachid() || 0),
+                if (!confirm("Do You Want to Save ?")) {
+                    this.disablesavebutton = false;
+                    this.savebutton = 'Save';
+                    return;
+                }
 
-                        company_code: this._commonService.getCompanyCode() || '',
+                const totalamount = Number(
+                    this._commonService.removeCommasInAmount(
+                        this.paymentlistcolumnwiselist?.ptotalamount || 0
+                    )
+                );
 
-                        branch_code: this._commonService.getBranchCode() || '',
+                /* -------- SWAGGER PAYLOAD -------- */
 
-                        receipt_number:
-                            this.GeneralReceiptForm.value.preceiptid || "0",
+                // let payload: any = {
 
-                        receipt_date: trans_date,
+                //     ...this.GeneralReceiptForm.value,
 
-                        total_received_amount: totalamount,
+                //     pRecordid: "0",
 
-                        debit_account_id:
-                            Number(this.GeneralReceiptForm.value.pledgerid || 0),
+                //     branchid: String(this._commonService.getbrachid()),
+                //     companycode: this._commonService.getCompanyCode(),
+                //     branchcode: this._commonService.getBranchCode(),
 
-                        contact_id:
-                            Number(this.GeneralReceiptForm.value.ppartyid || 0),
+                //     global_schema: this._commonService.getschemaname(),
+                //     branch_schema: this._commonService.getbranchname(),
 
-                        modeof_receipt:
-                            this.GeneralReceiptForm.value.pmodofreceipt || '',
+                //     preceiptdate: trans_date,
+                //     ptotalreceivedamount: String(totalamount),
 
-                        is_tds_applicable:
-                            Boolean(this.GeneralReceiptForm.value.pistdsapplicable),
+                //     pCreatedby: this._commonService.getCreatedBy(),
+                //     ptypeofoperation: "CREATE",
 
-                        narration:
-                            this.GeneralReceiptForm.value.pnarration || '',
+                //     preceiptslist: this.paymentslist.map((x: any) => ({
 
-                        created_by:
-                            0,
+                //         psubledgerid: x.psubledgerid || "",
+                //         psubledgername: x.psubledgername || "",
+                //         pledgerid: x.pledgerid || "",
+                //         pledgername: x.pledgername || "",
 
-                        ptypeofoperation: "CREATE",
+                //         id: "",
+                //         text: "",
+                //         ptranstype: "",
+                //         accountbalance: "",
+                //         pAccounttype: "",
+                //         legalcellReceipt: "",
+                //         pbranchcode: "",
+                //         pbranchtype: "",
+                //         groupcode: "",
+                //         chitgroupid: "",
 
-                        generalreceiptdetails: this.paymentslist.map((x: any) => ({
+                //         pamount: String(
+                //             this._commonService.removeCommasInAmount(x.pamount || 0)
+                //         ),
 
-                            credit_account_id: Number(x.psubledgerid || 0),
+                //         pgsttype: x.pgsttype || "",
+                //         pgstcalculationtype: x.pgstcalculationtype || "",
+                //         pgstpercentage: x.pgstpercentage || "",
+                //         pigstamount: x.pigstamount || "",
+                //         pcgstamount: x.pcgstamount || "",
+                //         psgstamount: x.psgstamount || "",
+                //         putgstamount: x.putgstamount || "",
 
-                            ledger_amount: Number(
-                                this._commonService.removeCommasInAmount(x.pamount || 0)
-                            ),
+                //         pState: "",
+                //         pStateId: "",
+                //         pgstno: "",
 
-                            is_gst_applicable: Boolean(x.pisgstapplicable),
+                //         pisgstapplicable: x.pisgstapplicable || "",
 
-                            gst_amount: Number(
-                                this._commonService.removeCommasInAmount(x.pgstamount || 0)
-                            ),
+                //         ptdsamountindividual: x.ptdsamountindividual || "",
+                //         pTdsSection: x.pTdsSection || "",
+                //         pTdsPercentage: x.pTdsPercentage || "",
 
-                            gst_percentage: Number(x.pgstpercentage || 0)
-                        }))
-                    };
+                //         preferencetext: ""
 
-                    console.log('General Receipt Payload:', payload);
+                //     }))
+                // };
 
+                let payload: any = {
 
-                    this._Accountservice
-                        .saveGeneralReceipt(
-                            this._commonService.getbranchname(),
-                            this._commonService.getschemaname(),
-                            payload
-                        )
-                        .subscribe(
-                            (res: any) => {
+                    ...this.GeneralReceiptForm.value,
 
-                                if (res === true) {
+                    pStatusid: "",
+                    pStatusname: "",
+                    pEffectfromdate: "",
+                    pEffecttodate: "",
+                    pipaddress: "",
 
-                                    this._commonService.showInfoMessage("Saved successfully");
+                    global_schema: this._commonService.getschemaname(),
+                    branch_schema: this._commonService.getbranchname(),
 
-                                    const receipt = btoa(
-                                        payload.receipt_number + ',' +
-                                        'General Receipt' + ',' +
-                                        '' + ',' +
-                                        this._commonService.getschemaname()
-                                    );
+                    companycode: this._commonService.getCompanyCode(),
+                    branchcode: this._commonService.getBranchCode(),
+                    branchid: String(this._commonService.getbrachid()),
 
-                                    window.open(
-                                        '/#/GeneralReceiptReport?id=' + receipt,
-                                        "_blank"
-                                    );
+                    pCreatedby: this._commonService.getCreatedBy(),
+                    ptypeofoperation: "CREATE",
 
-                                    this.ClearGenerealReceipt();
-                                }
+                    preceiptid: "",
+                    preceiptno: "",
+                    preceiptdate: trans_date,
+                    pmodofreceipt: this.GeneralReceiptForm.value.pmodofreceipt || "",
 
-                                this.disablesavebutton = false;
-                                this.savebutton = 'Save';
-                            },
-                            (error) => {
+                    ptotalreceivedamount: Number(totalamount) || 0,
+                    pnarration: this.GeneralReceiptForm.value.pnarration || "",
 
-                                this._commonService.showErrorMessage(error);
+                    // -------- Party --------
+                    ppartyname: this.GeneralReceiptForm.value.ppartyname || "",
+                    ppartyid: this.GeneralReceiptForm.value.ppartyid || null,
+                    ppartypannumber: "",
+                    ppartyreftype: "",
+                    ppartyreferenceid: "",
 
-                                this.disablesavebutton = false;
-                                this.savebutton = 'Save';
-                            }
-                        );
-                },
+                    pistdsapplicable: this.GeneralReceiptForm.value.pistdsapplicable || false,
+                    pTdsSection: "",
+                    pTdsPercentage: Number(this.GeneralReceiptForm.value.pTdsPercentage) || 0,
+                    ptdsamount: Number(this.GeneralReceiptForm.value.ptdsamount) || 0,
+                    ptdscalculationtype: "",
+                    ptdsaccountid: "",
+                    pTdsSectionId: "",
+
+                    pFilename: "",
+                    pFilepath: "",
+                    pFileformat: "",
+
+                    pCleardate: "",
+                    pdepositeddate: "",
+
+                    preceiptrecordid: "",
+                    groupcode: "",
+                    pchequestatus: "",
+                    preferencetext: "",
+                    formname: "General Receipt",
+                    chitpaymentid: "",
+                    adjustmentid: "",
+
+                    pBankName: this.GeneralReceiptForm.value.pBankName || "",
+                    pbranchname: this.GeneralReceiptForm.value.pbranchname || "",
+                    ptranstype: this.GeneralReceiptForm.value.ptranstype || "",
+                    ptypeofpayment: this.GeneralReceiptForm.value.ptypeofpayment || "",
+                    pChequenumber: this.GeneralReceiptForm.value.pChequenumber || "",
+                    pchequedate: this.GeneralReceiptForm.value.pchequedate || "",
+                    pchequedepositdate: "",
+                    pchequecleardate: "",
+                    pbankid: this.GeneralReceiptForm.value.pbankid || 0,
+                    pCardNumber: "",
+                    pdepositbankid: 0,
+                    pdepositbankname: "",
+                    pAccountnumber: this.GeneralReceiptForm.value.pAccountnumber || "",
+                    ChallanaNo: "",
+
+                    pRecordid: "0",
+                    pUpiname: "",
+                    pUpiid: "",
+                    pBankconfigurationId: "",
+
+                    preceiptslist: this.paymentslist.map((x: any) => ({
+
+                        psubledgerid: x.psubledgerid || "",
+                        psubledgername: x.psubledgername || "",
+                        pledgerid: x.pledgerid || "",
+                        pledgername: x.pledgername || "",
+
+                        id: "",
+                        text: "",
+                        ptranstype: "",
+                        accountbalance: "",
+                        pAccounttype: "",
+                        legalcellReceipt: "",
+                        pbranchcode: "",
+                        pbranchtype: "",
+                        groupcode: "",
+                        chitgroupid: "",
+
+                        pamount: Number(this._commonService.removeCommasInAmount(x.pamount || 0)),
+
+                        pgsttype: x.pgsttype || "",
+                        pgstcalculationtype: x.pgstcalculationtype || "",
+                        pgstpercentage: Number(x.pgstpercentage) || 0,
+
+                        pigstamount: Number(x.pigstamount) || 0,
+                        pcgstamount: Number(x.pcgstamount) || 0,
+                        psgstamount: Number(x.psgstamount) || 0,
+                        putgstamount: Number(x.putgstamount) || 0,
+
+                        pState: "",
+                        pStateId: "",
+                        pgstno: "",
+
+                        pisgstapplicable: x.pisgstapplicable || false,
+
+                        ptdsamountindividual: Number(x.ptdsamountindividual) || 0,
+                        pTdsSection: x.pTdsSection || "",
+                        pTdsPercentage: Number(x.pTdsPercentage) || 0,
+
+                        preferencetext: "",
+
+                        pgstamount: Number(x.pgstamount) || 0,
+                        pigstpercentage: Number(x.pigstpercentage) || 0,
+                        pcgstpercentage: Number(x.pcgstpercentage) || 0,
+                        psgstpercentage: Number(x.psgstpercentage) || 0,
+                        putgstpercentage: Number(x.putgstpercentage) || 0,
+
+                        pactualpaidamount: Number(x.pactualpaidamount) || 0,
+                        ptotalamount: Number(x.ptotalamount) || 0
+
+                    }))
+                };
+
+                console.log("Swagger Payload:", payload);
+
+                this._Accountservice.saveGeneralReceipt(payload).subscribe(
+
+                    (res: any) => {
+
+                        if (res === true) {
+
+                            this._commonService.showInfoMessage("Saved successfully");
+
+                            let receipt = btoa(
+                                payload.preceiptid + ',' +
+                                'General Receipt' + ',' +
+                                '' + ',' +
+                                this._commonService.getschemaname()
+                            );
+
+                            window.open('/#/GeneralReceiptReport?id=' + receipt, "_blank");
+
+                            this.ClearGenerealReceipt();
+                        }
+
+                        this.disablesavebutton = false;
+                        this.savebutton = 'Save';
+                    },
+
+                    (error) => {
+
+                        this._commonService.showErrorMessage(error);
+
+                        this.disablesavebutton = false;
+                        this.savebutton = 'Save';
+                    }
+                );
+
+            },
                 (error) => {
 
                     this._commonService.showErrorMessage(error);
 
                     this.disablesavebutton = false;
                     this.savebutton = 'Save';
-                }
-            );
+                });
     }
 
     getpartyJournalEntryData() {
         debugger;
         try {
-
             let dataobject;
             let journalentryamount;
             let tdsjournalentrylist = [];
@@ -1652,29 +1804,21 @@ export class GeneralReceiptNewComponent implements OnInit {
     // }
 
     tdsSection_Change(event: any): void {
-        debugger
-        const group = this.GeneralReceiptForm.get('ppaymentsslistcontrols');
-        // const ptdssection = $event?.target?.value;
-        const ptdssection = event.pTdsSection;
-
+        debugger;
+        let group = this.GeneralReceiptForm.get('ppaymentsslistcontrols');
+        let pTdsSection = event?.pTdsSection;
         this.tdspercentagelist = [];
         group?.get('pTdsPercentage')?.setValue('');
+        group?.get('ptdsamount')?.setValue('');
 
-        if (ptdssection) {
-
-            console.log('per:', ptdssection)
-            this.gettdsPercentage(ptdssection);
+        if (pTdsSection) {
+            console.log('Selected Section:', pTdsSection);
+            this.gettdsPercentage(pTdsSection);
         }
-
-        this.GetValidationByControl(
-            this.GeneralReceiptForm,
-            'pTdsSection',
-            true
-        );
+        this.GetValidationByControl(this.GeneralReceiptForm, 'pTdsSection', true);
     }
-
     gettdsPercentage(ptdssection: any) {
-        debugger
+        debugger;
         this.tdspercentagelist = this.tdslist.filter((res: { pTdsSection: any }) =>
             res.pTdsSection == ptdssection
         );
@@ -1696,7 +1840,12 @@ export class GeneralReceiptNewComponent implements OnInit {
     //     }
 
     // }
-
+    tdsPercentage_Change(): void {
+        const group = this.GeneralReceiptForm.get('ppaymentsslistcontrols');
+        group?.get('ptdsamount')?.setValue('');
+        this.claculateTDSamount();
+        this.GetValidationByControl(this.GeneralReceiptForm, 'pTdsPercentage', true);
+    }
     // tdsSection_Change($event: any): void {
     //     debugger
     //     const pTdsSection = $event.pTdsSection;
@@ -1942,12 +2091,23 @@ export class GeneralReceiptNewComponent implements OnInit {
     //  { target: { value: any; options: { [x: string]: { text: any; }; }; selectedIndex: string | number; }; }
 
     state_change($event: any) {
-        debugger
+        debugger;
+        if (!$event) {
+            this.gst_clear();
+            this.GeneralReceiptForm.get('preceiptslist.pStateId')?.setValue(null);
+            this.GeneralReceiptForm.get('preceiptslist.pState')?.setValue('');
+            this.GeneralReceiptForm.get('preceiptslist.pgstno')?.setValue('');
+            this.GeneralReceiptForm.get('preceiptslist.pgstpercentage')?.setValue(null);
+            this.showgstamount = false;
+            this.showigst = false;
+            this.showcgst = false;
+            this.showsgst = false;
+            this.showutgst = false;
+            this.showgstno = false;
+            return;
+        }
         const pstateid = $event.pStateId;
-
         this.gst_clear();
-        // pgstno
-        // Hide everything by default
         this.showgstamount = false;
         this.showigst = false;
         this.showcgst = false;
@@ -1955,9 +2115,8 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.showutgst = false;
         this.showgstno = false;
 
-        if (pstateid && pstateid !== '') {
+        if (pstateid) {
 
-            // If using ng-select, get selected object properly
             let selectedState = this.statelist.find((x: any) => x.pStateId == pstateid);
 
             if (!selectedState) return;
@@ -1974,10 +2133,8 @@ export class GeneralReceiptNewComponent implements OnInit {
             this.GeneralReceiptForm.get('preceiptslist.pgsttype')?.setValue(selectedState.pgsttype);
             this.GeneralReceiptForm.get('preceiptslist.pgstno')?.setValue(selectedState.gstnumber);
 
-            // Show GST amount section
             this.showgstamount = true;
 
-            // Show GST type fields
             if (selectedState.pgsttype === 'IGST') {
                 this.showigst = true;
             }
@@ -1993,10 +2150,6 @@ export class GeneralReceiptNewComponent implements OnInit {
 
             this.claculategsttdsamounts();
             this.claculateTDSamount();
-        }
-        else {
-            // Clear state if nothing selected
-            this.GeneralReceiptForm.get('preceiptslist.pState')?.setValue('');
         }
     }
 

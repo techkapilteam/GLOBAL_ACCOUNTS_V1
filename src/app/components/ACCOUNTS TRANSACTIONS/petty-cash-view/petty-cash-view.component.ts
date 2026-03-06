@@ -1,118 +1,118 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { TableModule } from 'primeng/table';
-import { PageCriteria } from '../../../Models/pageCriteria';
-import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
-import { CommonService } from '../../../services/common.service';
+// import { Component, OnInit } from '@angular/core';
+// import { CommonModule, CurrencyPipe } from '@angular/common';
+// import { RouterModule } from '@angular/router';
+// import { TableModule } from 'primeng/table';
+// import { PageCriteria } from '../../../Models/pageCriteria';
+// import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+// import { CommonService } from '../../../services/common.service';
 
-@Component({
-  selector: 'app-petty-cash-view',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    TableModule,
-    CurrencyPipe
-  ],
-  templateUrl: './petty-cash-view.component.html',
-  styleUrls: ['./petty-cash-view.component.css']
-})
-export class PettyCashViewComponent implements OnInit {
-  public gridData: any[] = [];
-  public gridView: any[] = [];
-  public filteredData: any[] = [];
-  public list: any[] = [];
-  public columnsWithSearch: string[] = [];
-  public currencySymbol!: string;
+// @Component({
+//   selector: 'app-petty-cash-view',
+//   standalone: true,
+//   imports: [
+//     CommonModule,
+//     RouterModule,
+//     TableModule,
+//     CurrencyPipe
+//   ],
+//   templateUrl: './petty-cash-view.component.html',
+//   styleUrls: ['./petty-cash-view.component.css']
+// })
+// export class PettyCashViewComponent implements OnInit {
+//   public gridData: any[] = [];
+//   public gridView: any[] = [];
+//   public filteredData: any[] = [];
+//   public list: any[] = [];
+//   public columnsWithSearch: string[] = [];
+//   public currencySymbol!: string;
 
-  pageCriteria: PageCriteria;
+//   pageCriteria: PageCriteria;
 
-  constructor(
-    private _commonService: CommonService,
-    private _AccountingTransactionsService: AccountingTransactionsService,
-    private router: RouterModule
-  ) {
-    this.pageCriteria = new PageCriteria();
-  }
+//   constructor(
+//     private _commonService: CommonService,
+//     private _AccountingTransactionsService: AccountingTransactionsService,
+//     private router: RouterModule
+//   ) {
+//     this.pageCriteria = new PageCriteria();
+//   }
 
-  ngOnInit(): void {
-    this.setPageModel();
-    this.getLoadData();
-
-
-    this.currencySymbol = this._commonService.currencysymbol
-      ? this._commonService.currencysymbol
-      : '₹';
-  }
-
-  setPageModel() {
-    this.pageCriteria.pageSize = this._commonService.pageSize;
-    this.pageCriteria.offset = 0;
-    this.pageCriteria.pageNumber = 1;
-    this.pageCriteria.footerPageHeight = 50;
-  }
+//   ngOnInit(): void {
+//     this.setPageModel();
+//     this.getLoadData();
 
 
- getLoadData(): void {let GlobalSchema = 'global'; let BranchSchema = 'accounts';
-  let CompanyCode = 'KAPILCHITS'; let Branchcode = 'KLC01';
+//     this.currencySymbol = this._commonService.currencysymbol
+//       ? this._commonService.currencysymbol
+//       : '₹';
+//   }
 
-  console.log('API Params:', GlobalSchema, BranchSchema, CompanyCode, Branchcode
-  );
-  this._AccountingTransactionsService
-    .GetPettyCashExistingData( GlobalSchema, BranchSchema, CompanyCode, Branchcode
-    )
-    .subscribe({ next: (json: any[]) => {
-        if (!json || json.length === 0) {
-          this.gridData = [];this.gridView = []; this.filteredData = []; this.pageCriteria.totalrows = 0;
-          this.pageCriteria.TotalPages = 0;
-          return;
-        }
-        this.gridData = json; this.gridView = [...json]; this.list = json; this.gridView.forEach((data: any) => {
-          data.preceiptdate =
-            this._commonService.getFormatDateGlobal(data.preceiptdate);
-        });
-        this.filteredData = [...this.gridView];
-        this.columnsWithSearch = this.gridView.length > 0 ? Object.keys(this.gridView[0]) : [];
+//   setPageModel() {
+//     this.pageCriteria.pageSize = this._commonService.pageSize;
+//     this.pageCriteria.offset = 0;
+//     this.pageCriteria.pageNumber = 1;
+//     this.pageCriteria.footerPageHeight = 50;
+//   }
 
-        this.pageCriteria.totalrows = this.gridView.length;
-        this.pageCriteria.TotalPages = Math.ceil(
-        this.pageCriteria.totalrows / this.pageCriteria.pageSize
-        );
 
-        this.pageCriteria.currentPageRows =
-          this.gridView.length < this.pageCriteria.pageSize
-            ? this.gridView.length
-            : this.pageCriteria.pageSize;
-      },
-      error: (error) => {
-        this._commonService.showErrorMessage(error);
-      }
-    });
-}
-  viewRow(row: any) {
-    const receipt = btoa(row.preceiptid + ',' + 'Petty Cash');
-    window.open('/#/PaymentVoucherReport?id=' + receipt, '_blank');
-  }
+//  getLoadData(): void {let GlobalSchema = 'global'; let BranchSchema = 'accounts';
+//   let CompanyCode = 'KAPILCHITS'; let Branchcode = 'KLC01';
 
-  filterDatatable(event: any) {
-    const filter = event.target.value.toLowerCase();
-    this.gridView = this.filteredData.filter((item) => {
-      for (let i = 0; i < this.columnsWithSearch.length; i++) {
-        const colValue = item[this.columnsWithSearch[i]];
-        if (
-          !filter ||
-          (!!colValue &&
-            colValue.toString().toLowerCase().indexOf(filter) !== -1)
-        ) {
-          return true;
-        }
-      }
-      return false;
-    });
-    this.pageCriteria.offset = 0;
-  }
-}
+//   console.log('API Params:', GlobalSchema, BranchSchema, CompanyCode, Branchcode
+//   );
+//   this._AccountingTransactionsService
+//     .GetPettyCashExistingData( GlobalSchema, BranchSchema, CompanyCode, Branchcode
+//     )
+//     .subscribe({ next: (json: any[]) => {
+//         if (!json || json.length === 0) {
+//           this.gridData = [];this.gridView = []; this.filteredData = []; this.pageCriteria.totalrows = 0;
+//           this.pageCriteria.TotalPages = 0;
+//           return;
+//         }
+//         this.gridData = json; this.gridView = [...json]; this.list = json; this.gridView.forEach((data: any) => {
+//           data.preceiptdate =
+//             this._commonService.getFormatDateGlobal(data.preceiptdate);
+//         });
+//         this.filteredData = [...this.gridView];
+//         this.columnsWithSearch = this.gridView.length > 0 ? Object.keys(this.gridView[0]) : [];
+
+//         this.pageCriteria.totalrows = this.gridView.length;
+//         this.pageCriteria.TotalPages = Math.ceil(
+//         this.pageCriteria.totalrows / this.pageCriteria.pageSize
+//         );
+
+//         this.pageCriteria.currentPageRows =
+//           this.gridView.length < this.pageCriteria.pageSize
+//             ? this.gridView.length
+//             : this.pageCriteria.pageSize;
+//       },
+//       error: (error) => {
+//         this._commonService.showErrorMessage(error);
+//       }
+//     });
+// }
+//   viewRow(row: any) {
+//     const receipt = btoa(row.preceiptid + ',' + 'Petty Cash');
+//     window.open('/#/PaymentVoucherReport?id=' + receipt, '_blank');
+//   }
+
+//   filterDatatable(event: any) {
+//     const filter = event.target.value.toLowerCase();
+//     this.gridView = this.filteredData.filter((item) => {
+//       for (let i = 0; i < this.columnsWithSearch.length; i++) {
+//         const colValue = item[this.columnsWithSearch[i]];
+//         if (
+//           !filter ||
+//           (!!colValue &&
+//             colValue.toString().toLowerCase().indexOf(filter) !== -1)
+//         ) {
+//           return true;
+//         }
+//       }
+//       return false;
+//     });
+//     this.pageCriteria.offset = 0;
+//   }
+// }
 
 // @Component({
 //   selector: 'app-petty-cash-view',
@@ -198,3 +198,149 @@ export class PettyCashViewComponent implements OnInit {
 //   }
 
 // }
+
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TableModule } from 'primeng/table';
+
+import { PageCriteria } from '../../../Models/pageCriteria';
+import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { CommonService } from '../../../services/common.service';
+
+@Component({
+  selector: 'app-petty-cash-view',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TableModule,
+    CurrencyPipe
+  ],
+  templateUrl: './petty-cash-view.component.html',
+  styleUrls: ['./petty-cash-view.component.css']
+})
+export class PettyCashViewComponent implements OnInit {
+
+  public gridData: any[] = [];
+  public gridView: any[] = [];
+  public filteredData: any[] = [];
+  public list: any[] = [];
+  public columnsWithSearch: string[] = [];
+  public currencySymbol!: string;
+
+  pageCriteria: PageCriteria;
+
+  constructor(
+    private _commonService: CommonService,
+    private _AccountingTransactionsService: AccountingTransactionsService
+  ) {
+    this.pageCriteria = new PageCriteria();
+  }
+
+  // ======================================
+  // INIT
+  // ======================================
+
+  ngOnInit(): void {
+
+    this.setPageModel();
+    this.getLoadData();
+
+    this.currencySymbol = this._commonService.currencysymbol
+      ? this._commonService.currencysymbol
+      : '₹';
+  }
+
+  // ======================================
+  // PAGE MODEL
+  // ======================================
+
+  setPageModel() {
+
+    this.pageCriteria.pageSize = this._commonService.pageSize;
+    this.pageCriteria.offset = 0;
+    this.pageCriteria.pageNumber = 1;
+    this.pageCriteria.footerPageHeight = 50;
+
+  }
+
+  // ======================================
+  // LOAD GRID DATA
+  // ======================================
+
+  getLoadData(): void {
+
+    const GlobalSchema = this._commonService.getschemaname();
+    const BranchSchema = this._commonService.getbranchname();
+    const CompanyCode = this._commonService.getCompanyCode();
+    const Branchcode = this._commonService.getBranchCode();
+
+    console.log('API Params:', GlobalSchema, BranchSchema, CompanyCode, Branchcode);
+
+    this._AccountingTransactionsService.GetPettyCashExistingData('global','accounts','KAPILCHITS','KLC01')
+      .subscribe({
+
+        next: (json: any[]) => {
+
+          if (!json || json.length === 0) {
+
+            this.gridData = [];
+            this.gridView = [];
+            this.filteredData = [];
+
+            this.pageCriteria.totalrows = 0;
+            this.pageCriteria.TotalPages = 0;
+
+            return;
+          }
+
+          this.gridData = json;
+          this.gridView = [...json];
+          this.list = json;
+
+          this.gridView.forEach((data: any) => {
+
+            data.preceiptdate =
+              this._commonService.getFormatDateGlobal(data.preceiptdate);
+
+          });
+
+          this.filteredData = [...this.gridView];
+
+          this.columnsWithSearch =
+            this.gridView.length > 0
+              ? Object.keys(this.gridView[0])
+              : [];
+
+          this.pageCriteria.totalrows = this.gridView.length;
+
+          this.pageCriteria.TotalPages = Math.ceil(
+            this.pageCriteria.totalrows /
+            this.pageCriteria.pageSize
+          );
+          this.pageCriteria.currentPageRows = this.gridView.length < this.pageCriteria.pageSize? this.gridView.length : this.pageCriteria.pageSize;
+        },
+        error: (error) => {this._commonService.showErrorMessage(error);}});
+  }
+  viewRow(row: any) {
+    let receipt = btoa(row.preceiptid + ',' + 'Petty Cash');
+    window.open('/#/PaymentVoucherReport?id=' + receipt, '_blank');
+  }
+
+  filterDatatable(event: any) {
+    let filter = event.target.value.toLowerCase();this.gridView = this.filteredData.filter((item) => {
+
+      for (let i = 0; i < this.columnsWithSearch.length; i++) {
+        let colValue = item[this.columnsWithSearch[i]];
+        if (
+          !filter || (!!colValue && colValue.toString().toLowerCase().indexOf(filter) !== -1)) 
+          {
+          return true;
+          }
+      }
+      return false; });
+    this.pageCriteria.offset = 0;
+  }
+}
