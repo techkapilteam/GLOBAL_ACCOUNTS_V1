@@ -13,7 +13,7 @@ import { CompanyDetailsComponent } from 'src/app/common/company-details/company-
   selector: 'app-journal-voucher-report',
   imports: [ CommonModule,
     DatePipe,
-    TitleCasePipe,CompanyDetailsComponent],
+    TitleCasePipe],
   templateUrl: './journal-voucher-report.component.html',
   styleUrl: './journal-voucher-report.component.css',
 })
