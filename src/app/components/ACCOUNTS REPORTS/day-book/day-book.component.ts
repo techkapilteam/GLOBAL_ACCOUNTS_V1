@@ -13,6 +13,7 @@ import { finalize } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-day-book',
@@ -22,7 +23,7 @@ import autoTable from 'jspdf-autotable';
     FormsModule,
     ReactiveFormsModule,
     NgxDatatableModule,
-    BsDatepickerModule,TableModule,NgSelectModule
+    BsDatepickerModule,TableModule,NgSelectModule,CompanyDetailsComponent
   ],
   templateUrl: './day-book.component.html',
   styleUrls: ['./day-book.component.css'],
@@ -208,6 +209,7 @@ kgms: boolean = false;
 dte:boolean=false;
   EndDate!: string | null;
   StartDate!: string | null;
+  printedDate: boolean = true;
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
@@ -465,15 +467,32 @@ let toDate: string;
     let paycreditamt = '';
     
 
-    if (element.prcptdebitamount !== 0) {
-      // debitamount = this.commonService.currencyformat(parseFloat(element.prcptdebitamount));
-      debitamount = this.commonService.convertAmountToPdfFormat(parseFloat(element.prcptdebitamount));
-    }
+    // if (element.prcptdebitamount !== 0) {
+    //   // debitamount = this.commonService.currencyformat(parseFloat(element.prcptdebitamount));
+    //   debitamount = this.commonService.convertAmountToPdfFormat(parseFloat(element.prcptdebitamount));
+    // }
 
-    if (element.pcreditamount !== 0) {
-      // paycreditamt = this.commonService.currencyformat(element.pcreditamount);
-      paycreditamt = this.commonService.convertAmountToPdfFormat(parseFloat(element.pcreditamount));
-    }
+    // if (element.pcreditamount !== 0) {
+    //   // paycreditamt = this.commonService.currencyformat(element.pcreditamount);
+    //   paycreditamt = this.commonService.convertAmountToPdfFormat(parseFloat(element.pcreditamount));
+    // }
+if (element.prcptdebitamount != null && element.prcptdebitamount !== 0 && element.prcptdebitamount !== '') {
+  const parsed = parseFloat(element.prcptdebitamount);
+  debitamount = !isNaN(parsed) 
+    ? this.commonService.convertAmountToPdfFormat(parsed)
+    : '0';
+} else {
+  debitamount = this.commonService.convertAmountToPdfFormat(0);
+}
+
+if (element.pcreditamount != null && element.pcreditamount !== 0 && element.pcreditamount !== '') {
+  const parsed = parseFloat(element.pcreditamount);
+  paycreditamt = !isNaN(parsed)
+    ? this.commonService.convertAmountToPdfFormat(parsed)
+    : '0';
+} else {
+  paycreditamt = this.commonService.convertAmountToPdfFormat(0);
+}
     
 
     // let temp: any[];

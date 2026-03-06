@@ -122,6 +122,10 @@ export class CommonService {
     const rupeeImage = this._getRupeeSymbol();
     const currencySymbol = this.currencysymbol;
     const today = this.pdfProperties('Date');
+    const companyName = company?.companyName ?? '';
+const companyAddress = company?.registrationAddress ?? '';
+const companyCIN = company?.cinNumber ?? '';
+const companyBranch = company?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
@@ -180,15 +184,15 @@ export class CommonService {
           // doc.text(address, pageWidth / 2, 18, { align: 'center' });
           doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
           doc.setFontSize(12);
           doc.text(reportName, pageWidth / 2, 35, { align: 'center' });
@@ -196,7 +200,7 @@ export class CommonService {
           // doc.text(`Branch : ${company?.pBranchname ?? ''}`, pageWidth - 60, 40);
           doc.setFontSize(10);
           doc.setFont('helvetica', 'normal');
-          doc.text('Branch : CA-HYDERABAD-CO', pageWidth - rightMargin, 40, {
+          doc.text(`Branch : ${companyBranch}`, pageWidth - rightMargin, 40, {
       align: 'right'
     });
 
@@ -683,16 +687,21 @@ export class CommonService {
     if (!companyDetails) {
       return '';
     }
-    let address = '';
+    // let address = '';
 
-    if (companyDetails.pAddress1?.trim()) {
-      address = companyDetails.pAddress1.trim();
-    }
+    // if (companyDetails.pAddress1?.trim()) {
+    //   address = companyDetails.pAddress1.trim();
+    // }
+    const address = companyDetails.branchAddress?.trim() ?? '';
     return address ? `${address.replace(/,\s*$/, '')}.` : '';
   }
   _getCompanyDetails(): any | null {
-    let raw = sessionStorage.getItem('companydetails');
-    return raw ? JSON.parse(raw) : null;
+    let raw = sessionStorage.getItem('CompanyDetails');
+    // return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+ 
+  const parsed = JSON.parse(raw);
+  return Array.isArray(parsed) ? parsed[0] : parsed;
   }
 
   // showErrorMessage(errormsg: string) {
@@ -1008,8 +1017,8 @@ export class CommonService {
         if (doc.getNumberOfPages() === 1) {
           doc.setFontSize(15);
 
-          doc.addImage(kapil_logo, 'JPEG', 10, 5, 40, 20);
-          doc.text(Companyreportdetails?.pCompanyName ?? '', 60, 10);
+          doc.addImage(kapil_logo, 'JPEG', 10, 5, 20, 20);
+          doc.text(Companyreportdetails?.companyName  ?? '', 60, 10);
 
           doc.setFontSize(14);
           doc.text(reportName, 87, 30);
@@ -1240,6 +1249,10 @@ export class CommonService {
 
     const company = this._getCompanyDetails();
     const address = this.getcompanyaddress();
+    const companyName = company?.companyName ?? '';
+const companyAddress = company?.registrationAddress ?? '';
+const companyCIN = company?.cinNumber ?? '';
+const companyBranch = company?.uniqueBranchName ?? '';
     const doc = new jsPDF({
       orientation: pagetype === 'landscape' ? 'landscape' : 'portrait',
       unit: 'mm',
@@ -1302,25 +1315,25 @@ export class CommonService {
             // }
             doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
             doc.setFontSize(14);
             doc.text(reportName, 90, 35);
 
             doc.setFontSize(10);
             // doc.text('Branch : ' + company?.pBranchname, 163, 40);
-            doc.text('Branch : ' , 163, 40);
+            doc.text('Branch : '+companyBranch, 163, 40);
 
             if (grouptype === 'Between') {
-              doc.text('Between : CA-HYDERABAD-CO' + from + ' And ' + to, 15, 40);
+              doc.text(`Between : ${companyBranch}` + from + ' And ' + to, 15, 40);
             } else if (grouptype === 'Ason' && from) {
               doc.text('As on : ' + from, 15, 40);
             }
@@ -1338,22 +1351,22 @@ export class CommonService {
             // }
             doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
             doc.setFontSize(14);
             doc.text(reportName, 130, 33);
 
             doc.setFontSize(10);
             // doc.text('Branch : ' + company?.pBranchname, 235, 40);
-            doc.text('Branch : CA-HYDERABAD-CO' , 235, 40);
+            doc.text(`Between : ${companyBranch}` , 235, 40);
 
             if (grouptype === 'Between') {
               doc.text('Between : ' + from + ' And ' + to, 15, 40);
@@ -1402,6 +1415,7 @@ export class CommonService {
         ) {
 
           const textPos = data.cell.textPos;
+           if (!textPos) return;
 
           if (data.row.index === gridData.length - 1) {
             doc.setFont('helvetica', 'bold');
@@ -1467,7 +1481,7 @@ export class CommonService {
   ): void {
 
     const company: any = this._getCompanyDetails();
-    let address = company?.pAddress1 || this.getcompanyaddress() || '';
+    let address = company?.registrationAddress || this.getcompanyaddress() || '';
     address = address.replace(/,\s*$/, '');
     if (address) address += '.';
 
@@ -1480,14 +1494,14 @@ export class CommonService {
 
     doc.setFont('times', 'normal');
     doc.setFontSize(15);
-    doc.text(company?.pCompanyName ?? '', pageWidth / 2, 10, { align: 'center' });
+    doc.text(company?.companyName ?? '', pageWidth / 2, 10, { align: 'center' });
 
     doc.setFontSize(8);
     doc.text(address.substring(0, 115), pageWidth / 2, 15, { align: 'center' });
     doc.text(address.substring(115), pageWidth / 2, 18, { align: 'center' });
 
-    if (company?.pCinNo) {
-      doc.text(`CIN : ${company?.pCinNo ?? ''}`, pageWidth / 2, 22, { align: 'center' });
+    if (company?.cinNumber) {
+      doc.text(`CIN : ${company?.cinNumber ?? ''}`, pageWidth / 2, 22, { align: 'center' });
     }
 
     doc.setFontSize(14);
@@ -1879,6 +1893,10 @@ export class CommonService {
     const today = this.pdfProperties('Date');
     const kapilLogo = this.getKapilGroupLogo();
     const rupeeImage = this._getRupeeSymbol();
+    const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
@@ -1940,19 +1958,19 @@ export class CommonService {
 
           doc.setFont('helvetica', 'bold');
           doc.setFontSize(16);
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', pageWidth / 2, yBase, { align: 'center' });
+          doc.text(companyName, pageWidth / 2, yBase, { align: 'center' });
 
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(9);
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,
             yBase + 6,
             { align: 'center' }
           );
 
           doc.text(
-            'CIN : U65992TG2008PTC060803',
+            `CIN :${companyCIN}`,
             pageWidth / 2,
             yBase + 11,
             { align: 'center' }
@@ -1965,7 +1983,7 @@ export class CommonService {
           doc.setFontSize(10);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Branch : CA-HYDERABAD-CO',
+            `Branch : ${companyBranch}`,
             pageWidth - 15,
             yBase + 30,
             { align: 'right' }
@@ -2012,6 +2030,7 @@ export class CommonService {
         if ((data.column.index === 1 || data.column.index === 2) && data.cell.section === 'body') {
           if (currencySymbol === '₹' && data.cell.raw !== 0) {
             const textPos = data.cell.textPos;
+             if (!textPos) return;
             // doc.addImage(rupeeImage, textPos.x - data.cell.contentWidth, textPos.y + 0.5, 1.7, 1.7);
             doc.addImage(
               rupeeImage,
@@ -2057,6 +2076,10 @@ export class CommonService {
     const today = this.pdfProperties('Date');
     const kapil_logo = this.getKapilGroupLogo();
     const rupeeImage = this._getRupeeSymbol();
+    const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
     const orientation = pagetype === 'landscape' ? 'landscape' : 'portrait';
 
@@ -2125,15 +2148,15 @@ export class CommonService {
           // }
           doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+          doc.text(companyName, 105, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             105, 21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`, 105, 26, { align: 'center' });
 
 
           doc.setFontSize(14);
@@ -2141,7 +2164,7 @@ export class CommonService {
 
           doc.setFontSize(10);
           // doc.text(`Branch : ${Companyreportdetails?.pBranchname ?? ''}`, 160, 40);
-          doc.text(`Branch : CA-HYDERABAD-CO`, 160, 40);
+          doc.text(`Branch : ${companyBranch}`, 160, 40);
 
           if (betweenorason === 'Between') {
             doc.text(`Between : ${fromdate} And ${todate}`, 15, 40);
@@ -2156,20 +2179,20 @@ export class CommonService {
 
           doc.addImage(kapil_logo, 'JPEG', 20, 15, 20, 20);
           doc.setFontSize(15);
-          doc.text(Companyreportdetails?.pCompanyName ?? '', 110, 20);
+          doc.text(Companyreportdetails?.companyName ?? '', 110, 20);
 
           doc.setFontSize(10);
           doc.text(address, 80, 27);
 
-          if (Companyreportdetails.pCinNo) {
-            doc.text(`CIN : ${Companyreportdetails?.pCinNo ?? ''}`, 125, 32);
+          if (Companyreportdetails?.cinNumber) {
+            doc.text(`CIN : ${Companyreportdetails?.cinNumber ?? ''}`, 125, 32);
           }
 
           doc.setFontSize(14);
           doc.text(reportName, 130, 42);
 
           doc.setFontSize(10);
-          doc.text(`Branch : ${Companyreportdetails?.pBranchname ?? ''}`, 235, 50);
+          doc.text(`Branch : ${Companyreportdetails?.uniqueBranchName ?? ''}`, 235, 50);
 
           if (betweenorason === 'Between') {
             doc.text(`Between : ${fromdate} And ${todate}`, 15, 50);
@@ -2209,15 +2232,28 @@ export class CommonService {
           currencyformat === '₹' &&
           data.cell.raw !== ''
         ) {
-          const pos = data.cell.textPos;
-          doc.setFont('helvetica', 'normal');
-          doc.addImage(
-            rupeeImage,
-            pos.x - data.cell.contentWidth,
-            pos.y + 0.5,
-            1.5,
-            1.5
-          );
+          // const pos = data.cell.textPos;
+          // doc.setFont('helvetica', 'normal');
+          // doc.addImage(
+          //   rupeeImage,
+          //   pos.x - data.cell.contentWidth,
+          //   pos.y + 0.5,
+          //   1.5,
+          //   1.5
+          // );
+          const padding = data.cell.padding;
+        let paddingLeft = 2;
+        if (typeof padding === 'number') {
+          paddingLeft = padding;
+        } else if (padding && typeof padding === 'object') {
+          paddingLeft = (padding as any).left ?? 2;
+        }
+
+        const x = data.cell.x + paddingLeft;
+        const y = data.cell.y + data.cell.height / 2 - 1;
+
+        doc.setFont('helvetica', 'normal');
+        doc.addImage(rupeeImage, 'PNG', x, y, 1.5, 1.5);
         }
       }
     });
@@ -2292,6 +2328,11 @@ export class CommonService {
     const today = this.pdfProperties("Date");
     const currencyformat = this.currencysymbol;
     const kapil_logo = this.getKapilGroupLogo();
+     const Companyreportdetails = this._getCompanyDetails();
+    const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
     let pageHeight = doc.internal.pageSize.getHeight();
     let pageWidth = doc.internal.pageSize.getWidth();
@@ -2325,18 +2366,18 @@ export class CommonService {
 
         doc.setFontSize(15);
         doc.setFont('helvetica', 'bold');
-        doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', centerX, 15, { align: 'center' });
+        doc.text(companyName, centerX, 15, { align: 'center' });
 
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.text(
-          'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+          companyAddress,
           centerX,
           21,
           { align: 'center' }
         );
 
-        doc.text('CIN : U65992TG2008PTC060803', centerX, 26, { align: 'center' });
+        doc.text(`CIN : ${companyCIN}`, centerX, 26, { align: 'center' });
 
 
 
@@ -2352,7 +2393,7 @@ export class CommonService {
           doc.text(`As On : ${fromdate}`, 15, 40);
         }
 
-        doc.addImage(kapil_logo, 'JPEG', pageWidth - 40, 10, 25, 15);
+        doc.addImage(kapil_logo, 'JPEG', pageWidth - 40, 10, 20, 20);
 
         let str = "Page " + doc.getNumberOfPages();
         if (typeof doc.putTotalPages === 'function') {
@@ -2424,6 +2465,10 @@ export class CommonService {
 
     const companyDetails = this._getCompanyDetails();
     const address = this.getcompanyaddress();
+    const companyName = companyDetails?.companyName ?? '';
+const companyAddress = companyDetails?.registrationAddress ?? '';
+const companyCIN = companyDetails?.cinNumber ?? '';
+const companyBranch = companyDetails?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       orientation: pageType
@@ -2476,13 +2521,13 @@ export class CommonService {
 
           doc.addImage(kapilLogo, 'JPEG', 10, 5, 20, 20);
 
-          doc.text(companyDetails?.pCompanyName ?? '', 110, 10);
+          doc.text(companyDetails?.companyName ?? '', 110, 10);
 
           doc.setFontSize(10);
           doc.text(address, 80, 15);
 
-          if (companyDetails?.pCinNo ?? '') {
-            doc.text(`CIN : ${companyDetails?.pCinNo}`, 125, 20);
+          if (companyDetails?.cinNumber ?? '') {
+            doc.text(`CIN : ${companyDetails?.cinNumber}`, 125, 20);
           }
 
           doc.setFontSize(14);
@@ -2490,7 +2535,7 @@ export class CommonService {
 
           doc.setFontSize(10);
           doc.text(
-            `Branch : ${companyDetails?.pBranchname}`,
+            `Branch : ${companyDetails?.uniqueBranchName}`,
             235,
             40
           );
@@ -2814,6 +2859,10 @@ export class CommonService {
     const today = this.pdfProperties('Date');
     const logo = this.getKapilGroupLogo();
     const currencySymbol = this.currencysymbol;
+    const companyName = company?.companyName ?? '';
+const companyAddress = company?.registrationAddress ?? '';
+const companyCIN = company?.cinNumber ?? '';
+const companyBranch = company?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
@@ -2861,15 +2910,15 @@ export class CommonService {
         // }
         doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
 
         doc.setFontSize(12);
@@ -2884,7 +2933,7 @@ export class CommonService {
         }
 
         // doc.text(`Branch : ${company?.pBranchname ?? ''}`, pageWidth - 14, 34, { align: 'right' });
-        doc.text(`Branch : CA-HYDERABAD-CO`, pageWidth - 14, 34, { align: 'right' });
+        doc.text(`Branch : ${companyBranch}`, pageWidth - 14, 34, { align: 'right' });
 
         doc.line(10, 36, pageWidth - 10, 36);
 
@@ -2939,6 +2988,10 @@ export class CommonService {
     const currencyformat = this.currencysymbol || '';
     const rupeeImage = this._getRupeeSymbol();
     const today = this.pdfProperties('Date');
+    const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       format: pagetype,
@@ -2949,10 +3002,28 @@ export class CommonService {
     const rMargin = 15;
 
     const totalPagesExp = '{total_pages_count_string}';
+    const cleanedGridData = gridData.map(row => {
+    const cleaned = { ...row };
+    Object.keys(cleaned).forEach(key => {
+      if (typeof cleaned[key] === 'string') {
+        cleaned[key] = cleaned[key].replace(/₹/g, '').trim();
+      }
+    });
+    return cleaned;
+  });
+
+  const mergedColumnStyles = {
+      ...colWidthHeight,
+      3: {
+        ...colWidthHeight[3],
+        cellPadding: { top: 1, bottom: 1, left: 6, right: 1 }, // left padding > rupee image width (2.5mm) + gap
+      },
+    };
 
     autoTable(doc, {
       columns: gridheaders,
-      body: gridData,
+      // body: gridData,
+      body: cleanedGridData,
       theme: 'grid',
       headStyles: {
         fillColor: this.pdfProperties('Header Color'),
@@ -2965,7 +3036,8 @@ export class CommonService {
         overflow: 'linebreak',
         rowPageBreak: 'avoid',
       } as any,
-      columnStyles: colWidthHeight,
+      // columnStyles: colWidthHeight,
+      columnStyles: mergedColumnStyles,
       startY: 48,
       showHead: 'everyPage',
       showFoot: 'lastPage',
@@ -2974,11 +3046,11 @@ export class CommonService {
         const pageWidth = pageSize.width;
         const pageHeight = pageSize.height;
         const centerX = pageWidth / 2;
-        // Header (only on first page)
+
         if (doc.getNumberOfPages() === 1) {
           doc.setFontSize(15);
           if (kapil_logo) {
-            doc.addImage(kapil_logo, 'JPEG', lMargin, 8, 30, 18);
+            doc.addImage(kapil_logo, 'JPEG', 10,5, 20, 20);
           }
 
           doc.setTextColor('black');
@@ -2996,19 +3068,22 @@ export class CommonService {
           // }
           doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', centerX, 14, { align: 'center' });
+          doc.text(companyName, centerX, 14, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             centerX, 20,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803', centerX, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`, centerX, 26, { align: 'center' });
 
 
           doc.setFontSize(14);
-          doc.text(reportName, 90, 30);
+          // doc.text(reportName, 90, 30);
+          doc.setFont('helvetica', 'bold');
+          doc.text(reportName, centerX, 33, { align: 'center' });
+          doc.setFont('helvetica', 'normal');
 
           // const branchName = Companyreportdetails?.pBranchname ?? '';
           // if (branchName) {
@@ -3020,9 +3095,9 @@ export class CommonService {
           doc.setFont('helvetica', 'normal');
 
           doc.text(
-            'Branch : CA-HYDERABAD-CO',
+            `Branch : ${companyBranch}`,
             pageWidth - rMargin,
-            42,
+            40,
             { align: 'right' }
           );
 
@@ -3051,7 +3126,9 @@ export class CommonService {
 
         doc.text(`Printed on: ${today}, User: ${username.pEmployeeName || ''}`, lMargin, pageHeight - 5);
 
-        doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
+        // doc.text(pageStr, pageWidth - rMargin - doc.getTextWidth(pageStr), pageHeight - 5);
+        doc.text(pageStr, pageWidth - rMargin, pageHeight - 5, { align: 'right' });
+     
       },
       willDrawCell: (data) => {
         // Bold last row for PS List
@@ -3060,28 +3137,60 @@ export class CommonService {
           doc.setFont('helvetica', 'bold');
         }
       },
+      // didDrawCell: (data) => {
+      //   const td = data.cell.raw;
+      //   // const rupeeColumns = [1, 2, 3, 4, 5, 6, 12]; 
+      //   const rupeeColumns = [3];
+
+      //   if (td && currencyformat === '₹' && rupeeColumns.includes(data.column.index)) {
+      //     if (rupeeImage) {
+       
+      //       // let paddingLeft = 2;
+      //       // if (typeof data.cell.padding === 'number') {
+      //       //   const x = data.cell.x + paddingLeft;
+      //       // } else if (typeof data.cell.padding === 'function') {
+      //       //   paddingLeft = data.cell.padding('left');
+      //       // }
+      //       let paddingLeft = 2;
+      // const padding = data.cell.padding;
+      // if (typeof padding === 'number') {
+      //   paddingLeft = padding;
+      // } else if (padding && typeof padding === 'object') {
+      //   paddingLeft = (padding as any).left ?? 2;
+      // }
+
+      //       const x = data.cell.x + paddingLeft;
+      //       const y = data.cell.y + data.cell.height / 2 - 0.5; // vertically center
+      //       const size = 2.5; // image size in mm
+
+      //       // Add rupee image
+      //       doc.addImage(rupeeImage, 'PNG', x, y, size, size);
+      //     }
+      //   }
+      // },
       didDrawCell: (data) => {
-        const td = data.cell.raw;
-        const rupeeColumns = [1, 2, 3, 4, 5, 6, 12]; // adjust based on your report
+        const rupeeColumns = [3];
 
-        if (td && currencyformat === '₹' && rupeeColumns.includes(data.column.index)) {
-          if (rupeeImage) {
-            // Compute left padding safely
-            let paddingLeft = 2; // default
-            if (typeof data.cell.padding === 'number') {
-              const x = data.cell.x + paddingLeft;
-            } else if (typeof data.cell.padding === 'function') {
-              paddingLeft = data.cell.padding('left');
-            }
+        if (
+          data.cell.raw &&
+          currencyformat === '₹' &&
+          rupeeColumns.includes(data.column.index) &&
+          rupeeImage
+        ) {
 
-            // Coordinates for the image
-            const x = data.cell.x + paddingLeft;
-            const y = data.cell.y + data.cell.height / 2 - 0.5; // vertically center
-            const size = 2.5; // image size in mm
-
-            // Add rupee image
-            doc.addImage(rupeeImage, 'PNG', x, y, size, size);
+          let paddingLeft = 2;
+          const padding = data.cell.padding;
+          if (typeof padding === 'number') {
+            paddingLeft = padding;
+          } else if (padding && typeof padding === 'object') {
+            paddingLeft = (padding as any).left ?? 2;
           }
+
+          const size = 2.5; 
+          const x = data.cell.x + paddingLeft;
+          const y = data.cell.y + (data.cell.height - size) / 2; 
+
+          doc.addImage(rupeeImage, 'PNG', x, y, size, size);
         }
       },
 
@@ -3538,6 +3647,10 @@ export class CommonService {
     const totalPagesExp = '{total_pages_count_string}';
     const today = this.pdfProperties('Date');
     const kapil_logo = this.getKapilGroupLogo();
+    const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
     const lMargin = 15;
     const rMargin = 15;
@@ -3586,18 +3699,18 @@ export class CommonService {
             // }
             doc.setFontSize(15);
             doc.setFont('helvetica', 'bold');
-            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+            doc.text(companyName, 105, 15, { align: 'center' });
 
             doc.setFontSize(9);
             doc.setFont('helvetica', 'normal');
             doc.text(
-              'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+              companyAddress,
               105,
               21,
               { align: 'center' }
             );
 
-            doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
+            doc.text(`CIN : ${companyCIN}`, 105, 26, { align: 'center' });
 
             doc.setFontSize(14);
             doc.text(reportName, 90, 42);
@@ -3606,7 +3719,7 @@ export class CommonService {
             // doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 50);
             doc.setFontSize(10);
             doc.setFont('helvetica', 'normal');
-            doc.text('Branch : CA-HYDERABAD-CO', 160, 57);
+            doc.text(`Branch : ${companyBranch}`, 160, 57);
 
             //           if (betweenorason === 'Between' && fromdate && todate) {
             //             doc.text('Between : ' + fromdate + ' And ' + todate, 15, 50);
@@ -3639,21 +3752,21 @@ export class CommonService {
             // }
             doc.setFontSize(15);
             doc.setFont('helvetica', 'bold');
-            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', pageWidth / 2, 15, { align: 'center' });
+            doc.text(companyName, pageWidth / 2, 15, { align: 'center' });
 
             doc.setFontSize(9);
             doc.setFont('helvetica', 'normal');
             doc.text(
-              'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+              companyAddress,
               pageWidth / 2,
               21,
               { align: 'center' }
             );
 
-            doc.text('CIN : U65992TG2008PTC060803', pageWidth / 2, 26, { align: 'center' });
+            doc.text(`CIN : ${companyCIN}`, pageWidth / 2, 26, { align: 'center' });
 
             doc.setFontSize(14);
-            doc.text(reportName, 130, 30);
+            doc.text(reportName, 130, 35);
             doc.text('Form XV', 132, 40);
 
             // doc.setFontSize(10);
@@ -3665,7 +3778,7 @@ export class CommonService {
               doc.text('As on : ' + fromdate, 15, 50);
             }
             doc.text(
-              'Branch : CA-HYDERABAD-CO',
+              `Branch : ${companyBranch}`,
               pageWidth - 15,
               50,
               { align: 'right' }
@@ -3761,6 +3874,10 @@ export class CommonService {
     const address = this.getcompanyaddress();
     const companyDetails = this._getCompanyDetails();
     const currencySymbol = this.currencysymbol;
+    const companyName = companyDetails?.companyName ?? '';
+const companyAddress = companyDetails?.registrationAddress ?? '';
+const companyCIN = companyDetails?.cinNumber ?? '';
+const companyBranch = companyDetails?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
@@ -3825,23 +3942,23 @@ export class CommonService {
             // }
             doc.setFontSize(15);
             doc.setFont('helvetica', 'bold');
-            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+            doc.text(companyName, 105, 15, { align: 'center' });
             doc.setFontSize(9);
             doc.setFont('helvetica', 'normal');
             doc.text(
-              'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+              companyAddress,
               105,
               21,
               { align: 'center' }
             );
-            doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
+            doc.text(`CIN : ${companyCIN}`, 105, 26, { align: 'center' });
 
             doc.setFontSize(14);
             doc.text(reportName, 85, 35);
 
             doc.setFontSize(10);
             // doc.text(`Branch : ${companyDetails?.pBranchname ?? ''}`, 155, 40);
-            doc.text(`Branch : CA-HYDERABAD-CO`, 155, 40);
+            doc.text(`Branch : ${companyBranch}`, 155, 40);
 
             if (betweenOrAsOn === 'Between') {
               doc.text(`Between : ${fromDate} And ${toDate}`, 10, 40);
@@ -3856,20 +3973,20 @@ export class CommonService {
 
             doc.addImage(kapilLogo, 'JPEG', 20, 15, 20, 20);
             doc.setFontSize(15);
-            doc.text(companyDetails?.pCompanyName ?? '', 110, 20);
+            doc.text(companyName, 110, 20);
 
             doc.setFontSize(10);
-            doc.text(address, 70, 27);
+            doc.text(companyAddress, 70, 27);
 
-            if (companyDetails?.pCinNo) {
-              doc.text(`CIN : ${companyDetails?.pCinNo ?? ''}`, 125, 32);
+            if (companyCIN) {
+              doc.text(`CIN : ${companyCIN}`, 125, 32);
             }
 
             doc.setFontSize(14);
             doc.text(reportName, 125, 42);
 
             doc.setFontSize(10);
-            doc.text(`Branch : ${companyDetails?.pBranchname ?? ''}`, 235, 47);
+            doc.text(`Branch : ${companyBranch}`, 235, 47);
 
             if (betweenOrAsOn === 'Between') {
               doc.text(`Between : ${fromDate} And ${toDate}`, 15, 47);
@@ -3914,19 +4031,32 @@ export class CommonService {
         ) {
 
           const cellValue = data.cell.raw;
+          if (!cellValue || currencySymbol !== '₹') return;
 
-          if (cellValue && currencySymbol === '₹') {
+          // if (cellValue && currencySymbol === '₹') {
 
-            const textPos = data.cell.textPos;
+          //   const textPos = data.cell.textPos;
 
-            doc.addImage(
-              rupeeImage,
-              textPos.x - data.cell.contentWidth,
-              textPos.y + 0.5,
-              1.5,
-              1.5
-            );
-          }
+          //   doc.addImage(
+          //     rupeeImage,
+          //     textPos.x - data.cell.contentWidth,
+          //     textPos.y + 0.5,
+          //     1.5,
+          //     1.5
+          //   );
+          // }
+           const padding = data.cell.padding;
+        let paddingLeft = 2;
+        if (typeof padding === 'number') {
+          paddingLeft = padding;
+        } else if (padding && typeof padding === 'object') {
+          paddingLeft = (padding as any).left ?? 2;
+        }
+
+        const x = data.cell.x + paddingLeft;
+        const y = data.cell.y + data.cell.height / 2 - 1;
+
+        doc.addImage(rupeeImage, 'PNG', x, y, 1.5, 1.5);
         }
       }
 
@@ -3959,6 +4089,10 @@ export class CommonService {
     const address: string = this.getcompanyaddress();
     const companyDetails = this._getCompanyDetails();
     const currencySymbol: string | null = this.currencysymbol;
+    const companyName = companyDetails?.companyName ?? '';
+const companyAddress = companyDetails?.registrationAddress ?? '';
+const companyCIN = companyDetails?.cinNumber ?? '';
+const companyBranch = companyDetails?.uniqueBranchName ?? '';
 
     const doc = new jsPDF({
       orientation: pageType === 'landscape' ? 'landscape' : 'portrait',
@@ -4027,7 +4161,7 @@ export class CommonService {
             doc.text(reportName, 90, 42);
 
             doc.setFontSize(10);
-            doc.text(`Branch : ${companyDetails?.pBranchname ?? ''}`, 163, 47);
+            doc.text(`Branch : ${companyBranch}`, 163, 47);
 
             if (betweenOrAsOn === 'Between') {
               doc.text(`Between : ${fromDate} And ${toDate}`, 15, 47);
@@ -4039,6 +4173,7 @@ export class CommonService {
           }
 
           if (pageType === 'landscape') {
+            const centerX = pageWidth / 2;
 
             doc.addImage(kapilLogo, 'JPEG', 10, 5, 20, 20);
             // doc.setFontSize(15);
@@ -4053,16 +4188,16 @@ export class CommonService {
             // }
             doc.setFontSize(15);
             doc.setFont('helvetica', 'bold');
-            doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.', 105, 15, { align: 'center' });
+            doc.text(companyName, centerX, 15, { align: 'center' });
             doc.setFontSize(9);
             doc.setFont('helvetica', 'normal');
             doc.text(
-              'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
-              105,
+              companyAddress,
+              centerX,
               21,
               { align: 'center' }
             );
-            doc.text('CIN : U65992TG2008PTC060803', 105, 26, { align: 'center' });
+            doc.text(`CIN : ${companyCIN}`, centerX, 26, { align: 'center' });
 
 
             doc.setFontSize(14);
@@ -4070,7 +4205,7 @@ export class CommonService {
 
             doc.setFontSize(10);
             // doc.text(`Branch : ${companyDetails?.pBranchname ?? ''}`, 235, 40);
-            doc.text(`Branch : CA-HYDERABAD-CO`, 235, 40);
+            doc.text(`Branch : ${companyBranch}`, 235, 40);
 
             if (betweenOrAsOn === 'Between') {
               doc.text(`Between : ${fromDate} And ${toDate}`, 15, 40);
@@ -4119,19 +4254,36 @@ export class CommonService {
 
         if (!cellValue || currencySymbol !== '₹') return;
 
-        const textPos = data.cell.textPos;
+        // const textPos = data.cell.textPos;
 
-        const isLastRow = data.row.index === gridData.length - 1;
+        // const isLastRow = data.row.index === gridData.length - 1;
 
-        doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
+        // doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
 
-        doc.addImage(
-          rupeeImage,
-          textPos.x - data.cell.contentWidth + (isLastRow ? 3 : 0),
-          textPos.y + (isLastRow ? 0.7 : 0.5),
-          isLastRow ? 2 : 1.5,
-          isLastRow ? 2 : 1.5
-        );
+        // doc.addImage(
+        //   rupeeImage,
+        //   textPos.x - data.cell.contentWidth + (isLastRow ? 3 : 0),
+        //   textPos.y + (isLastRow ? 0.7 : 0.5),
+        //   isLastRow ? 2 : 1.5,
+        //   isLastRow ? 2 : 1.5
+        // );
+        const padding = data.cell.padding;
+  let paddingLeft = 2;
+  if (typeof padding === 'number') {
+    paddingLeft = padding;
+  } else if (padding && typeof padding === 'object') {
+    paddingLeft = (padding as any).left ?? 2;
+  }
+
+  const x = data.cell.x + paddingLeft;
+  const y = data.cell.y + data.cell.height / 2 - 1;
+
+  const isLastRow = data.row.index === gridData.length - 1;
+
+  doc.setFont('helvetica', isLastRow ? 'bold' : 'normal');
+
+  const size = isLastRow ? 2 : 1.5;
+  doc.addImage(rupeeImage, 'PNG', x, y, size, size);
       }
 
     });
@@ -4149,8 +4301,9 @@ export class CommonService {
     }
   }
   _setCompanyDetails() {
-
-    this.comapnydetails = JSON.parse(sessionStorage.getItem("companydetails") ?? '');
+    // this.comapnydetails = JSON.parse(sessionStorage.getItem("companydetails") ?? '');
+    const raw = sessionStorage.getItem("CompanyDetails");
+  this.comapnydetails = raw ? JSON.parse(raw) : {};
   }
   _downloadGridPdf1(
     reportName: any,
@@ -4186,6 +4339,10 @@ export class CommonService {
 
     const kapil_logo =
       this.getKapilGroupLogo();
+      const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
     const lMargin = 15;
     const rMargin = 15;
@@ -4303,15 +4460,15 @@ export class CommonService {
       const pageWidth = pageSize.getWidth();
       doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
             doc.setFontSize(14);
 
@@ -4330,7 +4487,7 @@ export class CommonService {
             //   35
             // );
             doc.text(
-              'Branch : CA-HYDERABAD-CO' ,
+              `Branch : ${companyBranch}` ,
               150,
               35
             );
@@ -4371,7 +4528,7 @@ export class CommonService {
             );
 
             doc.text(
-              Companyreportdetails?.pCompanyName ?? '',
+              Companyreportdetails?.companyName ?? '',
               110,
               20
             );
@@ -4385,11 +4542,11 @@ export class CommonService {
             );
 
             if (
-              Companyreportdetails?.pCinNo ?? ''
+              Companyreportdetails?.cinNumber ?? ''
             ) {
               doc.text(
                 'CIN : ' +
-                Companyreportdetails?.pCinNo,
+                Companyreportdetails?.cinNumber,
                 125,
                 32
               );
@@ -4405,7 +4562,7 @@ export class CommonService {
 
             doc.text(
               'Branch : ' +
-              Companyreportdetails?.pBranchname,
+              Companyreportdetails?.uniqueBranchName,
               235,
               50
             );
@@ -4483,6 +4640,8 @@ export class CommonService {
 
             const textPos =
               data.cell.textPos;
+
+            if (!textPos || textPos.x === undefined || textPos.y === undefined) return;
 
             doc.addImage(
               rupeeImage,

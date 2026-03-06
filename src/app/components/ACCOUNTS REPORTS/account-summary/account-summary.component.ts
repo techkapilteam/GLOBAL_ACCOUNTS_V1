@@ -8,11 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { CommonService } from '../../../services/common.service';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-account-summary',
   standalone: true,
-  imports: [NgxDatatableModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, FormsModule, TableModule,ButtonModule,MultiSelectModule],
+  imports: [NgxDatatableModule, CommonModule, ReactiveFormsModule, BsDatepickerModule, FormsModule, TableModule,ButtonModule,MultiSelectModule,CompanyDetailsComponent],
   providers: [DatePipe],
   templateUrl: './account-summary.component.html',
   styleUrls: ['./account-summary.component.css']
@@ -149,7 +150,7 @@ export class AccountSummaryComponent {
 
   ledgerAccountsList: any[] = [];
   gridData: any[] = [];
-
+submitted=false;
   loading = false;
   selectedDateMode = true;   
   // asOnDateFlag = 'T';
@@ -162,6 +163,7 @@ inbetween: string = '';
   totalCredit = 0;
   AsOnDate: string='T';
   // betweendates: any;
+  printedDate: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -213,6 +215,7 @@ inbetween: string = '';
         error: (err) => this.commonService.showErrorMessage(err)
       });
   }
+  get f() { return this.accountSummaryForm.controls; }
 
   onDateModeChange(): void {
     this.selectedDateMode = this.accountSummaryForm.value.asOn;
@@ -228,8 +231,12 @@ this.inbetween    = this.selectedDateMode ? '' : 'And';
   }
 
   generateReport(): void {
+    this.submitted=true
 
-    if (this.accountSummaryForm.invalid) return;
+    if (this.accountSummaryForm.invalid) {
+      this.accountSummaryForm.markAllAsTouched();
+      return
+    };
 
     this.loading = true;
     this.gridData = [];

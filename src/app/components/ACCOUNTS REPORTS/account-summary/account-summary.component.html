@@ -57,8 +57,12 @@
         [filter]="true"
         [appendTo]="'body'"
         [maxSelectedLabels]="3"
-  selectedItemsLabel="{0} items selected">
+  selectedItemsLabel="{0} items selected"
+  [ngClass]="{ 'is-invalid': f['ledgerId'].errors && submitted }">
       </p-multiSelect>
+      <div class="invalid-feedback d-block" *ngIf="submitted && f['ledgerId'].errors?.['required']">
+    Ledger is required
+  </div>
 
     </div>
 
@@ -94,7 +98,7 @@
             </li>
         </ul>
   </div>
-  <div class="text-center mb-1 fw-bold fs-5">
+  <!-- <div class="text-center mb-1 fw-bold fs-5">
         KAPIL CHITS (HYDERABAD) PVT. LTD.
       </div>
 
@@ -104,7 +108,8 @@
 
       <div class="text-center mb-2 fw-semibold">
         CIN: U65992TG2008PTC060803
-      </div>
+      </div> -->
+      <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details>
       <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
         <h5 class="m-0 fw-bold">Account Summary</h5>
       </div>

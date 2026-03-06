@@ -45,6 +45,12 @@ export class PaymentVoucherReportComponent implements OnInit {
   duplicate: any;
   showgrid = false;
   Gstinn: any;
+  companyName: string | undefined;
+  registrationAddress!: string;
+  cinNumber!: string;
+  branchName!: string;
+  branchAddress: any;
+  gstNumber: any;
 
   constructor(
     private router: Router,
@@ -104,42 +110,56 @@ export class PaymentVoucherReportComponent implements OnInit {
 
   getComapnyName() {
 
-    // this.companyService.GetCompanyData().subscribe({
-    //   next: (json: any) => {
+    this.companyService.GetCompanyData().subscribe({
+      next: (json: any) => {
 
-    //     sessionStorage.setItem(
-    //       'companydetails',
-    //       JSON.stringify(json)
-    //     );
+        sessionStorage.setItem(
+          'CompanyDetails',
+          JSON.stringify(json)
+        );
 
-    //     this.commonService._setCompanyDetails();
+        // this.commonService._setCompanyDetails();
 
-    //     this.comapnydata =
-    //       this.commonService.comapnydetails;
+        // this.comapnydata =
+        //   this.commonService.comapnydetails;
 
-    //     this.pCompanyName =
-    //       this.comapnydata['pCompanyName'];
+        // this.pCompanyName =
+        //   this.comapnydata['pCompanyName'];
 
-    //     this.pAddress1 =
-    //       this.comapnydata['pAddress1'];
+        // this.pAddress1 =
+        //   this.comapnydata['pAddress1'];
 
-    //     this.pAddress2 =
-    //       this.comapnydata['pAddress2'];
+        // this.pAddress2 =
+        //   this.comapnydata['pAddress2'];
 
-    //     this.pCinNo =
-    //       this.comapnydata['pCinNo'];
+        // this.pCinNo =
+        //   this.comapnydata['pCinNo'];
 
-    //     this.pGstinNo =
-    //       this.comapnydata['pGstinNo'];
+        // this.pGstinNo =
+        //   this.comapnydata['pGstinNo'];
 
-    //     this.pBranchname =
-    //       this.comapnydata['pBranchname'];
+        // this.pBranchname =
+        //   this.comapnydata['pBranchname'];
 
-    //     const l = this.pGstinNo.split('');
-    //     this.Gstinn = (l[0] + l[1]).toString();
-    //   },
-    //   error: err => this.commonService.showErrorMessage(err)
-    // });
+        // const l = this.pGstinNo.split('');
+        // this.Gstinn = (l[0] + l[1]).toString();
+        const company = json[0];
+
+        this.companyName = company.companyName;
+        this.branchAddress = company.branchAddress;
+        this.registrationAddress = company.registrationAddress;
+        this.cinNumber = company.cinNumber;
+        this.gstNumber = company.gstNumber;
+        this.branchName = company.branchName;
+
+        if (this.gstNumber) {
+          const l = this.gstNumber.split('');
+          this.Gstinn = (l[0] + l[1]).toString();
+        }
+
+      },
+      error: err => this.commonService.showErrorMessage(err)
+    });
   }
 
   GetPaymentVoucherReportDataById(id: any) {
@@ -153,7 +173,7 @@ export class PaymentVoucherReportComponent implements OnInit {
               index === self.findIndex((t: any) => t.ppaymentid === item.ppaymentid)
           );
           // this.tempPaymentData = res;
-           this.tempPaymentData = unique;
+          this.tempPaymentData = unique;
 
           this.tempPaymentData.forEach((x: any) => {
 
@@ -162,7 +182,7 @@ export class PaymentVoucherReportComponent implements OnInit {
                 s + i.pLedgeramount - i.ptdsamount + i.pcgstamount,
               0
             );
-             x.totvalue = tot;
+            x.totvalue = tot;
 
             const gst = x.ppaymentslist.reduce(
               (s: number, i: any) =>

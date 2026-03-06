@@ -159,88 +159,65 @@
         </div> -->
       <form [formGroup]="BRStatmentForm" (ngSubmit)="getBRStatmentReports()" autocomplete="off">
 
-        <div class="row">
+  <div class="d-flex align-items-center" style="gap: 12px; flex-wrap: nowrap;">
 
-          <div class="col-md-3 form-group">
-            <label class="required-field">Bank Name</label>
+    <div style="width: 200px; flex-shrink: 0;">
+      <label class="required-field d-block mb-1" style="font-size: 13px;">Bank Name</label>
+      <select class="form-control" formControlName="bankAccountId"
+        [class.is-invalid]="BRStatmentForm.get('bankAccountId')?.invalid && BRStatmentForm.get('bankAccountId')?.touched">
+        <option value="">Select</option>
+        <option *ngFor="let bank of bankData" [value]="bank.bankAccountId">{{ bank.bankName }}</option>
+      </select>
+      <small class="text-danger d-block" style="min-height: 18px; font-size: 11px;">
+        <span *ngIf="BRStatmentForm.get('pbankname')?.hasError('required')">Bank Name is required</span>
+      </small>
+    </div>
 
-            <select class="form-control" formControlName="bankAccountId"
-              [class.is-invalid]="BRStatmentForm.get('bankAccountId')?.invalid && BRStatmentForm.get('bankAccountId')?.touched">
+    <div style="flex-shrink: 0; margin-top: 18px;">
+      <div class="form-check form-check-inline mb-0">
+        <input class="form-check-input" type="checkbox" (change)="ChequesInfo($event)">
+        <label class="form-check-label">Cheques Info</label>
+      </div>
+      <small class="d-block" style="min-height: 18px;"></small>
+    </div>
 
-              <option value="">Select</option>
-              <option *ngFor="let bank of bankData" [value]="bank.bankAccountId">
-                {{ bank.bankName }}
-              </option>
+    <div *ngIf="chequesInfo" style="width: 145px; flex-shrink: 0;">
+      <label class="d-block mb-1" style="font-size: 13px;">From Date</label>
+      <input type="text" class="form-control" formControlName="fromDate"
+             bsDatepicker [bsConfig]="dpConfig" readonly>
+      <small class="text-danger d-block" style="min-height: 18px; font-size: 11px;">
+        <span *ngIf="BRStatmentForm.get('fromDate')?.invalid">From Date is required</span>
+      </small>
+    </div>
 
-            </select>
+    <div *ngIf="chequesInfo" style="width: 145px; flex-shrink: 0;">
+      <label class="d-block mb-1" style="font-size: 13px;">To Date</label>
+      <input type="text" class="form-control" formControlName="toDate"
+             bsDatepicker [bsConfig]="dpConfig1" readonly>
+      <small class="text-danger d-block" style="min-height: 18px; font-size: 11px;">
+        <span *ngIf="BRStatmentForm.errors?.['dateRangeInvalid']">From Date cannot be greater than To Date</span>
+      </small>
+    </div>
 
-            <div class="invalid-feedback" *ngIf="BRStatmentForm.get('pbankname')?.hasError('required')">
-              Bank Name is required
-            </div>
-          </div>
+    <div *ngIf="!chequesInfo" style="width: 145px; flex-shrink: 0;">
+      <label class="d-block mb-1" style="font-size: 13px;">As on Date</label>
+      <input type="text" class="form-control" formControlName="fromDate"
+             bsDatepicker [bsConfig]="dpConfig" readonly>
+      <small class="d-block" style="min-height: 18px;"></small>
+    </div>
 
-          <div class="col-md-3 mt-4">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" (change)="ChequesInfo($event)">
-              <label class="form-check-label">
-                Cheques Info
-              </label>
-            </div>
-          </div>
+    <div style="flex-shrink: 0; margin-top: 18px;">
+      <button type="submit" class="btn btn-primary border-0"
+              [disabled]="BRStatmentForm.invalid || isLoading">
+        <img src="assets/images/icon-check-white.svg" width="20" height="20" class="mr-2">
+        {{ savebutton }}
+      </button>
+      <small class="d-block" style="min-height: 18px;"></small>
+    </div>
 
-          <div class="col-md-4" *ngIf="chequesInfo">
+  </div>
 
-            <div class="row">
-
-              <div class="col-6 form-group">
-                <label>From Date</label>
-                <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
-                  readonly>
-
-                <div class="invalid-feedback" *ngIf="BRStatmentForm.get('fromDate')?.invalid">
-                  From Date is required
-                </div>
-              </div>
-
-              <div class="col-6 form-group">
-                <label>To Date</label>
-                <input type="text" class="form-control" formControlName="toDate" bsDatepicker [bsConfig]="dpConfig1"
-                  readonly>
-
-                <div class="invalid-feedback" *ngIf="BRStatmentForm.get('toDate')?.invalid">
-                  To Date is required
-                </div>
-                <small class="text-danger d-block mt-1" *ngIf="BRStatmentForm.errors?.['dateRangeInvalid']">
-    From Date cannot be greater than To Date
-  </small>
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="col-md-3 form-group" *ngIf="!chequesInfo">
-
-            <label>As on Date</label>
-
-            <input type="text" class="form-control" formControlName="fromDate" bsDatepicker [bsConfig]="dpConfig"
-              readonly>
-
-          </div>
-
-          <div class="col-md-3 pt-4">
-            <button type="submit" class="btn btn-primary border-0" [disabled]="BRStatmentForm.invalid || isLoading">
-
-              <img src="assets/images/icon-check-white.svg" width="20" height="20" class="mr-2">
-
-              {{ savebutton }}
-
-            </button>
-          </div>
-
-        </div>
-
-      </form>
+</form>
     </div>
     <div *ngIf="!Showhide" class="section-content mt-2">
 
@@ -250,7 +227,7 @@
 
         <img src="assets/images/print-icon-blue.svg" width="20" style="cursor:pointer" (click)="pdfOrprint('Print')" />
       </div>
-      <div class="text-center mb-1 fw-bold fs-5">
+      <!-- <div class="text-center mb-1 fw-bold fs-5">
               KAPIL CHITS (HYDERABAD) PVT. LTD.
             </div>
             <div class="text-center mb-1">
@@ -258,8 +235,9 @@
             </div>
             <div class="text-center mb-2 fw-semibold">
               CIN : U65992TG2008PTC060803
-            </div>
-            <hr>
+            </div> -->
+      <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details>
+      <hr>
 
       <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
         <h5 class="m-0 fw-bold">Bank Reconciliation</h5>

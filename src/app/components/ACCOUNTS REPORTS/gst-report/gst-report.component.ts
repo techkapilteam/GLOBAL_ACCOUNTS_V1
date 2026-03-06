@@ -55,6 +55,7 @@ export class GstReportComponent implements OnInit {
   dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
   dpConfig2: Partial<BsDatepickerConfig> = {};
+  submitted: boolean=false;
 
   ngOnInit(): void {
     this.initDatePickers();
@@ -79,7 +80,7 @@ export class GstReportComponent implements OnInit {
     this.GstReportForm = this.fb.group({
       month: [firstday, Validators.required],
       pledgerid: [null, Validators.required],
-      pledgername: [''],
+      pledgername: ['', Validators.required],
       receiptsPayments: ['receipts'],
       fromdate: [today,Validators.required],
       todate: [today,Validators.required]
@@ -148,8 +149,11 @@ export class GstReportComponent implements OnInit {
   ledgerName_Change(event: any) {
     this.GstReportForm.patchValue({ pledgername: event?.pledgername || '' });
   }
+  get f() { return this.GstReportForm.controls; }
 
   click_GstReport(): void {
+    this.submitted = true;
+  if (this.GstReportForm.invalid) return;
     if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
@@ -224,6 +228,8 @@ private cleanObjectValues(data: any[]): void {
   });
 }
 private loadGstPayments(): void {
+  this.submitted = true;
+  if (this.GstReportForm.invalid) return;
   if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
@@ -253,6 +259,8 @@ return;
     });
 }
 click_GstSummary(): void {
+  this.submitted = true;
+  if (this.GstReportForm.invalid) return;
   if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;

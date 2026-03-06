@@ -11,6 +11,7 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-bank-book',
@@ -20,7 +21,7 @@ import { AccountingTransactionsService } from '../../../services/Transactions/Ac
     FormsModule,
     NgxDatatableModule,
     BsDatepickerModule,
-    TableModule, ReactiveFormsModule
+    TableModule, ReactiveFormsModule,CompanyDetailsComponent
   ],
   templateUrl: './bank-book.component.html',
   providers: [DatePipe]
@@ -105,6 +106,8 @@ export class BankBookComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private _AccountingTransactionsService = inject(AccountingTransactionsService);
   bankName=''
+  submitted = false;
+  printedDate: boolean = true;
 
 
   bankBookForm = this.fb.nonNullable.group({
@@ -201,7 +204,7 @@ export class BankBookComponent implements OnInit {
   }
 
   getBankBookReports(): void {
-
+this.submitted = true;
     if (this.bankBookForm.invalid) {
       this.bankBookForm.markAllAsTouched();
       return;

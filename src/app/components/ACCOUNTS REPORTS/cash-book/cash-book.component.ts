@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { CommonService } from '../../../services/common.service';
 import { Router } from '@angular/router';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-cash-book',
@@ -16,7 +17,7 @@ import { Router } from '@angular/router';
     FormsModule,
     NgxDatatableModule,
     BsDatepickerModule,
-    TableModule,ReactiveFormsModule
+    TableModule,ReactiveFormsModule,CompanyDetailsComponent
   ],
   templateUrl: './cash-book.component.html',
   providers: [DatePipe]
@@ -109,6 +110,7 @@ export class CashBookComponent implements OnInit {
 
   ptranstype = 'BOTH';
   currencysymbol: string;
+  printedDate: boolean = true;
 
   dpConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD-MMM-YYYY',

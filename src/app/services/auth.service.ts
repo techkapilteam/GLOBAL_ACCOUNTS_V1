@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { CompanyDetailsService } from './company-details.service';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,7 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
-  constructor() { }
+  constructor(private companyService: CompanyDetailsService, private commonService:CommonService) { }
 
   private hasToken(): boolean {
     return !!localStorage.getItem('authToken');
