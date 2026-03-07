@@ -378,7 +378,7 @@ SaveChequesIssued(data: any) {
   saveGeneralReceipt( data: any) {
     const params = new HttpParams();
       // .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
-    return this._CommonService.postAPI('api/Accounts/savegeneralreceipt', data);
+    return this._CommonService.postAPI('/Accounts/savegeneralreceipt', data);
   }
   
   saveJournalVoucher(data: any) {

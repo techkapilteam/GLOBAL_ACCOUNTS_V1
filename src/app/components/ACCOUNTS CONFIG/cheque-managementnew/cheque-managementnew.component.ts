@@ -90,7 +90,7 @@ export class ChequeManagementnewComponent implements OnInit {
           this.bankdetails = res;
 
           console.log('SUCCESS:', res);
-          alert('hello');
+        
         },
         error: (err: any) => {
           console.log('ERROR:', err);

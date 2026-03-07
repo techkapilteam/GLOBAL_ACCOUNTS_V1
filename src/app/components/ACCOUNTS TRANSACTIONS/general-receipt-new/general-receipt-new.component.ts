@@ -668,7 +668,12 @@ export class GeneralReceiptNewComponent implements OnInit {
                 this.walletshowhide = this.Paymentbuttondata[n].walletshowhide;
             }
         }
-        //this.GeneralReceiptForm.controls['pbankname'].setValue('');
+        //           this.dpConfig = {
+        //   dateInputFormat: 'YYYY-MM-DD'
+        // };
+
+
+        this.GeneralReceiptForm.controls['pbankname'].setValue('');
         this.GeneralReceiptForm.controls['pChequenumber'].setValue('');
         this.GeneralReceiptForm.controls['pchequedate'].setValue(this.today);
         this.GeneralReceiptForm.controls['pdepositbankname'].setValue('');
@@ -691,7 +696,7 @@ export class GeneralReceiptNewComponent implements OnInit {
             let TypeofPAymentControl = this.GeneralReceiptForm.controls['ptypeofpayment'];
             let BranchControl = this.GeneralReceiptForm.controls['pbranchname'];
             let CardNumberControl = this.GeneralReceiptForm.controls['pCardNumber'];
-            let ChequeDateControl = this.GeneralReceiptForm.controls['pchequedate']
+            let ChequeDateControl = this.GeneralReceiptForm.controls['pchequedate'];
             let AccountnumberControl = this.GeneralReceiptForm.controls['pAccountnumber'];
             BankControl.clearValidators();
             ChequeControl.clearValidators();
@@ -1299,7 +1304,7 @@ export class GeneralReceiptNewComponent implements OnInit {
     saveGeneralReceipt(): void {
 
         debugger;
-
+        let date = this.datepipe.transform(this.GeneralReceiptForm.controls['pchequedate'].value, 'dd-MM-yyyy')
         let count = 0;
         this.disablesavebutton = true;
         this.savebutton = 'Processing';
@@ -1579,6 +1584,7 @@ export class GeneralReceiptNewComponent implements OnInit {
 
 
 
+
                 let payload: any = {
 
                     ...this.GeneralReceiptForm.value,
@@ -1594,76 +1600,84 @@ export class GeneralReceiptNewComponent implements OnInit {
 
                     companycode: this._commonService.getCompanyCode(),
                     branchcode: this._commonService.getBranchCode(),
-                    branchid: String(this._commonService.getbrachid()),
+                    branchid: this._commonService.getbrachid() || 1,
 
-                    pCreatedby: this._commonService.getCreatedBy(),
+                    pCreatedby: this._commonService.getCreatedBy() || 0,
+                    pModifiedby: 0,
                     ptypeofoperation: "CREATE",
 
                     preceiptid: "",
-                    preceiptno: "",
+                    preceiptno: "string",
                     preceiptdate: trans_date,
+
                     pmodofreceipt: this.GeneralReceiptForm.value.pmodofreceipt || "",
 
-                    ptotalreceivedamount: String(totalamount || 0),
+                    ptotalreceivedamount: totalamount || 0,
                     pnarration: this.GeneralReceiptForm.value.pnarration || "",
 
                     ppartyname: this.GeneralReceiptForm.value.ppartyname || "",
-                    ppartyid: this.GeneralReceiptForm.value.ppartyid || "",
+                    ppartyid: this.GeneralReceiptForm.value.ppartyid || 0,
                     ppartypannumber: "",
                     ppartyreftype: "",
                     ppartyreferenceid: "",
 
-                    pistdsapplicable: String(this.GeneralReceiptForm.value.pistdsapplicable || false),
+                    pistdsapplicable: this.GeneralReceiptForm.value.pistdsapplicable || false,
                     pTdsSection: "",
-                    pTdsPercentage: String(this.GeneralReceiptForm.value.pTdsPercentage || 0),
-                    ptdsamount: String(this.GeneralReceiptForm.value.ptdsamount || 0),
+                    pTdsPercentage: this.GeneralReceiptForm.value.pTdsPercentage || 0,
+                    ptdsamount: this.GeneralReceiptForm.value.ptdsamount || 0,
                     ptdscalculationtype: "",
-                    ptdsaccountid: "",
-                    pTdsSectionId: "",
+
+                    ptdsaccountid: 0,
+                    pTdsSectionId: this.GeneralReceiptForm.value.pTdsSection || 0,
 
                     pFilename: "",
                     pFilepath: "",
                     pFileformat: "",
 
-                    pCleardate: "",
                     pdepositeddate: "",
+                    pCleardate: "",
 
-                    preceiptrecordid: "",
+                    preceiptrecordid: 0,
                     groupcode: "",
                     pchequestatus: "",
                     preferencetext: "",
+
                     formname: "General Receipt",
-                    chitpaymentid: "",
-                    adjustmentid: "",
+                    chitpaymentid: 0,
+                    adjustmentid: 0,
 
                     pBankName: this.GeneralReceiptForm.value.pBankName || "",
                     pbranchname: this.GeneralReceiptForm.value.pbranchname || "",
                     ptranstype: this.GeneralReceiptForm.value.ptranstype || "",
                     ptypeofpayment: this.GeneralReceiptForm.value.ptypeofpayment || "",
+
                     pChequenumber: this.GeneralReceiptForm.value.pChequenumber || "",
-                    pchequedate: this.GeneralReceiptForm.value.pchequedate || "",
+                    // pchequedate: this.GeneralReceiptForm.value.pchequedate || "",
+                    pchequedate: date,
+
                     pchequedepositdate: "",
                     pchequecleardate: "",
-                    pbankid: String(this.GeneralReceiptForm.value.pbankid || 0),
+
+                    pbankid: this.GeneralReceiptForm.value.pbankid || 0,
 
                     pCardNumber: "",
-                    pdepositbankid: "0",
+                    pdepositbankid: 0,
                     pdepositbankname: "",
                     pAccountnumber: this.GeneralReceiptForm.value.pAccountnumber || "",
                     challanaNo: "",
 
-                    pRecordid: "0",
+                    pRecordid: 0,
                     pUpiname: "",
-                    pUpiid: "",
+                    pUpiid: 0,
                     pBankconfigurationId: "",
 
                     pDocStorePath: "",
 
                     preceiptslist: this.paymentslist.map((x: any) => ({
 
-                        psubledgerid: x.psubledgerid || "",
+                        psubledgerid: x.psubledgerid || 0,
                         psubledgername: x.psubledgername || "",
-                        pledgerid: x.pledgerid || "",
+                        pledgerid: x.pledgerid || 0,
                         pledgername: x.pledgername || "",
 
                         id: "",
@@ -1677,41 +1691,40 @@ export class GeneralReceiptNewComponent implements OnInit {
                         groupcode: "",
                         chitgroupid: "",
 
-                        pamount: String(this._commonService.removeCommasInAmount(x.pamount || 0)),
+                        pamount: this._commonService.removeCommasInAmount(x.pamount || 0),
 
                         pgsttype: x.pgsttype || "",
                         pgstcalculationtype: x.pgstcalculationtype || "",
-                        pgstpercentage: String(x.pgstpercentage || 0),
+                        pgstpercentage: x.pgstpercentage || 0,
 
-                        pigstamount: String(x.pigstamount || 0),
-                        pcgstamount: String(x.pcgstamount || 0),
-                        psgstamount: String(x.psgstamount || 0),
-                        putgstamount: String(x.putgstamount || 0),
+                        pigstamount: x.pigstamount || 0,
+                        pcgstamount: x.pcgstamount || 0,
+                        psgstamount: x.psgstamount || 0,
+                        putgstamount: x.putgstamount || 0,
 
-                        pState: "",
-                        pStateId: "",
-                        pgstno: "",
+                        pState: x.pState || "",
+                        pStateId: x.pStateId || 0,
+                        pgstno: 0,
 
-                        pisgstapplicable: String(x.pisgstapplicable || false),
+                        pisgstapplicable: x.pisgstapplicable || false,
 
-                        ptdsamountindividual: String(x.ptdsamountindividual || 0),
+                        ptdsamountindividual: x.ptdsamountindividual || 0,
                         pTdsSection: x.pTdsSection || "",
-                        pTdsPercentage: String(x.pTdsPercentage || 0),
+                        pTdsPercentage: x.pTdsPercentage || 0,
 
                         preferencetext: "",
 
-                        pgstamount: String(x.pgstamount || 0),
-                        pigstpercentage: String(x.pigstpercentage || 0),
-                        pcgstpercentage: String(x.pcgstpercentage || 0),
-                        psgstpercentage: String(x.psgstpercentage || 0),
-                        putgstpercentage: String(x.putgstpercentage || 0),
+                        pgstamount: x.pgstamount || 0,
+                        pigstpercentage: x.pigstpercentage || 0,
+                        pcgstpercentage: x.pcgstpercentage || 0,
+                        psgstpercentage: x.psgstpercentage || 0,
+                        putgstpercentage: x.putgstpercentage || 0,
 
-                        pactualpaidamount: String(x.pactualpaidamount || 0),
-                        ptotalamount: String(x.ptotalamount || 0)
+                        pactualpaidamount: x.pactualpaidamount || 0,
+                        ptotalamount: x.ptotalamount || 0
 
                     }))
                 };
-
 
 
                 console.log("Swagger Payload:", payload);
