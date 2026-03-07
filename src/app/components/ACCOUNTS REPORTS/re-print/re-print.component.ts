@@ -59,6 +59,7 @@ export class RePrintComponent implements OnInit {
 
   commencementgridPage = new PageCriteria();
   private _AccountService=inject(AccountReportsService);
+  submitted: boolean=false;
 
   constructor(
     private numbertowords: NumberToWordsPipe,
@@ -93,7 +94,7 @@ export class RePrintComponent implements OnInit {
       schemaname: ['schemaname'],
       samebranchcode: [this._commonService.getschemaname()],
       TransType: [null, Validators.required],
-      Transno: [null],
+      Transno: [null,Validators.required],
       branch_name: [null],
       panno: [null]
     });
@@ -321,11 +322,15 @@ export class RePrintComponent implements OnInit {
         ? data.length
         : this.pageCriteria.pageSize;
   }
+  get f() { return this.ReprintRepotForm.controls; }
   getduplicateReport(): void {
     // if (!this.validateSaveDeatails(this.ReprintRepotForm)) return;
     //  window.open('/GeneralReceiptReport','_blank')
     //  this.router.navigate(['/GeneralReceiptReport'])
     // this.router.navigate(['/dashboard/GeneralReceiptReport']);
+    this.submitted = true;
+    this.ReprintRepotForm.markAllAsTouched();
+  if (this.ReprintRepotForm.invalid) return;
     const transType = this.ReprintRepotForm.controls['TransType'].value;
     const transNo = this.ReprintRepotForm.controls['Transno'].value;
     // const schemaName = this._commonService.getschemaname();

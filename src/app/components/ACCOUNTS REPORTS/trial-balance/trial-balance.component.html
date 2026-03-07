@@ -6,7 +6,7 @@
       </div>
 
       <div class="screen-content">
-        <form [formGroup]="TrialBalanceForm">
+        <!-- <form [formGroup]="TrialBalanceForm">
   <div class="row">
 
     <div class="col-md-2 mt-3">
@@ -53,62 +53,85 @@
       </div>
     </div>
 
-    <div class="col-md-2 mt-3">
+    <div class="col-md-4">
       <button type="button"
-              class="btn btn-primary"
+              class="btn btn-primary px-4"
               (click)="GenerateReport()">
         {{savebutton}}
       </button>
     </div>
 
   </div>
-</form>
-<div *ngIf="showhidetable" class="d-flex justify-content-end mt-4 me-3">
+</form> -->
+        <form [formGroup]="TrialBalanceForm">
+          <div class="row align-items-end">
 
-  <ul *ngIf="TrialBalanceDifference" class="temp-ul">
+            <div class="col-md-auto mt-0">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="asdate" (change)="checkboxChecked($event)">
+                <label class="form-check-label" for="asdate">
+                  As On
+                </label>
+              </div>
+            </div>
 
-    <li class="temp-ico ms-2">
-      <img
-        src="assets/images/pdf-icon-blue.svg"
-        width="18"
-        class="pt-2"
-        alt="PDF"
-        style="cursor: pointer;"
-        (click)="pdfOrprint('Pdf')"
-      />
-    </li>
+            <div class="col-md-3">
+              <label>{{ groupType === 'ASON' ? 'Date' : 'From Date' }}</label>
+              <input type="text" class="form-control" readonly [bsConfig]="dpConfig" formControlName="fromdate"
+                bsDatepicker>
+            </div>
 
-    <li class="temp-ico ms-2">
-      <img
-        src="assets/images/print-icon-blue.svg"
-        width="18"
-        class="pt-2"
-        alt="Print"
-        style="cursor: pointer;"
-        (click)="pdfOrprint('Print')"
-      />
-    </li>
+            <div class="col-md-3" *ngIf="showhideason">
+              <label>To Date</label>
+              <input type="text" class="form-control" readonly [bsConfig]="dppConfig" formControlName="todate"
+                bsDatepicker>
+            </div>
 
-    <li class="temp-ico ms-2">
-      <img
-        src="assets/images/icon-excel.svg"
-        width="18"
-        class="pt-2"
-        alt="Excel"
-        style="cursor: pointer;"
-        (click)="export()"
-      />
-    </li>
+            <div class="col-md-auto mt-0">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="grouping" (change)="withGrouping($event)">
+                <label class="form-check-label" for="grouping">
+                  With Grouping
+                </label>
+              </div>
+            </div>
 
-  </ul>
+            <div class="col-md-auto">
+              <button type="button" class="btn btn-primary px-4" (click)="GenerateReport()">
+                {{savebutton}}
+              </button>
+            </div>
 
-</div>
+          </div>
+        </form>
+        <div *ngIf="showhidetable" class="d-flex justify-content-end mt-4 me-3">
 
-<div *ngIf="dataisempty">No Records to Display</div>
+          <ul *ngIf="TrialBalanceDifference" class="temp-ul">
+
+            <li class="temp-ico ms-2">
+              <img src="assets/images/pdf-icon-blue.svg" width="18" class="pt-2" alt="PDF" style="cursor: pointer;"
+                (click)="pdfOrprint('Pdf')" />
+            </li>
+
+            <li class="temp-ico ms-2">
+              <img src="assets/images/print-icon-blue.svg" width="18" class="pt-2" alt="Print" style="cursor: pointer;"
+                (click)="pdfOrprint('Print')" />
+            </li>
+
+            <li class="temp-ico ms-2">
+              <img src="assets/images/icon-excel.svg" width="18" class="pt-2" alt="Excel" style="cursor: pointer;"
+                (click)="export()" />
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div *ngIf="dataisempty">No Records to Display</div>
 
 
-<div *ngIf="showhidetable" class="mt-4">
-  <div class="text-center mb-1 fw-bold fs-5">
+        <div *ngIf="showhidetable" class="mt-4">
+          <!-- <div class="text-center mb-1 fw-bold fs-5">
         KAPIL CHITS (HYDERABAD) PVT. LTD.
       </div>
 
@@ -118,70 +141,67 @@
 
       <div class="text-center mb-2 fw-semibold">
         CIN: U65992TG2008PTC060803
+      </div> -->
+          <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details>
+          <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
+            <h5 class="m-0 fw-bold">Trial Balance</h5>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <span class="font-weight-bold">{{ betweendates }} :</span>
+              <label class="ml-2">
+                {{ betweenfrom }}
+                <span *ngIf="inbetween"> {{ inbetween }} </span>
+                {{ betweento }}
+              </label>
+            </div>
+          </div>
+
+          <p-table [value]="Trialbalancelst" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Type</th>
+                <th>Particulars</th>
+                <th class="text-end">Debit</th>
+                <th class="text-end">Credit</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr>
+                <td>{{ row.pparentname }}</td>
+                <td>{{ row.paccountname }}</td>
+
+                <td class="text-end">
+                  <span *ngIf="row.pdebitamount !== 0">
+                    {{currencysymbol}} {{ row.pdebitamount | number:'1.2-2' }}
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  <span *ngIf="row.pcreditamount !== 0">
+                    {{currencysymbol}} {{ row.pcreditamount | number:'1.2-2' }}
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+              <tr>
+                <td colspan="2" class="text-end fw-bold">Total</td>
+                <td class="text-end fw-bold">
+                  {{currencysymbol}} {{ totaldebitamount | number:'1.2-2' }}
+                </td>
+                <td class="text-end fw-bold">
+                  {{currencysymbol}} {{ totalcreditamount | number:'1.2-2' }}
+                </td>
+              </tr>
+            </ng-template>
+
+          </p-table>
+
+        </div>
       </div>
-      <div class="mt-3 border rounded shadow-sm bg-white p-3 text-center">
-        <h5 class="m-0 fw-bold">Trial Balance</h5>
-      </div>
-      <div class="row mt-2">
-  <div class="col-md-6">
-    <span class="font-weight-bold">{{ betweendates }} :</span>
-    <label class="ml-2">
-      {{ betweenfrom }}
-      <span *ngIf="inbetween"> {{ inbetween }} </span>
-      {{ betweento }}
-    </label>
+    </div>
   </div>
-</div>
-
-  <p-table
-    [value]="Trialbalancelst"
-    [paginator]="true"
-    [rows]="10"
-    responsiveLayout="scroll">
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Type</th>
-        <th>Particulars</th>
-        <th class="text-end">Debit</th>
-        <th class="text-end">Credit</th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td>{{ row.pparentname }}</td>
-        <td>{{ row.paccountname }}</td>
-
-        <td class="text-end">
-          <span *ngIf="row.pdebitamount !== 0">
-            {{currencysymbol}} {{ row.pdebitamount | number:'1.2-2' }}
-          </span>
-        </td>
-
-        <td class="text-end">
-          <span *ngIf="row.pcreditamount !== 0">
-            {{currencysymbol}} {{ row.pcreditamount | number:'1.2-2' }}
-          </span>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-      <tr>
-        <td colspan="2" class="text-end fw-bold">Total</td>
-        <td class="text-end fw-bold">
-          {{currencysymbol}} {{ totaldebitamount | number:'1.2-2' }}
-        </td>
-        <td class="text-end fw-bold">
-          {{currencysymbol}} {{ totalcreditamount | number:'1.2-2' }}
-        </td>
-      </tr>
-    </ng-template>
-
-  </p-table>
-
-</div>
-  </div>
-</div>
-</div>

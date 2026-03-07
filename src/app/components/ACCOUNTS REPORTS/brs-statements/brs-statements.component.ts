@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -199,26 +199,32 @@ get f() { return this.BrsStatementsReport.controls; }
    this.BrsStatementsReport = this.fb.group({
   fromDate: this.fb.control<Date | null>(this.today),
   toDate: this.fb.control<Date | null>(this.today),
-  pbankname: this.fb.control<string | null>(null),
+  pbankname: this.fb.control<string | null>('', Validators.required),
   branchschema: this.fb.control<string | null>(null),
   Bank: this.fb.control<string>('CREDIT')
 },
 {
-  validators: this.dateRangeValidator
+  validators: this.dateRangeValidator()
 });
     this.bankBookDetails();
     this.relesechange('CREDIT');
   }
-  private dateRangeValidator(group: FormGroup) {
-    debugger
-const from = group.get('fromDate')?.value;
-const to = group.get('toDate')?.value;
+  dateRangeValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
 
-if (from && to && new Date(from) > new Date(to)) {
-return { dateRangeInvalid: true };
-}
-return null;
-}
+      const from = group.get('fromDate')?.value;
+      const to = group.get('toDate')?.value;
+
+      if (!from || !to) return null;
+
+      const fromTime = new Date(from).setHours(0, 0, 0, 0);
+      const toTime = new Date(to).setHours(0, 0, 0, 0);
+
+      return fromTime > toTime
+        ? { dateRangeInvalid: true }
+        : null;
+    };
+  }
 
   bankBookDetails(): void {
     this._bankBookService.GetBankNames(this._CommonService.getschemaname(),
@@ -268,7 +274,15 @@ return null;
   }
 
   Show(): void {
-    debugger
+    this.submitted = true;
+    if (this.BrsStatementsReport.invalid) {
+    this.BrsStatementsReport.markAllAsTouched();
+    return;
+  }
+    if (this.BrsStatementsReport.errors?.['dateRangeInvalid']) {
+    alert('From Date should not be greater than To Date');
+    return;
+  }
 
     this.disablesavebutton = true;
     this.savebutton = 'Processing';

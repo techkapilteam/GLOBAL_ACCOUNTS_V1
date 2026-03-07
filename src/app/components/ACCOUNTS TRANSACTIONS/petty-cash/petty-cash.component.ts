@@ -965,6 +965,7 @@ debugger
   }
 
   partyName_Change($event: any): void {
+    debugger
     const ppartyid = $event?.ppartyid;
 
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
@@ -1003,7 +1004,7 @@ debugger
         ppartypannumber: data.ppartypannumber
       });
 
-      this.getPartyDetailsbyid(ppartyid, partynamename);
+      this.getPartyDetailsbyid(ppartyid);
       this.setenableordisabletdsgst(partynamename, 'PARTYCHANGE');
     } else {
       this.setBalances('PARTY', 0);
@@ -1012,18 +1013,16 @@ debugger
   }
 
 
-  getPartyDetailsbyid(ppartyid: any, pStateId: any): void {
+  getPartyDetailsbyid(ppartyid: any,) {
+    debugger
     this._AccountingTransactionsService.getPartyDetailsbyid(
-      ppartyid, 
-         this._commonService.getbranchname(),
-       this._commonService.getBranchCode(),
-       this._commonService.getCompanyCode(),
-       this._commonService.getschemaname(),
-       'texas'
+      ppartyid, 'accounts', 'KLC01','KAPILCHITS', 'global', 'taxes'
     ).subscribe(
         (json: any) => {
           if (!json) return;
           this.tdslist = json.lstTdsSectionDetails || [];
+          // this.statelist = json.statelist || [];
+
           const newdata = this.tdslist
             .map(item => item.pTdsSection)
             .filter((value, index, self) =>

@@ -15,7 +15,7 @@
                 (change)="reportchange_Change($event)" appendTo="body">
               </ng-select>
               <div class="text-danger mt-1"
-                *ngIf="ReprintRepotForm.get('TransType')?.touched && ReprintRepotForm.get('TransType')?.errors?.['required']">
+                *ngIf="(ReprintRepotForm.get('TransType')?.touched || submitted) && ReprintRepotForm.get('TransType')?.errors?.['required']">
                 Transaction Type is required
               </div>
             </div>
@@ -27,7 +27,7 @@
               <input type="text" class="form-control" formControlName="Transno">
             </div>
             <div class="text-danger mt-1"
-              *ngIf="ReprintRepotForm.get('Transno')?.touched && ReprintRepotForm.get('Transno')?.errors?.['required']">
+              *ngIf="(ReprintRepotForm.get('Transno')?.touched || submitted) && ReprintRepotForm.get('Transno')?.errors?.['required']">
               Transaction No. is required
             </div>
           </div>

@@ -1,55 +1,32 @@
+<div class="screen-container">
+  <div class="screen-card">
+    <div class="screen-header">
+      <h2>Online Settlement</h2>
+    </div>
 <form [formGroup]="ChequesInBankForm" class="container mt-3">
-
-  
   <div class="row">
-
-   
     <div class="col-md-4">
-
       <div class="form-group">
         <label class="required-field">Transaction Date</label>
-        <input type="text"
-               class="form-control"
-               formControlName="ptransactiondate"
-               bsDatepicker
-               [bsConfig]="ptransactiondateConfig"
-               readonly>
+        <input type="text"class="form-control"formControlName="ptransactiondate"bsDatepicker [bsConfig]="ptransactiondateConfig"readonly>
       </div>
 
       <div class="form-group">
         <label class="required-field">Receipt Date</label>
-        <input type="text"
-               class="form-control"
-               formControlName="pchequereceiptdate"
-               bsDatepicker
-               [bsConfig]="pchequecleardateConfig"
-               readonly>
+        <input type="text"class="form-control"formControlName="pchequereceiptdate"bsDatepicker[bsConfig]="pchequecleardateConfig"readonly>
       </div>
 
       <div class="form-group">
         <label class="required-field">Clear Date</label>
-        <input type="text"
-               class="form-control"
-               formControlName="pchequecleardate"
-               bsDatepicker
-               [bsConfig]="pchequecleardateConfig"
-               readonly>
+        <input type="text"class="form-control"formControlName="pchequecleardate"bsDatepicker[bsConfig]="pchequecleardateConfig"readonly>
       </div>
-
-      
       <div class="form-group">
         <label>Bank</label>
         <ng-select
-          [items]="bankList"
-          bindLabel="pdepositbankname"
-          bindValue="paccountid"
-          formControlName="bankname"
-          placeholder="Select"
-          class="w-100">
-        </ng-select>
+          [items]="bankList"bindLabel="pdepositbankname"bindValue="paccountid"formControlName="bankname"placeholder="Select"class="w-100">
+       </ng-select>
       </div>
 
-      
       <div class="form-group">
         <label>Online Account</label>
         <ng-select
@@ -63,10 +40,7 @@
       </div>
 
     </div>
-
-    
     <div class="col-md-8">
-
       <div class="border rounded shadow-sm bg-light p-3 mb-3">
         <div class="form-group mb-2">
           <label>Balance:</label>
@@ -74,7 +48,6 @@
             {{currencySymbol}} {{bankbalance | number:'1.2-2'}} {{bankbalancetype}}
           </span>
         </div>
-
         <div class="form-group mb-0">
           <label>BRS Date:</label>
           <span class="ml-2 font-weight-bold">{{brsdate}}</span>
@@ -141,7 +114,6 @@
         <th>UPI</th>
       </tr>
     </ng-template>
-
     <ng-template pTemplate="body" let-row>
       <tr>
         <td>
@@ -162,7 +134,6 @@
     </ng-template>
 
   </p-table>
-
   <div class="font-weight-bold mt-3">
     Selected Rows Count is: {{selected.length}}
   </div>
@@ -187,3 +158,5 @@
   </div>
 
 </form>
+</div>
+</div>

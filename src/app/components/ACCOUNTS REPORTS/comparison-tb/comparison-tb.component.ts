@@ -9,10 +9,11 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { TableModule } from 'primeng/table';
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-comparison-tb',
-  imports: [FormsModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,TableModule],
+  imports: [FormsModule,CommonModule,ReactiveFormsModule,BsDatepickerModule,TableModule,CompanyDetailsComponent],
   templateUrl: './comparison-tb.component.html',
   styleUrl: './comparison-tb.component.css',
 })
@@ -49,6 +50,7 @@ export class ComparisonTbComponent {
   totalcreditamount2 = 0;
   totaldebitamount3 = 0;
   totalcreditamount3 = 0;
+  printedDate: boolean = true;
 
   pageCriteria = new PageCriteria();
   // commencementgridPage = new Page();

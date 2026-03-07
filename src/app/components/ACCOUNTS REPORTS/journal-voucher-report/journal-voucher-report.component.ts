@@ -8,6 +8,7 @@ import { CompanyDetailsService } from '../../../services/company-details.service
 import { AccountingReportsService } from '../../../services/Transactions/AccountingReports/accounting-reports.service';
 import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 @Component({
   selector: 'app-journal-voucher-report',
   imports: [ CommonModule,
@@ -19,7 +20,7 @@ import autoTable from 'jspdf-autotable';
 export class JournalVoucherReportComponent {
   loading = false;
 
-  @Output() printedDate = new EventEmitter<boolean>();
+  // @Output() printedDate = new EventEmitter<boolean>();
 
   @ViewChild('pdf', { static: false })
   pdf!: ElementRef;
@@ -61,6 +62,14 @@ export class JournalVoucherReportComponent {
 
   pCreatedby: any;
   duplicate: any;
+  companyName: string = '';
+registrationAddress: string = '';
+cinNumber: string = '';
+branchName:string='';
+printedDate: boolean = true;
+  gstNumber: any;
+  branchAddress: any;
+  Gstinn: any;
 
   constructor(
     private datepipe: DatePipe,
@@ -77,7 +86,7 @@ export class JournalVoucherReportComponent {
     this.getCompanyName();
 
     this.todaydate = new Date();
-    this.printedDate.emit(true);
+    // this.printedDate.emit(true);
 
     this.currencySymbol = this.commonService.currencysymbol;
     this.pCreatedby = this.commonService.pCreatedby;
@@ -107,44 +116,57 @@ export class JournalVoucherReportComponent {
 
   getCompanyName(): void {
 
-    // this.companyDetailsService
-    //   .GetCompanyData()
-    //   .subscribe({
+    this.companyDetailsService
+      .GetCompanyData()
+      .subscribe({
 
-    //     next: (json: any) => {
+        next: (json: any) => {
 
-    //       sessionStorage.setItem(
-    //         'companydetails',
-    //         JSON.stringify(json)
-    //       );
+          sessionStorage.setItem(
+            'CompanyDetails',
+            JSON.stringify(json)
+          );
 
-    //       this.commonService._setCompanyDetails();
+        //  const comapnydata= this.commonService._setCompanyDetails();
 
-    //       this.comapnydata =
-    //         this.commonService.comapnydetails;
+        //   // this.comapnydata =
+        //   //   this.commonService.comapnydetails;
 
-    //       this.pCompanyName =
-    //         this.comapnydata?.pCompanyName;
+        //   this.companyName =
+        //     this.comapnydata?.companyName;
 
-    //       this.pAddress1 =
-    //         this.comapnydata?.pAddress1;
+        //   this.registrationAddress =
+        //     this.comapnydata?.registrationAddress;
 
-    //       this.pAddress2 =
-    //         this.comapnydata?.pAddress2;
+        //   // this.pAddress2 =
+        //   //   this.comapnydata?.pAddress2;
 
-    //       this.pCinNo =
-    //         this.comapnydata?.pCinNo;
+        //   this.cinNumber =
+        //     this.comapnydata?.cinNumber;
 
-    //       this.pGstinNo =
-    //         this.comapnydata?.pGstinNo;
+        //   this.gstNumber =
+        //     this.comapnydata?.gstNumber;
 
-    //       this.pBranchname =
-    //         this.comapnydata?.pBranchname;
-    //     },
+        //   this.branchName =
+        //     this.comapnydata?.branchName;
+        const company = json[0];
 
-    //     error: err =>
-    //       this.commonService.showErrorMessage(err)
-    //   });
+        this.companyName = company.companyName;
+        this.branchAddress = company.branchAddress;
+        this.registrationAddress = company.registrationAddress;
+        this.cinNumber = company.cinNumber;
+        this.gstNumber = company.gstNumber;
+        this.branchName = company.branchName;
+
+        if (this.gstNumber) {
+          const l = this.gstNumber.split('');
+          this.Gstinn = (l[0] + l[1]).toString();
+        }
+        },
+
+        error: err =>
+          this.commonService.showErrorMessage(err)
+      });
   }
 
   downloadPdf(): void {

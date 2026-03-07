@@ -59,7 +59,6 @@
               </tr>
             </ng-template>
 
-            <!-- Body -->
             <ng-template pTemplate="body" let-row>
               <tr>
 
@@ -72,20 +71,20 @@
                 </td>
 
                 <td>
-                  {{ row.preceiptdate || '--' }}
+                  {{ row.receipt_date || '--' }}
                 </td>
 
                 <td class="text-center">
-                  {{ row.preceiptid || '--' }}
+                  {{ row.receipt_number || '--' }}
                 </td>
 
                 <td>
-                  <ng-container *ngIf="row.pmodofreceipt === 'CASH'; else nonCash">
+                  <ng-container *ngIf="row.modeof_receipt === 'CASH'; else nonCash">
                     CASH
                   </ng-container>
 
                   <ng-template #nonCash>
-                    {{ row.pmodofreceipt || '--' }}
+                    {{ row.modeof_receipt || '--' }}
                     <span *ngIf="row.ptypeofpayment">
                       ({{ row.ptypeofpayment }}
                       <span *ngIf="row.pChequenumber">
@@ -97,17 +96,15 @@
 
                 <td class="text-end">
                   {{ currencySymbol }}
-                  {{ row.ptotalreceivedamount ?? 0 | number:'1.2-2' }}
+                  {{ row.totalreceivedamount ?? 0 | number:'1.2-2' }}
                 </td>
 
                 <td style="width:400px">
-                  {{ row.pnarration || '-- NA --' }}
+                  {{ row.narration || '-- NA --' }}
                 </td>
 
               </tr>
             </ng-template>
-
-            <!-- Empty Message -->
             <ng-template pTemplate="emptymessage">
               <tr>
                 <td colspan="6" class="text-center py-4">

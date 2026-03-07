@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { CompanyDetailsService } from 'src/app/services/company-details.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private companyService: CompanyDetailsService
   ) {}
 
   onLogin(): void {
@@ -27,6 +29,14 @@ export class LoginComponent {
     }
 
     if (this.authService.login(this.username, this.password)) {
+      
+    this.companyService.GetCompanyData().subscribe({
+       next: (response: any) => { debugger
+        sessionStorage.setItem('CompanyDetails',JSON.stringify(response[0]))
+    },
+    
+    });
+  
       this.router.navigate(['/dashboard']);
     } else {
       this.errorMessage = 'Invalid credentials';
