@@ -276,7 +276,7 @@
   Party is required
 </div>
 
-            <app-validation-message [messgae]="formValidationMessages?.ppartyid"></app-validation-message>
+            <!-- <app-validation-message [messgae]="formValidationMessages?.ppartyid"></app-validation-message> -->
 
             <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{partyBalance }}</span>
           </div>
@@ -309,8 +309,8 @@
 
             <span class=" position-absolute font-italic" style="right:-160px; top:35px;">{{ledgerBalance }}</span>
           </div>
-          <app-validation-message [messgae]="formValidationMessages?.pledgerid"></app-validation-message>
-
+          <!-- <app-validation-message [messgae]="formValidationMessages?.pledgerid"></app-validation-message> -->
+<!--  -->
 
         </div>
 
@@ -329,14 +329,15 @@
 
             <span class=" position-absolute font-italic" style="right:-160px; top:30px;">{{subledgerBalance }}</span>
           </div>
-          <app-validation-message [messgae]="formValidationMessages?.psubledgerid"></app-validation-message>
+          <!-- <app-validation-message [messgae]="formValidationMessages?.psubledgerid"></app-validation-message> -->
 
 
         </div>
         <div class="form-group">
           <label class="pl-0 pr-0" class="required-field">Amount Paid</label>
           <input class="form-control border-warning sec-head-bold " style="text-align:right;" type="text" placeholder=""
-            id="pactualpaidamount" title="Amount Paid" formControlName="pactualpaidamount" (blur)="pamount_change()"
+            id="pactualpaidamount" title="Amount Paid" formControlName="pactualpaidamount"
+             (blur)="pamount_change()"  (keypress)="allowNumberOnly($event)"
            appRoundecimal="12@2" appMycurrencyFormatter
                         
     
@@ -351,8 +352,8 @@
             paymentVoucherForm.get(['ppaymentsslistcontrols','pactualpaidamount'])?.invalid">
   Amount is required
 </div>
-          <app-validation-message [messgae]="formValidationMessages?.pactualpaidamount">
-          </app-validation-message>
+          <!-- <app-validation-message [messgae]="formValidationMessages?.pactualpaidamount">
+          </app-validation-message> -->
 
         </div>
       </div>
@@ -448,7 +449,7 @@
                     <div class="row">
                       <div class="form-group col-md-8" *ngIf="showgstamount">
                         <label>Amount</label>
-                        <label class="form-control col-md-12 text-right pt-2"> {{ currencySymbol }}
+                        <label class="form-control col-md-12 text-right pt-2"> 
                           {{
                           paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pgstamount')?.value ?? 0
                           | currency: currencyCode:'symbol':'1.2-2'
@@ -464,7 +465,7 @@
                           }}%)
 
                         </label>
-                        <label class="col-md-12"> {{ currencySymbol }}
+                        <label class="col-md-12">
                           {{
                           paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pigstamount')?.value ?? 0
                           | currency: currencyCode:'symbol':'1.2-2'
@@ -481,7 +482,7 @@
 
 
                         </label>
-                        <label class="col-md-12"> {{ currencySymbol }}
+                        <label class="col-md-12"> 
                           {{
                           paymentVoucherForm.get('ppaymentsslistcontrols')?.get('pcgstamount')?.value ?? 0
                           | currency: currencyCode:'symbol':'1.2-2'
@@ -507,7 +508,7 @@
 
 
                         <label class="col-md-12">
-                          {{ currencySymbol }}
+                         
                           {{
                           (paymentVoucherForm.get('ppaymentsslistcontrols')?.get('putgstamount')?.value ?? 0)
                           | currency: currencyCode:'symbol':'1.2-2'
@@ -529,7 +530,7 @@
                           currency:currencyCode:'symbol':'1.2-2'}}</label> -->
 
                         <label class="col-md-12">
-                          {{ currencySymbol }}
+                       
                           {{
                           paymentVoucherForm.get('ppaymentsslistcontrols')?.get('putgstamount')?.value ?? 0
                           | currency:currencyCode:'symbol':'1.2-2'
@@ -614,7 +615,7 @@
                       ((paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup)?.get('ptdsamount')?.value ?? 0)
                       | currency: currencyCode:'symbol':'1.2-2'
                       }} -->
-                      {{ currencySymbol }}
+                      
                       {{
                       paymentVoucherForm.get('ppaymentsslistcontrols')?.get('ptdsamount')?.value ?? 0
                       | currency: currencyCode:'symbol':'1.2-2'
