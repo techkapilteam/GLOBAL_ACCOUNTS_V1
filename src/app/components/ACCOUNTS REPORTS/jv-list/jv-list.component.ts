@@ -107,6 +107,10 @@ export class JvListComponent implements OnInit {
     this.pageCriteria.pageNumber = 1;
     this.pageCriteria.footerPageHeight = 50;
   }
+  isDateRow(row: any): boolean {
+  const value = row.formOrModulename || row.pparticulars;
+  return /^\d{4}-\d{2}-\d{2}$/.test(value?.trim());
+  }
 
   onFooterPageChange(event: any): void {
     this.pageCriteria.offset = event.page - 1;

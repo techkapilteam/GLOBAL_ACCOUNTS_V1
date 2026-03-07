@@ -820,6 +820,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
     doc.setFontSize(10);
     doc.text(`Between : ${fromdate} And ${todate}`, margin, currentY);
     // doc.text(`Between : ${fromdate} And ${todate}`, 15, 57);
+    doc.text(`Branch: ${companyBranch}`, pageWidth - margin, currentY, { align: 'right' });
 
     currentY += 6;
 
@@ -997,7 +998,7 @@ const registrationAddr  = Companyreportdetails?.registrationAddress   ?? '';
 
           doc.setFontSize(14);
           doc.text(reportName, 90, 38);
-
+          doc.setFontSize(10);
           const lines = doc.splitTextToSize(subreportname, 90);
           doc.text(lines, 30, 45);
 
@@ -1183,7 +1184,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
     // const branch = this._CommonService.getBranch();
     const doc = new jsPDF({ orientation: 'landscape' });
 
-    const todayDateTime = this._CommonService.pdfProperties('DateTime');
+    const todayDateTime = this._CommonService.pdfProperties('Date');
     const kapil_logo = this._CommonService.getKapilGroupLogo();
     const currencyformat = this._CommonService.currencysymbol;
     const totalPagesExp = '{total_pages_count_string}';
@@ -1590,7 +1591,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
         const currentPage = (doc as any).internal.getCurrentPageInfo().pageNumber;
         if (currentPage === 1) {
           doc.setFont('helvetica', 'normal');
-          if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 30, 15);
+          if (kapil_logo) doc.addImage(kapil_logo, 'JPEG', 10, 5, 20, 20);
 
           // doc.setFontSize(15);
           // doc.text(String(Companyreportdetails?.pCompanyName ?? ''), 60, 10);

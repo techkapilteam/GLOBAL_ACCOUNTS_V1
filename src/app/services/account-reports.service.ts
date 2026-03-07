@@ -25,5 +25,24 @@ export class AccountReportsService {
     const params = new HttpParams().set("localSchema", localSchema).set("sectionid", sectionid).set("fromdate", fromdate).set("todate", todate).set("grouptype", grouptype).set("reporttype", reporttype).set("globalSchema", this._CommonService.getschemaname()).set("companyCode", this._CommonService.getCompanyCode()).set("branchCode", this._CommonService.getBranchCode());
     return this._CommonService.getAPI('/Accounts/getTDSReportDetails', params, 'YES');
   }
+  GetSubscriberGroups(caobranchschema: string): Observable<any> {
+
+    const params = new HttpParams({
+      fromObject: {
+        GlobalSchema: this._CommonService.getschemaname(),
+      LocalSchema: this._CommonService.getbranchname(),
+      CaoSchema: caobranchschema,
+      CompanyCode: this._CommonService.getCompanyCode(),
+      BranchCode: this._CommonService.getBranchCode(),
+        
+      }
+    });
+
+    return this._CommonService.getAPI(
+      '/Accounts/GetSubscriberGroupCodes',
+      params,
+      'Yes'
+    );
+  }
   
 }
