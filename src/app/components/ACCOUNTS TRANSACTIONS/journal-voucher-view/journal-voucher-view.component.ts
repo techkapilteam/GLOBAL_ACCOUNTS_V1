@@ -19,6 +19,7 @@ import { Table, TableModule } from 'primeng/table';
 import { CurrencyPipe } from '@angular/common';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { CommonService } from '../../../services/common.service';
+import { ButtonModule } from 'primeng/button';
 // import { PageCriteria } from 'src/app/Models/pagecriteria';
 // import { PageCriteria } from '../Models/pageCriteria';
 // import { CurrencyPipe } from '@angular/common';
@@ -28,7 +29,7 @@ import { CommonService } from '../../../services/common.service';
   imports: [NgxDatatableModule,TableModule,
     CurrencyPipe,
     // CustomCurrencyPipe,
-    RouterLink
+    RouterLink,ButtonModule
   ],
   templateUrl: './journal-voucher-view.component.html',
   styleUrl: './journal-voucher-view.component.css',

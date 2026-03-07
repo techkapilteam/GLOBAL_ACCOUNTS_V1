@@ -382,7 +382,7 @@ SaveChequesIssued(data: any) {
   }
   
   saveJournalVoucher(data: any) {
-    return this._CommonService.postAPI('/accountingtransactions/SaveJournalVoucher', data)
+    return this._CommonService.postAPI('/Accounts/SaveJournalVoucher', data)
   }
   GetJournalVoucherData(
     BranchSchema: any, CompanyCode: any, BranchCode: any
