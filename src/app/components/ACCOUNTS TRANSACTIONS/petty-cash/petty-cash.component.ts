@@ -1016,7 +1016,7 @@ debugger
   getPartyDetailsbyid(ppartyid: any,) {
     debugger
     this._AccountingTransactionsService.getPartyDetailsbyid(
-      ppartyid, 'accounts', 'KLC01','KAPILCHITS', 'global', 'taxes'
+      ppartyid, 'accounts', 'KLC01','KAPILCHITS', 'global', 'taxes '
     ).subscribe(
         (json: any) => {
           if (!json) return;
