@@ -507,8 +507,15 @@ export class CommonService {
     return companyDetails?.pbranchid ?? null;
   }
   extractData(data: any) {
+    //  let body = res;
+    // return body;
     return data;
   }
+  // public extractData(res: Response) {
+
+  //   let body = res;
+  //   return body;
+  // }
 
   extractData1(data: any) {
     return data;
@@ -562,28 +569,7 @@ export class CommonService {
     )
   }
   getAPI(apiPath: string, params: any, parameterStatus: string): Observable<any> {
-    // debugger;
-    // const urldata = environment.apiURL;
-
-    // return this.http.get<any>(urldata).pipe(
-    //   mergeMap(json => {
-    //     debugger;
-    //     const apiUrl = json[0].ApiHostUrl + apiPath;
-
-    //     if (parameterStatus.toUpperCase() === 'YES') {
-    //       return this.http.get(apiUrl, { params }).pipe(
-    //         map(this.extractData),
-    //         catchError(this.handleError)
-    //       );
-    //     } else {
-    //       return this.http.get(apiUrl).pipe(
-    //         map(this.extractData),
-    //         catchError(this.handleError)
-    //       );
-    //     }
-    //   }),
-    //   catchError(this.handleError)
-    // );
+ 
     debugger;
     let urldata = environment.apiURL;
 
@@ -608,44 +594,89 @@ export class CommonService {
         }));
   }
 
-  postAPI(apiPath: string, data: any): Observable<any> {
-    const urldata = environment.apiURL;
+  // postAPI(apiPath: string, data: any): Observable<any> {
+  //   const urldata = environment.apiURL;
 
-    const headers = new HttpHeaders({
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Cache-Control': 'no-cache'
+  //   });
+
+  //   return this.http.get<any[]>(urldata).pipe(
+  //     mergeMap(json => {
+  //       const apiUrl = json[0].ApiHostUrl + apiPath;
+
+  //       return this.http.post(apiUrl, data, { headers }).pipe(
+  //         map(this.extractData),
+  //         catchError(this.handleError)
+  //       );
+  //     }),
+  //     catchError(this.handleError)
+  //   );
+  // }
+
+  // postAPI1(apiPath: string, data: any): Observable<any> {
+  //   const urldata = environment.apiURL;
+
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Cache-Control': 'no-cache'
+  //   });
+
+  //   return this.http.get<any[]>(urldata).pipe(
+  //     mergeMap(json => {
+  //       const apiUrl = json[0].ApiHostUrl + apiPath;
+  //       return this.http.post(apiUrl, data, { headers });
+  //     }),
+  //     catchError(this.handleError)
+  //   );
+  // }
+ postAPI(apiPath: any, data: any) {
+    debugger;
+    let urldata = environment.apiURL;
+    let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache'
     });
 
-    return this.http.get<any[]>(urldata).pipe(
-      mergeMap(json => {
-        const apiUrl = json[0].ApiHostUrl + apiPath;
+    let options = {
+      headers: httpHeaders
+    };
 
-        return this.http.post(apiUrl, data, { headers }).pipe(
-          map(this.extractData),
-          catchError(this.handleError)
+    return this.loadApiHostUrl().pipe(
+      switchMap(apiBaseUrl => {
+        const fullUrl = apiBaseUrl + apiPath;
+        return this.http.post(fullUrl, data, options).pipe(
+          map((res: any) => this.extractData(res)),
+          catchError(error => this.handleError(error))
         );
-      }),
-      catchError(this.handleError)
-    );
+      }
+      ));
+
   }
 
-  postAPI1(apiPath: string, data: any): Observable<any> {
-    const urldata = environment.apiURL;
-
-    const headers = new HttpHeaders({
+  callPostAPIMultipleParameters(apiPath: any) {
+    let urldata = environment.apiURL;
+    let httpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache'
     });
+    httpHeaders.append('Access-Control-Allow-Origin', '/*');
 
-    return this.http.get<any[]>(urldata).pipe(
-      mergeMap(json => {
-        const apiUrl = json[0].ApiHostUrl + apiPath;
-        return this.http.post(apiUrl, data, { headers });
-      }),
-      catchError(this.handleError)
+    let options = {
+      headers: httpHeaders
+    };
+
+    return this.http.get(urldata).pipe(
+      mergeMap((json: any) =>
+        this.http.post(json[0]['ApiHostUrl'] + apiPath, options).pipe(
+          map((data: any) => this.extractData(data)),
+          catchError(this.handleError)
+        )
+      )
     );
-  }
 
+  }
 
   getcompanyaddress(): string {
     let companyDetails = this._getCompanyDetails();

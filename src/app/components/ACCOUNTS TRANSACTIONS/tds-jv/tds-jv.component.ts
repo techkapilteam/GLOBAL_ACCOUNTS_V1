@@ -97,7 +97,7 @@ export class TdsJvComponent implements OnInit {
 
     this.dpConfig1.maxDate = new Date();
     this.dpConfig1.containerClass = 'theme-dark-blue';
-    this.dpConfig1.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig1.dateInputFormat = 'DD-MMM-YYYY';
     this.dpConfig1.showWeekNumbers = false;
 
     // this.dpConfig1.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');;
@@ -200,6 +200,11 @@ export class TdsJvComponent implements OnInit {
       pCalendarMonth: [null, Validators.required],
       CreditLedger: [null, Validators.required],
       preceiptdate: [''],
+  //      DebitLedger: ['', Validators.required],
+  // CreditLedger: ['', Validators.required],
+  // preceiptdate: ['', Validators.required],
+  // pPeriodType: ['', Validators.required],
+  // pCalendarMonth: ['', Validators.required]
     })
   }
   click_jvtype(event:any) {
@@ -298,9 +303,20 @@ export class TdsJvComponent implements OnInit {
 
   // }
 
+  formatAmount(amount: any): string {
+  const num = Number(amount);
+  if (isNaN(num) || num === 0) {
+    return '';  // Show nothing if zero or invalid
+  }
+  return num.toFixed(2);
+}
+
   gettdsjvdetails() {
   debugger;
-
+  if (this.tdsJvDetailsForm.invalid) {
+    this.tdsJvDetailsForm.markAllAsTouched(); // <--- Important!
+    return;
+  }
   // Reset selections and totals
   this.selected1 = [];
   this.selectedValues = [];
@@ -349,6 +365,7 @@ export class TdsJvComponent implements OnInit {
         debit_amount: Number(item.debit_amount) || 0,
         credit_amount: Number(item.credit_amount) || 0
       }));
+      console.log('tdsJvDetailsGrid',this.tdsJvDetailsGrid);
 
       // Show table
       this.showhidetable = true;

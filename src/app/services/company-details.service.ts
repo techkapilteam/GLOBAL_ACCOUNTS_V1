@@ -22,7 +22,7 @@ export class CompanyDetailsService {
   }
 
   SaveTextData(data: any): Observable<any> {
-    return this.commonService.postAPI1(
+    return this.commonService.postAPI(
       '/Common/SaveTextData',
       data
     );

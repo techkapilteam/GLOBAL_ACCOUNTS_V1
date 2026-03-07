@@ -19,8 +19,8 @@
                         <div class="col-md-6 col-xl-4">
                             <div class="form-group">
                                 <label class="required-field">Date</label>
-                                <fieldset [disabled]="!disabletransactiondate">
-                                    <input class="form-control" id="pjvdate" title="Date" readonly type="text"
+                                <fieldset [disabled]="disabletransactiondate">
+                                    <input class="form-control" id="pjvdate" title="Date" type="text"
                                         [bsConfig]="ppaymentdateConfig" bsDatepicker formControlName="pjvdate"
                                         [ngClass]="{ 'is-invalid': formValidationMessages?.pjvdate }">
                                 </fieldset>
@@ -43,18 +43,26 @@
                                         formControlName="pledgerid" groupBy="pAccounttype" bindLabel="pledgername"
                                         bindValue="pledgerid" [multiple]=false placeholder="Select" [searchable]=true
                                         [clearable]=false dropdownPosition="bottom" [clearOnBackspace]=true
-                                        (change)="ledgerName_Change($event)">
+                                        (change)="ledgerName_Change($event)" [ngClass]="{
+    'is-invalid': paymentVoucherForm.get('ppaymentsslistcontrols.pledgerid')?.invalid &&
+                  (paymentVoucherForm.get('ppaymentsslistcontrols.pledgerid')?.touched || paymentVoucherForm.get('ppaymentsslistcontrols.pledgerid')?.dirty)
+  }">
                                         <ng-template ng-optgroup-tmp let-item="item">
                                             {{item.pAccounttype}}
                                         </ng-template>
                                     </ng-select>
 
+                                    <div class="invalid-feedback">
+                                        <span
+                                            *ngIf="paymentVoucherForm.get('ppaymentsslistcontrols.pledgerid')?.errors?.['required']">
+                                            Ledger is required
+                                        </span>
+                                    </div>
 
-                                    <span class=" position-absolute font-italic"
-                                        style="right:-160px; top:35px;">{{ ledgerBalance || '0 Dr' }}</span>
+                                    <span class=" position-absolute font-italic" style="right:-160px; top:35px;">{{
+                                        ledgerBalance || '0 Dr' }}</span>
                                 </div>
-                                <!-- [ngClass]="{ 'is-invalid': formValidationMessages.pledgername }"
-                    <app-validation-message [messgae]="formValidationMessages?.pledgername"></app-validation-message> -->
+
 
                             </div>
 
@@ -68,14 +76,10 @@
                                         [clearable]=true dropdownPosition="bottom" [clearOnBackspace]=true
                                         (change)="subledger_Change($event)">
                                     </ng-select>
-                                    <!--<div class="input-group-append">
-          <button class="btn btn-lg-icon rounded-right px-2 p-0"> <img src="assets/images/icon-add-blue.svg" class="" width="20px" height="20px"></button>
-        </div>-->
+
                                     <span class=" position-absolute font-italic"
                                         style="right:-160px; top:30px;">{{subledgerBalance || '0 Dr' }}</span>
                                 </div>
-                                <!-- [ngClass]="{ 'is-invalid': formValidationMessages.psubledgername }"
-                     <app-validation-message [messgae]="formValidationMessages?.psubledgername"></app-validation-message> -->
 
                             </div>
 
@@ -87,13 +91,22 @@
                                         formControlName="ppartyid" bindLabel="ppartyname" bindValue="ppartyid"
                                         [multiple]=false placeholder="Select" [searchable]=true [clearable]=true
                                         dropdownPosition="bottom" [clearOnBackspace]=true
-                                        (change)="partyName_Change($event)" [virtualScroll]="true">
+                                        (change)="partyName_Change($event)" [virtualScroll]="true" [ngClass]="{
+    'is-invalid': paymentVoucherForm.get('ppaymentsslistcontrols.ppartyid')?.invalid &&
+                  (paymentVoucherForm.get('ppaymentsslistcontrols.ppartyid')?.touched || paymentVoucherForm.get('ppaymentsslistcontrols.ppartyid')?.dirty)
+  }">
                                     </ng-select>
-
+                                    <!-- Validation Message -->
+                                    <div class="invalid-feedback">
+                                        <span
+                                            *ngIf="paymentVoucherForm.get('ppaymentsslistcontrols.ppartyid')?.errors?.['required']">
+                                            Party is required-field
+                                        </span>
+                                    </div>
                                     <!-- <app-validation-message [messgae]="formValidationMessages?.ppartyname"></app-validation-message>
                          [ngClass]="{ 'is-invalid': formValidationMessages.ppartyname }" -->
                                     <span class=" position-absolute font-italic"
-                                        style="right:-160px; top:30px;">{{partyBalance  || '0 Dr'}}</span>
+                                        style="right:-160px; top:30px;">{{partyBalance || '0 Dr'}}</span>
                                 </div>
 
                             </div>
@@ -109,8 +122,24 @@
                                     <input class="form-control border-warning sec-head-bold " style="text-align:right;"
                                         id="pdebitamount" formControlName="pdebitamount" [readonly]="readonlydebit"
                                         type="text" placeholder="" (keyup)="disableamounttype('Debit')"
-                                        (blur)="pamount_change()" appRoundecimal="12@2"
-                                        appMyCurrencyFormatorincludingzero>
+                                        (blur)="pamount_change()" (input)="allowNumberOnly($event)"
+                                        (blur)="formatCurrency('pdebitamount')" appRoundecimal="12@2"
+                                        appMyCurrencyFormatorincludingzero [ngClass]="{
+    'is-invalid': paymentVoucherForm.get('ppaymentsslistcontrols.pdebitamount')?.invalid &&
+                  (paymentVoucherForm.get('ppaymentsslistcontrols.pdebitamount')?.touched || paymentVoucherForm.get('ppaymentsslistcontrols.pdebitamount')?.dirty)
+  }">
+
+
+                                    <div class="invalid-feedback">
+                                        <span
+                                            *ngIf="paymentVoucherForm.get('ppaymentsslistcontrols.pdebitamount')?.errors?.['required']">
+                                            Debit is required
+                                        </span>
+                                        <span
+                                            *ngIf="paymentVoucherForm.get('ppaymentsslistcontrols.pdebitamount')?.errors?.['required']">
+                                            Only numeric values allowed
+                                        </span>
+                                    </div>
                                     <!-- <app-validation-message [messgae]="formValidationMessages?.pdebitamount">
                         </app-validation-message>
                         [ngClass]="{ 'is-invalid': formValidationMessages.pdebitamount }" -->
@@ -121,10 +150,22 @@
                                         id="pcreditamount" formControlName="pcreditamount" [readonly]="readonlycredit"
                                         type="text" placeholder="" (keyup)="disableamounttype('Credit')"
                                         (blur)="pamount_change()" appRoundecimal="12@2"
-                                        appMyCurrencyFormatorincludingzero>
-                                    <!-- <app-validation-message [messgae]="formValidationMessages?.pcreditamount">
-                        </app-validation-message> 
-                         [ngClass]="{ 'is-invalid': formValidationMessages.pcreditamount }"-->
+                                        appMyCurrencyFormatorincludingzero (input)="allowNumberOnly($event)"
+                                        (blur)="formatCurrency('pcreditamount')"  [ngClass]="{
+    'is-invalid': paymentVoucherForm.get('ppaymentsslistcontrols.pcreditamount')?.invalid &&
+                  (paymentVoucherForm.get('ppaymentsslistcontrols.pcreditamount')?.touched || 
+                  paymentVoucherForm.get('ppaymentsslistcontrols.pcreditamount')?.dirty)
+  }">
+                                    <div class="invalid-feedback">
+                                        <span
+                                            *ngIf="paymentVoucherForm.get('ppaymentsslistcontrols.pcreditamount')?.errors?.['required']">
+                                            Credit is required
+                                        </span>
+                                        <span
+                                            *ngIf="paymentVoucherForm.get('ppaymentsslistcontrols.pcreditamount')?.errors?.['required']">
+                                            Only numeric values allowed
+                                        </span>
+                                    </div>
                                 </div>
 
                             </div>
@@ -133,10 +174,10 @@
 
                                 <a class="btn btn-primary mr-4 px-3 border-0" (click)="clearPaymentDetails()"><img
                                         src="assets/images/icon-cancel-white.svg" width="20px" height="20px"
-                                        class="mr-3" appButtonDoubleClick >Clear</a>
-                                        <!-- [debounceTime]="500" -->
-                                <a data-toggle="tab" class="btn btn-secondary px-3 border-0" role="tab" aria-controls="hot"
-                                    aria-selected="false" appButtonDoubleClick 
+                                        class="mr-3" appButtonDoubleClick>Clear</a>
+                                <!-- [debounceTime]="500" -->
+                                <a data-toggle="tab" class="btn btn-secondary px-3 border-0" role="tab"
+                                    aria-controls="hot" aria-selected="false" appButtonDoubleClick
                                     (click)="addPaymentDetails()"><img src="assets/images/icon-add-blue.svg"
                                         width="20px" height="20px" class="mr-3">Add</a>
                                 <!-- [debounceTime]="500" -->
@@ -440,7 +481,7 @@
                 <div class="section-content mt-2">
                     <div class="row">
                         <div class="col-md-12 col-xl-12 pt-4">
-                          
+
 
 
 
@@ -472,12 +513,12 @@
                                         <td>{{ row.ppartyname }}</td>
                                         <td>{{ row.pledgername }}</td>
                                         <td>{{ row.psubledgername }}</td>
-                                            <!-- ptotaldebitamount -->
+                                        <!-- ptotaldebitamount -->
                                         <td class="text-right" *ngIf="row.pdebitamount != 0">
                                             {{ row.pdebitamount | currency:'INR':'symbol':'1.2-2' }}
                                         </td>
                                         <td class="text-right" *ngIf="row.pdebitamount == 0"></td>
-                                    <!-- ptotalcreditamount -->
+                                        <!-- ptotalcreditamount -->
                                         <td class="text-right" *ngIf="row.pcreditamount != 0">
                                             {{ row.pcreditamount | currency:'INR':'symbol':'1.2-2' }}
                                         </td>
@@ -513,7 +554,7 @@
                     <div class="row">
                         <div class="col-md-6 col-xl-6">
                             <div class="mt-2">
-                              
+
 
 
 

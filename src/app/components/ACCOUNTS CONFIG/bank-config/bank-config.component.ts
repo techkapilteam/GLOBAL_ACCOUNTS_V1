@@ -182,7 +182,12 @@ import { Logger } from 'html2canvas/dist/types/core/logger';
 export class BankConfigComponent implements OnInit {
   @ViewChild(DataBindingDirective, { static: true }) dataBinding!: DataBindingDirective;
   // @ViewChild(AddressComponent, { static: false }) addressdetails;
-  @ViewChild(AddressComponent, { static: false }) addressdetails!: AddressComponent;
+  // @ViewChild(AddressComponent, { static: false }) addressdetails!: AddressComponent;
+  @ViewChild(AddressComponent) set addressdetails(comp: AddressComponent) {
+  if (comp && this.datatobind?.lstBankInformationAddressDTO?.length) {
+    comp.editdata(this.datatobind.lstBankInformationAddressDTO, 'Bank');
+  }
+}
 
   AdresssDetailsForm: any;
   accuntnumber = false;
@@ -299,21 +304,37 @@ export class BankConfigComponent implements OnInit {
       ({
         pCreatedby: [this._commonService.getCreatedBy()],
         pBankdate: [''],
-        pAcctountype: ['', Validators.required],
+        // pAcctountype: ['', Validators.required],
+        pAcctountype: [null, Validators.required],
         pBankID: [''],
-        bankName: ['', Validators.required],
+        // bankName: ['', Validators.required],
+        bankName: [null, Validators.required],
+
         pBankbranch: [''],
-        pAccountnumber: ['', Validators.required],
+        // pAccountnumber: ['', Validators.required],
+        pAccountnumber: ['', [Validators.required, Validators.pattern("^[0-9]{9,18}$")]],
         pIfsccode: [''],
         account_name: ['', Validators.required],
         // pAccountname: ['', Validators.required],
-        pOverdraft: [''],
-        pOpeningBalance: [''],
-        pOpeningBalanceType: [''],
+        // pOverdraft: [''],
+        // pOpeningBalance: [''],
+        // pOpeningBalanceType: [''],
+
+          pOverdraft: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+  pOpeningBalance: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+  //         pOverdraft: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{0,2})?$/)]],
+  // pOpeningBalance: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{0,2})?$/)]],
+  pOpeningBalanceType: ['', Validators.required],
         pRecordid: ['0'],
         pStatusname: ['Active'],
         ptypeofoperation: ['CREATE'],
-        pCardNo: [],
+          pCardNo: ['', [
+    Validators.required,
+    Validators.minLength(16),
+    Validators.maxLength(16),
+    Validators.pattern('^[0-9]+$') // digits only
+  ]],
+        // pCardNo: [],
         pIsdebitcardapplicable: [false],
         pCardName: [''],
         pValidfrom: [''],
@@ -436,8 +457,8 @@ export class BankConfigComponent implements OnInit {
         this.disable = true;
         this.loading = false;
         // this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.bank_date))
-        this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.bankInfo.bank_date))
-        console.log('DATE', this.datatobind.bankInfo.bank_date);
+        this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.pBankdate))
+        console.log('DATE', this.datatobind.pBankdate);
 
         // this.bankmasterform.controls['pBankID'].setValue(this.datatobind.pBankID)
         // this.bankmasterform.controls['pBankID'].setValue(this.datatobind.pBankID)
@@ -449,53 +470,53 @@ export class BankConfigComponent implements OnInit {
           this.banksetup = true
         }
 
-        this.bankmasterform.controls['bankName'].setValue(this.datatobind[0].bank_name)
-        this.bankmasterform.controls['pBankbranch'].setValue(this.datatobind[0].bank_branch)
-        this.bankmasterform.controls['pRecordid'].setValue(this.datatobind[0].recordid);
-        if (this.datatobind[0].account_number != '' && this.datatobind[0].account_number != null) {
+        this.bankmasterform.controls['bankName'].setValue(this.datatobind.pBankname)
+        this.bankmasterform.controls['pBankbranch'].setValue(this.datatobind.pBankbranch)
+        this.bankmasterform.controls['pRecordid'].setValue(this.datatobind.pRecordid);
+        if (this.datatobind.pAccountnumber != '' && this.datatobind.pAccountnumber!= null) {
           this.accountno = true;
-          this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind[0].account_number)
+          this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind.pAccountnumber)
         }
         else {
           this.bankmasterform.controls['pAccountnumber'].setValue('')
         }
-        this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind[0].account_number)
+        this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind.pAccountnumber)
 
-        this.bankmasterform.controls['pIfsccode'].setValue(this.datatobind[0].ifsccode)
+        this.bankmasterform.controls['pIfsccode'].setValue(this.datatobind.pIfsccode)
         // this.bankmasterform.controls['pAccountname'].setValue(this.datatobind.pAccountname)
-        this.bankmasterform.controls['account_name'].setValue(this.datatobind[0].account_name)
+        this.bankmasterform.controls['account_name'].setValue(this.datatobind.pAccountnumber)
         this.bankmasterform.controls['ptypeofoperation'].setValue("UPDATE");
-        this.bankmasterform.controls['pOverdraft'].setValue(this._commonService.currencyformat(this.datatobind[0].overdraft))
-        this.bankmasterform.controls['pAcctountype'].setValue(this.datatobind[0].account_type)
-        this.bankmasterform.controls['pOpeningBalance'].setValue(this._commonService.currencyformat(this.datatobind[0].openingbalance))
-        this.bankmasterform.controls['popeningjvno'].setValue(this.datatobind[0].opening_jvno)
-        if (this.datatobind[0].openingBalanceType == "") {
+        this.bankmasterform.controls['pOverdraft'].setValue(this._commonService.currencyformat(this.datatobind.pOverdraft))
+        this.bankmasterform.controls['pAcctountype'].setValue(this.datatobind.pAcctountype)
+        this.bankmasterform.controls['pOpeningBalance'].setValue(this._commonService.currencyformat(this.datatobind.pOpeningBalance))
+        this.bankmasterform.controls['popeningjvno'].setValue(this.datatobind.popeningjvno)
+        if (this.datatobind.pOpeningBalanceType == "") {
           this.bankmasterform.controls['pOpeningBalanceType'].setValue('D')
         }
         else {
-          this.bankmasterform.controls['pOpeningBalanceType'].setValue(this.datatobind[0].openingBalanceType)
+          this.bankmasterform.controls['pOpeningBalanceType'].setValue(this.datatobind.pOpeningBalanceType)
         }
 
 
 
-        if (this.datatobind[0].is_upi_applicable == true) {
-          this.bankmasterform.controls['pIsupiapplicable'].setValue(this.datatobind[0].is_upi_applicable)
+        if (this.datatobind.pIsupiapplicable == true) {
+          this.bankmasterform.controls['pIsupiapplicable'].setValue(this.datatobind.pIsupiapplicable)
           this.bankupihideandshow = true;
           this.bankupidetails = true;
-          this.gridData = this.datatobind[0].lstBankUPI
+          this.gridData = this.datatobind.lstBankUPI
         }
 
-        if (this.datatobind[0].is_debitcard_applicable == true) {
-          this.bankmasterform.controls['pIsdebitcardapplicable'].setValue(this.datatobind[0].is_debitcard_applicable)
+        if (this.datatobind.pIsdebitcardapplicable == true) {
+          this.bankmasterform.controls['pIsdebitcardapplicable'].setValue(this.datatobind.pIsdebitcardapplicable)
           this.debitcardhideandshow = true
           this.debitcarddetails = true;
           console.log('databind 1', this.datatobind.lstBankdebitcarddtlsDTO);
 
 
-          if (this.datatobind[0].lstBankdebitcarddtlsDTO.length > 0) {
-            if (this.datatobind[0].lstBankdebitcarddtlsDTO[0].pCardNo != '' && this.datatobind[0].lstBankdebitcarddtlsDTO[0].pCardNo != null) {
+          if (this.datatobind.lstBankdebitcarddtlsDTO.length > 0) {
+            if (this.datatobind.lstBankdebitcarddtlsDTO.pCardNo != '' && this.datatobind.lstBankdebitcarddtlsDTO.pCardNo != null) {
               this.cardno = true;
-              this.bankmasterform.controls['pCardNo'].patchValue(this.datatobind[0].lstBankdebitcarddtlsDTO[0].pCardNo)
+              this.bankmasterform.controls['pCardNo'].patchValue(this.datatobind.lstBankdebitcarddtlsDTO.pCardNo)
             }
             else {
               this.bankmasterform.controls['pCardNo'].patchValue('')
@@ -505,10 +526,10 @@ export class BankConfigComponent implements OnInit {
             this.bankmasterform.controls['pCardNo'].patchValue('')
           }
 
-          this.bankmasterform.controls['pCardName'].patchValue(this.datatobind.lstBankdebitcarddtlsDTO[0].pCardName)
+          this.bankmasterform.controls['pCardName'].patchValue(this.datatobind.lstBankdebitcarddtlsDTO.pCardName)
 
-          this.bankmasterform.controls['pValidfrom'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.lstBankdebitcarddtlsDTO[0].pValidfrom))
-          this.bankmasterform.controls['pValidto'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.lstBankdebitcarddtlsDTO[0].pValidto))
+          this.bankmasterform.controls['pValidfrom'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.lstBankdebitcarddtlsDTO.pValidfrom))
+          this.bankmasterform.controls['pValidto'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.lstBankdebitcarddtlsDTO.pValidto))
           // this.bankmasterform.controls['pRecordid'].setValue(this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid);
         }
         if (this.datatobind.lstBankInformationAddressDTO != 0) {
@@ -522,6 +543,173 @@ export class BankConfigComponent implements OnInit {
 
     }
   }
+
+
+
+// Prevent pasting invalid content
+blockNonLettersPaste(event: ClipboardEvent) {
+  const paste = event.clipboardData?.getData('text') || '';
+  const regex = /^[a-zA-Z ]*$/;
+  if (!regex.test(paste)) {
+    event.preventDefault();
+  }
+}
+
+
+
+
+
+
+lettersOnly(event: any) {
+  event.target.value = event.target.value.replace(/[^a-zA-Z ]/g, '');
+}
+
+
+
+convertTitleCase(controlName: string) {
+  const control = this.bankmasterform.get(controlName);
+  const value = control?.value;
+
+  if (value) {
+    const titleCase = value
+      .toLowerCase()
+      .split(' ')
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    control?.setValue(titleCase);
+  }
+}
+
+// Only allow numbers and dot
+// allowNumbersOnly(event: KeyboardEvent) {
+//   const charCode = event.which ? event.which : event.keyCode;
+//   const input = event.target as HTMLInputElement;
+
+//   // Allow digits (0-9), one dot, and control keys
+//   if (
+//     (charCode < 48 || charCode > 57) && // not 0-9
+//     charCode !== 46 && // not dot
+//     charCode !== 8 && // backspace
+//     charCode !== 9 && // tab
+//     charCode !== 37 && // left arrow
+//     charCode !== 39 // right arrow
+//   ) {
+//     event.preventDefault();
+//   }
+
+//   // Prevent more than one dot
+//   if (charCode === 46 && input.value.includes('.')) {
+//     event.preventDefault();
+//   }
+// }
+
+// // Prevent pasting letters or invalid characters
+// blockNonNumericPaste(event: ClipboardEvent) {
+//   const paste = event.clipboardData?.getData('text') || '';
+//   const regex = /^\d*\.?\d*$/; // allow digits and optional single dot
+//   if (!regex.test(paste)) {
+//     event.preventDefault();
+//   }
+// }
+
+
+
+// Allow only digits and one decimal point on typing
+
+
+
+allowNumbersOnly(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+  const input = event.target as HTMLInputElement;
+
+  // Allow digits (48-57), one dot (46), backspace (8), tab (9), left/right arrow (37/39)
+  if (
+    (charCode < 48 || charCode > 57) && // not 0-9
+    charCode !== 46 && // not dot
+    charCode !== 8 && // backspace
+    charCode !== 9 && // tab
+    charCode !== 37 && // left arrow
+    charCode !== 39 // right arrow
+  ) {
+    event.preventDefault();
+  }
+
+  // Prevent entering more than one dot
+  if (charCode === 46 && input.value.includes('.')) {
+    event.preventDefault();
+  }
+}
+
+// Prevent pasting non-numeric or badly formatted content
+blockNonNumericPaste(event: ClipboardEvent) {
+  const paste = event.clipboardData?.getData('text') || '';
+  const regex = /^\d*\.?\d*$/; // digits with optional single dot
+  if (!regex.test(paste)) {
+    event.preventDefault();
+  }
+}
+
+// Format input as currency with commas on every input
+onInputChange(event: Event, controlName: string) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Remove all commas before processing
+  value = value.replace(/,/g, '');
+
+  // Validate number format: allow digits and at most one dot with up to 2 decimals
+  if (!/^\d*\.?\d{0,2}$/.test(value)) {
+    // Invalid format: remove last char
+    value = value.slice(0, -1);
+  }
+
+  // Format integer part with commas
+  const parts = value.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  // Set formatted value back to input
+  input.value = parts.join('.');
+
+  // Update form control with unformatted value (no commas)
+  this.bankmasterform.controls[controlName].setValue(value, { emitEvent: false });
+}
+
+// Format on blur to fixed 2 decimals with commas
+onInputBlur(event: Event, controlName: string) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/,/g, '');
+
+  if (value === '') return;
+
+  const num = parseFloat(value);
+  if (!isNaN(num)) {
+    input.value = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    this.bankmasterform.controls[controlName].setValue(num.toFixed(2), { emitEvent: false });
+  }
+}
+
+
+formatValueWithCommas(controlName: string) {
+  const val = this.bankmasterform.controls[controlName].value;
+  if (!val) return;
+
+  // Remove commas (if any)
+  const numStr = val.toString().replace(/,/g, '');
+
+  const num = parseFloat(numStr);
+  if (isNaN(num)) return;
+
+  // Format with commas and 2 decimals
+  const formatted = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  // Update input field’s displayed value ONLY (without changing form control value)
+  const el = document.getElementById(controlName) as HTMLInputElement;
+  if (el) {
+    el.value = formatted;
+  }
+}
+
 
 
   Bankdebitcarddtls() {
@@ -1008,7 +1196,16 @@ export class BankConfigComponent implements OnInit {
 
   save() {
 
-    debugger
+      this.bankmasterform.markAllAsTouched();
+  this.bankmasterform.updateValueAndValidity();
+
+  if (this.bankmasterform.invalid) {
+    this._commonService.showWarningMessage("Please fill all required fields");
+    return;
+  }
+
+  debugger;
+    
     this.AdresssDetailsForm = this.addressdetails.addressForm.value;
 
 
