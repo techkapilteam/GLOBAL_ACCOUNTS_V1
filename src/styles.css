@@ -32,11 +32,11 @@ html, body {
   border: 1px solid #ccc;
 }
 
-.screen-header {
+/* .screen-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 10px 30px 1px 30px;
-}
+} */
 
 .screen-header h2 {
   margin: 0 0 10px 0;

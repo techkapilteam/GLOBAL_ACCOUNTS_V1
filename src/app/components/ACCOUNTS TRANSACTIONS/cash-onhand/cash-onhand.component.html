@@ -35,6 +35,10 @@
                     <input class="form-control w-auto" type="text" id="fromdate" formControlName="fromdate"
                         placeholder="" readonly (ngModelChange)="fromdateChange($event)" [bsConfig]="fromdate"
                         #dp="bsDatepicker" bsDatepicker placement="bottom">
+                        <div class="text-danger"
+     *ngIf="CashOnHandForm.controls['fromdate'].touched && CashOnHandForm.controls['fromdate'].invalid">
+    From Date is required
+</div>
                     <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.fromdate }"
                         <app-validation-message [messgae]="CashOnHandValidation?.fromdate"></app-validation-message> -->
                 </div>
@@ -46,6 +50,10 @@
                     <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="todate"
                         placeholder="" readonly [bsConfig]="todate" #dp="bsDatepicker" bsDatepicker placement="bottom"
                        > 
+                       <div class="text-danger"
+     *ngIf="CashOnHandForm.controls['todate'].touched && CashOnHandForm.controls['todate'].invalid">
+    To Date is required
+</div>
                        <!-- [disabled]="true" -->
                     <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.todate }" 
                         <app-validation-message [messgae]="CashOnHandValidation?.todate"></app-validation-message> -->
@@ -63,6 +71,11 @@
                         <option *ngFor="let bank of BanksList" [value]="bank.branchName">{{bank.branchName}}</option>
 
                     </select>
+                    <div class="text-danger"
+     *ngIf="CashOnHandForm.controls['bankname'].touched 
+     && CashOnHandForm.controls['bankname'].invalid">
+    CAO is required
+</div>
                     <!--
                      <app-validation-message [messgae]="CashOnHandValidation?.bankname"></app-validation-message> -->
                     <!-- <div *ngIf="ShowBankErrorMsg" style="color:red">Select Bank</div> -->
@@ -75,6 +88,13 @@
                         [disabled]="!pdatepickerenablestatus" (ngModelChange)="change_date($event)"
                         formControlName="ptransactiondate" placeholder="" readonly [bsConfig]="dpConfig"
                         #dp="bsDatepicker" bsDatepicker placement="bottom">
+
+
+                        
+<div class="text-danger"
+     *ngIf="CashOnHandForm.controls['ptransactiondate'].touched && CashOnHandForm.controls['ptransactiondate'].invalid">
+    Transaction Date is required
+</div>
                     <!--  [ngClass]="{ 'is-invalid': CashOnHandValidation.ptransactiondate }"
                         <app-validation-message [messgae]="CashOnHandValidation?.ptransactiondate"></app-validation-message> -->
                 </div>

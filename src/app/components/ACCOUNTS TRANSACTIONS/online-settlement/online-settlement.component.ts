@@ -6,7 +6,6 @@ import { TableModule } from 'primeng/table';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AccountingTransactionsService } from 'src/app/services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { CommonService } from 'src/app/services/common.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-online-settlement',
@@ -47,6 +46,10 @@ export class OnlineSettlementComponent implements OnInit {
   private datePipe = inject(DatePipe);
   private _Accountservice = inject(AccountingTransactionsService);
   private _CommonService = inject(CommonService);
+
+  // ==================================================
+  // INIT
+  // ==================================================
 
   ngOnInit(): void {
 
@@ -133,7 +136,12 @@ export class OnlineSettlementComponent implements OnInit {
         this.gridData = [...this.originalGridData];
 
       });
+
   }
+
+  // ==================================================
+  // CHEQUE RETURN CHARGES
+  // ==================================================
 
   loadChequeReturnCharges(): void {
 
@@ -147,6 +155,10 @@ export class OnlineSettlementComponent implements OnInit {
       BranchCode
     ).subscribe();
   }
+
+  // ==================================================
+  // DEPENDENCY LOGIC
+  // ==================================================
 
   setupDependencies(): void {
 
@@ -194,6 +206,9 @@ export class OnlineSettlementComponent implements OnInit {
 
   }
 
+  // ==================================================
+  // RADIO FILTER
+  // ==================================================
 
   applyRadioFilter(type: string): void {
 
@@ -209,6 +224,10 @@ export class OnlineSettlementComponent implements OnInit {
 
     this.selected = [];
   }
+
+  // ==================================================
+  // SEARCH
+  // ==================================================
 
   onSearch(value: string): void {
 
@@ -231,6 +250,10 @@ export class OnlineSettlementComponent implements OnInit {
 
     this.gridData = filteredData;
   }
+
+  // ==================================================
+  // HELPERS
+  // ==================================================
 
   getSelectedTotal(): number {
     return this.selected.reduce(

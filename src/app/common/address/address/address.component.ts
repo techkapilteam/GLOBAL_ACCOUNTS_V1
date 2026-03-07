@@ -58,6 +58,7 @@ export class AddressComponent implements OnInit {
   }
   /**<-------(start) binding address data to form (start)------> */
   bindingdata(data: any) {
+    debugger
     console.log(data);
     debugger;
     if ((data[0].pAddress1) == "") {
@@ -94,7 +95,8 @@ export class AddressComponent implements OnInit {
 
     }
     else {
-      this._contacmasterservice.getSateDetails((data[0].pcountryid)).subscribe((json: any) => {
+      this._contacmasterservice.getstates(
+       this._commonService.getschemaname(), data[0].pcountryid).subscribe((json: any) => {
         this.stateDetails = json;
       })
 
@@ -119,7 +121,7 @@ export class AddressComponent implements OnInit {
       this.addressForm.controls['pDistrict'].updateValueAndValidity();
     }
     else {
-      this._contacmasterservice.getDistrictDetails(data[0].pstateid).subscribe((json: any) => {
+      this._contacmasterservice.getDistrict(this._commonService.getschemaname(),data[0].pstateid).subscribe((json: any) => {
         this.districtDetails = json;
       })
     }
@@ -138,6 +140,7 @@ export class AddressComponent implements OnInit {
 
   /**<-------(start) binding company config address data to form (start)------> */
   bindingcompanydata(data: any) {
+    debugger
     if ((data.pAddress1) == "") {
       this.addressForm.controls['paddress1'].clearValidators();
       this.addressForm.controls['paddress1'].updateValueAndValidity();
@@ -172,7 +175,7 @@ export class AddressComponent implements OnInit {
 
     }
     else {
-      this._contacmasterservice.getSateDetails((data.pCountryId)).subscribe((json: any) => {
+      this._contacmasterservice.getstates(this._commonService.getschemaname(),data.pCountryId).subscribe((json: any) => {
         this.stateDetails = json;
       })
 
@@ -196,7 +199,7 @@ export class AddressComponent implements OnInit {
       this.addressForm.controls['pDistrict'].updateValueAndValidity();
     }
     else {
-      this._contacmasterservice.getDistrictDetails(data.pStateId).subscribe((json: any) => {
+      this._contacmasterservice.getDistrict(this._commonService.getschemaname(),data.pStateId).subscribe((json: any) => {
         this.districtDetails = json;
       })
     }
@@ -217,6 +220,7 @@ export class AddressComponent implements OnInit {
 
   /**<-------(start) update data of address form (append to form) (start)------> */
   editdata(data: any, formname: any) {
+    debugger
     this.Form = formname
     if (this.Form == "companyconfig") {
       this.addressForm.controls['pRecordid'].setValue(data.pRecordId)
@@ -224,8 +228,8 @@ export class AddressComponent implements OnInit {
     }
     else if (this.Form == "Bank") {
       debugger;
-      // this.addressForm.controls['pRecordid'].setValue(data[0].pRecordid)
-      this.addressForm.controls['pRecordid'].setValue(data[0].bank_id)
+      this.addressForm.controls['pRecordid'].setValue(data.pRecordid)
+      // this.addressForm.controls['pRecordid'].setValue(data[0].bank_id)
       this.bindingdata(data)
     }
   }
@@ -362,7 +366,7 @@ export class AddressComponent implements OnInit {
           this.country_id = res.tbl_mst_country_id
 
           console.log('SUCCESS:', res);
-          alert('hello');
+      
         },
         error: (err: any) => {
           console.log('ERROR:', err);

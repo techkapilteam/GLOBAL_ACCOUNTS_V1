@@ -52,10 +52,15 @@ export class ChequeManagementnewComponent implements OnInit {
     this.chequemanagementform = this.fb.group({
       pBankId: [""],
       // pBankname: [null, Validators.required],
-      bankName: ['', Validators.required],
-      pNoofcheques: ["", Validators.required],
-      pChequeto: ["", Validators.required],
-      pChequefrom: ["", Validators.required],
+      // bankName: ['', Validators.required],
+      // pNoofcheques: ["", Validators.required],
+      // pChequeto: ["", Validators.required],
+      // pChequefrom: ["", Validators.required],
+
+       bankName: ['', Validators.required],
+  pNoofcheques: ['', [Validators.required, Validators.min(1), Validators.max(999)]],
+  pChequefrom: ['', [Validators.required, Validators.minLength(1)]],
+  pChequeto: ['', Validators.required],
       pChqegeneratestatus: [""],
       pStatusname: ["Active"],
       ptypeofoperation: ["CREATE"],
@@ -85,7 +90,7 @@ export class ChequeManagementnewComponent implements OnInit {
           this.bankdetails = res;
 
           console.log('SUCCESS:', res);
-          alert('hello');
+        
         },
         error: (err: any) => {
           console.log('ERROR:', err);
@@ -173,7 +178,14 @@ export class ChequeManagementnewComponent implements OnInit {
 
   addtoGrid() {
     debugger;
+
+      if(this.chequemanagementform.invalid){
+    this.chequemanagementform.markAllAsTouched();
+    return;
+  }
     let validate = true;
+
+
     console.log("Form valid:", this.chequemanagementform.valid);
 
     const customValidation = this.checkValidations(this.chequemanagementform, validate);

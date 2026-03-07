@@ -378,11 +378,11 @@ SaveChequesIssued(data: any) {
   saveGeneralReceipt( data: any) {
     const params = new HttpParams();
       // .set('Branchschema', branchSchema).set('Globalschema', globalSchema);
-    return this._CommonService.postAPI('api/Accounts/savegeneralreceipt', data);
+    return this._CommonService.postAPI('/Accounts/savegeneralreceipt', data);
   }
   
   saveJournalVoucher(data: any) {
-    return this._CommonService.postAPI('/accountingtransactions/SaveJournalVoucher', data)
+    return this._CommonService.postAPI('/Accounts/SaveJournalVoucher', data)
   }
   GetJournalVoucherData(
     BranchSchema: any, CompanyCode: any, BranchCode: any

@@ -73,7 +73,7 @@ export class CashOnhandComponent implements OnInit {
   pdfstatus = "All";
   count = 0;
   pcashonhandbalance: any;
-  currencyCode!:'INR';
+  currencyCode='INR';
   // cancel = false;
   // bankselection = false;
   hiddendate = true;
@@ -122,14 +122,14 @@ export class CashOnhandComponent implements OnInit {
     // this.dpConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
     this.dpConfig.maxDate = new Date();
     this.dpConfig.containerClass = 'theme-dark-blue';
-    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.dpConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.dpConfig.showWeekNumbers = false;
     // this.dpConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
 
 
     this.fromdate.maxDate = new Date();
     this.fromdate.containerClass = 'theme-dark-blue';
-    this.fromdate.dateInputFormat = 'DD-MM-YYYY';
+    this.fromdate.dateInputFormat = 'DD-MMM-YYYY';
     this.fromdate.showWeekNumbers = false;
     // this.fromdate.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
     // this.fromdate.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
@@ -137,7 +137,7 @@ export class CashOnhandComponent implements OnInit {
     // this.fromdate.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
     this.todate.maxDate = new Date();
     this.todate.containerClass = 'theme-dark-blue';
-    this.todate.dateInputFormat = 'DD-MM-YYYY';
+    this.todate.dateInputFormat = 'DD-MMM-YYYY';
     this.todate.showWeekNumbers = false;
 
 
@@ -161,9 +161,9 @@ export class CashOnhandComponent implements OnInit {
       pchequesOnHandlist: [],
       // SearchClear: [''],
       schemaname: [this._commonService.getschemaname()],
-      fromdate: [new Date()],
-      // todate: [new Date()],
-       todate: [{ value: new Date(), disabled: true }],
+      fromdate: [new Date(), Validators.required],
+       todate: [{ value: new Date(), disabled: true }, Validators.required],
+        // todate: [new Date()],
 
 
       
@@ -255,11 +255,12 @@ export class CashOnhandComponent implements OnInit {
       ,this._commonService.getCompanyCode()
     ).subscribe(data => {
       console.log('BALCE',data);
+      // this.pcashonhandbalance = data.balance;
       this.pcashonhandbalance = data[0].balance;
-      // if (parseFloat(this.pcashonhandbalance) != 0) {
-      if (parseFloat(this.pcashonhandbalance) == 0) {
+      if (parseFloat(this.pcashonhandbalance) != 0) {
+      // if (parseFloat(this.pcashonhandbalance) == 0) {
         this.buttonname = "Update";
-        this.GetChequesOnHand("");
+     //   this.GetChequesOnHand("");
       } else {
         this.buttonname = "Save";
       }
@@ -1490,16 +1491,42 @@ this._commonService._JvListdownloadReportsPdf(
     this.CashOnHandForm.get('todate')?.disable();
   }
 }
-  getCashOnHandData() {
-    debugger
-    // if(this.checkValidations(this.CashOnHandForm,true)){
-    if (!this._commonService.isNullOrEmpty(this.CashOnHandForm.controls['bankname'].value)) {
-      this.CashOnHandValidation = {};
-      this.GetChequesOnHand(this.bankid);
-    } else {
-      this.CashOnHandValidation['bankname'] = "Bank Name Required";
-    }
+//   getCashOnHandData() {
+//     debugger
+
+//      if(this.CashOnHandForm.invalid){
+//    this.CashOnHandForm.markAllAsTouched();
+//    return;
+//  }
+//   console.log(this.CashOnHandForm.value);
+//     // if(this.checkValidations(this.CashOnHandForm,true)){
+//     if (!this._commonService.isNullOrEmpty(this.CashOnHandForm.controls['bankname'].value)) {
+//       this.CashOnHandValidation = {};
+//       this.GetChequesOnHand(this.bankid);
+//     } else {
+//       this.CashOnHandValidation['bankname'] = "Bank Name Required";
+//     }
+//   }
+getCashOnHandData() {
+  // 1️⃣ Validate form
+  if (this.CashOnHandForm.invalid) {
+    this.CashOnHandForm.markAllAsTouched();
+    return;
   }
+
+  // 2️⃣ Clear previous validation messages
+  this.CashOnHandValidation = {};
+
+  // 3️⃣ Ensure bank is selected
+  const bankId = this.CashOnHandForm.controls['bankname'].value;
+  if (!bankId) {
+    this.CashOnHandValidation['bankname'] = "Bank Name Required";
+    return;
+  }
+
+  // 4️⃣ Call API to load grid
+  this.GetChequesOnHand(bankId);
+}
   // fromdateChange($event: any) {
   //   if ($event != undefined) {
   //     this.todate.minDate = new Date($event);

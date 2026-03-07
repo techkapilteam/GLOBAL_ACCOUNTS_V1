@@ -668,7 +668,12 @@ export class GeneralReceiptNewComponent implements OnInit {
                 this.walletshowhide = this.Paymentbuttondata[n].walletshowhide;
             }
         }
-        //this.GeneralReceiptForm.controls['pbankname'].setValue('');
+        //           this.dpConfig = {
+        //   dateInputFormat: 'YYYY-MM-DD'
+        // };
+
+
+        this.GeneralReceiptForm.controls['pbankname'].setValue('');
         this.GeneralReceiptForm.controls['pChequenumber'].setValue('');
         this.GeneralReceiptForm.controls['pchequedate'].setValue(this.today);
         this.GeneralReceiptForm.controls['pdepositbankname'].setValue('');
@@ -691,7 +696,7 @@ export class GeneralReceiptNewComponent implements OnInit {
             let TypeofPAymentControl = this.GeneralReceiptForm.controls['ptypeofpayment'];
             let BranchControl = this.GeneralReceiptForm.controls['pbranchname'];
             let CardNumberControl = this.GeneralReceiptForm.controls['pCardNumber'];
-            let ChequeDateControl = this.GeneralReceiptForm.controls['pchequedate']
+            let ChequeDateControl = this.GeneralReceiptForm.controls['pchequedate'];
             let AccountnumberControl = this.GeneralReceiptForm.controls['pAccountnumber'];
             BankControl.clearValidators();
             ChequeControl.clearValidators();
@@ -1299,7 +1304,7 @@ export class GeneralReceiptNewComponent implements OnInit {
     saveGeneralReceipt(): void {
 
         debugger;
-
+        let date = this.datepipe.transform(this.GeneralReceiptForm.controls['pchequedate'].value, 'dd-MM-yyyy')
         let count = 0;
         this.disablesavebutton = true;
         this.savebutton = 'Processing';
@@ -1446,6 +1451,140 @@ export class GeneralReceiptNewComponent implements OnInit {
                 //     }))
                 // };
 
+                // let payload: any = {
+
+                //     ...this.GeneralReceiptForm.value,
+
+                //     pStatusid: "",
+                //     pStatusname: "",
+                //     pEffectfromdate: "",
+                //     pEffecttodate: "",
+                //     pipaddress: "",
+
+                //     global_schema: this._commonService.getschemaname(),
+                //     branch_schema: this._commonService.getbranchname(),
+
+                //     companycode: this._commonService.getCompanyCode(),
+                //     branchcode: this._commonService.getBranchCode(),
+                //     branchid: String(this._commonService.getbrachid()),
+
+                //     pCreatedby: this._commonService.getCreatedBy(),
+                //     ptypeofoperation: "CREATE",
+
+                //     preceiptid: "",
+                //     preceiptno: "",
+                //     preceiptdate: trans_date,
+                //     pmodofreceipt: this.GeneralReceiptForm.value.pmodofreceipt || "",
+
+                //     ptotalreceivedamount: Number(totalamount) || 0,
+                //     pnarration: this.GeneralReceiptForm.value.pnarration || "",
+
+                //     // -------- Party --------
+                //     ppartyname: this.GeneralReceiptForm.value.ppartyname || "",
+                //     ppartyid: this.GeneralReceiptForm.value.ppartyid || null,
+                //     ppartypannumber: "",
+                //     ppartyreftype: "",
+                //     ppartyreferenceid: "",
+
+                //     pistdsapplicable: this.GeneralReceiptForm.value.pistdsapplicable || false,
+                //     pTdsSection: "",
+                //     pTdsPercentage: Number(this.GeneralReceiptForm.value.pTdsPercentage) || 0,
+                //     ptdsamount: Number(this.GeneralReceiptForm.value.ptdsamount) || 0,
+                //     ptdscalculationtype: "",
+                //     ptdsaccountid: "",
+                //     pTdsSectionId: "",
+
+                //     pFilename: "",
+                //     pFilepath: "",
+                //     pFileformat: "",
+
+                //     pCleardate: "",
+                //     pdepositeddate: "",
+
+                //     preceiptrecordid: "",
+                //     groupcode: "",
+                //     pchequestatus: "",
+                //     preferencetext: "",
+                //     formname: "General Receipt",
+                //     chitpaymentid: "",
+                //     adjustmentid: "",
+
+                //     pBankName: this.GeneralReceiptForm.value.pBankName || "",
+                //     pbranchname: this.GeneralReceiptForm.value.pbranchname || "",
+                //     ptranstype: this.GeneralReceiptForm.value.ptranstype || "",
+                //     ptypeofpayment: this.GeneralReceiptForm.value.ptypeofpayment || "",
+                //     pChequenumber: this.GeneralReceiptForm.value.pChequenumber || "",
+                //     pchequedate: this.GeneralReceiptForm.value.pchequedate || "",
+                //     pchequedepositdate: "",
+                //     pchequecleardate: "",
+                //     pbankid: this.GeneralReceiptForm.value.pbankid || 0,
+                //     pCardNumber: "",
+                //     pdepositbankid: 0,
+                //     pdepositbankname: "",
+                //     pAccountnumber: this.GeneralReceiptForm.value.pAccountnumber || "",
+                //     ChallanaNo: "",
+
+                //     pRecordid: "0",
+                //     pUpiname: "",
+                //     pUpiid: "",
+                //     pBankconfigurationId: "",
+
+                //     preceiptslist: this.paymentslist.map((x: any) => ({
+
+                //         psubledgerid: x.psubledgerid || "",
+                //         psubledgername: x.psubledgername || "",
+                //         pledgerid: x.pledgerid || "",
+                //         pledgername: x.pledgername || "",
+
+                //         id: "",
+                //         text: "",
+                //         ptranstype: "",
+                //         accountbalance: "",
+                //         pAccounttype: "",
+                //         legalcellReceipt: "",
+                //         pbranchcode: "",
+                //         pbranchtype: "",
+                //         groupcode: "",
+                //         chitgroupid: "",
+
+                //         pamount: Number(this._commonService.removeCommasInAmount(x.pamount || 0)),
+
+                //         pgsttype: x.pgsttype || "",
+                //         pgstcalculationtype: x.pgstcalculationtype || "",
+                //         pgstpercentage: Number(x.pgstpercentage) || 0,
+
+                //         pigstamount: Number(x.pigstamount) || 0,
+                //         pcgstamount: Number(x.pcgstamount) || 0,
+                //         psgstamount: Number(x.psgstamount) || 0,
+                //         putgstamount: Number(x.putgstamount) || 0,
+
+                //         pState: "",
+                //         pStateId: "",
+                //         pgstno: "",
+
+                //         pisgstapplicable: x.pisgstapplicable || false,
+
+                //         ptdsamountindividual: Number(x.ptdsamountindividual) || 0,
+                //         pTdsSection: x.pTdsSection || "",
+                //         pTdsPercentage: Number(x.pTdsPercentage) || 0,
+
+                //         preferencetext: "",
+
+                //         pgstamount: Number(x.pgstamount) || 0,
+                //         pigstpercentage: Number(x.pigstpercentage) || 0,
+                //         pcgstpercentage: Number(x.pcgstpercentage) || 0,
+                //         psgstpercentage: Number(x.psgstpercentage) || 0,
+                //         putgstpercentage: Number(x.putgstpercentage) || 0,
+
+                //         pactualpaidamount: Number(x.pactualpaidamount) || 0,
+                //         ptotalamount: Number(x.ptotalamount) || 0
+
+                //     }))
+                // };
+
+
+
+
                 let payload: any = {
 
                     ...this.GeneralReceiptForm.value,
@@ -1461,74 +1600,84 @@ export class GeneralReceiptNewComponent implements OnInit {
 
                     companycode: this._commonService.getCompanyCode(),
                     branchcode: this._commonService.getBranchCode(),
-                    branchid: String(this._commonService.getbrachid()),
+                    branchid: this._commonService.getbrachid() || 1,
 
-                    pCreatedby: this._commonService.getCreatedBy(),
+                    pCreatedby: this._commonService.getCreatedBy() || 0,
+                    pModifiedby: 0,
                     ptypeofoperation: "CREATE",
 
                     preceiptid: "",
-                    preceiptno: "",
+                    preceiptno: "string",
                     preceiptdate: trans_date,
+
                     pmodofreceipt: this.GeneralReceiptForm.value.pmodofreceipt || "",
 
-                    ptotalreceivedamount: Number(totalamount) || 0,
+                    ptotalreceivedamount: totalamount || 0,
                     pnarration: this.GeneralReceiptForm.value.pnarration || "",
 
-                    // -------- Party --------
                     ppartyname: this.GeneralReceiptForm.value.ppartyname || "",
-                    ppartyid: this.GeneralReceiptForm.value.ppartyid || null,
+                    ppartyid: this.GeneralReceiptForm.value.ppartyid || 0,
                     ppartypannumber: "",
                     ppartyreftype: "",
                     ppartyreferenceid: "",
 
                     pistdsapplicable: this.GeneralReceiptForm.value.pistdsapplicable || false,
                     pTdsSection: "",
-                    pTdsPercentage: Number(this.GeneralReceiptForm.value.pTdsPercentage) || 0,
-                    ptdsamount: Number(this.GeneralReceiptForm.value.ptdsamount) || 0,
+                    pTdsPercentage: this.GeneralReceiptForm.value.pTdsPercentage || 0,
+                    ptdsamount: this.GeneralReceiptForm.value.ptdsamount || 0,
                     ptdscalculationtype: "",
-                    ptdsaccountid: "",
-                    pTdsSectionId: "",
+
+                    ptdsaccountid: 0,
+                    pTdsSectionId: this.GeneralReceiptForm.value.pTdsSection || 0,
 
                     pFilename: "",
                     pFilepath: "",
                     pFileformat: "",
 
-                    pCleardate: "",
                     pdepositeddate: "",
+                    pCleardate: "",
 
-                    preceiptrecordid: "",
+                    preceiptrecordid: 0,
                     groupcode: "",
                     pchequestatus: "",
                     preferencetext: "",
+
                     formname: "General Receipt",
-                    chitpaymentid: "",
-                    adjustmentid: "",
+                    chitpaymentid: 0,
+                    adjustmentid: 0,
 
                     pBankName: this.GeneralReceiptForm.value.pBankName || "",
                     pbranchname: this.GeneralReceiptForm.value.pbranchname || "",
                     ptranstype: this.GeneralReceiptForm.value.ptranstype || "",
                     ptypeofpayment: this.GeneralReceiptForm.value.ptypeofpayment || "",
+
                     pChequenumber: this.GeneralReceiptForm.value.pChequenumber || "",
-                    pchequedate: this.GeneralReceiptForm.value.pchequedate || "",
+                    // pchequedate: this.GeneralReceiptForm.value.pchequedate || "",
+                    pchequedate: date,
+
                     pchequedepositdate: "",
                     pchequecleardate: "",
+
                     pbankid: this.GeneralReceiptForm.value.pbankid || 0,
+
                     pCardNumber: "",
                     pdepositbankid: 0,
                     pdepositbankname: "",
                     pAccountnumber: this.GeneralReceiptForm.value.pAccountnumber || "",
-                    ChallanaNo: "",
+                    challanaNo: "",
 
-                    pRecordid: "0",
+                    pRecordid: 0,
                     pUpiname: "",
-                    pUpiid: "",
+                    pUpiid: 0,
                     pBankconfigurationId: "",
+
+                    pDocStorePath: "",
 
                     preceiptslist: this.paymentslist.map((x: any) => ({
 
-                        psubledgerid: x.psubledgerid || "",
+                        psubledgerid: x.psubledgerid || 0,
                         psubledgername: x.psubledgername || "",
-                        pledgerid: x.pledgerid || "",
+                        pledgerid: x.pledgerid || 0,
                         pledgername: x.pledgername || "",
 
                         id: "",
@@ -1542,40 +1691,41 @@ export class GeneralReceiptNewComponent implements OnInit {
                         groupcode: "",
                         chitgroupid: "",
 
-                        pamount: Number(this._commonService.removeCommasInAmount(x.pamount || 0)),
+                        pamount: this._commonService.removeCommasInAmount(x.pamount || 0),
 
                         pgsttype: x.pgsttype || "",
                         pgstcalculationtype: x.pgstcalculationtype || "",
-                        pgstpercentage: Number(x.pgstpercentage) || 0,
+                        pgstpercentage: x.pgstpercentage || 0,
 
-                        pigstamount: Number(x.pigstamount) || 0,
-                        pcgstamount: Number(x.pcgstamount) || 0,
-                        psgstamount: Number(x.psgstamount) || 0,
-                        putgstamount: Number(x.putgstamount) || 0,
+                        pigstamount: x.pigstamount || 0,
+                        pcgstamount: x.pcgstamount || 0,
+                        psgstamount: x.psgstamount || 0,
+                        putgstamount: x.putgstamount || 0,
 
-                        pState: "",
-                        pStateId: "",
-                        pgstno: "",
+                        pState: x.pState || "",
+                        pStateId: x.pStateId || 0,
+                        pgstno: 0,
 
                         pisgstapplicable: x.pisgstapplicable || false,
 
-                        ptdsamountindividual: Number(x.ptdsamountindividual) || 0,
+                        ptdsamountindividual: x.ptdsamountindividual || 0,
                         pTdsSection: x.pTdsSection || "",
-                        pTdsPercentage: Number(x.pTdsPercentage) || 0,
+                        pTdsPercentage: x.pTdsPercentage || 0,
 
                         preferencetext: "",
 
-                        pgstamount: Number(x.pgstamount) || 0,
-                        pigstpercentage: Number(x.pigstpercentage) || 0,
-                        pcgstpercentage: Number(x.pcgstpercentage) || 0,
-                        psgstpercentage: Number(x.psgstpercentage) || 0,
-                        putgstpercentage: Number(x.putgstpercentage) || 0,
+                        pgstamount: x.pgstamount || 0,
+                        pigstpercentage: x.pigstpercentage || 0,
+                        pcgstpercentage: x.pcgstpercentage || 0,
+                        psgstpercentage: x.psgstpercentage || 0,
+                        putgstpercentage: x.putgstpercentage || 0,
 
-                        pactualpaidamount: Number(x.pactualpaidamount) || 0,
-                        ptotalamount: Number(x.ptotalamount) || 0
+                        pactualpaidamount: x.pactualpaidamount || 0,
+                        ptotalamount: x.ptotalamount || 0
 
                     }))
                 };
+
 
                 console.log("Swagger Payload:", payload);
 
