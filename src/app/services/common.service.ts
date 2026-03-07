@@ -1607,9 +1607,10 @@ const companyBranch = company?.uniqueBranchName ?? '';
     }
   }
 
-  getCreatedBy(): string {
+  getCreatedBy(): any {
     const userId = sessionStorage.getItem('LoginUserid');
-    return userId ? JSON.parse(userId).toString() : '';
+    return userId ??  '';
+    //JSON.parse(userId).toString() :
   }
 
   getIpAddress(): string {
