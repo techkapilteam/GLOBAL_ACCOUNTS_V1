@@ -1,71 +1,68 @@
 <div class="screen-container">
-  <div class="screen-card">
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
 
-    
- <div class="screen-header" style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd;">
-      <span style="display:inline-block; width:4px; height:26px; background:#0d6efd; border-radius:3px; flex-shrink:0;"></span>
-      <h2 style="margin:0; font-size:20px; font-weight:700; color:#0e0e0e;">General Receipt View</h2>
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style=" padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">General Receipt View</h2>
     </div>
+    <div class="row mb-4 align-items-center">
 
-  
-    <div class="row mb-3">
-      <div class="col-12">
-        <a
-          routerLink="/dashboard/accounts/accounts-transactions/general-receipt-new"
-          class="btn btn-primary px-4"
-          style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:8px 20px;">
+      <!-- Search -->
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search..." (input)="filterDatatable($event)"
+          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+      </div>
+
+      <!-- New Button -->
+      <div class="col-md-6 text-end">
+        <a routerLink="/dashboard/accounts/accounts-transactions/general-receipt-new" class="btn btn-primary px-4"
+          style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
           + New
         </a>
       </div>
-    </div>
 
-    <!-- Search -->
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search..."
-          (input)="filterDatatable($event)"
-          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
-      </div>
     </div>
-
     <!-- Table Card -->
     <div class="row">
       <div class="col-12">
-        <div class="border rounded p-3 bg-white" style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
-          <p-table
-            [value]="gridView"
-            [paginator]="true"
-            [rows]="pageCriteria.pageSize"
-            [totalRecords]="gridView.length"
-            (onPage)="onFooterPageChange($event)"
-            [rowsPerPageOptions]="[5,10,20]"
-            responsiveLayout="scroll"
-            [loading]="loading"
-            [showCurrentPageReport]="true"
+        <div class="border rounded p-3 bg-white"
+          style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
+          <p-table [value]="gridView" [paginator]="true" [rows]="pageCriteria.pageSize" [totalRecords]="gridView.length"
+            (onPage)="onFooterPageChange($event)" [rowsPerPageOptions]="[5,10,20]" responsiveLayout="scroll"
+            [loading]="loading" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             styleClass="p-datatable-sm p-datatable-gridlines">
 
             <!-- Header -->
             <ng-template pTemplate="header">
               <tr>
-                <th class="text-center" style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Actions</th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Date</th>
-                <th class="text-center" style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt No.</th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Details</th>
-                <th class="text-end" style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; text-align:right !important; white-space:nowrap;">Received Amount</th>
-                <th style="width:400px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">Narration</th>
+                <th class="text-center"
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Actions</th>
+                <th
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Receipt Date</th>
+                <th class="text-center"
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Receipt No.</th>
+                <th
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Payment Details</th>
+                <th class="text-end"
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; text-align:right !important; white-space:nowrap;">
+                  Received Amount</th>
+                <th
+                  style="width:400px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                  Narration</th>
               </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-row>
               <tr>
                 <td class="text-center" style="padding:8px 12px; font-size:13px;">
-                  <button
-                    class="btn btn-sm btn-primary"
-                    (click)="viewRow(row)"
+                  <button class="btn btn-sm btn-primary" (click)="viewRow(row)"
                     style="background:#0d6efd; border-color:#0d6efd; border-radius:6px; font-size:12px; font-weight:600; padding:4px 14px;">
                     View
                   </button>
@@ -90,7 +87,8 @@
                     </span>
                   </ng-template>
                 </td>
-                <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                <td class="text-end"
+                  style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                   {{ currencySymbol }}
                   {{ row.totalreceivedamount ?? 0 | number:'1.2-2' }}
                 </td>
@@ -102,14 +100,17 @@
 
             <ng-template pTemplate="emptymessage">
               <tr>
-                <td colspan="6" class="text-center py-4" style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+                <td colspan="6" class="text-center py-4"
+                  style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
                   No records found
                 </td>
               </tr>
             </ng-template>
+
           </p-table>
         </div>
       </div>
     </div>
+
   </div>
 </div>
