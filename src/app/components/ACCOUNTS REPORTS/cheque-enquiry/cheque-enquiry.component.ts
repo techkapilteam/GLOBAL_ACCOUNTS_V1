@@ -310,6 +310,10 @@ spinner = false;
   // this.spinner = true;
   // this.GetChequesIssued(this.bankid);
   // this.spinner = false;
+  console.log('Search value:', value);                                        
+  console.log('Backup array length:', this.displayAllChequesDataBasedOnFormBackup.length); 
+  console.log('Cheque numbers in backup:', this.displayAllChequesDataBasedOnFormBackup.map(c => c.pChequenumber)); 
+
    if (!value || value.trim() === '') {
     // Empty search → restore full list
     this.displayAllChequesDataBasedOnForm = [...this.displayAllChequesDataBasedOnFormBackup];
@@ -319,9 +323,11 @@ spinner = false;
       c.pChequenumber?.toString().toLowerCase().includes(value.trim().toLowerCase())
     );
   }
+  console.log('Filtered result:', this.displayAllChequesDataBasedOnForm);
   this.totalamount = this.displayAllChequesDataBasedOnForm.reduce(
     (sum, c) => sum + (c?.ptotalreceivedamount || 0), 0
   );
+   this.updatePagination(this.displayAllChequesDataBasedOnForm.length);
 }
 
 onSearchForChequeReceived(value: string) {
@@ -419,21 +425,36 @@ onSearchForChequeReceived(value: string) {
   GetChequesIssued(bankId: number) {
 
     this.gridLoading = true;
+      const fromDate = '01-01-2000';
+  const toDate = '09-03-2026';
+  console.log('Calling API with params:', {
+    fromDate,
+    toDate,
+    bankId,
+    branch: this.commonService.getbranchname(),
+    company: this.commonService.getCompanyCode(),
+    branchCode: this.commonService.getBranchCode()
+  });
 
     // this.accountingService
       // .GetChequesIssuedData(bankId, 0, 999999, '', '', '')
       this.accountservice
-      .GetChequesIssuedData('01-01-2026','09-02-2026',bankId, 0, 999999, 'CHEQUE', '0', 'global','KAPILCHITS','KLC01')
+      .GetChequesIssuedData(fromDate,toDate,bankId, 0, 999999, 'CHEQUE', '0', 'global','KLC01','KAPILCHITS')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (res: any) => {
+          console.log('API RAW RESPONSE:', res);
 
           this.ChequesIssuedData = res?.pchequesOnHandlist ?? [];
           this.ChequesClearReturnData = res?.pchequesclearreturnlist ?? [];
+          console.log('pchequesOnHandlist:', this.ChequesIssuedData);
+          console.log('pchequesclearreturnlist:', this.ChequesClearReturnData);
 
           this.chequesStatusInfoGridForChequesIssued();
+          console.log('displayAllChequesDataBasedOnForm:', this.displayAllChequesDataBasedOnForm); 
+        console.log('Sample pChequenumber:', this.displayAllChequesDataBasedOnForm[0]?.pChequenumber); 
            this.displayAllChequesDataBasedOnFormBackup = [...this.displayAllChequesDataBasedOnForm];
-          
+          console.log('Backup length:', this.displayAllChequesDataBasedOnFormBackup.length); 
           this.gridLoading = false;
         },
         error: err => {
