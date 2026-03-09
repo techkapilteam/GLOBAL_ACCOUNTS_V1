@@ -95,13 +95,13 @@
 
                 <td class="text-center">
                   <span *ngIf="row.pchequestatus === 'R'">
-                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
+                    {{ row.pchequecleardate | date:'dd-MM-yyyy' }}
                   </span>
                 </td>
 
                 <td class="text-center">
                   <span *ngIf="row.pchequestatus === 'C'">
-                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
+                    {{ row.pchequecleardate | date:'dd-MM-yyyy' }}
                   </span>
                 </td>
 
@@ -195,15 +195,20 @@
 
                 <td>{{ row.pdepositeddate | date:'dd-MM-yyyy' }}</td>
 
-                <td>{{ row.pCleardate | date:'dd-MM-yyyy' }}</td>
+                <!-- <td>{{ row.pCleardate | date:'dd-MM-yyyy' }}</td> -->
+                 <td>
+                  <span *ngIf="row.pchequestatus === 'Y'">
+                    {{ row.pchequecleardate | date:'dd-MM-yyyy' }}
+                  </span>
+                </td>
 
                 <td>
-                  {{ row.pchequestatus === 'R' ? (row.pCleardate | date:'dd-MM-yyyy') : '' }}
+                  {{ row.pchequestatus === 'R' ? (row.pchequecleardate | date:'dd-MM-yyyy') : '' }}
                 </td>
 
                 <td>{{ row.ptypeofpayment }}</td>
 
-                <td>{{ row.pbankname }}</td>
+                <td>{{ row.cheque_bank }}</td>
 
                 <td>{{ row.ppartyname }}</td>
               </tr>

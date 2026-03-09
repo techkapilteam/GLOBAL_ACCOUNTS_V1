@@ -258,6 +258,7 @@ export class ChequeEnquiryComponent implements OnInit {
 
   displayAllChequesDataBasedOnForm: any[] = [];
   displayGridDataBasedOnForm: any[] = [];
+  displayAllChequesDataBasedOnFormBackup: any[] = [];
 
   showOrHideIssuedCheques = true;
   showOrHideReceivedCheques = false;
@@ -306,9 +307,21 @@ spinner = false;
       });
   }
   onSearchForCheque(value: string) {
-  this.spinner = true;
-  this.GetChequesIssued(this.bankid);
-  this.spinner = false;
+  // this.spinner = true;
+  // this.GetChequesIssued(this.bankid);
+  // this.spinner = false;
+   if (!value || value.trim() === '') {
+    // Empty search → restore full list
+    this.displayAllChequesDataBasedOnForm = [...this.displayAllChequesDataBasedOnFormBackup];
+  } else {
+    // Filter by cheque number (case-insensitive)
+    this.displayAllChequesDataBasedOnForm = this.displayAllChequesDataBasedOnFormBackup.filter(c =>
+      c.pChequenumber?.toString().toLowerCase().includes(value.trim().toLowerCase())
+    );
+  }
+  this.totalamount = this.displayAllChequesDataBasedOnForm.reduce(
+    (sum, c) => sum + (c?.ptotalreceivedamount || 0), 0
+  );
 }
 
 onSearchForChequeReceived(value: string) {
@@ -419,6 +432,8 @@ onSearchForChequeReceived(value: string) {
           this.ChequesClearReturnData = res?.pchequesclearreturnlist ?? [];
 
           this.chequesStatusInfoGridForChequesIssued();
+           this.displayAllChequesDataBasedOnFormBackup = [...this.displayAllChequesDataBasedOnForm];
+          
           this.gridLoading = false;
         },
         error: err => {
