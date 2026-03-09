@@ -575,14 +575,14 @@
                                             <td>{{ row.pledgername }}</td>
                                             <td class="text-right">
                                                 <ng-container *ngIf="row.pdebitamount != 0; else emptyDr">
-                                                    {{ currencySymbol }} {{ row.pdebitamount |
+                                                     {{ row.pdebitamount |
                                                     currency:'INR':'symbol':'1.2-2' }}
                                                 </ng-container>
                                                 <ng-template #emptyDr></ng-template>
                                             </td>
                                             <td class="text-right">
                                                 <ng-container *ngIf="row.pcreditamount != 0; else emptyCr">
-                                                    {{ currencySymbol }} {{ row.pcreditamount |
+                                                   {{ row.pcreditamount |
                                                     currency:'INR':'symbol':'1.2-2' }}
                                                 </ng-container>
                                                 <ng-template #emptyCr></ng-template>

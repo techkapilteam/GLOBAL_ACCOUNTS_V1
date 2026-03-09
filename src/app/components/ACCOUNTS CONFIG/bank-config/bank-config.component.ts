@@ -183,9 +183,9 @@ export class BankConfigComponent implements OnInit {
   @ViewChild(DataBindingDirective, { static: true }) dataBinding!: DataBindingDirective;
   // @ViewChild(AddressComponent, { static: false }) addressdetails;
   // @ViewChild(AddressComponent, { static: false }) addressdetails!: AddressComponent;
-  @ViewChild(AddressComponent) set addressdetails(comp: AddressComponent) {
-  if (comp && this.datatobind?.lstBankInformationAddressDTO?.length) {
-    comp.editdata(this.datatobind.lstBankInformationAddressDTO, 'Bank');
+@ViewChild(AddressComponent) set addressdetails(comp: AddressComponent) {
+  if (comp && this.datatobind?.[0]?.lstBankInformationAddressDTO?.length) {
+    comp.editdata(this.datatobind[0].lstBankInformationAddressDTO, 'Bank');
   }
 }
 
@@ -320,7 +320,7 @@ export class BankConfigComponent implements OnInit {
         // pOpeningBalance: [''],
         // pOpeningBalanceType: [''],
 
-          pOverdraft: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+         pOverdraft: [0, [Validators.pattern(/^\d*(\.\d{0,2})?$/)]],
   pOpeningBalance: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
   //         pOverdraft: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{0,2})?$/)]],
   // pOpeningBalance: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{0,2})?$/)]],
@@ -457,66 +457,66 @@ export class BankConfigComponent implements OnInit {
         this.disable = true;
         this.loading = false;
         // this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.bank_date))
-        this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.pBankdate))
-        console.log('DATE', this.datatobind.pBankdate);
+        this.bankmasterform.controls['pBankdate'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind[0].pBankdate))
+        console.log('DATE', this.datatobind[0].pBankdate);
 
         // this.bankmasterform.controls['pBankID'].setValue(this.datatobind.pBankID)
         // this.bankmasterform.controls['pBankID'].setValue(this.datatobind.pBankID)
         this.bankmasterform.controls['isprimary'].setValue(this.bankdetails.isprimary)
         this.bankmasterform.controls['isformanbank'].setValue(this.bankdetails.isformanbank)
-        this.bankmasterform.controls['isintrestpaymentbank'].setValue(this.bankdetails.isintrestpaymentbank)
-        this.bankmasterform.controls['isforemanpaymentbank'].setValue(this.bankdetails.isforemanpaymentbank)
-        if (this.bankdetails.isprimary || this.bankdetails.isformanbank || this.bankdetails.isintrestpaymentbank || this.bankdetails.isforemanpaymentbank) {
+        this.bankmasterform.controls['isintrestpaymentbank'].setValue(this.bankdetails.is_interest_payment_bank)
+        this.bankmasterform.controls['isforemanpaymentbank'].setValue(this.bankdetails.is_foreman_payment_bank)
+        if (this.bankdetails.isprimary || this.bankdetails.isformanbank || this.bankdetails.is_interest_payment_bank || this.bankdetails.is_foreman_payment_bank) {
           this.banksetup = true
         }
 
-        this.bankmasterform.controls['bankName'].setValue(this.datatobind.pBankname)
-        this.bankmasterform.controls['pBankbranch'].setValue(this.datatobind.pBankbranch)
-        this.bankmasterform.controls['pRecordid'].setValue(this.datatobind.pRecordid);
-        if (this.datatobind.pAccountnumber != '' && this.datatobind.pAccountnumber!= null) {
+        this.bankmasterform.controls['bankName'].setValue(this.datatobind[0].pBankname)
+        this.bankmasterform.controls['pBankbranch'].setValue(this.datatobind[0].pBankbranch)
+        this.bankmasterform.controls['pRecordid'].setValue(this.datatobind[0].pRecordid);
+        if (this.datatobind[0].pAccountnumber != '' && this.datatobind[0].pAccountnumber!= null) {
           this.accountno = true;
-          this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind.pAccountnumber)
+          this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind[0].pAccountnumber)
         }
         else {
           this.bankmasterform.controls['pAccountnumber'].setValue('')
         }
-        this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind.pAccountnumber)
+        this.bankmasterform.controls['pAccountnumber'].setValue(this.datatobind[0].pAccountnumber)
 
-        this.bankmasterform.controls['pIfsccode'].setValue(this.datatobind.pIfsccode)
+        this.bankmasterform.controls['pIfsccode'].setValue(this.datatobind[0].pIfsccode)
         // this.bankmasterform.controls['pAccountname'].setValue(this.datatobind.pAccountname)
-        this.bankmasterform.controls['account_name'].setValue(this.datatobind.pAccountnumber)
+        this.bankmasterform.controls['account_name'].setValue(this.datatobind[0].pAccountnumber)
         this.bankmasterform.controls['ptypeofoperation'].setValue("UPDATE");
-        this.bankmasterform.controls['pOverdraft'].setValue(this._commonService.currencyformat(this.datatobind.pOverdraft))
-        this.bankmasterform.controls['pAcctountype'].setValue(this.datatobind.pAcctountype)
-        this.bankmasterform.controls['pOpeningBalance'].setValue(this._commonService.currencyformat(this.datatobind.pOpeningBalance))
-        this.bankmasterform.controls['popeningjvno'].setValue(this.datatobind.popeningjvno)
-        if (this.datatobind.pOpeningBalanceType == "") {
+        this.bankmasterform.controls['pOverdraft'].setValue(this._commonService.currencyformat(this.datatobind[0].pOverdraft))
+        this.bankmasterform.controls['pAcctountype'].setValue(this.datatobind[0].pAcctountype)
+        this.bankmasterform.controls['pOpeningBalance'].setValue(this._commonService.currencyformat(this.datatobind[0].pOpeningBalance))
+        this.bankmasterform.controls['popeningjvno'].setValue(this.datatobind[0].popeningjvno)
+        if (this.datatobind[0].pOpeningBalanceType == "") {
           this.bankmasterform.controls['pOpeningBalanceType'].setValue('D')
         }
         else {
-          this.bankmasterform.controls['pOpeningBalanceType'].setValue(this.datatobind.pOpeningBalanceType)
+          this.bankmasterform.controls['pOpeningBalanceType'].setValue(this.datatobind[0].pOpeningBalanceType)
         }
 
 
 
-        if (this.datatobind.pIsupiapplicable == true) {
-          this.bankmasterform.controls['pIsupiapplicable'].setValue(this.datatobind.pIsupiapplicable)
+        if (this.datatobind[0].pIsupiapplicable == true) {
+          this.bankmasterform.controls['pIsupiapplicable'].setValue(this.datatobind[0].pIsupiapplicable)
           this.bankupihideandshow = true;
           this.bankupidetails = true;
-          this.gridData = this.datatobind.lstBankUPI
+          this.gridData = this.datatobind[0].lstBankUPI
         }
 
-        if (this.datatobind.pIsdebitcardapplicable == true) {
-          this.bankmasterform.controls['pIsdebitcardapplicable'].setValue(this.datatobind.pIsdebitcardapplicable)
+        if (this.datatobind[0].pIsdebitcardapplicable == true) {
+          this.bankmasterform.controls['pIsdebitcardapplicable'].setValue(this.datatobind[0].pIsdebitcardapplicable)
           this.debitcardhideandshow = true
           this.debitcarddetails = true;
-          console.log('databind 1', this.datatobind.lstBankdebitcarddtlsDTO);
+          console.log('databind 1', this.datatobind[0].lstBankdebitcarddtlsDTO);
 
 
-          if (this.datatobind.lstBankdebitcarddtlsDTO.length > 0) {
-            if (this.datatobind.lstBankdebitcarddtlsDTO.pCardNo != '' && this.datatobind.lstBankdebitcarddtlsDTO.pCardNo != null) {
+          if (this.datatobind[0].lstBankdebitcarddtlsDTO.length > 0) {
+            if (this.datatobind[0].lstBankdebitcarddtlsDTO.pCardNo != '' && this.datatobind[0].lstBankdebitcarddtlsDTO.pCardNo != null) {
               this.cardno = true;
-              this.bankmasterform.controls['pCardNo'].patchValue(this.datatobind.lstBankdebitcarddtlsDTO.pCardNo)
+              this.bankmasterform.controls['pCardNo'].patchValue(this.datatobind[0].lstBankdebitcarddtlsDTO.pCardNo)
             }
             else {
               this.bankmasterform.controls['pCardNo'].patchValue('')
@@ -526,17 +526,18 @@ export class BankConfigComponent implements OnInit {
             this.bankmasterform.controls['pCardNo'].patchValue('')
           }
 
-          this.bankmasterform.controls['pCardName'].patchValue(this.datatobind.lstBankdebitcarddtlsDTO.pCardName)
+          this.bankmasterform.controls['pCardName'].patchValue(this.datatobind[0].lstBankdebitcarddtlsDTO.pCardName)
 
-          this.bankmasterform.controls['pValidfrom'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.lstBankdebitcarddtlsDTO.pValidfrom))
-          this.bankmasterform.controls['pValidto'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind.lstBankdebitcarddtlsDTO.pValidto))
+          this.bankmasterform.controls['pValidfrom'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind[0].lstBankdebitcarddtlsDTO.pValidfrom))
+          this.bankmasterform.controls['pValidto'].setValue(this._commonService.getDateObjectFromDataBase(this.datatobind[0].lstBankdebitcarddtlsDTO.pValidto))
           // this.bankmasterform.controls['pRecordid'].setValue(this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid);
         }
-        if (this.datatobind.lstBankInformationAddressDTO != 0) {
+      if (this.datatobind[0].lstBankInformationAddressDTO?.length > 0){
+        // if (this.datatobind[0].lstBankInformationAddressDTO != 0) {
           debugger;
-          console.log('edit data', this.datatobind.lstBankInformationAddressDTO);
+          console.log('edit data', this.datatobind[0].lstBankInformationAddressDTO);
 
-          this.addressdetails.editdata(this.datatobind.lstBankInformationAddressDTO, 'Bank')
+          this.addressdetails.editdata(this.datatobind[0].lstBankInformationAddressDTO, 'Bank')
         }
         //console.log(this.bankmasterform.value)
       })

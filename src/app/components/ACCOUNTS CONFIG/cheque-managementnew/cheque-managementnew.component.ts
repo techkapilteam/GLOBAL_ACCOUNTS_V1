@@ -211,18 +211,24 @@ export class ChequeManagementnewComponent implements OnInit {
                 ...this.gridData,
                 this.chequemanagementform.value,
               ];
-              this.totalcheques = "";
-              this.fromcheqno = 0;
-              this.tocheqno = 0;
-              this.noofcheque = "";
-              this.chequemanagementform["controls"]["pNoofcheques"].setValue(
-                ""
-              );
-              this.chequemanagementform["controls"]["pChequefrom"].setValue("");
-              this.chequemanagementform["controls"]["pChequeto"].setValue("");
-              this.chequemanagementvalidations["pNoofcheques"] = "";
-              this.chequemanagementvalidations["pChequefrom"] = "";
-              this.chequemanagementvalidations["pChequeto"] = "";
+
+
+this.chequemanagementform.reset();
+this.chequemanagementform.markAsPristine();
+this.chequemanagementform.markAsUntouched();
+
+              // this.totalcheques = "";
+              // this.fromcheqno = 0;
+              // this.tocheqno = 0;
+              // this.noofcheque = "";
+              // this.chequemanagementform["controls"]["pNoofcheques"].setValue(
+              //   ""
+              // );
+              // this.chequemanagementform["controls"]["pChequefrom"].setValue("");
+              // this.chequemanagementform["controls"]["pChequeto"].setValue("");
+              // this.chequemanagementvalidations["pNoofcheques"] = "";
+              // this.chequemanagementvalidations["pChequefrom"] = "";
+              // this.chequemanagementvalidations["pChequeto"] = "";
             } else {
               this.commonService.showWarningMessage(
                 "cheque No already exists"
