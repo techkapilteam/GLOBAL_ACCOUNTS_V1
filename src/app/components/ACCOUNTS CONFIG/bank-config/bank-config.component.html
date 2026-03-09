@@ -408,10 +408,15 @@
         <div *ngIf="bankupihideandshow">
           <div class="form-group">
             <label class="required-field" id="pUpiid" title="UPI ID">UPI ID</label>
-            <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
+            <!-- <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
               pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$" maxlength="150"
               [ngClass]="{ 'is-invalid': submitted &&   bankmastervalidations.pUpiid}" placeholder="xyz@okicici"
-              formControlName="pUpiid">
+              formControlName="pUpiid"> -->
+
+              <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
+  pattern= "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$" maxlength="150"
+  [ngClass]="{  'is-invalid': submitted && bankmasterform.controls['pUpiid'].invalid  }" placeholder="xyz@okicici"
+  formControlName="pUpiid">
             <div class="invalid-feedback">
               <span *ngIf="bankmastervalidations.pUpiid">{{bankmastervalidations?.pUpiid}}</span>
             </div>
