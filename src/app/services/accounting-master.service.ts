@@ -101,7 +101,7 @@ export class AccountingMasterService {
 
   SaveChequeManagement(cheqinformation: any): Observable<any> {
     return this._CommonService.postAPI(
-      '/Accounting/Configuration/SaveChequeManagement',
+      '/Accounts/SaveChequeManagement',
       cheqinformation
     );
   }
@@ -157,6 +157,7 @@ export class AccountingMasterService {
   }
 
   GetCheckDuplicateDebitCardNo(bankinformationdata: any): Observable<any> {
+    
     return this._CommonService.postAPI(
       '/BankInformation/GetCheckDuplicateDebitCardNo',
       bankinformationdata

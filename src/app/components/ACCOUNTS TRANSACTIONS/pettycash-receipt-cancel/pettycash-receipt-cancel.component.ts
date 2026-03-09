@@ -267,9 +267,15 @@ export class PettycashReceiptCancelComponent implements OnInit {
     this.getReceiptNumber();
   }
 
-  getReceiptNumber() {
-    this._AccountingTransactionsService.getReceiptNumber().subscribe({
-      next: res => this.receiptdata = res,
+ getReceiptNumber() { const GlobalSchema = 'global';
+  const BranchSchema = 'accounts';  const CompanyCode = 'KAPILCHITS'; const BranchCode = 'KLC01';
+
+  this._AccountingTransactionsService
+    .getReceiptNumber(GlobalSchema, BranchSchema, CompanyCode, BranchCode)
+    .subscribe({
+      next: (res: any) => {
+        this.receiptdata = res;
+      },
       error: () => {
         this.receiptdata = [
           { receiptid: 1, receiptnumber: 'PCR-001' },
@@ -277,8 +283,8 @@ export class PettycashReceiptCancelComponent implements OnInit {
         ];
       }
     });
-  }
 
+}
   getEmployeeName(schema: string) {
     this._generalreceiptcancelservice.getEmployeeName(schema).subscribe({
       next: res => this.Employee = res,

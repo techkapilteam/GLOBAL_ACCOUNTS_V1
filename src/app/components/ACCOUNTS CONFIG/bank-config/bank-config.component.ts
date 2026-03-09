@@ -27,168 +27,30 @@ import { Logger } from 'html2canvas/dist/types/core/logger';
 })
 // export class BankConfigComponent implements OnInit {
 
-//   bankmasterform!: FormGroup;
 
-//   banksList = [{ pBankName: 'HDFC' }, { pBankName: 'ICICI' }, { pBankName: 'SBI' }];
-//   upiname = [{ pUpiname: 'PhonePe' }, { pUpiname: 'GooglePay' }, { pUpiname: 'Paytm' }];
-
-//   debitcardhideandshow = false;
-//   bankupihideandshow = false;
-//   branchAddressExpanded = false;
-//   bankSetupExpanded = false;
-
-//   selectedBankStatus: 'isprimary' | 'isformanbank' | 'isforemanpaymentbank' | 'isintrestpaymentbank' | null = null;
-
-//   dpConfig: Partial<BsDatepickerConfig> = {
-//     containerClass: 'theme-dark-blue',
-//     dateInputFormat: 'DD-MMM-YYYY',
-//     maxDate: new Date(),
-//     showWeekNumbers: false
-//   };
-
-//   countries: Country[] = [
-//     {
-//       name: 'India', states: [
-//         {
-//           name: 'Maharashtra', districts: [
-//             { name: 'Mumbai', pincodes: ['400001', '400002'] },
-//             { name: 'Pune', pincodes: ['411001', '411002'] }
-//           ]
-//         }
-//       ]
-//     }
-//   ];
-
-//   states: State[] = [];
-//   districts: District[] = [];
-//   pincodes: string[] = [];
-
-//   constructor(private fb: FormBuilder) { }
-
-//   ngOnInit(): void {
-//     this.bankmasterform = this.fb.group({
-//       todate: [new Date(), Validators.required],
-//       pAcctountype: ['', Validators.required],
-//       pAccountnumber: ['', Validators.required],
-//       pBankname: ['', Validators.required],
-//       pAccountname: ['', Validators.required],
-//       pBankbranch: ['', Validators.required],
-//       pIfsccode: ['', Validators.required],
-//       pOverdraft: ['0.00', Validators.required],
-//       pOpeningBalance: ['0.00', Validators.required],
-//       pOpeningBalanceType: ['', Validators.required],
-//       address1: ['', Validators.required],
-//       address2: [''],
-//       city: ['', Validators.required],
-//       country: ['', Validators.required],
-//       state: ['', Validators.required],
-//       district: ['', Validators.required],
-//       pincode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-//       pIsdebitcardapplicable: [false],
-//       pCardNo: [''],
-//       pValidfrom: [new Date()],
-//       pValidto: [new Date()],
-//       pCardName: [''],
-//       pIsupiapplicable: [false],
-//       pUpiid: [''],
-//       pUpiname: [''],
-//       isprimary: [false],
-//       isformanbank: [false],
-//       isforemanpaymentbank: [false],
-//       isintrestpaymentbank: [false]
-//     });
-
-//     this.bankmasterform.get('country')?.valueChanges.subscribe(c => this.onCountryChange(c));
-//     this.bankmasterform.get('state')?.valueChanges.subscribe(s => this.onStateChange(s));
-//     this.bankmasterform.get('district')?.valueChanges.subscribe(d => this.onDistrictChange(d));
-
-//     this.bankmasterform.get('pIsdebitcardapplicable')?.valueChanges.subscribe(val => {
-//       this.debitcardhideandshow = val;
-//     });
-
-//     this.bankmasterform.get('pIsupiapplicable')?.valueChanges.subscribe(val => {
-//       this.bankupihideandshow = val;
-//     });
-//   }
-
-//   onCountryChange(countryName: string) {
-//     const country = this.countries.find(c => c.name === countryName);
-//     this.states = country ? country.states : [];
-//     this.districts = [];
-//     this.pincodes = [];
-//     this.bankmasterform.patchValue({ state: '', district: '', pincode: '' });
-//   }
-
-//   onStateChange(stateName: string) {
-//     const state = this.states.find(s => s.name === stateName);
-//     this.districts = state ? state.districts : [];
-//     this.pincodes = [];
-//     this.bankmasterform.patchValue({ district: '', pincode: '' });
-//   }
-
-//   onDistrictChange(districtName: string) {
-//     const district = this.districts.find(d => d.name === districtName);
-//     this.pincodes = district ? district.pincodes : [];
-//     this.bankmasterform.patchValue({ pincode: this.pincodes[0] || '' });
-//   }
-
-//   toggleBranchAddress() {
-//     this.branchAddressExpanded = !this.branchAddressExpanded;
-//   }
-
-//   toggleBankSetup() {
-//     this.bankSetupExpanded = !this.bankSetupExpanded;
-//   }
-
-//   selectBankStatus(
-//     status: 'isprimary' | 'isformanbank' | 'isforemanpaymentbank' | 'isintrestpaymentbank',
-//     event: Event
-//   ) {
-//     event.stopPropagation();
-//     this.selectedBankStatus = this.selectedBankStatus === status ? null : status;
-//     this.bankmasterform.patchValue({
-//       isprimary: false,
-//       isformanbank: false,
-//       isforemanpaymentbank: false,
-//       isintrestpaymentbank: false
-//     });
-//     if (this.selectedBankStatus) {
-//       this.bankmasterform.patchValue({ [status]: true });
-//     }
-//   }
-
-//   save() {
-//     if (this.bankmasterform.valid) {
-//       console.log('Form submitted', this.bankmasterform.value);
-//       alert('Form submitted successfully!');
-//     } else {
-//       alert('Please fill all required fields.');
-//     }
-//   }
-
-//   clear() {
-//     this.bankmasterform.reset({
-//       todate: new Date(),
-//       pOverdraft: '0.00',
-//       pOpeningBalance: '0.00',
-//       pIsdebitcardapplicable: false,
-//       pIsupiapplicable: false
-//     });
-//   }
-
-// }
 
 
 export class BankConfigComponent implements OnInit {
+  private _addressdetails!: AddressComponent;
+  // 2. Use the setter to assign the instance to that variable
+@ViewChild(AddressComponent) set addressdetails(comp: AddressComponent) {
+  if (comp) {
+    this._addressdetails = comp; // Store it here!
+    
+    if (this.datatobind?.[0]?.lstBankInformationAddressDTO?.length) {
+      this._addressdetails.editdata(this.datatobind[0].lstBankInformationAddressDTO, 'Bank');
+    }
+  }
+}
   @ViewChild(DataBindingDirective, { static: true }) dataBinding!: DataBindingDirective;
   // @ViewChild(AddressComponent, { static: false }) addressdetails;
   // @ViewChild(AddressComponent, { static: false }) addressdetails!: AddressComponent;
-@ViewChild(AddressComponent) set addressdetails(comp: AddressComponent) {
-  if (comp && this.datatobind?.[0]?.lstBankInformationAddressDTO?.length) {
-    comp.editdata(this.datatobind[0].lstBankInformationAddressDTO, 'Bank');
-  }
-}
-
+// @ViewChild(AddressComponent) set addressdetails(comp: AddressComponent) {
+//   if (comp && this.datatobind?.[0]?.lstBankInformationAddressDTO?.length) {
+//     comp.editdata(this.datatobind[0].lstBankInformationAddressDTO, 'Bank');
+//   }
+// }
+//  @ViewChild(AddressComponent, { static: false }) addressdetails!: AddressComponent;
   AdresssDetailsForm: any;
   accuntnumber = false;
   bankname: any;
@@ -339,7 +201,9 @@ export class BankConfigComponent implements OnInit {
         pCardName: [''],
         pValidfrom: [''],
         pValidto: [''],
-        pUpiid: [''],
+        pUpiid: ['', [Validators.required, 
+          Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$')]],
+        // pUpiid: [''],
         // pUpiname: [''],
         upiname: [''],
         popeningjvno: [''],
@@ -544,6 +408,14 @@ export class BankConfigComponent implements OnInit {
 
     }
   }
+  //   ngAfterViewInit(): void {
+  //   // Ensure that addressdetails is available and the form is initialized
+  //   if (this.addressdetails && this.datatobind?.[0]?.lstBankInformationAddressDTO?.length) {
+  //     this.addressdetails.editdata(this.datatobind[0].lstBankInformationAddressDTO, 'Bank');
+  //   } else {
+  //     console.error('AddressComponent or data is not available yet.');
+  //   }
+  // }
 
 
 
@@ -980,74 +852,121 @@ formatValueWithCommas(controlName: string) {
   //   return isValid
   // }
 
+addtogrid() {
+  this.submitted = true;
+  debugger;
+ console.log('pUpiid Value before add to grid:', this.bankmasterform.value.pUpiid);
+  if (this.validateupi()) {
+    const newUpi: any = {
+      pUpiid: this.bankmasterform.value.pUpiid,
+      pUpiname: this.bankmasterform.value.upiname,
+      pCreatedby: this.bankmasterform.value.pCreatedby,
+      pStatusname: this.bankmasterform.value.pIsupiapplicable,
+      ptypeofoperation: "CREATE"
+    };
 
-  addtogrid() {
-    this.submitted = true;
-    debugger;
+    this.gridData.push(newUpi);
+    console.log("Grid after add:", this.gridData);
 
-    if (this.validateupi()) {
-
-      const newUpi: any = {
-        pUpiid: this.bankmasterform.value.pUpiid,
-        pUpiname: this.bankmasterform.value.upiname,
-        pCreatedby: this.bankmasterform.value.pCreatedby,
-        // pStatusname: this.bankmasterform.value.pStatusname,
-        pStatusname: this.bankmasterform.value.pIsupiapplicable,
-        ptypeofoperation: "CREATE"
-      };
-
-      this.gridData.push(newUpi);
-      console.log("Grid after add:", this.gridData);
-
-      // clear form controls
+    // Only reset the form if the UPI ID is not empty
+    if (this.bankmasterform.value.pUpiid !== '') {
       this.bankmasterform.patchValue({
         pUpiid: "",
         pUpiname: ""
       });
-
-      this.submitted = false;
-      this.bankmastervalidations.pUpiid = "";
-      this.bankmastervalidations.pUpiname = "";
-
     }
+
+    // Clear form validation errors
+    this.submitted = false;
+    this.bankmastervalidations.pUpiid = "";
+    this.bankmastervalidations.pUpiname = "";
+  }
+}
+  // addtogrid() {
+  //   this.submitted = true;
+  //   debugger;
+
+  //   if (this.validateupi()) {
+
+  //     const newUpi: any = {
+  //       pUpiid: this.bankmasterform.value.pUpiid,
+  //       pUpiname: this.bankmasterform.value.upiname,
+  //       pCreatedby: this.bankmasterform.value.pCreatedby,
+  //       // pStatusname: this.bankmasterform.value.pStatusname,
+  //       pStatusname: this.bankmasterform.value.pIsupiapplicable,
+  //       ptypeofoperation: "CREATE"
+  //     };
+
+  //     this.gridData.push(newUpi);
+  //     console.log("Grid after add:", this.gridData);
+
+  //     // clear form controls
+  //     this.bankmasterform.patchValue({
+  //       pUpiid: "",
+  //       pUpiname: ""
+  //     });
+
+  //     this.submitted = false;
+  //     this.bankmastervalidations.pUpiid = "";
+  //     this.bankmastervalidations.pUpiname = "";
+
+  //   }
+  // }
+validateupi() {
+  // Ensure that pUpiid and upiname are not empty or invalid
+  const pUpiid = this.bankmasterform.value.pUpiid;
+  const upiname = this.bankmasterform.value.upiname;
+
+  if (!pUpiid || !upiname) {
+    this._commonService.showWarningMessage("Both UPI ID and UPI Link must be provided.");
+    return false; // Return false if validation fails
   }
 
-  validateupi(): boolean {
-    let isValid = true;
-
-    const upiid = this.bankmasterform.value.pUpiid;
-    const upiname = this.bankmasterform.value.upiname;
-
-    // required fields
-    if (!upiid) {
-      this.upigridvalidation = true;
-      this.bankmastervalidations.pUpiid = "UPI ID Required";
-      isValid = false;
-    }
-
-    if (!upiname) {
-      this.upigridvalidation = true;
-      this.bankmastervalidations.pUpiname = "UPI Link with Required";
-      isValid = false;
-    }
-
-    // check duplicates
-    const duplicateId = this.gridData.find((d: any) => d.pUpiid === upiid);
-    if (duplicateId) {
-      this.bankmastervalidations.pUpiid = "UPI ID already exists!";
-      isValid = false;
-    }
-
-    const duplicateName = this.gridData.find((d: any) => d.pUpiname === upiname);
-    if (duplicateName) {
-      this.bankmastervalidations.pUpiname = "UPI Link already exists!";
-      isValid = false;
-    }
-
-    this.upigridvalidation = !isValid;
-
-    return isValid;
+  // Perform further validation (optional)
+  const isValidEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$/.test(pUpiid);
+  if (!isValidEmail) {
+    this._commonService.showWarningMessage("Please enter a valid UPI ID.");
+    return false;
   }
+
+  return true; // Return true if validation is successful
+}
+  // validateupi(): boolean {
+  //   let isValid = true;
+
+  //   const upiid = this.bankmasterform.value.pUpiid;
+  //   const upiname = this.bankmasterform.value.upiname;
+
+  //   // required fields
+  //   if (!upiid) {
+  //     this.upigridvalidation = true;
+  //     this.bankmastervalidations.pUpiid = "UPI ID Required";
+  //     isValid = false;
+  //   }
+
+  //   if (!upiname) {
+  //     this.upigridvalidation = true;
+  //     this.bankmastervalidations.pUpiname = "UPI Link with Required";
+  //     isValid = false;
+  //   }
+
+  //   // check duplicates
+  //   const duplicateId = this.gridData.find((d: any) => d.pUpiid === upiid);
+  //   if (duplicateId) {
+  //     this.bankmastervalidations.pUpiid = "UPI ID already exists!";
+  //     isValid = false;
+  //   }
+
+  //   const duplicateName = this.gridData.find((d: any) => d.pUpiname === upiname);
+  //   if (duplicateName) {
+  //     this.bankmastervalidations.pUpiname = "UPI Link already exists!";
+  //     isValid = false;
+  //   }
+
+  //   this.upigridvalidation = !isValid;
+
+  //   return isValid;
+  // }
 
 
   getapi() {
@@ -1195,336 +1114,476 @@ formatValueWithCommas(controlName: string) {
   }
 
 
-  save() {
+//   save() {
+//     debugger
 
-      this.bankmasterform.markAllAsTouched();
-  this.bankmasterform.updateValueAndValidity();
+//       this.bankmasterform.markAllAsTouched();
+//   this.bankmasterform.updateValueAndValidity();
+//   console.log('Form valid:', this.bankmasterform.valid);
+// console.log('Form errors:', this.bankmasterform.errors);
+// console.log('pUpiid Value:', this.bankmasterform.value.pUpiid);
 
-  if (this.bankmasterform.invalid) {
-    this._commonService.showWarningMessage("Please fill all required fields");
+// //valid
+// // for (const controlName in this.bankmasterform.controls) {
+// //   const control = this.bankmasterform.get(controlName);
+// //   if (control && control.errors) {
+// //     console.log(`Error in ${controlName}:`, control.errors);
+// //   }
+// // }
+// // //invlaid
+
+
+// // for (const controlName in this.bankmasterform.controls) {
+// //   const control = this.bankmasterform.get(controlName);
+// //   console.log(`${controlName} valid:`, control?.valid);
+// // }
+//   // if (this.bankmasterform.valid) {
+//   //   this._commonService.showWarningMessage("Please fill all required fields");
+//   //   return;
+//   // }
+
+//   debugger;
+
+// if (this._addressdetails) {
+//     this.AdresssDetailsForm = this._addressdetails.addressForm.value;
+//   } else {
+//     console.error("Address component not found");
+//     return;
+//   }
+//     // this.AdresssDetailsForm = this.addressdetails.addressForm.value;
+
+
+//     this.upivalidation('')
+//     // let c = this._commonService.removeCommasForEntredNumber(this.bankmasterform.controls['pOpeningBalance'].value)
+
+//     // if (c > 0) {
+//     //   this.validateopeningbalancetype('GET')
+//     // }
+
+//     const openingBalanceStr = this.bankmasterform.get('pOpeningBalance')?.value || '';
+//     let c = Number(this._commonService.removeCommasForEntredNumber(openingBalanceStr));
+
+//     // Now you can safely compare
+//     if (c > 0) {
+//       this.validateopeningbalancetype('GET');
+//     }
+
+
+
+
+
+
+
+//     else {
+//       this.validateopeningbalancetype('SET')
+//     }
+
+//     let i = this.validatedatepicker()
+//     if (this.debitcarddetails == true && i == true) {
+//       this.validationfordebitcarddetails = true;
+//     }
+//     else {
+//       this.validationfordebitcarddetails = false;
+//     }
+//     let upistatus = true;
+//     if (this.bankmasterform.controls['pIsupiapplicable'].value == true && this.gridData.length == 0) {
+//       this.addtogrid();
+//       upistatus = false;
+//     }
+
+//     let isValid = true;
+//     if (this.checkValidations(this.bankmasterform, isValid) && upistatus) {
+//       let savetype = this.buttontype == 'edit' ? 'Update' : 'Save';
+//       let bankcount = 0
+//       if (this.banksetup) {
+//         if (this.bankmasterform.controls['isprimary'].value) {
+//           bankcount++
+//         }
+//         if (this.bankmasterform.controls['isforemanpaymentbank'].value) {
+//           bankcount++
+//         }
+//         if (this.bankmasterform.controls['isformanbank'].value) {
+//           bankcount++
+//         }
+//         if (this.bankmasterform.controls['isintrestpaymentbank'].value) {
+//           bankcount++
+//         }
+//         if (bankcount == 1) {
+//           if (confirm('Do You Want to ' + savetype + ' ?')) {
+//             // if (this.validationfordebitcarddetails == true) {
+//             //   let Chargescontrolbankdebitcard = <FormArray>this.bankmasterform.controls['lstBankdebitcarddtlsDTO'];
+//             //   Chargescontrolbankdebitcard.push(this.Bankdebitcarddtls());
+//             //   this.BlurEventAllControll(this.bankmasterform);
+
+
+//             //   this.bankmasterform['controls']['lstBankdebitcarddtlsDTO']['controls'][0].patchValue(this.bankmasterform.value);
+
+
+//             //           // this.bankmasterform.get('lstBankdebitcarddtlsDTO')?.value[0].patchValue(this.bankmasterform.value);
+
+//             //   // console.log(this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid)
+//             //   if (this.buttontype == "edit") {
+//             //     if (this.datatobind.lstBankdebitcarddtlsDTO.length > 0) {
+//             //       this.bankmasterform.value["lstBankdebitcarddtlsDTO"][0]["pRecordid"] = this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid
+//             //     }
+//             //   }
+
+//             // }
+
+
+//             if (this.validationfordebitcarddetails) {
+//               const debitCardsArray = this.bankmasterform.get('lstBankdebitcarddtlsDTO') as FormArray;
+
+//               debitCardsArray.push(this.Bankdebitcarddtls());
+
+//               this.BlurEventAllControll(this.bankmasterform);
+
+//               if (debitCardsArray.length > 0) {
+//                 const firstCardGroup = debitCardsArray.at(0) as FormGroup;
+
+//                 firstCardGroup.patchValue(this.bankmasterform.value);
+//               }
+
+//               if (this.buttontype === "edit") {
+//                 if (this.datatobind.lstBankdebitcarddtlsDTO?.length > 0) {
+//                   const firstCardValue = debitCardsArray.at(0).value;
+//                   firstCardValue.pRecordid = this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid;
+
+//                   debitCardsArray.at(0).patchValue(firstCardValue);
+//                 }
+//               }
+//             }
+
+//             // console.log(this.AdresssDetailsForm);
+//             if (this.AdresssDetailsForm['paddress1'] != "" || this.AdresssDetailsForm['paddress2'] != "" || this.AdresssDetailsForm['pcity'] != "" ||
+//               this.AdresssDetailsForm['pState'] != "" || this.AdresssDetailsForm['pDistrict'] != "" || this.AdresssDetailsForm['pCountry'] != ""
+//               || this.AdresssDetailsForm['Pincode'] != "") {
+//               debugger;
+//               let Chargescontrolbankadress = <FormArray>this.bankmasterform.controls['lstBankInformationAddressDTO'];
+//               Chargescontrolbankadress.push(this.BankInformationAddress());
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pAddress1"] = this.AdresssDetailsForm['paddress1']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pAddress2"] = this.AdresssDetailsForm['paddress2']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pCity"] = this.AdresssDetailsForm['pcity']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pState"] = this.AdresssDetailsForm['pState']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pDistrict"] = this.AdresssDetailsForm['pDistrict']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pdistrictid"] = this.AdresssDetailsForm['pDistrictId']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pCountry"] = this.AdresssDetailsForm['pCountry']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pPincode"] = this.AdresssDetailsForm['Pincode']
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pStatusname"] = this.bankmasterform.controls['pStatusname'].value
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["ptypeofoperation"] = this.bankmasterform.controls['ptypeofoperation'].value
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pCreatedby"] = this.bankmasterform.controls['pCreatedby'].value;
+//               this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pRecordid"] = this.AdresssDetailsForm['pRecordid']
+//               console.log(this.bankmasterform.value["lstBankInformationAddressDTO"][0])
+//             }
+
+//             if (this.bankmasterform.controls['pOverdraft'].value == "") {
+//               this.bankmasterform.controls['pOverdraft'].setValue(0);
+//             }
+//             else {
+
+//               let b = this._commonService.removeCommasForEntredNumber(this.bankmasterform.controls['pOverdraft'].value)
+
+//               this.bankmasterform.controls['pOverdraft'].setValue(b)
+
+//             }
+//             if (this.bankmasterform.controls['pOpeningBalance'].value == "") {
+//               this.bankmasterform.controls['pOpeningBalance'].setValue(0);
+//             }
+//             else {
+//               let a = this._commonService.removeCommasForEntredNumber(this.bankmasterform.controls['pOpeningBalance'].value)
+//               this.bankmasterform.controls['pOpeningBalance'].setValue(a)
+
+//             }
+
+//             //this.bankmasterform.controls.pBankdate.setValue(this._commonService.getFormatDate(this.bankmasterform.controls.pBankdate.value))
+
+//             this.bankmasterform['controls']['lstBankUPI'].setValue(this.gridData);
+//             //console.log(this.gridData);
+//             // this.bankmasterform.controls['pBankname'].setValue(this.captilizebank)
+//             //this.bankname=(this.banksList.filter((ele)=>{return ele.pBankId==this.bankmasterform.controls['pBankname'].value}))[0]["pBankName"];
+//             console.log('bank list: ',this.banksList);
+            
+//             let bankid: object = (this.banksList.filter((ele: any) => { 
+//               return ele.bankName == this.bankmasterform.controls['bankName'].value }))[0]['pBankId'];
+//             this.bankmasterform.controls['pBankID'].setValue(bankid);
+
+//             if (this.buttontype == "edit") {
+
+//               this.bankmasterform.controls['pRecordid'].setValue(this.datatobind[0].pRecordid)
+
+
+//             }
+
+//             let bankmasterdata = this.bankmasterform.value;
+//             bankmasterdata.pValidfrom = this._commonService.getFormatDateNormal(bankmasterdata.pValidfrom);
+//             bankmasterdata.pValidto = this._commonService.getFormatDateNormal(bankmasterdata.pValidto);
+
+//             bankmasterdata.pBankdate = this._commonService.getFormatDateNormal(bankmasterdata.pBankdate);
+//             bankmasterdata.lstBankdebitcarddtlsDTO.filter((x: any) => {
+//               x.pValidfrom = this._commonService.getFormatDateNormal(x.pValidfrom);
+//               x.pValidto = this._commonService.getFormatDateNormal(x.pValidto);
+//             });
+//             //console.log(bankmasterdata.lstBankdebitcarddtlsDTO);
+
+
+//             // let data = JSON.stringify(this.bankmasterform.value);
+//             let data = JSON.stringify(bankmasterdata);
+//             console.log(data)
+//             this._accountingmasterserive.GetCheckDuplicateDebitCardNo(data).subscribe(res => {
+
+//               debugger;
+//               if (res[0] == "TRUE") {
+//                 this.disablesavebutton = true;
+//                 this.buttonname = 'Processing';
+//                 console.log('bank',data)
+//                 let temp = []
+//                 let count = 0
+//                 this._accountingmasterserive.getBankConfigurationdetails(this._commonService.getschemaname()).subscribe(json => {
+//                   console.log(json)
+//                   temp = json
+
+//                   temp.forEach((element: any) => {
+//                     if (this.bankmasterform.controls['isprimary'].value) {
+//                       if (element.isprimary) {
+//                         count++
+//                       }
+//                     }
+//                     if (this.bankmasterform.controls['isforemanpaymentbank'].value) {
+//                       if (element.isformanpaymentbank) {
+//                         count++
+//                       }
+//                     }
+//                     if (this.bankmasterform.controls['isformanbank'].value) {
+//                       if (element.isformanbank) {
+//                         count++
+//                       }
+//                     }
+//                     if (this.bankmasterform.controls['isintrestpaymentbank'].value) {
+//                       if (element.isinterestpaymentbank) {
+//                         count++
+//                       }
+//                     }
+//                   });
+//                   if (count == 0) {
+//                     this._accountingmasterserive.savebankinformation(data).subscribe(saveddata => {
+
+//                       //console.log(saveddata)
+//                       if (saveddata) {
+//                         this.disablesavebutton = false;
+//                         //this.router.navigateByUrl("/BankView")
+//                         this.router.navigate(['/configuration/BankViewComponent']);
+
+//                         this.bankmasterform.reset();
+//                         this.addressdetails.clear();
+//                         this.gridData = []
+//                         this.bankupihideandshow = false;
+//                         this.debitcardhideandshow = false;
+//                         this.bankmasterform['controls']['pBankdate'].setValue(this.date);
+//                         if (this.buttontype == "edit") {
+//                           this._commonService.showSuccessMsg("Updated Successfully");
+//                           this.clear();
+//                         }
+//                         else {
+//                           this._commonService.showSuccessMessage();
+//                           this.clear();
+//                         }
+
+//                       } else {
+//                         this.disablesavebutton = false;
+//                         this.buttonname = 'Save';
+//                       }
+//                     },
+//                       (error) => {
+//                         this._commonService.showErrorMessage(error);
+//                         this.disablesavebutton = false;
+//                       })
+//                   } else {
+//                     this._commonService.showWarningMessage('Selected Bank Setup is Already exist ,Select Another Bank Setup')
+//                     this.disablesavebutton = false;
+//                     this.buttonname = 'Save';
+//                   }
+//                 })
+//               }
+//               else {
+//                 debugger;
+//                 res.forEach((element: any) => {
+//                   if (element == "B") {
+//                     this._commonService.showWarningMessage("Bank Already Exist");
+//                     //this._commonService.showWarningMessage("Bank Already Exist");
+//                   }
+//                   if (element == "D") {
+//                     this._commonService.showWarningMessage("Debit Card Already Exist");
+//                     // this._commonService.showWarningMessage("Debit Card Already Exist");
+//                   }
+//                   if (element == "U") {
+//                     this._commonService.showWarningMessage("UPI Id Already Exist");
+
+//                     // this._commonService.showWarningMessage("UPI Id Already Exist");
+//                   }
+//                 });
+//                 // if (res[0] == "B") {
+//                 //     //this.toaster.info("Bank Already Exist")
+//                 //     this._commonService.showInfoMessage("Bank Already Exist");
+//                 //   }
+//                 //   if (res[0] == "D") {
+//                 //     //this.toaster.info("Debit Card Already Exist")
+//                 //     this._commonService.showInfoMessage("Debit Card Already Exist");
+//                 //   }
+//                 //   if (res[1] == "U") {
+//                 //    // this.toaster.info("UPI Id Already Exist")
+//                 //     this._commonService.showInfoMessage("UPI Id Already Exist");
+//                 //   }
+//               }
+//               // else if (res[0] == "Bank Already Exist") {
+//               //   this.toaster.info("Bank Already Exist")
+//               // }
+//               // else if (res[0] == "Debit Card Already Exist") {
+//               //   this.toaster.info("Debit Card Already Exist")
+//               // }
+//               // else if (res[0] == "UPI Id Already Exist") {
+//               //   this.toaster.info("UPI Id Already Exist")
+//               // }
+//             }, (error) => {
+//               this._commonService.showErrorMessage(error);
+//               this.disablesavebutton = false;
+
+//             })
+//             //
+
+//             let Chargescontrolbankdebitcard1 = <FormArray>this.bankmasterform.controls['lstBankdebitcarddtlsDTO'];
+//             for (let i = Chargescontrolbankdebitcard1.length - 1; i >= 0; i--) {
+//               Chargescontrolbankdebitcard1.removeAt(i)
+//             }
+//             let Chargescontrolbankadress1 = <FormArray>this.bankmasterform.controls['lstBankInformationAddressDTO'];
+//             for (let i = Chargescontrolbankadress1.length - 1; i >= 0; i--) {
+//               Chargescontrolbankadress1.removeAt(i)
+//             }
+//           }
+//         } else {
+//           this._commonService.showWarningMessage('Select only one Bank ')
+//         }
+//       } else {
+//         this._commonService.showWarningMessage('Select Bank Setup')
+//       }
+//     }
+
+
+//   }
+
+save() {
+  debugger
+  this.bankmasterform.markAllAsTouched();
+  // if (!this.bankmasterform.valid) return;
+
+  // 1. Get Address from Child Component
+  if (this._addressdetails) {
+    this.AdresssDetailsForm = this._addressdetails.addressForm.value;
+  }
+
+  // 2. Logic Check: Only one Bank Setup allowed
+  const f = this.bankmasterform.value;
+  const bankSetupCount = [f.isprimary, f.isforemanpaymentbank, f.isformanbank, f.isintrestpaymentbank]
+                         .filter(v => v === true).length;
+
+  if (bankSetupCount !== 1) {
+    this._commonService.showWarningMessage('Select exactly one Bank Setup');
     return;
   }
 
-  debugger;
+  if (!confirm(`Do You Want to ${this.buttontype == 'edit' ? 'Update' : 'Save'}?`)) return;
+
+  // 3. Mapping directly to Swagger Schema
+  const selectedBank = this.banksList.find((ele: any) => ele.bankName === f.bankName);
+  
+  const payload = {
+    ...f,
+    pRecordid: String(f.pRecordid || "0"),
+    pBankID: String(selectedBank?.bankId || "0"),
+    pBankname: String(f.bankName || ""),
+    pOpeningBalance: String(this._commonService.removeCommasForEntredNumber(f.pOpeningBalance) || "0"),
+    pOverdraft: String(this._commonService.removeCommasForEntredNumber(f.pOverdraft) || "0"),
     
-    this.AdresssDetailsForm = this.addressdetails.addressForm.value;
+    // Dates must be Strings
+    pBankdate: this._commonService.getFormatDateNormal(f.pBankdate),
+    
+    // Booleans must be Strings for your Swagger
+    isprimary: String(f.isprimary),
+    isformanbank: String(f.isformanbank),
+    isforemanpaymentbank: String(f.isforemanpaymentbank),
+    isintrestpaymentbank: String(f.isintrestpaymentbank),
 
+    // DTO Arrays
+    lstBankInformationAddressDTO: [{
+      pRecordid: Number(this.AdresssDetailsForm?.pRecordid || 0),
+      pAddressType: "Bank",
+      pBankId: Number(selectedBank?.bankId || 0)
+    }],
+    lstBankdebitcarddtlsDTO: f.pIsdebitcardapplicable ? [{
+      pRecordid: String(this.datatobind?.[0]?.lstBankdebitcarddtlsDTO?.[0]?.pRecordid || "0"),
+      pCardNo: String(f.pCardNo || ""),
+      pCardName: String(f.pCardName || ""),
+      pValidfrom: this._commonService.getFormatDateNormal(f.pValidfrom),
+      pValidto: this._commonService.getFormatDateNormal(f.pValidto),
+      pBankId: String(selectedBank?.bankId || "0")
+    }] : [],
+    lstBankUPI: this.gridData.map((upi: any) => ({
+      pRecordid: String(upi.pRecordid || "0"),
+      pUpiname: String(upi.pUpiname),
+      pUpiid: String(upi.pUpiid),
+      pBankconfigurationId: String(f.pRecordid || "0")
+    }))
+  };
 
-    this.upivalidation('')
-    // let c = this._commonService.removeCommasForEntredNumber(this.bankmasterform.controls['pOpeningBalance'].value)
+  // 4. API Execution
+  this.disablesavebutton = true;
+  this.buttonname = 'Processing';
 
-    // if (c > 0) {
-    //   this.validateopeningbalancetype('GET')
-    // }
+  const finalData = JSON.stringify(payload);
+  console.log('paload dta',finalData);
+  let p1=this._commonService.getCompanyCode();
+  let p2=this._commonService.getBranchCode();
+  let p3=this._commonService.getschemaname()
 
-    const openingBalanceStr = this.bankmasterform.get('pOpeningBalance')?.value || '';
-    let c = Number(this._commonService.removeCommasForEntredNumber(openingBalanceStr));
-
-    // Now you can safely compare
-    if (c > 0) {
-      this.validateopeningbalancetype('GET');
-    }
-
-
-
-
-
-
-
-    else {
-      this.validateopeningbalancetype('SET')
-    }
-
-    let i = this.validatedatepicker()
-    if (this.debitcarddetails == true && i == true) {
-      this.validationfordebitcarddetails = true;
-    }
-    else {
-      this.validationfordebitcarddetails = false;
-    }
-    let upistatus = true;
-    if (this.bankmasterform.controls['pIsupiapplicable'].value == true && this.gridData.length == 0) {
-      this.addtogrid();
-      upistatus = false;
-    }
-
-    let isValid = true;
-    if (this.checkValidations(this.bankmasterform, isValid) && upistatus) {
-      let savetype = this.buttontype == 'edit' ? 'Update' : 'Save';
-      let bankcount = 0
-      if (this.banksetup) {
-        if (this.bankmasterform.controls['isprimary'].value) {
-          bankcount++
+  this._accountingmasterserive.GetCheckDuplicateDebitCardNo(finalData).subscribe(res => {
+    if (res[0] === "TRUE") {
+      this._accountingmasterserive.savebankinformation(finalData).subscribe(saved => {
+        if (saved) {
+          this._commonService.showSuccessMsg("Success!");
+          this.router.navigate(['/configuration/BankViewComponent']);
         }
-        if (this.bankmasterform.controls['isforemanpaymentbank'].value) {
-          bankcount++
-        }
-        if (this.bankmasterform.controls['isformanbank'].value) {
-          bankcount++
-        }
-        if (this.bankmasterform.controls['isintrestpaymentbank'].value) {
-          bankcount++
-        }
-        if (bankcount == 1) {
-          if (confirm('Do You Want to ' + savetype + ' ?')) {
-            // if (this.validationfordebitcarddetails == true) {
-            //   let Chargescontrolbankdebitcard = <FormArray>this.bankmasterform.controls['lstBankdebitcarddtlsDTO'];
-            //   Chargescontrolbankdebitcard.push(this.Bankdebitcarddtls());
-            //   this.BlurEventAllControll(this.bankmasterform);
-
-
-            //   this.bankmasterform['controls']['lstBankdebitcarddtlsDTO']['controls'][0].patchValue(this.bankmasterform.value);
-
-
-            //           // this.bankmasterform.get('lstBankdebitcarddtlsDTO')?.value[0].patchValue(this.bankmasterform.value);
-
-            //   // console.log(this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid)
-            //   if (this.buttontype == "edit") {
-            //     if (this.datatobind.lstBankdebitcarddtlsDTO.length > 0) {
-            //       this.bankmasterform.value["lstBankdebitcarddtlsDTO"][0]["pRecordid"] = this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid
-            //     }
-            //   }
-
-            // }
-
-
-            if (this.validationfordebitcarddetails) {
-              const debitCardsArray = this.bankmasterform.get('lstBankdebitcarddtlsDTO') as FormArray;
-
-              debitCardsArray.push(this.Bankdebitcarddtls());
-
-              this.BlurEventAllControll(this.bankmasterform);
-
-              if (debitCardsArray.length > 0) {
-                const firstCardGroup = debitCardsArray.at(0) as FormGroup;
-
-                firstCardGroup.patchValue(this.bankmasterform.value);
-              }
-
-              if (this.buttontype === "edit") {
-                if (this.datatobind.lstBankdebitcarddtlsDTO?.length > 0) {
-                  const firstCardValue = debitCardsArray.at(0).value;
-                  firstCardValue.pRecordid = this.datatobind.lstBankdebitcarddtlsDTO[0].pRecordid;
-
-                  debitCardsArray.at(0).patchValue(firstCardValue);
-                }
-              }
-            }
-
-            // console.log(this.AdresssDetailsForm);
-            if (this.AdresssDetailsForm['paddress1'] != "" || this.AdresssDetailsForm['paddress2'] != "" || this.AdresssDetailsForm['pcity'] != "" ||
-              this.AdresssDetailsForm['pState'] != "" || this.AdresssDetailsForm['pDistrict'] != "" || this.AdresssDetailsForm['pCountry'] != ""
-              || this.AdresssDetailsForm['Pincode'] != "") {
-              debugger;
-              let Chargescontrolbankadress = <FormArray>this.bankmasterform.controls['lstBankInformationAddressDTO'];
-              Chargescontrolbankadress.push(this.BankInformationAddress());
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pAddress1"] = this.AdresssDetailsForm['paddress1']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pAddress2"] = this.AdresssDetailsForm['paddress2']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pCity"] = this.AdresssDetailsForm['pcity']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pState"] = this.AdresssDetailsForm['pState']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pDistrict"] = this.AdresssDetailsForm['pDistrict']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pdistrictid"] = this.AdresssDetailsForm['pDistrictId']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pCountry"] = this.AdresssDetailsForm['pCountry']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pPincode"] = this.AdresssDetailsForm['Pincode']
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pStatusname"] = this.bankmasterform.controls['pStatusname'].value
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["ptypeofoperation"] = this.bankmasterform.controls['ptypeofoperation'].value
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pCreatedby"] = this.bankmasterform.controls['pCreatedby'].value;
-              this.bankmasterform.value["lstBankInformationAddressDTO"][0]["pRecordid"] = this.AdresssDetailsForm['pRecordid']
-              console.log(this.bankmasterform.value["lstBankInformationAddressDTO"][0])
-            }
-
-            if (this.bankmasterform.controls['pOverdraft'].value == "") {
-              this.bankmasterform.controls['pOverdraft'].setValue(0);
-            }
-            else {
-
-              let b = this._commonService.removeCommasForEntredNumber(this.bankmasterform.controls['pOverdraft'].value)
-
-              this.bankmasterform.controls['pOverdraft'].setValue(b)
-
-            }
-            if (this.bankmasterform.controls['pOpeningBalance'].value == "") {
-              this.bankmasterform.controls['pOpeningBalance'].setValue(0);
-            }
-            else {
-              let a = this._commonService.removeCommasForEntredNumber(this.bankmasterform.controls['pOpeningBalance'].value)
-              this.bankmasterform.controls['pOpeningBalance'].setValue(a)
-
-            }
-
-            //this.bankmasterform.controls.pBankdate.setValue(this._commonService.getFormatDate(this.bankmasterform.controls.pBankdate.value))
-
-            this.bankmasterform['controls']['lstBankUPI'].setValue(this.gridData);
-            //console.log(this.gridData);
-            // this.bankmasterform.controls['pBankname'].setValue(this.captilizebank)
-            //this.bankname=(this.banksList.filter((ele)=>{return ele.pBankId==this.bankmasterform.controls['pBankname'].value}))[0]["pBankName"];
-            let bankid: object = (this.banksList.filter((ele: any) => { return ele.pBankName == this.bankmasterform.controls['pBankname'].value }))[0]['pBankId'];
-            this.bankmasterform.controls['pBankID'].setValue(bankid);
-
-            if (this.buttontype == "edit") {
-
-              this.bankmasterform.controls['pRecordid'].setValue(this.datatobind.pRecordid)
-
-
-            }
-
-            let bankmasterdata = this.bankmasterform.value;
-            bankmasterdata.pValidfrom = this._commonService.getFormatDateNormal(bankmasterdata.pValidfrom);
-            bankmasterdata.pValidto = this._commonService.getFormatDateNormal(bankmasterdata.pValidto);
-
-            bankmasterdata.pBankdate = this._commonService.getFormatDateNormal(bankmasterdata.pBankdate);
-            bankmasterdata.lstBankdebitcarddtlsDTO.filter((x: any) => {
-              x.pValidfrom = this._commonService.getFormatDateNormal(x.pValidfrom);
-              x.pValidto = this._commonService.getFormatDateNormal(x.pValidto);
-            });
-            //console.log(bankmasterdata.lstBankdebitcarddtlsDTO);
-
-
-            // let data = JSON.stringify(this.bankmasterform.value);
-            let data = JSON.stringify(bankmasterdata);
-            console.log(data)
-            this._accountingmasterserive.GetCheckDuplicateDebitCardNo(data).subscribe(res => {
-
-              debugger;
-              if (res[0] == "TRUE") {
-                this.disablesavebutton = true;
-                this.buttonname = 'Processing';
-                console.log(data)
-                let temp = []
-                let count = 0
-                this._accountingmasterserive.getBankConfigurationdetails(this._commonService.getschemaname()).subscribe(json => {
-                  console.log(json)
-                  temp = json
-
-                  temp.forEach((element: any) => {
-                    if (this.bankmasterform.controls['isprimary'].value) {
-                      if (element.isprimary) {
-                        count++
-                      }
-                    }
-                    if (this.bankmasterform.controls['isforemanpaymentbank'].value) {
-                      if (element.isformanpaymentbank) {
-                        count++
-                      }
-                    }
-                    if (this.bankmasterform.controls['isformanbank'].value) {
-                      if (element.isformanbank) {
-                        count++
-                      }
-                    }
-                    if (this.bankmasterform.controls['isintrestpaymentbank'].value) {
-                      if (element.isinterestpaymentbank) {
-                        count++
-                      }
-                    }
-                  });
-                  if (count == 0) {
-                    this._accountingmasterserive.savebankinformation(data).subscribe(saveddata => {
-
-                      //console.log(saveddata)
-                      if (saveddata) {
-                        this.disablesavebutton = false;
-                        //this.router.navigateByUrl("/BankView")
-                        this.router.navigate(['/configuration/BankViewComponent']);
-
-                        this.bankmasterform.reset();
-                        this.addressdetails.clear();
-                        this.gridData = []
-                        this.bankupihideandshow = false;
-                        this.debitcardhideandshow = false;
-                        this.bankmasterform['controls']['pBankdate'].setValue(this.date);
-                        if (this.buttontype == "edit") {
-                          this._commonService.showSuccessMsg("Updated Successfully");
-                          this.clear();
-                        }
-                        else {
-                          this._commonService.showSuccessMessage();
-                          this.clear();
-                        }
-
-                      } else {
-                        this.disablesavebutton = false;
-                        this.buttonname = 'Save';
-                      }
-                    },
-                      (error) => {
-                        this._commonService.showErrorMessage(error);
-                        this.disablesavebutton = false;
-                      })
-                  } else {
-                    this._commonService.showWarningMessage('Selected Bank Setup is Already exist ,Select Another Bank Setup')
-                    this.disablesavebutton = false;
-                    this.buttonname = 'Save';
-                  }
-                })
-              }
-              else {
-                debugger;
-                res.forEach((element: any) => {
-                  if (element == "B") {
-                    this._commonService.showWarningMessage("Bank Already Exist");
-                    //this._commonService.showWarningMessage("Bank Already Exist");
-                  }
-                  if (element == "D") {
-                    this._commonService.showWarningMessage("Debit Card Already Exist");
-                    // this._commonService.showWarningMessage("Debit Card Already Exist");
-                  }
-                  if (element == "U") {
-                    this._commonService.showWarningMessage("UPI Id Already Exist");
-
-                    // this._commonService.showWarningMessage("UPI Id Already Exist");
-                  }
-                });
-                // if (res[0] == "B") {
-                //     //this.toaster.info("Bank Already Exist")
-                //     this._commonService.showInfoMessage("Bank Already Exist");
-                //   }
-                //   if (res[0] == "D") {
-                //     //this.toaster.info("Debit Card Already Exist")
-                //     this._commonService.showInfoMessage("Debit Card Already Exist");
-                //   }
-                //   if (res[1] == "U") {
-                //    // this.toaster.info("UPI Id Already Exist")
-                //     this._commonService.showInfoMessage("UPI Id Already Exist");
-                //   }
-              }
-              // else if (res[0] == "Bank Already Exist") {
-              //   this.toaster.info("Bank Already Exist")
-              // }
-              // else if (res[0] == "Debit Card Already Exist") {
-              //   this.toaster.info("Debit Card Already Exist")
-              // }
-              // else if (res[0] == "UPI Id Already Exist") {
-              //   this.toaster.info("UPI Id Already Exist")
-              // }
-            }, (error) => {
-              this._commonService.showErrorMessage(error);
-              this.disablesavebutton = false;
-
-            })
-            //
-
-            let Chargescontrolbankdebitcard1 = <FormArray>this.bankmasterform.controls['lstBankdebitcarddtlsDTO'];
-            for (let i = Chargescontrolbankdebitcard1.length - 1; i >= 0; i--) {
-              Chargescontrolbankdebitcard1.removeAt(i)
-            }
-            let Chargescontrolbankadress1 = <FormArray>this.bankmasterform.controls['lstBankInformationAddressDTO'];
-            for (let i = Chargescontrolbankadress1.length - 1; i >= 0; i--) {
-              Chargescontrolbankadress1.removeAt(i)
-            }
-          }
-        } else {
-          this._commonService.showWarningMessage('Select only one Bank ')
-        }
-      } else {
-        this._commonService.showWarningMessage('Select Bank Setup')
-      }
+      }, err => this.handleError(err));
+    } else {
+      this.handleDuplicates(res);
     }
+  }, err => this.handleError(err));
+}
+handleDuplicates(res: any[]) {
+  if (!res || res[0] === "TRUE") return;
 
-
-  }
-
-
+  res.forEach((code: string) => {
+    switch (code) {
+      case "B":
+        this._commonService.showWarningMessage("Bank Already Exists");
+        break;
+      case "D":
+        this._commonService.showWarningMessage("Debit Card Already Exists");
+        break;
+      case "U":
+        this._commonService.showWarningMessage("UPI Id Already Exists");
+        break;
+      default:
+        console.warn("Unknown validation code:", code);
+    }
+  });
+  
+  this.disablesavebutton = false;
+  this.buttonname = 'Save';
+}
+handleError(err: any) {
+  this._commonService.showErrorMessage(err);
+  this.disablesavebutton = false;
+  this.buttonname = 'Save';
+}
 
   toggleBranch() {
     this.isBranchOpen = !this.isBranchOpen;

@@ -1712,6 +1712,7 @@ validateaddPaymentDetails(currentRow: any): boolean {
 
 
 addPaymentDetails(): void {
+  debugger
   this.disableaddbutton = true;
   this.addbutton = "Processing";
 
@@ -1745,7 +1746,8 @@ if (control.invalid) {
     ppartyname: control.get('ppartyname')?.value,
     pledgername: control.get('pledgername')?.value,
     psubledgerid: selectedSubledger?.subledgerid ?? subledgerid,
-    psubledgername: selectedSubledger?.subledgername || null,
+    psubledgername: selectedSubledger?.subledgername?? control.get('pledgername')?.value, 
+    // psubledgername: selectedSubledger?.subledgername || null,
     // ?? control.get('psubledgername')?.value
     ptotalamount: parseFloat(this._commonService.removeCommasInAmount(control.get('ptotalamount')?.value ?? '0')),
     pamount: parseFloat(this._commonService.removeCommasInAmount(control.get('pamount')?.value ?? '0')),

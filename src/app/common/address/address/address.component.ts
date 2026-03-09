@@ -421,7 +421,7 @@ export class AddressComponent implements OnInit {
           this.state_id = res.tbl_mst_state_id
 
           console.log('SUCCESS:', res);
-          alert('hello');
+        
         },
         error: (err: any) => {
           console.log('ERROR:', err);
@@ -452,7 +452,7 @@ export class AddressComponent implements OnInit {
           // this.country_id = res.tbl_mst_country_id
 
           console.log('SUCCESS:', res);
-          alert('hello');
+    
         },
         error: (err: any) => {
           console.log('ERROR:', err);

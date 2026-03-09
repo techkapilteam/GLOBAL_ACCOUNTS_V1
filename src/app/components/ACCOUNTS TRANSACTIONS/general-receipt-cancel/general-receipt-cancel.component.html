@@ -1,124 +1,192 @@
 <div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>General Receipt Cancel</h2>
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
+
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">General Receipt Cancel</h2>
     </div>
+
     <div class="screen-content">
       <form [formGroup]="GeneralReceiptCancelForm">
-        <div class="row">
+
+        <!-- Filter Panel -->
+        <div class="row align-items-end mb-4"
+          style="border: 2px solid #e1e9fb; border-radius: 8px; padding: 15px; margin: 0 0 16px 0; background-color: #f8faff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+
+          <!-- Receipt No -->
           <div class="col-md-4">
-            <label class="required-field">Receipt No.</label>
-
-            <ng-select [items]="receiptdata" bindLabel="payment_number" bindValue="tbl_trans_pettycash_voucher_id"
-              formControlName="receiptid" [searchable]="true" [clearable]="true" [ngClass]="{
-        'is-invalid':
-          GeneralReceiptCancelForm.get('receiptid')?.invalid &&
-          GeneralReceiptCancelForm.get('receiptid')?.touched
-      }">
-            </ng-select>
-
-            <div class="invalid-feedback" *ngIf="
-        GeneralReceiptCancelForm.get('receiptid')?.invalid &&
-        GeneralReceiptCancelForm.get('receiptid')?.touched
-      ">
-              Receipt No is required
-            </div>
-          </div>
-
-          <div class="col-md-4 mt-4">
-            <button type="button" class="btn btn-primary" (click)="Show()"
-              [disabled]="GeneralReceiptCancelForm.get('receiptid')?.invalid">
-              Show
-            </button>
-          </div>
-
-          <div class="col-md-4">
-            <label class="required-field">Date</label>
-            <input type="text" class="form-control" formControlName="ppaymentdate" bsDatepicker [bsConfig]="dpConfig"
-              readonly [ngClass]="{
-        'is-invalid':
-          GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
-          GeneralReceiptCancelForm.get('ppaymentdate')?.touched
-      }">
-
-            <div class="invalid-feedback" *ngIf="
-        GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
-        GeneralReceiptCancelForm.get('ppaymentdate')?.touched
-      ">
-              Date is required
-            </div>
-          </div>
-        </div>
-        <div *ngIf="show" class="mt-3">
-          <div class="row">
-            <div class="col-md-6">
-              Received From: <b>{{ lblcontact }}</b>
-            </div>
-            <div class="col-md-6 text-end">
-              Receipt Date:
-              <b>{{ lblreceiptdate | date:'dd/MMM/yyyy' }}</b>
-            </div>
-          </div>
-          <p-table class="mt-3" [value]="generealreceiptdata" [paginator]="true" [rows]="pageCriteria.pageSize"
-            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
-            (onPage)="onPrimePageChange($event)">
-            <ng-template pTemplate="header">
-              <tr>
-                <th>S.No</th>
-                <th>Particulars</th>
-                <th class="text-end">Amount</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-row let-i="rowIndex">
-              <tr>
-                <td>{{ i + 1 }}</td>
-                <td>{{ row.parentaccountname }}</td>
-                <td class="text-end">
-                  {{ currencysymbol }}
-                  {{ row.totalreceivedamount | number:'1.2-2' }}
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
-          <div class="row mt-3">
-            <div class="col-md-6">
-              <label class="required-field">Reason</label>
-              <textarea class="form-control" formControlName="cancellationreason" [ngClass]="{
+            <div class="form-group mb-0">
+              <label style="font-weight:500; color:#495057; font-size:13px;">
+                Receipt No. <span style="color:red;">*</span>
+              </label>
+              <ng-select [items]="receiptdata" bindLabel="payment_number" bindValue="tbl_trans_pettycash_voucher_id"
+                formControlName="receiptid" [searchable]="true" [clearable]="true" [ngClass]="{
                   'is-invalid':
-                    GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
-                    GeneralReceiptCancelForm.get('cancellationreason')?.touched
-                }">
-              </textarea>
-              <div class="invalid-feedback" *ngIf="GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
-                          GeneralReceiptCancelForm.get('cancellationreason')?.touched">
-                Reason is required
-              </div>
-            </div>
-            <div class="col-md-6">
-              <label class="required-field">Authorised By</label>
-              <ng-select [items]="(authorizedbylist | async) ?? []" bindLabel="subintroducedname"
-                bindValue="subintroducedid" formControlName="autorizedcontactid" [ngClass]="{
-                  'is-invalid':
-                    GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
-                    GeneralReceiptCancelForm.get('autorizedcontactid')?.touched
+                    GeneralReceiptCancelForm.get('receiptid')?.invalid &&
+                    GeneralReceiptCancelForm.get('receiptid')?.touched
                 }">
               </ng-select>
-              <div class="invalid-feedback" *ngIf="GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
-                          GeneralReceiptCancelForm.get('autorizedcontactid')?.touched">
-                Authorised By is required
+              <div class="invalid-feedback"
+                *ngIf="GeneralReceiptCancelForm.get('receiptid')?.invalid && GeneralReceiptCancelForm.get('receiptid')?.touched">
+                Receipt No is required
               </div>
             </div>
           </div>
 
-          <!-- Actions -->
-          <div class="text-end mt-3">
-            <button type="button" class="btn btn-secondary me-2" (click)="Cancel()">
+          <!-- Show Button -->
+          <div class="col-md-2">
+            <div class="form-group mb-0">
+              <button type="button" class="btn btn-primary w-100" (click)="Show()"
+                [disabled]="GeneralReceiptCancelForm.get('receiptid')?.invalid"
+                style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; height:36px;">
+                Show
+              </button>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="col-md-4">
+            <div class="form-group mb-0">
+              <label style="font-weight:500; color:#495057; font-size:13px;">
+                Date <span style="color:red;">*</span>
+              </label>
+              <input type="text" class="form-control" formControlName="ppaymentdate" bsDatepicker [bsConfig]="dpConfig"
+                readonly [ngClass]="{
+                  'is-invalid':
+                    GeneralReceiptCancelForm.get('ppaymentdate')?.invalid &&
+                    GeneralReceiptCancelForm.get('ppaymentdate')?.touched
+                }" style="height:36px; padding:6px 12px; font-size:14px; border:1px solid #ced4da;">
+              <div class="invalid-feedback"
+                *ngIf="GeneralReceiptCancelForm.get('ppaymentdate')?.invalid && GeneralReceiptCancelForm.get('ppaymentdate')?.touched">
+                Date is required
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Detail Section -->
+        <div *ngIf="show" class="mt-2">
+
+          <!-- Received From / Receipt Date Info -->
+          <div class="row mb-3 align-items-center"
+            style="border: 1px solid #dce8fd; border-radius: 8px; padding: 12px 16px; background-color: #f8faff;">
+            <div class="col-md-6">
+              <span style="font-size:13px; color:#495057; font-weight:500;">Received From: </span>
+              <b style="color:#162246; font-size:13px;">{{ lblcontact }}</b>
+            </div>
+            <div class="col-md-6 text-end">
+              <span style="font-size:13px; color:#495057; font-weight:500;">Receipt Date: </span>
+              <b style="color:#162246; font-size:13px;">{{ lblreceiptdate | date:'dd/MMM/yyyy' }}</b>
+            </div>
+          </div>
+
+          <!-- Table Card -->
+          <div class="border rounded p-3 bg-white mb-4"
+            style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
+            <p-table [value]="generealreceiptdata" [paginator]="true" [rows]="pageCriteria.pageSize"
+              [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+              (onPage)="onPrimePageChange($event)" [showCurrentPageReport]="true"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+              styleClass="p-datatable-sm p-datatable-gridlines">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th class="text-center"
+                    style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; width:80px;">
+                    S.No
+                  </th>
+                  <th
+                    style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    Particulars
+                  </th>
+                  <th class="text-end"
+                    style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; white-space:nowrap; text-align:right !important;">
+                    Amount
+                  </th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-row let-i="rowIndex">
+                <tr>
+                  <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">{{ i + 1 }}</td>
+                  <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row.parentaccountname }}</td>
+                  <td class="text-end"
+                    style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    {{ currencysymbol }} {{ row.totalreceivedamount | number:'1.2-2' }}
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="3" style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+                    No records found
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+          </div>
+
+          <!-- Reason & Authorised By -->
+          <div class="row mb-4"
+            style="border: 2px solid #e1e9fb; border-radius: 8px; padding: 15px; margin: 0 0 16px 0; background-color: #f8faff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; color:#495057; font-size:13px;">
+                  Reason <span style="color:red;">*</span>
+                </label>
+                <textarea class="form-control" formControlName="cancellationreason" rows="3" [ngClass]="{
+                    'is-invalid':
+                      GeneralReceiptCancelForm.get('cancellationreason')?.invalid &&
+                      GeneralReceiptCancelForm.get('cancellationreason')?.touched
+                  }" style="font-size:13px; border:1px solid #ced4da; border-radius:6px; resize:vertical;">
+                </textarea>
+                <div class="invalid-feedback"
+                  *ngIf="GeneralReceiptCancelForm.get('cancellationreason')?.invalid && GeneralReceiptCancelForm.get('cancellationreason')?.touched">
+                  Reason is required
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; color:#495057; font-size:13px;">
+                  Authorised By <span style="color:red;">*</span>
+                </label>
+                <ng-select [items]="(authorizedbylist | async) ?? []" bindLabel="subintroducedname"
+                  bindValue="subintroducedid" formControlName="autorizedcontactid" [ngClass]="{
+                    'is-invalid':
+                      GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid &&
+                      GeneralReceiptCancelForm.get('autorizedcontactid')?.touched
+                  }">
+                </ng-select>
+                <div class="invalid-feedback"
+                  *ngIf="GeneralReceiptCancelForm.get('autorizedcontactid')?.invalid && GeneralReceiptCancelForm.get('autorizedcontactid')?.touched">
+                  Authorised By is required
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex justify-content-end gap-3 mt-2">
+            <button type="button" class="btn px-4" (click)="Cancel()"
+              style="background:#162246; border-color:#162246; color:white; border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px;">
               Cancel
             </button>
-            <button type="button" class="btn btn-success" (click)="Save()" [disabled]="disablesavebutton">
+
+            <button type="button" class="btn btn-primary px-4" (click)="Save()" [disabled]="disablesavebutton"
+              style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px;">
               {{ ButtonType }}
             </button>
           </div>
+
         </div>
       </form>
     </div>

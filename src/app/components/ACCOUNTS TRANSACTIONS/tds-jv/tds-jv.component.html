@@ -1,217 +1,256 @@
 <div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>TDS Journal Voucher</h2>
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
+
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">TDS Journal Voucher</h2>
     </div>
-    <div class="section-content ms-4   ">
+
+    <!-- Form Section -->
+    <div class="border rounded p-3 bg-white mb-4"
+      style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
+
       <form autocomplete="off" [formGroup]="tdsJvDetailsForm">
-        <div class="row mt-3">
+
+        <!-- Row 1: Debit Ledger, Credit Ledger, Date -->
+        <div class="row mt-2">
+
           <div class="col-md-4">
-            <div class="form-group">
-              <label id="DebitLedger" title="Debit Ledger" class="required-field">Debit Ledger</label>
+            <div class="form-group mb-3">
+              <label id="DebitLedger" title="Debit Ledger" class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Debit Ledger</label>
               <ng-select id="DebitLedger" title="Debit Ledger" [items]="tdsledgeraccountslist"
-                formControlName="DebitLedger" bindLabel="pledgername" bindValue="pledgername" [multiple]=false
-                placeholder="Debit Ledger" [searchable]=true [clearable]=true dropdownPosition="bottom"
-                [clearOnBackspace]=true (change)="click_jvtype($event)" [ngClass]="{
-    'is-invalid': tdsJvDetailsForm.controls['DebitLedger'].invalid &&
-    (tdsJvDetailsForm.controls['DebitLedger'].dirty || tdsJvDetailsForm.controls['DebitLedger'].touched)
-}">
+                formControlName="DebitLedger" bindLabel="pledgername" bindValue="pledgername"
+                [multiple]=false placeholder="Debit Ledger" [searchable]=true [clearable]=true
+                dropdownPosition="bottom" [clearOnBackspace]=true (change)="click_jvtype($event)"
+                [ngClass]="{
+                  'is-invalid': tdsJvDetailsForm.controls['DebitLedger'].invalid &&
+                  (tdsJvDetailsForm.controls['DebitLedger'].dirty || tdsJvDetailsForm.controls['DebitLedger'].touched)
+                }">
               </ng-select>
-
-
               <div class="invalid-feedback">
                 <span *ngIf="tdsJvDetailsForm.controls['DebitLedger'].errors?.['required']">
                   Debit Ledger is required
                 </span>
               </div>
-              <app-validation-message [messgae]="formValidationMessages?.DebitLedger">
-              </app-validation-message>
+              <app-validation-message [messgae]="formValidationMessages?.DebitLedger"></app-validation-message>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label id="CreditLedger" title="Credit Ledger" class="required-field">Credit Ledger</label>
-              <ng-select id="CreditLedger" title="Credit Ledger" [items]="ledgeraccountslist"
-                formControlName="CreditLedger" bindLabel="pledgername" bindValue="pledgername" [multiple]=false
-                placeholder="Credit Ledger" [searchable]=true [clearable]=true dropdownPosition="bottom"
-                [clearOnBackspace]=true [ngClass]="{
-    'is-invalid': tdsJvDetailsForm.controls['CreditLedger'].invalid &&
-    (tdsJvDetailsForm.controls['CreditLedger'].dirty || tdsJvDetailsForm.controls['CreditLedger'].touched)
-}">
-              </ng-select>
 
+          <div class="col-md-4">
+            <div class="form-group mb-3">
+              <label id="CreditLedger" title="Credit Ledger" class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Credit Ledger</label>
+              <ng-select id="CreditLedger" title="Credit Ledger" [items]="ledgeraccountslist"
+                formControlName="CreditLedger" bindLabel="pledgername" bindValue="pledgername"
+                [multiple]=false placeholder="Credit Ledger" [searchable]=true [clearable]=true
+                dropdownPosition="bottom" [clearOnBackspace]=true
+                [ngClass]="{
+                  'is-invalid': tdsJvDetailsForm.controls['CreditLedger'].invalid &&
+                  (tdsJvDetailsForm.controls['CreditLedger'].dirty || tdsJvDetailsForm.controls['CreditLedger'].touched)
+                }">
+              </ng-select>
               <div class="invalid-feedback">
                 <span *ngIf="tdsJvDetailsForm.controls['CreditLedger'].errors?.['required']">
                   Credit Ledger is required
                 </span>
               </div>
-              <app-validation-message [messgae]="formValidationMessages?.CreditLedger">
-              </app-validation-message>
+              <app-validation-message [messgae]="formValidationMessages?.CreditLedger"></app-validation-message>
             </div>
           </div>
+
           <div class="col-md-4">
-            <div class="form-group">
-              <label class="required-field">Date</label>
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Date</label>
               <fieldset [disabled]="disabletransactiondate">
-                <input type="text" class="form-control w-auto" formControlName="preceiptdate"
-                  placeholder="Date picker here" [bsConfig]="dpConfig1" #dp="bsDatepicker" bsDatepicker
-                  placement="bottom">
+                <input type="text" class="form-control" formControlName="preceiptdate"
+                  placeholder="Date picker here" [bsConfig]="dpConfig1" #dp="bsDatepicker"
+                  bsDatepicker placement="bottom"
+                  style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
               </fieldset>
-              <!-- [ngClass]="{ 'is-invalid': submitted &&  LoanConfiguration.controls.preceiptdate.errors }" -->
             </div>
           </div>
+
         </div>
-        <div class="row mt-3">
+
+        <!-- Row 2: Year, Month, Show Button -->
+        <div class="row">
+
           <div class="col-md-4">
-            <div class="form-group">
-              <label id="pPeriodType" title="Year" class="required-field">Year</label>
-              <ng-select id="pPeriodType" title="Calendar Year" [items]="calendarYearData" formControlName="pPeriodType"
-                bindLabel="periodType" bindValue="calendarPeriodId" [multiple]=false placeholder="Select Year"
-                [searchable]=true [clearable]=true dropdownPosition="top" [clearOnBackspace]=true
-                (change)="CalendarYear_change($event)" [ngClass]="{
-    'is-invalid': tdsJvDetailsForm.controls['pPeriodType'].invalid &&
-    (tdsJvDetailsForm.controls['pPeriodType'].dirty || tdsJvDetailsForm.controls['pPeriodType'].touched)
-}">
+            <div class="form-group mb-3">
+              <label id="pPeriodType" title="Year" class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Year</label>
+              <ng-select id="pPeriodType" title="Calendar Year" [items]="calendarYearData"
+                formControlName="pPeriodType" bindLabel="periodType" bindValue="calendarPeriodId"
+                [multiple]=false placeholder="Select Year" [searchable]=true [clearable]=true
+                dropdownPosition="top" [clearOnBackspace]=true (change)="CalendarYear_change($event)"
+                [ngClass]="{
+                  'is-invalid': tdsJvDetailsForm.controls['pPeriodType'].invalid &&
+                  (tdsJvDetailsForm.controls['pPeriodType'].dirty || tdsJvDetailsForm.controls['pPeriodType'].touched)
+                }">
               </ng-select>
-
-
               <div class="invalid-feedback">
                 <span *ngIf="tdsJvDetailsForm.controls['pPeriodType'].errors?.['required']">
                   Year is required
                 </span>
               </div>
-              <app-validation-message [messgae]="formValidationMessages?.pPeriodType">
-              </app-validation-message>
+              <app-validation-message [messgae]="formValidationMessages?.pPeriodType"></app-validation-message>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="form-group">
-              <label id="pCalendarMonth" title="Month" class="required-field">Month</label>
-              <ng-select id="pCalendarMonth" title="Calender Month" [items]="calendarMonthData"
-                formControlName="pCalendarMonth" bindLabel="calendarMonth" bindValue="calendarPeriodDetailsId"
-                [multiple]=false placeholder="Month" [searchable]=true [clearable]=true dropdownPosition="top"
-                [clearOnBackspace]=true (change)="CalendarYearMOnth_change($event)" [ngClass]="{
-    'is-invalid': tdsJvDetailsForm.controls['pCalendarMonth'].invalid &&
-    (tdsJvDetailsForm.controls['pCalendarMonth'].dirty || tdsJvDetailsForm.controls['pCalendarMonth'].touched)
-}">
-              </ng-select>
 
+          <div class="col-md-4">
+            <div class="form-group mb-3">
+              <label id="pCalendarMonth" title="Month" class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Month</label>
+              <ng-select id="pCalendarMonth" title="Calender Month" [items]="calendarMonthData"
+                formControlName="pCalendarMonth" bindLabel="calendarMonth"
+                bindValue="calendarPeriodDetailsId" [multiple]=false placeholder="Month"
+                [searchable]=true [clearable]=true dropdownPosition="top" [clearOnBackspace]=true
+                (change)="CalendarYearMOnth_change($event)"
+                [ngClass]="{
+                  'is-invalid': tdsJvDetailsForm.controls['pCalendarMonth'].invalid &&
+                  (tdsJvDetailsForm.controls['pCalendarMonth'].dirty || tdsJvDetailsForm.controls['pCalendarMonth'].touched)
+                }">
+              </ng-select>
               <div class="invalid-feedback">
                 <span *ngIf="tdsJvDetailsForm.controls['pCalendarMonth'].errors?.['required']">
                   Month is required
                 </span>
               </div>
-              <app-validation-message [messgae]="formValidationMessages?.pCalendarMonth">
-              </app-validation-message>
+              <app-validation-message [messgae]="formValidationMessages?.pCalendarMonth"></app-validation-message>
             </div>
           </div>
+
           <div class="col-md-2">
-            <div class="d-flex justify-content-start mt-4">
-              <button class="btn btn-b-icon" (click)="gettdsjvdetails()">
-                 <!-- [disabled]="tdsJvDetailsForm.invalid" -->
-                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}"></i> {{savebutton1}}
+            <div class="form-group mb-3" style="margin-top:28px;">
+              <button class="btn btn-primary px-4" (click)="gettdsjvdetails()"
+                style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}"></i>
+                {{ savebutton1 }}
               </button>
             </div>
           </div>
+
         </div>
+
       </form>
-      <hr class="light">
-      <div *ngIf="dataisempty">No Records to Display</div>
-      <div class="row" *ngIf="showhidetable">
-        <div class="col-md-12 col-xl-12">
-          <h6 class="sec-head font-16">TDS/GST JV's </h6>
-        </div>
+    </div>
 
-        <div class="col-md-12 col-xl-12 ">
-          <div class="d-flex justify-content-end me-4">
-            <a class="export-icons" (click)="export()"><img src="assets/images/icon-excel.svg " title="Excel"
-                width="18px"></a>
-          </div>
+    <!-- No Records Message -->
+    <div *ngIf="dataisempty"
+      style="text-align:center; padding:16px; color:#8fa0c4; font-size:13px;">
+      No Records to Display
+    </div>
 
+    <!-- Table + Narration Section -->
+    <div class="border rounded p-3 bg-white mb-4"
+      style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);"
+      *ngIf="showhidetable">
 
-          <!-- currentPageReportTemplate="Page {page} of {totalPages} ({totalRecords} items)"  -->
-          <p-table [value]="tdsJvDetailsGrid" [paginator]="true" [rows]="pageCriteria.pageSize"
-            [first]="pageCriteria.offset" [responsiveLayout]="'scroll'" [scrollable]="true" [scrollHeight]="'400px'"
-            selectionMode="multiple" [(selection)]="selected1" (onRowSelect)="onSelect($event)"
-            (onRowUnselect)="onSelect($event)" [showCurrentPageReport]="true"
-            styleClass="p-datatable-gridlines p-datatable-striped">
-            <!-- Checkbox Column -->
-            <ng-template pTemplate="header">
-              <tr>
-                <th style="width: 60px">
-                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th style="width: 60px">Particulars</th>
-                <th style="width: 120px; text-align: right;">Debit Amount</th>
-                <th style="width: 120px; text-align: right;">Credit Amount</th>
-              </tr>
-            </ng-template>
+      <!-- Table Heading + Export -->
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="mb-0"
+          style="font-size:15px; font-weight:700; color:#162246;">TDS/GST JV's</h6>
+        <a class="export-icons" (click)="export()" style="cursor:pointer;">
+          <img src="assets/images/icon-excel.svg" title="Excel" width="18px">
+        </a>
+      </div>
 
-            <ng-template pTemplate="body" let-rowData let-i="rowIndex">
-              <tr>
-                <td>
-                  <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
-                </td>
-                <td>{{ rowData.particulars }}</td>
-                <!-- <td style="text-align: right;">
-        <div *ngIf="rowData.debit_amount !== 0">
-          {{ currencysymbol }} {{ rowData.debit_amount.toFixed(2) }}
-        </div>
-      </td>
-      <td style="text-align: right;">
-        <div *ngIf="rowData.credit_amount !== 0">
-          {{ currencysymbol }} {{ rowData.credit_amount.toFixed(2) }}
-        </div>
-      </td> -->
-                <td style="text-align: right;">
-                  {{ currencysymbol }} {{ (rowData.debit_amount || 0).toFixed(2) }}
-                </td>
-                <td style="text-align: right;">
-                  {{ currencysymbol }} {{ (rowData.credit_amount || 0).toFixed(2) }}
-                </td>
-              </tr>
-            </ng-template>
+      <!-- Table -->
+      <p-table [value]="tdsJvDetailsGrid" [paginator]="true" [rows]="pageCriteria.pageSize"
+        [first]="pageCriteria.offset" [responsiveLayout]="'scroll'" [scrollable]="true"
+        [scrollHeight]="'400px'" selectionMode="multiple" [(selection)]="selected1"
+        (onRowSelect)="onSelect($event)" (onRowUnselect)="onSelect($event)"
+        [showCurrentPageReport]="true"
+        styleClass="p-datatable-sm p-datatable-gridlines">
 
-            <!-- Footer / Totals -->
-            <ng-template pTemplate="footer">
-              <tr>
-                <td colspan="2" style="text-align: right; font-weight: bold;">Totals:</td>
-                <td style="text-align: right; font-weight: bold;">
-                  {{ currencysymbol }} {{ totaldebitamount.toFixed(2) }}
-                </td>
-                <td style="text-align: right; font-weight: bold;">
-                  {{ currencysymbol }} {{ totalcreditamount.toFixed(2) }}
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width:60px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th style="width:60px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              Particulars
+            </th>
+            <th style="width:120px; text-align:right; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              Debit Amount
+            </th>
+            <th style="width:120px; text-align:right; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+              Credit Amount
+            </th>
+          </tr>
+        </ng-template>
 
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+          <tr>
+            <td style="padding:8px 12px; font-size:13px; color:#162246;">
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td style="padding:8px 12px; font-size:13px; color:#162246;">
+              {{ rowData.particulars }}
+            </td>
+            <td style="padding:8px 12px; font-size:13px; color:#162246; text-align:right;">
+              {{ currencysymbol }} {{ (rowData.debit_amount || 0).toFixed(2) }}
+            </td>
+            <td style="padding:8px 12px; font-size:13px; color:#162246; text-align:right;">
+              {{ currencysymbol }} {{ (rowData.credit_amount || 0).toFixed(2) }}
+            </td>
+          </tr>
+        </ng-template>
 
+        <!-- Footer Totals -->
+        <ng-template pTemplate="footer">
+          <tr style="background:#f0f5ff;">
+            <td colspan="2"
+              style="text-align:right; font-weight:700; font-size:13px; color:#162246; padding:8px 12px;">
+              Totals:
+            </td>
+            <td style="text-align:right; font-weight:700; font-size:13px; color:#0d6efd; padding:8px 12px;">
+              {{ currencysymbol }} {{ totaldebitamount.toFixed(2) }}
+            </td>
+            <td style="text-align:right; font-weight:700; font-size:13px; color:#0d6efd; padding:8px 12px;">
+              {{ currencysymbol }} {{ totalcreditamount.toFixed(2) }}
+            </td>
+          </tr>
+        </ng-template>
 
-          <div class="form-group mt-1">
-            <label class="required-field">Narration</label>
-            <textarea class="form-control" rows="4" id="pnarration" title="Narration" formControlName="pnarration"
-              maxlength="250" [ngClass]="{ 'is-invalid': formValidationMessages.pnarration }"></textarea>
+      </p-table>
 
-            <app-validation-message [messgae]="formValidationMessages?.pnarration"></app-validation-message>
+      <!-- Narration -->
+      <div class="form-group mt-3">
+        <label class="required-field"
+          style="font-size:13px; font-weight:600; color:#162246;">Narration</label>
+        <textarea class="form-control" rows="4" id="pnarration" title="Narration"
+          formControlName="pnarration" maxlength="250"
+          [ngClass]="{ 'is-invalid': formValidationMessages.pnarration }"
+          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246; resize:none;">
+        </textarea>
+        <app-validation-message [messgae]="formValidationMessages?.pnarration"></app-validation-message>
+      </div>
 
-          </div>
-          <div class="d-flex justify-content-end mt-3">
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end mt-3" style="gap:12px;">
 
-            <a class="btn btn-g-icon mr-4 px-3 border-0" (click)="clearJVDetails()"><img
-                src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px" height="20px">Clear</a>
-            <!-- <a class="btn btn-s-icon px-3 border-0 " (click)="click_save()">
-            <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"> Save </a>  -->
-            <button *ngIf="isExists" (click)="saveJVDetails()" class="btn btn-s-icon px-3 border-0"
-              [disabled]="disablesavebutton">
-              <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                *ngIf="!disablesavebutton">
-              <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{savebutton}}
-            </button>
-          </div>
-        </div>
+        <a class="btn px-4" (click)="clearJVDetails()"
+          style="background:#6c757d; border-color:#6c757d; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px; color:#fff; cursor:pointer;">
+          <img src="assets/images/icon-cancel-white.svg" class="mr-2" width="16px" height="16px">
+          Clear
+        </a>
+
+        <button *ngIf="isExists" (click)="saveJVDetails()" [disabled]="disablesavebutton"
+          class="btn btn-primary px-4"
+          style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+          <img src="assets/images/icon-check-white.svg" class="mr-2" width="16px" height="16px"
+            *ngIf="!disablesavebutton">
+          <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
+          {{ savebutton }}
+        </button>
 
       </div>
+
     </div>
 
   </div>

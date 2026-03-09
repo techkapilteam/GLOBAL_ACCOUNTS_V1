@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
 import { AccountingMasterService } from '../../../services/accounting-master.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -36,11 +36,13 @@ export class ChequeManagementnewComponent implements OnInit {
   disablesavebutton = false;
   disablesaveactivebutton = false;
   chequemanagementvalidations: any;
-
+  today: Date = new Date()
+  date: any;
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private commonService: CommonService,
+    private datepipe: DatePipe,
     private accountingMasterService: AccountingMasterService
   ) { }
 
@@ -51,23 +53,21 @@ export class ChequeManagementnewComponent implements OnInit {
   ngOnInit() {
     this.chequemanagementform = this.fb.group({
       pBankId: [""],
-      // pBankname: [null, Validators.required],
-      // bankName: ['', Validators.required],
-      // pNoofcheques: ["", Validators.required],
-      // pChequeto: ["", Validators.required],
-      // pChequefrom: ["", Validators.required],
-
-       bankName: ['', Validators.required],
-  pNoofcheques: ['', [Validators.required, Validators.min(1), Validators.max(999)]],
-  pChequefrom: ['', [Validators.required, Validators.minLength(1)]],
-  pChequeto: ['', Validators.required],
+      bankName: ['', Validators.required],
+      pNoofcheques: ['', [Validators.required, Validators.min(1), Validators.max(999)]],
+      pChequefrom: ['', [Validators.required, Validators.minLength(1)]],
+      pChequeto: ['', Validators.required],
       pChqegeneratestatus: [""],
       pStatusname: ["Active"],
       ptypeofoperation: ["CREATE"],
       pCreatedby: [this.commonService.getCreatedBy()],
       branchSchema: [this.commonService.getschemaname()],
       pipaddress: [this.commonService.getIpAddress()],
+      pChequeGenerateDate: [this.today]
+
     });
+    this.date = this.datepipe.transform(this.chequemanagementform.controls['pChequeGenerateDate'].value, 'dd-MM-yyyy');
+    console.log('date', this.date);
 
     this.BlurEventAllControll(this.chequemanagementform);
     // this.accountingMasterService.GetBankDetails().subscribe((data:any) => {
@@ -90,7 +90,7 @@ export class ChequeManagementnewComponent implements OnInit {
           this.bankdetails = res;
 
           console.log('SUCCESS:', res);
-        
+
         },
         error: (err: any) => {
           console.log('ERROR:', err);
@@ -179,10 +179,10 @@ export class ChequeManagementnewComponent implements OnInit {
   addtoGrid() {
     debugger;
 
-      if(this.chequemanagementform.invalid){
-    this.chequemanagementform.markAllAsTouched();
-    return;
-  }
+    if (this.chequemanagementform.invalid) {
+      this.chequemanagementform.markAllAsTouched();
+      return;
+    }
     let validate = true;
 
 
@@ -213,9 +213,9 @@ export class ChequeManagementnewComponent implements OnInit {
               ];
 
 
-this.chequemanagementform.reset();
-this.chequemanagementform.markAsPristine();
-this.chequemanagementform.markAsUntouched();
+              this.chequemanagementform.reset();
+              this.chequemanagementform.markAsPristine();
+              this.chequemanagementform.markAsUntouched();
 
               // this.totalcheques = "";
               // this.fromcheqno = 0;
@@ -249,7 +249,7 @@ this.chequemanagementform.markAsUntouched();
     this.recordid = event.bankAccountId
     this.selectedbank = event.bankName
 
-    // this.chequemanagementform.controls["pBankId"].setValue(this.recordid);
+    this.chequemanagementform.controls["pBankId"].setValue(this.recordid);
     this.gridData = [];
   }
   noofcheques(event: any) {
@@ -441,27 +441,66 @@ this.chequemanagementform.markAsUntouched();
       }
 
       this.chequemanagementform.controls['pCreatedby'].setValue(
-        this.commonService.getCreatedBy()
+        1
       );
       this.chequemanagementform.controls['branchSchema'].setValue(
-        this.commonService.getschemaname()
+        this.commonService.getbranchname()
       );
       this.chequemanagementform.controls['pipaddress'].setValue(
-        this.commonService.getIpAddress()
+        "192.168.2.177"
       );
+
+      // this.chequemanagementform.controls['pCreatedby'].setValue(
+      //   this.commonService.getCreatedBy()
+      // );
+      // this.chequemanagementform.controls['branchSchema'].setValue(
+      //   this.commonService.getschemaname()
+      // );
+      // this.chequemanagementform.controls['pipaddress'].setValue(
+      //   this.commonService.getIpAddress()
+      // );
 
       this.chequemanagementform["controls"]["pChqegeneratestatus"].setValue(
         isActive
       );
-      let chequemanagement = { lstChequemanagementDTO: this.gridData };
-      let chequemanagementdata = Object.assign(
-        this.chequemanagementform.value,
-        chequemanagement
-      );
+      // let chequemanagement = { lstChequemanagementDTO: this.gridData };
+      // let chequemanagementdata = Object.assign(
+      //   this.chequemanagementform.value,
+      //   chequemanagement
+      // );
 
       //console.log(chequemanagementdata)
-      let data = JSON.stringify(chequemanagementdata);
-      this.accountingMasterService.SaveChequeManagement(data).subscribe(
+      // let data = JSON.stringify(chequemanagementdata);
+      let form = this.chequemanagementform.value;
+      let grid = this.gridData[0];
+      console.log('grid date:', grid);
+      // assuming one row
+      // let date = this.datepipe.transform(this.chequemanagementform.controls['pChequeGenerateDate'].value, 'dd-MM-yyyy')
+      let chequemanagementdata = {
+        branchSchema: form.branchSchema,
+        company_code: this.commonService.getCompanyCode(),
+        branch_code: this.commonService.getBranchCode(),
+        // company_code: form.company_code,
+        // branch_code: form.branch_code,
+        branch_id: form.branch_id,
+
+        pBankId: Number(grid.pBankId),
+        pNoofcheques: Number(grid.pNoofcheques),
+        pChequefrom: Number(grid.pChequefrom),
+        pChequeto: Number(grid.pChequeto),
+
+        cheque_book_id: form.cheque_book_id || 0,
+        pChqegeneratestatus: Boolean(grid.pChqegeneratestatus),
+        pChequeGenerateDate: this.date,
+
+        pCreatedby: form.pCreatedby,
+        pipaddress: form.pipaddress
+      }
+
+console.log('chequemanagementdata data :',chequemanagementdata);
+
+
+      this.accountingMasterService.SaveChequeManagement(chequemanagementdata).subscribe(
         (saveddata) => {
           //debugger;
           if (saveddata) {

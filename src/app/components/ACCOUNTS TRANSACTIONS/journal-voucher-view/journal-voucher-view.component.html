@@ -1,116 +1,113 @@
 <div class="screen-container">
-    <div class="screen-card">
-        <div class="screen-header">
-            <h2>Journal Voucher View</h2>
-        </div>
-        <div class="screen-content">
+  <div class="screen-card">
 
-            <div class="row">
-
-                <div class="col d-flex flex-wrap align-items-center">
-                    <!-- [routerLink]="['/Transactions','journalvochernew']"
-                  routerLink="/journalvochernew"
-                       [routerLink]="['/ACCOUNTS TRANSACTIONS','JournalVocher']"
-                  /dashboard/accounts/accounts-transactions/journal-voucher-->
-                    <a class="btn btn-primary border-0"
-                        routerLink="/dashboard/accounts/accounts-transactions/journal-voucher">
-                        New
-                    </a>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-md-12 col-xl-12">
-                    <div class="row ">
-                        <div class="col-md-6 col-xl-6">
-                            <div class="form-group mr-0 custom-search">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" (keyup)="filterDatatable($event)">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="col-md-6 col-xl-6">
-            <div class="d-flex justify-content-end">
-              <a href="" class="export-icons"><img class="" src="assets/images/pdf-icon-blue.svg " title="pdf"
-                  width="18px"></a>
-              <a href="" class="export-icons"><img class="" src="assets/images/icon-excel.svg " title="Excel"
-                  width="18px"></a>
-              <a href="" class="export-icons"><img class="" src="assets/images/print-icon-blue.svg " title="Print"
-                  width="18px"></a>
-            </div>
-          </div> -->
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-md-12 col-xl-12">
-                   
-
-                    <p-table [value]="Journalvoucherlist" dataKey="pjvnumber" [rows]="pageCriteria.pageSize"
-                        [paginator]="false" [totalRecords]="pageCriteria.totalrows" [rowsPerPageOptions]="[10, 20, 50]"
-                        [showCurrentPageReport]="true" scrollable="true" scrollHeight="400px" [resizableColumns]="true"
-                        columnResizeMode="fit" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
-
-
-                        <!-- currentPageReportTemplate="Page {currentPage} of {totalPages} ({totalRecords} items)" -->
-
-                        <!-- HEADER -->
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th style="width:100px" class="text-center">Actions</th>
-                                <th style="width:150px" class="text-center">Date</th>
-                                <th style="width:150px" class="text-center">JV No.</th>
-                                <th style="width:200px" class="text-right">Amount</th>
-                                <th style="width:500px">Narration</th>
-                            </tr>
-                        </ng-template>
-
-
-                        <ng-template pTemplate="body" let-row>
-                            <tr>
-
-                                <td class="text-center">
-                                    <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm"
-                                        (click)="viewHandler($event, row)">
-                                    </button>
-                                </td>
-
-                                <td class="text-center">
-                                    <!-- {{ row.pjvdate }} -->
-                                    {{ row.jvDate }}
-                                </td>
-
-                                <td class="text-center">
-                                    {{ row.journalVoucherNo }}
-                                    <!-- {{ row.pjvnumber }} -->
-                                </td>
-
-                                <td class="text-right">
-                                    <!-- {{ row.ptotalpaidamount | currency:'INR':'symbol':'1.2-2' }} -->
-                                    {{ row.amount | currency:'INR':'symbol':'1.2-2' }}
-                                </td>
-
-                                <td>
-                                    <!-- {{ row.pnarration }} -->
-                                    {{ row.narration }}
-                                </td>
-
-                            </tr>
-                        </ng-template>
-
-                        <ng-template pTemplate="emptymessage">
-                            <tr>
-                                <td colspan="5" class="text-center">
-                                    No records found
-                                </td>
-                            </tr>
-                        </ng-template>
-
-                    </p-table>
-                  
-
-
-                </div>
-            </div>
-        </div>
+    <!-- HEADER -->
+    <div class="screen-header" style="padding:14px 28px; display:flex; align-items:center; gap:10px; border-bottom:3px solid #0d6efd;">
+      <span style="display:inline-block; width:4px; height:26px; background:#0d6efd; border-radius:3px; flex-shrink:0;"></span>
+      <h2 style="margin:0; font-size:20px; font-weight:700; color:#070707;">Journal Voucher View</h2>
     </div>
+
+    <div style="padding:20px 24px;">
+
+      <!-- NEW BUTTON ROW -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <a
+            routerLink="/dashboard/accounts/accounts-transactions/journal-voucher"
+            class="btn btn-primary"
+            style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:8px 20px;">
+            + New
+          </a>
+        </div>
+      </div>
+
+      <!-- SEARCH ROW -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search..."
+            (keyup)="filterDatatable($event)"
+            style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+        </div>
+      </div>
+
+      <!-- TABLE CARD -->
+      <div class="row">
+        <div class="col-12">
+          <div style="border:1px solid #dce8fd; border-radius:10px; box-shadow:0 2px 8px rgba(13,110,253,0.07); overflow:hidden; background:#fff;">
+            <p-table
+              [value]="Journalvoucherlist"
+              dataKey="pjvnumber"
+              [rows]="pageCriteria.pageSize"
+              [paginator]="false"
+              [totalRecords]="pageCriteria.totalrows"
+              [rowsPerPageOptions]="[10,20,50]"
+              [showCurrentPageReport]="true"
+              scrollable="true"
+              scrollHeight="400px"
+              [resizableColumns]="true"
+              columnResizeMode="fit"
+              styleClass="p-datatable-sm p-datatable-gridlines">
+
+              <!-- HEADER -->
+              <ng-template pTemplate="header">
+                <tr>
+                  <th class="text-center" style="width:100px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Actions</th>
+                  <th class="text-center" style="width:150px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
+                  <th class="text-center" style="width:150px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">JV No.</th>
+                  <th class="text-end" style="width:200px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:right !important;">Amount</th>
+                  <th style="width:500px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; white-space:nowrap;">Narration</th>
+                </tr>
+              </ng-template>
+
+              <!-- BODY -->
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td class="text-center" style="padding:8px 12px; font-size:13px;">
+                    <button
+                      pButton
+                      type="button"
+                      icon="pi pi-eye"
+                      class="p-button-text p-button-sm p-button-primary"
+                      (click)="viewHandler($event, row)"
+                      style="color:#0d6efd;">
+                    </button>
+                  </td>
+
+                  <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">
+                    {{ row.jvDate || '--' }}
+                  </td>
+
+                  <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">
+                    {{ row.journalVoucherNo || '--' }}
+                  </td>
+
+                  <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    {{ row.amount | currency:'INR':'symbol':'1.2-2' }}
+                  </td>
+
+                  <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                    {{ row.narration || '-- NA --' }}
+                  </td>
+                </tr>
+              </ng-template>
+
+              <!-- EMPTY -->
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="5" style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+                    No records found
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
