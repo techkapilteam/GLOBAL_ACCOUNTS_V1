@@ -143,24 +143,23 @@
 
                   <p>
                     <strong>Narration :</strong>
-                    {{ receiptdata.narration?.narration || '' }}
+                    {{ (typeof receiptdata.narration === 'string' ? receiptdata.narration :
+                    receiptdata.narration?.narration) || '' }}
                   </p>
 
                   <p>
                     <strong>Mode of Payment :</strong>
-                    <span *ngIf="receiptdata.modeof_receipt === 'CASH'">
-                      {{ receiptdata.modeof_receipt }}
+                    <span *ngIf="receiptdata.modeof_receipt === 'C'">
+                      CASH
                     </span>
 
-                    <span *ngIf="receiptdata.modeof_receipt !== 'CASH'">
-                      {{ receiptdata.typeofpayment }}
+                    <span *ngIf="receiptdata.modeof_receipt !== 'C'">
+                      {{ typeof receiptdata.typeofpayment === 'string' ? receiptdata.typeofpayment : '' }}
                     </span>
 
-                    <span *ngIf="receiptdata.reference_number">
-                      (Ref No :
-                      {{ receiptdata.reference_number }},
-                      Bank :
-                      {{ receiptdata.cheque_bank }})
+                    <span *ngIf="typeof receiptdata.reference_number === 'string' && receiptdata.reference_number">
+                      (Ref No : {{ receiptdata.reference_number }},
+                      Bank : {{ typeof receiptdata.cheque_bank === 'string' ? receiptdata.cheque_bank : '' }})
                     </span>
                   </p>
 

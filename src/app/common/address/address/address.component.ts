@@ -61,42 +61,42 @@ export class AddressComponent implements OnInit {
     debugger
     console.log(data);
     debugger;
-    if ((data[0].pAddress1) == "") {
+    if ((data[0].address1) == "") {
       this.addressForm.controls['paddress1'].clearValidators();
       this.addressForm.controls['paddress1'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['paddress1'].setValue(data[0].pAddress1)
+      this.addressForm.controls['paddress1'].setValue(data[0].address1)
     }
-    if (data[0].pAddress2 == "") {
+    if (data[0].address2 == "") {
       this.addressForm.controls['paddress2'].clearValidators();
       this.addressForm.controls['paddress2'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['paddress2'].setValue(data[0].pAddress2)
+      this.addressForm.controls['paddress2'].setValue(data[0].address2)
     }
-    if (data[0].pPincode == "") {
+    if (data[0].pincode == "") {
       this.addressForm.controls['Pincode'].clearValidators();
       this.addressForm.controls['Pincode'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['Pincode'].setValue(data[0].pPincode)
+      this.addressForm.controls['Pincode'].setValue(data[0].pincode)
     }
-    if (data[0].pcity == "") {
+    if (data[0].city == "") {
       this.addressForm.controls['pcity'].clearValidators();
       this.addressForm.controls['pcity'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['pcity'].setValue(data[0].pcity)
+      this.addressForm.controls['pcity'].setValue(data[0].city)
     }
-    if ((data[0].pcountryid) == 0) {
+    if ((data[0].country_id) == 0) {
       this.addressForm.controls['pState'].clearValidators();
       this.addressForm.controls['pState'].updateValueAndValidity();
 
     }
     else {
       this._contacmasterservice.getstates(
-       this._commonService.getschemaname(), data[0].pcountryid).subscribe((json: any) => {
+       this._commonService.getschemaname(), data[0].country_id).subscribe((json: any) => {
         this.stateDetails = json;
       })
 
@@ -116,71 +116,74 @@ export class AddressComponent implements OnInit {
     // }
 
 
-    if ((data[0].pstateid == 0)) {
+    if ((data[0].state_id == 0)) {
       this.addressForm.controls['pDistrict'].clearValidators();
       this.addressForm.controls['pDistrict'].updateValueAndValidity();
     }
     else {
-      this._contacmasterservice.getDistrict(this._commonService.getschemaname(),data[0].pstateid).subscribe((json: any) => {
+      this._contacmasterservice.getDistrict(this._commonService.getschemaname(),data[0].state_id).subscribe((json: any) => {
         this.districtDetails = json;
       })
     }
-    if ((data[0].pdistrictid == 0)) {
+    if ((data[0].district_id == 0)) {
       this.addressForm.controls['pDistrict'].clearValidators();
       this.addressForm.controls['pDistrict'].updateValueAndValidity();
     }
-    this.addressForm.controls['pStateId'].setValue(data[0].pstateid)
-    this.addressForm.controls['pCountry'].setValue(data[0].pCountry)
-    this.addressForm.controls['pDistrict'].setValue(data[0].pDistrict)
-    this.addressForm.controls['pState'].setValue(data[0].pState)
-    this.addressForm.controls['pDistrictId'].setValue(data[0].pdistrictid)
-    this.addressForm.controls['pCountryId'].setValue(data[0].pcountryid)
+    this.addressForm.controls['pStateId'].setValue(data[0].state_id)
+    // this.addressForm.controls['pCountry'].setValue(data[0].pCountry)
+    this.addressForm.controls['pCountry'].setValue(data[0].country_name)
+    this.addressForm.controls['pDistrict'].setValue(data[0].district_name)
+    // this.addressForm.controls['pDistrict'].setValue(data[0].pDistrict)
+    this.addressForm.controls['pState'].setValue(data[0].state_name)
+    // this.addressForm.controls['pState'].setValue(data[0].pState)
+    this.addressForm.controls['pDistrictId'].setValue(data[0].district_id)
+    this.addressForm.controls['pCountryId'].setValue(data[0].country_id)
   }
   /**<-------(end) binding address data to form (end)------> */
 
   /**<-------(start) binding company config address data to form (start)------> */
   bindingcompanydata(data: any) {
     debugger
-    if ((data.pAddress1) == "") {
+    if ((data[0].address1) == "") {
       this.addressForm.controls['paddress1'].clearValidators();
       this.addressForm.controls['paddress1'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['paddress1'].setValue(data.pAddress1)
+      this.addressForm.controls['paddress1'].setValue(data[0].address1)
     }
-    if (data.pAddress2 == "") {
+    if (data[0].address2 == "") {
       this.addressForm.controls['paddress2'].clearValidators();
       this.addressForm.controls['paddress2'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['paddress2'].setValue(data.pAddress2)
+      this.addressForm.controls['paddress2'].setValue(data[0].address2)
     }
-    if (data.pPincode == "") {
+    if (data[0].pincode == "") {
       this.addressForm.controls['Pincode'].clearValidators();
       this.addressForm.controls['Pincode'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['Pincode'].setValue(data.pPinCode)
+      this.addressForm.controls['Pincode'].setValue(data[0].pincode)
     }
-    if (data.pCity == "") {
+    if (data[0].city == "") {
       this.addressForm.controls['pcity'].clearValidators();
       this.addressForm.controls['pcity'].updateValueAndValidity();
     }
     else {
-      this.addressForm.controls['pcity'].setValue(data.pCity)
+      this.addressForm.controls['pcity'].setValue(data[0].city)
     }
-    if ((data.pCountryId) == 0) {
+    if ((data[0].country_id) == 0) {
       this.addressForm.controls['pState'].clearValidators();
       this.addressForm.controls['pState'].updateValueAndValidity();
 
     }
     else {
-      this._contacmasterservice.getstates(this._commonService.getschemaname(),data.pCountryId).subscribe((json: any) => {
+      this._contacmasterservice.getstates(this._commonService.getschemaname(),data[0].country_id).subscribe((json: any) => {
         this.stateDetails = json;
       })
 
     }
-    if ((data.pCountryId) == 0) {
+    if ((data.country_id) == 0) {
       this.addressForm.controls['pCountry'].clearValidators();
       this.addressForm.controls['pCountry'].updateValueAndValidity();
 
@@ -194,26 +197,40 @@ export class AddressComponent implements OnInit {
     }
 
 
-    if ((data.pStateId == 0)) {
+    if ((data[0].state_id == 0)) {
       this.addressForm.controls['pDistrict'].clearValidators();
       this.addressForm.controls['pDistrict'].updateValueAndValidity();
     }
     else {
-      this._contacmasterservice.getDistrict(this._commonService.getschemaname(),data.pStateId).subscribe((json: any) => {
+      this._contacmasterservice.getDistrict(this._commonService.getschemaname(),data[0].state_id).subscribe((json: any) => {
         this.districtDetails = json;
       })
     }
-    if ((data.pDistrictId == 0)) {
+    if ((data[0].district_id == 0)) {
       this.addressForm.controls['pDistrict'].clearValidators();
       this.addressForm.controls['pDistrict'].updateValueAndValidity();
     }
 
-    this.addressForm.controls['pStateId'].setValue(data.pStateId)
-    this.addressForm.controls['pCountry'].setValue(data.pCountry)
-    this.addressForm.controls['pDistrict'].setValue(data.pDistrict)
-    this.addressForm.controls['pState'].setValue(data.pState)
-    this.addressForm.controls['pDistrictId'].setValue(data.pDistrictId)
-    this.addressForm.controls['pCountryId'].setValue(data.pCountryId)
+    // this.addressForm.controls['pStateId'].setValue(data[0].pStateId)
+    // this.addressForm.controls['pCountry'].setValue(data[0].pCountry)
+    // this.addressForm.controls['pDistrict'].setValue(data[0].pDistrict)
+    // this.addressForm.controls['pState'].setValue(data[0].pState)
+    // this.addressForm.controls['pDistrictId'].setValue(data[0].pDistrictId)
+    // this.addressForm.controls['pCountryId'].setValue(data[0].pCountryId)
+
+
+
+
+
+        this.addressForm.controls['pStateId'].setValue(data[0].state_id)
+    // this.addressForm.controls['pCountry'].setValue(data[0].pCountry)
+    this.addressForm.controls['pCountry'].setValue(data[0].country_name)
+    this.addressForm.controls['pDistrict'].setValue(data[0].district_name)
+    // this.addressForm.controls['pDistrict'].setValue(data[0].pDistrict)
+    this.addressForm.controls['pState'].setValue(data[0].state_name)
+    // this.addressForm.controls['pState'].setValue(data[0].pState)
+    this.addressForm.controls['pDistrictId'].setValue(data[0].district_id)
+    this.addressForm.controls['pCountryId'].setValue(data[0].country_id)
 
   }
   /**<-------(end) binding company config address data to form (end)------> */
@@ -221,14 +238,16 @@ export class AddressComponent implements OnInit {
   /**<-------(start) update data of address form (append to form) (start)------> */
   editdata(data: any, formname: any) {
     debugger
+    console.log('edit data address ',data);
+    
     this.Form = formname
     if (this.Form == "companyconfig") {
-      this.addressForm.controls['pRecordid'].setValue(data.pRecordId)
+      this.addressForm.controls['pRecordid'].setValue(data[0].bank_configuration_id)
       this.bindingcompanydata(data)
     }
     else if (this.Form == "Bank") {
       debugger;
-      this.addressForm.controls['pRecordid'].setValue(data.pRecordid)
+      this.addressForm.controls['pRecordid'].setValue(data[0].bank_configuration_id)
       // this.addressForm.controls['pRecordid'].setValue(data[0].bank_id)
       this.bindingdata(data)
     }
@@ -402,7 +421,7 @@ export class AddressComponent implements OnInit {
           this.state_id = res.tbl_mst_state_id
 
           console.log('SUCCESS:', res);
-          alert('hello');
+        
         },
         error: (err: any) => {
           console.log('ERROR:', err);
@@ -433,7 +452,7 @@ export class AddressComponent implements OnInit {
           // this.country_id = res.tbl_mst_country_id
 
           console.log('SUCCESS:', res);
-          alert('hello');
+    
         },
         error: (err: any) => {
           console.log('ERROR:', err);

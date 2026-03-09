@@ -143,14 +143,24 @@
           <div class="col-md-6 col-xl-6 pr-0">
             <label>Overdraft Limit</label>
             <input class="form-control" type="text" style="text-align:right;" id="pOverdraft" title="Overdraft Limit"
-              value="Overdraft Limit" formControlName="pOverdraft" placeholder="0.00"
+             formControlName="pOverdraft" placeholder="0.00"
               (input)="onInputChange($event, 'pOverdraft')" (blur)="onInputBlur($event, 'pOverdraft')"
               (keypress)="allowNumbersOnly($event)" (paste)="blockNonNumericPaste($event)"
-              [ngClass]="{ 'is-invalid':  bankmastervalidations.pOverdraft}">
-            <div class="invalid-feedback">
-              <span *ngIf="bankmastervalidations.pOverdraft">{{bankmastervalidations?.pOverdraft}}</span>
-            </div>
+             [ngClass]="{
+      'is-invalid': bankmasterform.get('pOverdraft')?.invalid 
+      && bankmasterform.get('pOverdraft')?.touched
+    }"
+              >
+             <div class="invalid-feedback"
+       *ngIf="bankmasterform.get('pOverdraft')?.invalid && bankmasterform.get('pOverdraft')?.touched">
+       
+    <span *ngIf="bankmasterform.get('pOverdraft')?.errors?.['pattern']">
+      Enter valid amount (max 2 decimals)
+    </span>
+
+  </div>
           </div>
+            <!-- value="Overdraft Limit" -->
           <!-- appRoundecimal="12@2" appMycurrencyFormatter
               appNumbersonly  -->
 
@@ -398,10 +408,15 @@
         <div *ngIf="bankupihideandshow">
           <div class="form-group">
             <label class="required-field" id="pUpiid" title="UPI ID">UPI ID</label>
-            <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
+            <!-- <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
               pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$" maxlength="150"
               [ngClass]="{ 'is-invalid': submitted &&   bankmastervalidations.pUpiid}" placeholder="xyz@okicici"
-              formControlName="pUpiid">
+              formControlName="pUpiid"> -->
+
+              <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
+  pattern= "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$" maxlength="150"
+  [ngClass]="{  'is-invalid': submitted && bankmasterform.controls['pUpiid'].invalid  }" placeholder="xyz@okicici"
+  formControlName="pUpiid">
             <div class="invalid-feedback">
               <span *ngIf="bankmastervalidations.pUpiid">{{bankmastervalidations?.pUpiid}}</span>
             </div>

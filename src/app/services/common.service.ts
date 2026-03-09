@@ -2381,6 +2381,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
       didDrawPage: (data) => {
         const centerX = pageWidth / 2;
+        doc.addImage(kapil_logo, 'JPEG', 15, 5, 20, 20);
 
         doc.setFontSize(15);
         doc.setFont('helvetica', 'bold');
@@ -2402,7 +2403,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
 
         doc.setFont('times', 'bold');
         doc.setFontSize(14);
-        doc.text(`Bank Reconciliation - ${bankname}`, 15, 34);
+        doc.text(`Bank Reconciliation - ${bankname}`, centerX, 34,{ align: 'center' });
 
         doc.setFontSize(10);
         if (betweenorason === "Between") {
@@ -2410,8 +2411,12 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
         } else {
           doc.text(`As On : ${fromdate}`, 15, 40);
         }
+        doc.text(`Branch : ${companyBranch}`, pageWidth - 15, 41, { align: 'right' });
 
-        doc.addImage(kapil_logo, 'JPEG', pageWidth - 40, 10, 20, 20);
+        doc.setLineWidth(0.3);
+  doc.line(15, 43, pageWidth - 15, 43);
+
+        // doc.addImage(kapil_logo, 'JPEG', pageWidth - 40, 10, 20, 20);
 
         let str = "Page " + doc.getNumberOfPages();
         if (typeof doc.putTotalPages === 'function') {
