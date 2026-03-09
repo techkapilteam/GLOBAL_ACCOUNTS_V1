@@ -8,6 +8,7 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
 import { CommonService } from '../../../services/common.service';
 import { finalize } from 'rxjs';
 import { SubscriberStatementService } from '../../../services/subscriber-statement.service';
+import { AccountReportsService } from 'src/app/services/account-reports.service';
 
 @Component({
   selector: 'app-receipts-and-payments',
@@ -164,7 +165,8 @@ export class ReceiptsAndPaymentsComponent {
   GroupCodes: any[] = [];
   ExtractCodes: any[] = [];
 
-  caoschema: string | null = null;
+  // caoschema: string | null = null;
+  caoschema: string | null = 'accounts';
 
   disablesavebutton = false;
   disablesavebutton1 = false;
@@ -177,10 +179,11 @@ export class ReceiptsAndPaymentsComponent {
   showWeekNumbers: false,
   adaptivePosition: true
 };
+  private reportService=inject(AccountReportsService)
 
   ngOnInit(): void {
     this.initForms();
-    this.caoschema = sessionStorage.getItem('loginBranchSchemaname');
+    // this.caoschema = sessionStorage.getItem('loginBranchSchemaname');
     this.getGroupcodes();
   }
 
@@ -208,7 +211,9 @@ return null;
   getGroupcodes(): void {
     if (!this.caoschema) return;
 
-    this.subscriberService
+    // this.subscriberService
+    //   .GetSubscriberGroups(this.caoschema)
+    this.reportService
       .GetSubscriberGroups(this.caoschema)
       .subscribe({
         next: (data: any[]) => this.GroupCodes = data,

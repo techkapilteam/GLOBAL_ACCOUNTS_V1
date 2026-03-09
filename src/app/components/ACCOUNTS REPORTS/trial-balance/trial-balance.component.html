@@ -151,8 +151,11 @@
               <span class="font-weight-bold">{{ betweendates }} :</span>
               <label class="ml-2">
                 {{ betweenfrom }}
-                <span *ngIf="inbetween"> {{ inbetween }} </span>
-                {{ betweento }}
+                <ng-container *ngIf="betweendates === 'Between'">
+        <!-- <span *ngIf="inbetween"> {{ inbetween }} </span> -->
+        And
+        {{ betweento }}
+      </ng-container>
               </label>
             </div>
           </div>

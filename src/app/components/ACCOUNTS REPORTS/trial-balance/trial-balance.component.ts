@@ -37,10 +37,9 @@ export class TrialBalanceComponent {
   difference = 0;
   savebutton = 'Generate Report';
   withgrouping = false;
-  betweendates: 'As On' | 'Between' = 'As On';
+  betweendates: 'As On' | 'Between' = 'Between';
 betweenfrom: string = '';
 betweento: string = '';
-inbetween: string = '';
 printedDate: boolean = true;
 
   fromdate!: Date;
@@ -62,8 +61,9 @@ printedDate: boolean = true;
 
   ngOnInit(): void {
 
-    this.currencysymbol = '₹',
+    this.currencysymbol = '₹';
       // this.commonService.datePickerPropertiesSetup('currencysymbol');
+    const today = new Date();
 
     this.dpConfig = {
       dateInputFormat:'DD-MMM-YYYY',
@@ -92,11 +92,11 @@ printedDate: boolean = true;
       todate: [this.todate],
       grouptype: ['BETWEEN']
     });
-     this.betweendates = 'As On';
-  const today = new Date();
-this.betweenfrom = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
-  this.betweento    = '';
-  this.inbetween    = '';
+     this.groupType = 'BETWEEN';
+  this.showhideason = true;
+  this.betweendates = 'Between';
+  this.betweenfrom = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
+  this.betweento = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
 
     // this.GetTrialBalance(this.fromdate, this.todate, this.groupType);
   }
@@ -107,14 +107,19 @@ this.betweenfrom = this.datePipe.transform(today, 'dd-MMM-yyyy') ?? '';
       this.showhideason = false;
       this.datelabel = 'Date';
       this.betweendates = 'As On';
-    this.inbetween    = '';
-    this.betweento    = '';
+      this.betweento    = '';
+      this.Trialbalancelst = [];
+      this.showhidetable = false;       
+    this.totaldebitamount = 0;       
+    this.totalcreditamount = 0;
+    this.difference = 0;
+    this.TrialBalanceDifference = false;
     } else {
       this.groupType = 'BETWEEN';
       this.showhideason = true;
       this.datelabel = 'From Date';
       this.betweendates = 'Between';
-    this.inbetween    = 'And';
+      this.Trialbalancelst = []; this.showhidetable = false; this.totaldebitamount = 0;  this.totalcreditamount = 0; this.difference = 0; this.TrialBalanceDifference = false;
     }
 
     this.TrialBalanceForm.patchValue({

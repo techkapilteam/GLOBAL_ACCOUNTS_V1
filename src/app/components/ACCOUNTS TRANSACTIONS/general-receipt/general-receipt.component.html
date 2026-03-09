@@ -1,17 +1,19 @@
 <div class="screen-container">
-  <div class="screen-card card shadow-sm p-4">
+  <div class="screen-card">
 
-    <!-- Header -->
-    <div class="screen-header mb-4">
-      <h2 class="mb-0">General Receipt View</h2>
+    
+ <div class="screen-header" style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd;">
+      <span style="display:inline-block; width:4px; height:26px; background:#0d6efd; border-radius:3px; flex-shrink:0;"></span>
+      <h2 style="margin:0; font-size:20px; font-weight:700; color:#0e0e0e;">General Receipt View</h2>
     </div>
 
-    <!-- New Button -->
+  
     <div class="row mb-3">
       <div class="col-12">
         <a
           routerLink="/dashboard/accounts/accounts-transactions/general-receipt-new"
-          class="btn btn-primary px-4">
+          class="btn btn-primary px-4"
+          style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:8px 20px;">
           + New
         </a>
       </div>
@@ -24,16 +26,15 @@
           type="text"
           class="form-control"
           placeholder="Search..."
-          (input)="filterDatatable($event)">
+          (input)="filterDatatable($event)"
+          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
       </div>
     </div>
 
     <!-- Table Card -->
     <div class="row">
       <div class="col-12">
-
-        <div class="border rounded p-3 bg-white">
-
+        <div class="border rounded p-3 bg-white" style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
           <p-table
             [value]="gridView"
             [paginator]="true"
@@ -50,39 +51,35 @@
             <!-- Header -->
             <ng-template pTemplate="header">
               <tr>
-                <th class="text-center">Actions</th>
-                <th>Receipt Date</th>
-                <th class="text-center">Receipt No.</th>
-                <th>Payment Details</th>
-                <th class="text-end">Received Amount</th>
-                <th style="width:400px">Narration</th>
+                <th class="text-center" style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Actions</th>
+                <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Date</th>
+                <th class="text-center" style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt No.</th>
+                <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Details</th>
+                <th class="text-end" style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; text-align:right !important; white-space:nowrap;">Received Amount</th>
+                <th style="width:400px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">Narration</th>
               </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-row>
               <tr>
-
-                <td class="text-center">
+                <td class="text-center" style="padding:8px 12px; font-size:13px;">
                   <button
                     class="btn btn-sm btn-primary"
-                    (click)="viewRow(row)">
+                    (click)="viewRow(row)"
+                    style="background:#0d6efd; border-color:#0d6efd; border-radius:6px; font-size:12px; font-weight:600; padding:4px 14px;">
                     View
                   </button>
                 </td>
-
-                <td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
                   {{ row.receipt_date || '--' }}
                 </td>
-
-                <td class="text-center">
+                <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">
                   {{ row.receipt_number || '--' }}
                 </td>
-
-                <td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
                   <ng-container *ngIf="row.modeof_receipt === 'CASH'; else nonCash">
                     CASH
                   </ng-container>
-
                   <ng-template #nonCash>
                     {{ row.modeof_receipt || '--' }}
                     <span *ngIf="row.ptypeofpayment">
@@ -93,32 +90,26 @@
                     </span>
                   </ng-template>
                 </td>
-
-                <td class="text-end">
+                <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                   {{ currencySymbol }}
                   {{ row.totalreceivedamount ?? 0 | number:'1.2-2' }}
                 </td>
-
-                <td style="width:400px">
+                <td style="width:400px; padding:8px 12px; font-size:13px; color:#162246;">
                   {{ row.narration || '-- NA --' }}
                 </td>
-
               </tr>
             </ng-template>
+
             <ng-template pTemplate="emptymessage">
               <tr>
-                <td colspan="6" class="text-center py-4">
+                <td colspan="6" class="text-center py-4" style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
                   No records found
                 </td>
               </tr>
             </ng-template>
-
           </p-table>
-
         </div>
-
       </div>
     </div>
-
   </div>
 </div>

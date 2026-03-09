@@ -11,7 +11,7 @@
             <div class="form-group">
               <label class="required-field">Group Code</label>
 
-              <ng-select [items]="GroupCodes" formControlName="groupcode" bindLabel="groupcode" bindValue="groupcode"
+              <ng-select [items]="GroupCodes" formControlName="groupcode" bindLabel="groupCode" bindValue="groupCode"
                 placeholder="Select" [searchable]="true" [clearable]="false" appendTo="body" (change)="GroupChange()"
                 [class.is-invalid]="
             FormReceiptsandPaymentsGroup.get('groupcode')?.invalid &&
