@@ -83,50 +83,75 @@ export class ChequeManagementComponent {
         : this.pageSize;
   }
 
+  // editClick(row: any): void {
+  //   debugger
+  //   if (row.pChqegeneratestatus === true) {
+  //     return;
+  //   }
+
+  //   // const isActive = row.pChqegeneratestatus ? 'false' : 'true';
+  //   const isActive = row.pchequegeneratestatus ? 'false' : 'true';
+
+  //   const item = {
+  //     pBankId: row.pBankId,
+  //     pChqbookid: row.pChqbookid,
+  //     pNoofcheques: row.pNoofcheques,
+  //     pChequefrom: row.pChequefrom,
+  //     pChequeto: row.pChequeto,
+  //     pChqegeneratestatus: isActive,
+  //     pBankname: `${row.pBankname} - ${row.pAccountnumber}`,
+  //     pAccountnumber: row.pAccountnumber,
+  //     pStatusname: row.pStatusname,
+  //     ptypeofoperation: 'UPDATE',
+  //     pCreatedby: this.commonService.getCreatedBy(),
+  //     branchSchema: this.commonService.getschemaname(),
+  //     pipaddress: this.commonService.getIpAddress()
+  //   };
+
+  //   const payload = {
+  //     pChqegeneratestatus: isActive,
+  //     pStatusname: row.pStatusname,
+  //     ptypeofoperation: 'UPDATE',
+  //     branchSchema: this.commonService.getschemaname(),
+  //     pipaddress: this.commonService.getIpAddress(),
+  //     pCreatedby: this.commonService.getCreatedBy(),
+  //     lstChequemanagementDTO: [item]
+  //   };
+
+  //   this.accountingService.SaveChequeManagement(JSON.stringify(payload)).subscribe({
+  //     next: () => {
+  //       this.commonService.showInfoMessage('Updated Successfully');
+  //       this.getChequeManagementGridData();
+  //     },
+  //     error: (error:any) => {
+  //       this.commonService.showErrorMessage(error);
+  //     }
+  //   });
+  // }
   editClick(row: any): void {
-    if (row.pChqegeneratestatus === true) {
-      return;
-    }
 
-    // const isActive = row.pChqegeneratestatus ? 'false' : 'true';
-    const isActive = row.pchequegeneratestatus ? 'false' : 'true';
-
-    const item = {
-      pBankId: row.pBankId,
-      pChqbookid: row.pChqbookid,
-      pNoofcheques: row.pNoofcheques,
-      pChequefrom: row.pChequefrom,
-      pChequeto: row.pChequeto,
-      pChqegeneratestatus: isActive,
-      pBankname: `${row.pBankname} - ${row.pAccountnumber}`,
-      pAccountnumber: row.pAccountnumber,
-      pStatusname: row.pStatusname,
-      ptypeofoperation: 'UPDATE',
-      pCreatedby: this.commonService.getCreatedBy(),
-      branchSchema: this.commonService.getschemaname(),
-      pipaddress: this.commonService.getIpAddress()
-    };
-
-    const payload = {
-      pChqegeneratestatus: isActive,
-      pStatusname: row.pStatusname,
-      ptypeofoperation: 'UPDATE',
-      branchSchema: this.commonService.getschemaname(),
-      pipaddress: this.commonService.getIpAddress(),
-      pCreatedby: this.commonService.getCreatedBy(),
-      lstChequemanagementDTO: [item]
-    };
-
-    this.accountingService.SaveChequeManagement(JSON.stringify(payload)).subscribe({
-      next: () => {
-        this.commonService.showInfoMessage('Updated Successfully');
-        this.getChequeManagementGridData();
-      },
-      error: (error:any) => {
-        this.commonService.showErrorMessage(error);
-      }
-    });
+  if (row.pchequegeneratestatus === true) {
+    return;
   }
+
+  const isActive = row.pchequegeneratestatus ? 'false' : 'true';
+
+  const item = {
+    pBankId: row.pbankconfigurationid,
+    pChqbookid: row.pchequebookid,
+    pNoofcheques: row.pnoofcheques,
+    pChequefrom: row.pchequefromnumber,
+    pChequeto: row.pchequetonumber,
+    pChqegeneratestatus: isActive,
+    pBankname: `${row.pbankname} - ${row.paccountnumber}`,
+    pAccountnumber: row.paccountnumber,
+    pStatusname: row.pstatus,
+    ptypeofoperation: 'UPDATE',
+    pCreatedby: this.commonService.getCreatedBy(),
+    branchSchema: this.commonService.getschemaname(),
+    pipaddress: this.commonService.getIpAddress()
+  };
+}
 
   onFooterPageChange(event: any): void {
     this.pageCriteria.offset = event.page - 1;

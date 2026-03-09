@@ -132,8 +132,8 @@
             <td class="text-center">{{ row.pchequetonumber }}</td>
 
             <td class="text-center">
-              <span *ngIf="row.pChqegeneratestatus">Active</span>
-              <a *ngIf="!row.pChqegeneratestatus" class="a-link" (click)="editClick(row)">
+              <span *ngIf="row.pchequegeneratestatus">Active</span>
+              <a *ngIf="!row.pchequegeneratestatus" class="a-link" (click)="editClick(row)">
                 Generate Cheques
               </a>
             </td>
