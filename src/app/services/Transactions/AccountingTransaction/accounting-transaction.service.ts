@@ -122,10 +122,10 @@ GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt:
     set('modeofreceipt', modeofreceipt).set('companyCode', companyCode).set('branchCode', branchCode);
     return this._CommonService.getAPI('/Accounts/getchequesrowcount', params, 'YES');
   }
-  getbankbalance( brstodate: any, _recordid: any, branchSchema: any, branchCode: 'KLC01',companyCode: 'KAPILCHITS'){
+  GetBankBalance( brstodate: any, _recordid: any, branchSchema: any, branchCode: 'KLC01',companyCode: 'KAPILCHITS'){
     const params = new HttpParams().set('brstodate', brstodate).set('_recordid', _recordid).set('branchSchema', branchSchema)
     .set('branchCode', branchCode).set('companyCode', companyCode);
-    return this._CommonService.getAPI('/Accounts/getbankbalance', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
   }
   getReceiptNumber(GlobalSchema: any, BranchSchema: any, CompanyCode: any, BranchCode: any) {
   const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set("CompanyCode", CompanyCode)
@@ -253,10 +253,10 @@ GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt:
     return this._CommonService.getAPI('/Accounts/GetBankUPIDetails', params, 'YES')
   }
 
-  GetBankBalance(brstodate:any,_recordid:any,BranchSchema:any,branchCode:any,companyCode:any) {
-    const params = new HttpParams().set('brstodate', brstodate).set('_recordid',_recordid).set('BranchSchema',BranchSchema).set('branchCode',branchCode).set('companyCode',companyCode);
-    return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
-  }
+  // GetBankBalance(brstodate:any,_recordid:any,BranchSchema:any,branchCode:any,companyCode:any) {
+  //   const params = new HttpParams().set('brstodate', brstodate).set('_recordid',_recordid).set('BranchSchema',BranchSchema).set('branchCode',branchCode).set('companyCode',companyCode);
+  //   return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
+  // }
   GetCashonhandBalance(globalSchema: any, BranchSchema: any, branchCode: any, companyCode: any) {
     const params = new HttpParams().set('globalSchema', globalSchema).set('BranchSchema', BranchSchema)
     .set('branchCode', branchCode).set('companyCode', companyCode);
@@ -454,9 +454,12 @@ SaveChequesIssued(data: any) {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/ChitTransactions/getBranchType', params, 'YES');
   }
- getChequesIssued(){
-
-}
+  GetChequesIssued(_BankId: any, BrsFromDate: any, BrsTodate:any, BranchSchema: any, startindex: any, endindex: any, modeofreceipt: any,
+  searchtext: any, GlobalSchema: any, branchcode:any, companycode:any)
+  { const params = new HttpParams().set(_BankId, _BankId).set(BrsFromDate, BrsFromDate).set(BrsTodate, BrsTodate).set(BranchSchema, BranchSchema)
+    .set(startindex, startindex).set(endindex, endindex).set(modeofreceipt, modeofreceipt).set(searchtext, searchtext).set(GlobalSchema, GlobalSchema)
+    .set(branchcode, branchcode).set(companycode, companycode);return this._CommonService.getAPI('/Accounts/GetChequesIssued', params, 'YES');
+  }
   getChequeReturnCharges(GlobalSchema: string, companyCode: string, branchCode: string): Observable<any> {
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('companyCode', companyCode)
       .set('branchCode', branchCode);
