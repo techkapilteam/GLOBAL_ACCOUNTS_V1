@@ -52,7 +52,7 @@ GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt:
   GetGeneralReceiptExistingData(): Observable<any> {
     const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', 'accounts').set('TaxSchema', 'taxes')
       .set('CompanyCode', this._CommonService.getCompanyCode()).set('BranchCode', this._CommonService.getBranchCode());
-    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData', params, 'YES');
+    return this._CommonService.getAPI('/Accounts/GetGeneralReceiptExistingData', params, 'YES');
   }
   GetModeoftransactions(): Observable<any> {
     return this._CommonService.getAPI('/AccountingTransactions/GetModeoftransactions', '', 'NO');
@@ -99,8 +99,12 @@ GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt:
   GetBankNames(GlobalSchema: any, AccountsSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
     debugger;
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('AccountsSchema', AccountsSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
-    // return this._CommonService.getAPI('/Accounts/BankNames', params, 'YES');
     return this._CommonService.getAPI('/Accounts/GetBankNames', params, 'YES');
+  }
+  GetReceiptNumber(GlobalSchema: any, BranchSchema: any, CompanyCode: any, BranchCode: any): Observable<any> {
+    debugger;
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
+    return this._CommonService.getAPI('/Accounts/GetReceiptNumber', params, 'YES');
   }
   GetBankDetailsbyId(pbankid: any): Observable<any> {
     const params = new HttpParams().set('pbankid', pbankid).set('BranchSchema', this._CommonService.getschemaname());
@@ -455,8 +459,8 @@ SaveChequesIssued(data: any) {
     return this._CommonService.getAPI('/ChitTransactions/getBranchType', params, 'YES');
   }
   GetChequesIssued(_BankId: any, BrsFromDate: any, BrsTodate:any, BranchSchema: any, startindex: any, endindex: any, modeofreceipt: any,
-  searchtext: any, GlobalSchema: any, branchcode:any, companycode:any)
-  { const params = new HttpParams().set(_BankId, _BankId).set(BrsFromDate, BrsFromDate).set(BrsTodate, BrsTodate).set(BranchSchema, BranchSchema)
+  searchtext: any, GlobalSchema: any, branchcode:any, companycode:any){
+  const params = new HttpParams().set(_BankId, _BankId).set(BrsFromDate, BrsFromDate).set(BrsTodate, BrsTodate).set(BranchSchema, BranchSchema)
     .set(startindex, startindex).set(endindex, endindex).set(modeofreceipt, modeofreceipt).set(searchtext, searchtext).set(GlobalSchema, GlobalSchema)
     .set(branchcode, branchcode).set(companycode, companycode);return this._CommonService.getAPI('/Accounts/GetChequesIssued', params, 'YES');
   }
