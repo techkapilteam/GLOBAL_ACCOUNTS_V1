@@ -257,6 +257,8 @@ return { dateRangeInvalid: true };
 return null;
 }
 onDateToggle(): void {
+  this.gridData = [];
+  this.totalBalanceGrid = [];
   if (this.dte) {
     this.dayBookForm.patchValue({
       dtodate: null

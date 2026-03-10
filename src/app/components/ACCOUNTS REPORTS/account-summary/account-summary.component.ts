@@ -222,6 +222,7 @@ inbetween: string = '';
     this.AsOnDate = this.selectedDateMode ? 'T' : 'F';
     this.betweendates = this.selectedDateMode ? 'As On' : 'Between';
 this.inbetween    = this.selectedDateMode ? '' : 'And';
+this.gridData = [];
 
     if (this.selectedDateMode) {
       this.accountSummaryForm.patchValue({

@@ -31,13 +31,15 @@ export class LoginComponent {
     if (this.authService.login(this.username, this.password)) {
       
     this.companyService.GetCompanyData().subscribe({
-       next: (response: any) => { debugger
+       next: (response: any) => { 
+        console.log('✅ Saving company details to session:', response[0]);
         sessionStorage.setItem('CompanyDetails',JSON.stringify(response[0]))
+        this.router.navigate(['/dashboard']);
     },
     
     });
   
-      this.router.navigate(['/dashboard']);
+      // this.router.navigate(['/dashboard']);
     } else {
       this.errorMessage = 'Invalid credentials';
     }
