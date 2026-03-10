@@ -131,21 +131,21 @@ export class GeneralReceiptComponent implements OnInit {
   //   window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
   // }
 
-  viewRow(row: any): void  {
+  viewRow(row: any): void {
     debugger
-  if (!row?.receipt_number) {
-    console.error('Invalid row data');
-    return;
+    if (!row?.receipt_number) {
+      console.error('Invalid row data');
+      return;
+    }
+
+    const receipt = btoa(`${row.receipt_number},General Receipt`);
+
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/GeneralReceiptReport', receipt])
+    );
+
+    window.open(url, '_blank');
   }
-
-  const receipt = btoa(`${row.receipt_number},General Receipt`);
-
-  const url = this.router.serializeUrl(
-    this.router.createUrlTree(['/GeneralReceiptReport', receipt])
-  );
-
-  window.open(url, '_blank');
-}
 
   private resetGrid(): void {
     this.gridView = [];

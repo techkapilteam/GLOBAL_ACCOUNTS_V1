@@ -1029,12 +1029,10 @@ export class GeneralReceiptNewComponent implements OnInit {
                 (res: any) => {
                     if (res === true) {
                         this._commonService.showInfoMessage('Saved successfully');
-                        const receipt = btoa(payload.preceiptid + ',General Receipt,,' + this._commonService.getschemaname());
-                        window.open('/#/GeneralReceiptReport?id=' + receipt, '_blank');
+                        // const receipt = btoa(payload.preceiptid + ',General Receipt,,' + this._commonService.getschemaname());
+                        // window.open('/#/GeneralReceiptReport?id=' + receipt, '_blank');
                         this.ClearGenerealReceipt();
-                        setTimeout(() => {
-                        this.router.navigate(['/GeneralReceiptReport']);
-                    }, 1000);
+                        this.router.navigate(['dashboard/accounts/accounts-transactions/general-receipt']);
                     }
                     this.disablesavebutton = false; this.savebutton = 'Save';
                 },
