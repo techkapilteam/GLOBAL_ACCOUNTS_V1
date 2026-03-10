@@ -153,8 +153,6 @@ export class GeneralReceiptNewComponent implements OnInit {
     public tempgstno: any = '';
     disabletransactiondate = false;
     public banksList: any;
-
-    // GST No. pattern
     gstnopattern = '^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}([a-zA-Z0-9]){1}([a-zA-Z]){1}([a-zA-Z0-9]){1}?';
 
     cashRestrictAmount: any;
@@ -221,54 +219,27 @@ export class GeneralReceiptNewComponent implements OnInit {
 
             // REQUIRED — date picker
             preceiptdate: ['', [Validators.required]],
-
-            // REQUIRED — radio selection
             pmodofreceipt: ['CASH', [Validators.required]],
-
             ptotalreceivedamount: [0],
-
-            // REQUIRED + STRING (max 250 chars)
             pnarration: ['', [Validators.required, Validators.maxLength(250)]],
-
             ppartyname: [''],
-
-            // REQUIRED — dropdown
             ppartyid: [null, [Validators.required]],
-
             pistdsapplicable: [false],
-
-            // TDS Section — required set dynamically by tdsvalidation()
             pTdsSection: [''],
-
-            // TDS % — NUMERIC 0–100 (required set dynamically)
             pTdsPercentage: [0, [percentageValidator]],
-
             ptdsamount: [0],
             ptdscalculationtype: [''],
             ppartypannumber: [''],
-
-            // Bank name — STRING (alphabets + spaces)
             pbankname: ['', [alphabetsOnlyValidator]],
-
-            // Branch name — STRING (required + alphabets, set fully in validation())
             pbranchname: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/), Validators.maxLength(30)]],
-
             schemaname: [this._commonService.getschemaname()],
             ptranstype: [''],
             ptypeofpayment: [null],
-
-            // Account number — NUMERIC digits only, 9–18 digits (required set in validation())
             pAccountnumber: ['', [Validators.required, digitsOnlyValidator, Validators.minLength(9), Validators.maxLength(40)]],
-
-            // Cheque/Reference No — ALPHANUMERIC (required set in validation())
             pChequenumber: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
-
             pchequedate: [this.today],
             pbankid: [null],
-
-            // Card number — exactly 16 DIGITS (required set in validation())
             pCardNumber: ['', [cardNumberValidator]],
-
             pdepositbankid: [null],
             pdepositbankname: [''],
             pRecordid: [0],
@@ -305,34 +276,23 @@ export class GeneralReceiptNewComponent implements OnInit {
         this.BlurEventAllControll(this.GeneralReceiptForm);
         sessionStorage.removeItem('schemaNameForReportCall');
     }
-
     trackByFn(index: number, item: any): any { return item?.pBankId || index; }
-
-    // ─── preceiptslist sub-FormGroup ─────────────────────────────────────────
     preceiptslist(): FormGroup {
         return this._FormBuilder.group({
             pisgstapplicable: [false],
             pState: [''],
             pStateId: [''],
-
-            // GST % — NUMERIC 0–100 (required set dynamically by gstvalidation())
             pgstpercentage: [0, [percentageValidator]],
-
             pamount: [0], pgsttype: [''], pgstcalculationtype: [''],
             pigstamount: [0], pcgstamount: [0], psgstamount: [0], putgstamount: [0],
             psubledgerid: [null], psubledgername: [''],
-
-            // Ledger — required set dynamically in addPaymentDetails()
             pledgerid: [null], pledgername: [''],
-
             pCreatedby: [this._commonService.pCreatedby],
             pStatusname: [this._commonService.pStatusname],
             pModifiedby: [0], pStatusid: [''],
             pEffectfromdate: [''], pEffecttodate: [''],
             ptypeofoperation: [this._commonService.ptypeofoperation],
             pgstamount: [0],
-
-            // GST No — pattern validated (STRING with specific pattern)
             pgstno: new FormControl('', [Validators.pattern(this.gstnopattern)]),
             pigstpercentage: [''], pcgstpercentage: [''], psgstpercentage: [''], putgstpercentage: [''],
             pactualpaidamount: ['', [Validators.required, positiveAmountValidator, Validators.pattern(/^[0-9,]+(\.[0-9]{1,2})?$/)]],
@@ -346,11 +306,9 @@ export class GeneralReceiptNewComponent implements OnInit {
             event.preventDefault();
             return false;
         }
-
         return true;
     }
     branchNameChange(event: any) {
-
         let value = event.target.value;
         value = value.replace(/[^a-zA-Z ]/g, '');
         value = value.toLowerCase().replace(/\b\w/g, function (char: string) {
@@ -358,7 +316,6 @@ export class GeneralReceiptNewComponent implements OnInit {
         });
 
         this.GeneralReceiptForm.get('pbranchname')?.setValue(value, { emitEvent: false });
-
     }
     get pgstno() { return this.GeneralReceiptForm.get('pgstno'); }
 
@@ -367,23 +324,17 @@ export class GeneralReceiptNewComponent implements OnInit {
         let data = this.partyjournalentrylist;
         this.partyjournalentrylist = [...this.partyjournalentrylist, data];
     }
-
-    // ─── Key-press guards ────────────────────────────────────────────────────
     allowNumbersOnly(event: KeyboardEvent) {
         const charCode = event.which ? event.which : event.keyCode;
         if (charCode >= 48 && charCode <= 57) return true;
         if (charCode === 46) return true;
         event.preventDefault(); return false;
     }
-
-    /** Digits only — for account number / card number fields */
     allowDigitsOnly(event: KeyboardEvent): boolean {
         const charCode = event.which ? event.which : event.keyCode;
         if ((charCode >= 48 && charCode <= 57) || [8, 9, 37, 39, 46].includes(charCode)) return true;
         event.preventDefault(); return false;
     }
-
-    /** Alphabets + space — for name / branch fields */
     allowAlphabetsOnly(event: KeyboardEvent): boolean {
         const charCode = event.which ? event.which : event.keyCode;
         if (
@@ -392,7 +343,6 @@ export class GeneralReceiptNewComponent implements OnInit {
         ) return true;
         event.preventDefault(); return false;
     }
-
     allowIndianAmount(event: KeyboardEvent) {
         const input = event.target as HTMLInputElement;
         const value = input.value.replace(/,/g, '');
@@ -531,8 +481,6 @@ export class GeneralReceiptNewComponent implements OnInit {
             case 'PARTY': this.partyBalance = `${this.currencySymbol} ${balanceDetails}`; break;
         }
     }
-
-    // ─── Payment type toggling ────────────────────────────────────────────────
     public Paymenttype(type: string) {
         for (var n = 0; n < this.Paymentbuttondata.length; n++) {
             if (this.Paymentbuttondata[n].type === type) {
@@ -563,7 +511,6 @@ export class GeneralReceiptNewComponent implements OnInit {
             this.GeneralReceiptForm.controls['ptranstype'].setValue('');
         }
     }
-
     public Banktype(type: string) {
         debugger;
         this.validation(type);
@@ -620,8 +567,6 @@ export class GeneralReceiptNewComponent implements OnInit {
         if (this.getpartyJournalEntryData) this.getpartyJournalEntryData();
         if (this.getPaymentListColumnWisetotals) this.getPaymentListColumnWisetotals();
     }
-
-    // ─── Dynamic bank-field validation (called on every Banktype() switch) ───
     validation(type: string) {
         debugger;
         this.formValidationMessages = {};
@@ -633,10 +578,7 @@ export class GeneralReceiptNewComponent implements OnInit {
         const DepositBankControl = this.GeneralReceiptForm.controls['pdepositbankid'];
         const AccountControl = this.GeneralReceiptForm.controls['pAccountnumber'];
         const BranchControl = this.GeneralReceiptForm.controls['pbranchname'];
-
         DepositBankControl.clearValidators();
-
-        // Cheque/Ref No — REQUIRED + ALPHANUMERIC
         ChequeControl.setValidators([Validators.required, alphanumericValidator]);
         TypeofPaymentControl.setValidators([Validators.required]);
 
@@ -647,7 +589,6 @@ export class GeneralReceiptNewComponent implements OnInit {
         } else {
             ChequeDateControl.clearValidators();
             BankControl.clearValidators();
-            // Card — REQUIRED + exactly 16 digits
             CardNumberControl.setValidators([Validators.required, cardNumberValidator]);
         }
 
