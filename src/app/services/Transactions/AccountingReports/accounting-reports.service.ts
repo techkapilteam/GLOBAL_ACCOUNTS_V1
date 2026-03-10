@@ -935,7 +935,9 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
     printorpdf: string,
     isNarrationChecked: boolean
   ) {
+    debugger
     const address = this._CommonService.getcompanyaddress();
+    console.log('Session at PDF time:', sessionStorage.getItem('CompanyDetails'));
     const Companyreportdetails = this._CommonService._getCompanyDetails();
     const doc = new jsPDF(pagetype);
     const totalPagesExp = '{total_pages_count_string}';

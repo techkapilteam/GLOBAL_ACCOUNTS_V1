@@ -275,6 +275,8 @@ setPageModel(): void {
 
   ChequesInfo(event: any): void {
     this.chequesInfo = event.target.checked;
+    this.gridView = [];
+    this.Showhide = true;
     this.BRStatmentForm.patchValue({
       fromDate: new Date(),
       pbankbalance: 0,

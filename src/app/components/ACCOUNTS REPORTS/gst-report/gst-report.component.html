@@ -75,7 +75,7 @@
   </div>
   <div *ngIf="showhidegstreport" class="section-content mt-2">
   <div class="col-md-12 col-xl-12">
-    <div class="d-flex justify-content-end" *ngIf="showicons">
+    <div class="d-flex justify-content-end gap-3" *ngIf="showicons">
       
       <a (click)="pdfOrprint('Pdf')" class="export-icons">
         <img 
@@ -145,7 +145,7 @@
   <div class="card shadow-sm mt-4" *ngIf="showhidegstsummary">
     <div class="card-body p-0">
       <div class="col-md-12 col-xl-12">
-        <div class="d-flex justify-content-end" *ngIf="showicons">
+        <div class="d-flex justify-content-end gap-3" *ngIf="showicons">
             <a (click)="pdfOrprintGstSummary('Pdf')" class="export-icons"><img src="assets/images/pdf-icon-blue.svg " title="pdf" width="18px"></a>
             <a (click)="pdfOrprintGstSummary('Print')" class="export-icons"><img src="assets/images/print-icon-blue.svg " title="Print" width="18px"></a>
             <a class="export-icons" (click)="exportSummary()"><img src="assets/images/icon-excel.svg " title="Excel" width="18px"></a>

@@ -61,7 +61,7 @@
                   <div class="col-md-6">
                     <strong>Printed On :</strong> {{ printedon }}
                   </div>
-                  <div class="col-md-6 text-right">
+                  <div class="col-md-6 d-flex justify-content-end align-items-center">
                     <strong>Branch :</strong> {{ branchName | titlecase }}
                   </div>
                 </div>
@@ -89,7 +89,7 @@
                       <strong>Receipt No :</strong>
                       {{ receiptdata.receiptid }}
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-6 d-flex justify-content-end align-items-center">
                       <strong>Date :</strong>
                       {{ receiptdata.receipt_date | date }}
                     </div>
