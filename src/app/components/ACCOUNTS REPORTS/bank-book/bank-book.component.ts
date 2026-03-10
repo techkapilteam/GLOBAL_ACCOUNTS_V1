@@ -327,5 +327,6 @@ this.updateFormattedDates();
         });
     }
   }
+  
 
 }
