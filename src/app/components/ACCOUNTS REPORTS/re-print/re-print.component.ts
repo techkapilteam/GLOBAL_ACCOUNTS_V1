@@ -353,12 +353,15 @@ export class RePrintComponent implements OnInit {
                     `${transNo},General Receipt,Reprint,${schemaName}`
                   );
 
+                  // const url = this.router.serializeUrl(
+                  //   this.router.createUrlTree(
+                  //     ['/GeneralReceiptReport/:id'],
+                  //     { queryParams: { id: receipt } }
+                  //   )
+                  // );
                   const url = this.router.serializeUrl(
-                    this.router.createUrlTree(
-                      ['/GeneralReceiptReport/:id'],
-                      { queryParams: { id: receipt } }
-                    )
-                  );
+  this.router.createUrlTree(['/GeneralReceiptReport', receipt])
+);
 
                   window.open(url, '_blank');
 
@@ -414,12 +417,15 @@ export class RePrintComponent implements OnInit {
                     `${transNo},General Receipt,Reprint,${schemaName}`
                   );
 
+                  // const url = this.router.serializeUrl(
+                  //   this.router.createUrlTree(
+                  //     ['/GeneralReceiptReport/:id'],
+                  //     { queryParams: { id: receipt } }
+                  //   )
+                  // );
                   const url = this.router.serializeUrl(
-                    this.router.createUrlTree(
-                      ['/GeneralReceiptReport/:id'],
-                      { queryParams: { id: receipt } }
-                    )
-                  );
+  this.router.createUrlTree(['/GeneralReceiptReport', receipt])
+);
 
                   window.open(url, '_blank');
           } else alert('Transaction No. Does Not Exit !');
@@ -430,12 +436,15 @@ export class RePrintComponent implements OnInit {
       const receipt = btoa(`${transNo},Journal Voucher,Reprint`);
       this._AccountingReportsService.GetJvReport(transNo,'accounts','global','KAPILCHITS','KLC01').subscribe(res => {
         if (res){
-          const url = this.router.serializeUrl(
-                    this.router.createUrlTree(
-                      ['/JournalVoucherReport/:id'],
-                      { queryParams: { id: receipt } }
-                    )
-                  );
+          // const url = this.router.serializeUrl(
+          //           this.router.createUrlTree(
+          //             ['/JournalVoucherReport/:id'],
+          //             { queryParams: { id: receipt } }
+          //           )
+          //         );
+           const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/JournalVoucherReport', receipt])
+      );
 
                   window.open(url, '_blank');
         }
@@ -448,14 +457,18 @@ export class RePrintComponent implements OnInit {
       
       this._AccountingReportsService.GetPaymentVoucherbyId(transNo,'accounts','KAPILCHITS','KLC01','global').subscribe(res => {
         if (res?.length > 0) {
+              console.log('Payment Voucher Response:', res);
           const receipt = btoa(`${transNo},Payment Voucher,Reprint`);
           // window.open(`/#/PaymentVoucherReport?id=${receipt}`, '_blank');
-          const url = this.router.serializeUrl(
-                    this.router.createUrlTree(
-                      ['/PaymentVoucherReport/:id'],
-                      { queryParams: { id: receipt } }
-                    )
-                  );
+          // const url = this.router.serializeUrl(
+          //           this.router.createUrlTree(
+          //             ['/PaymentVoucherReport/:id'],
+          //             { queryParams: { id: receipt } }
+          //           )
+          //         );
+           const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/PaymentVoucherReport', receipt])
+      );
 
                   window.open(url, '_blank');
         } else alert('Transaction No. Does Not Exit !');
@@ -481,12 +494,15 @@ export class RePrintComponent implements OnInit {
         if (res?.length > 0) {
           const receipt = btoa(`${transNo},Petty Cash,Reprint`);
           // window.open(`/#/PaymentVoucherReport?id=${receipt}`, '_blank');
-          const url = this.router.serializeUrl(
-                    this.router.createUrlTree(
-                      ['/PaymentVoucherReport/:id'],
-                      { queryParams: { id: receipt } }
-                    )
-                  );
+          // const url = this.router.serializeUrl(
+          //           this.router.createUrlTree(
+          //             ['/PaymentVoucherReport/:id'],
+          //             { queryParams: { id: receipt } }
+          //           )
+          //         );
+           const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/PaymentVoucherReport', receipt])
+      );
 
                   window.open(url, '_blank');
         } else alert('Transaction No. Does Not Exit !');
@@ -498,12 +514,15 @@ export class RePrintComponent implements OnInit {
         if (res) {
           const receipt = btoa(`${transNo},Chit Payment Voucher,Reprint`);
           // window.open(`/#/PaymentVoucherReport?id=${receipt}`, '_blank');
-          const url = this.router.serializeUrl(
-                    this.router.createUrlTree(
-                      ['/PaymentVoucherReport/:id'],
-                      { queryParams: { id: receipt } }
-                    )
-                  );
+          // const url = this.router.serializeUrl(
+          //           this.router.createUrlTree(
+          //             ['/PaymentVoucherReport/:id'],
+          //             { queryParams: { id: receipt } }
+          //           )
+          //         );
+           const url = this.router.serializeUrl(
+        this.router.createUrlTree(['/PaymentVoucherReport', receipt])
+      );
 
                   window.open(url, '_blank');
         } else alert('Transaction No. Does Not Exist !');
