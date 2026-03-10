@@ -50,7 +50,11 @@
         <label class="required-field" id="pAccountnumber" title="Account No.">Account No.</label>
 
         <input class="form-control" [attr.disabled]="accountno ? '' : null" type="text" value=""
-          formControlName="pAccountnumber" maxlength="50" appNumbersonly [ngClass]="{
+          formControlName="pAccountnumber"   (input)="allowNumbersOnly1($event)"
+          maxlength="16"
+  inputmode="numeric"
+  pattern="[0-9]*"
+          [ngClass]="{
         'is-invalid': bankmasterform.get('pAccountnumber')?.touched &&
                       bankmasterform.get('pAccountnumber')?.invalid
         }">
@@ -71,19 +75,30 @@
     <div class="col-md-6 col-xl-4">
       <div class="form-group">
         <label class="required-field" id="bankName" title="Bank">Bank</label>
-        <select class="form-control" formControlName="bankName" (change)="onChange($event)" maxlength="50" [ngClass]="{
+        <!-- <select class="form-control" formControlName="bankName" (change)="onChange($event)" maxlength="50" [ngClass]="{
         'is-invalid': bankmasterform.get('pAccountnumber')?.touched &&
                       bankmasterform.get('pAccountnumber')?.invalid
         }">
-          <!-- [ngClass]="{ 'is-invalid':bankmastervalidations.bankName}" -->
           <option value="" disabled>Select</option>
           <option *ngFor="let i of banksList" [value]="i.bankName">
             {{i.bankName}}
           </option>
-        </select>
+        </select> -->
+
+
+                  <!-- [ngClass]="{ 'is-invalid':bankmastervalidations.bankName}" -->
+
+
+        <ng-select class="form-control" formControlName="bankName" [items]="banksList" bindLabel="bankName"
+          bindValue="bankName" placeholder="Select" (change)="onChange($event)" [ngClass]="{
+    'is-invalid': bankmasterform.get('pAccountnumber')?.touched &&
+                  bankmasterform.get('pAccountnumber')?.invalid
+  }">
+        </ng-select>
+
         <div class="invalid-feedback" *ngIf="bankmasterform.get('bankName')?.touched &&
             bankmasterform.get('bankName')?.invalid">
-          A/C Type is required
+          Bank Name is required
         </div>
         <!-- <input class="form-control" type="text"  [attr.disabled]="disable ? '' : null" title="Bank" value=""formControlName="pBankname" appCharactersonly  appUppercase  [ngClass]="{ 'is-invalid': bankmastervalidations.pBankname }"> -->
         <!-- <div class="invalid-feedback">
@@ -143,24 +158,22 @@
           <div class="col-md-6 col-xl-6 pr-0">
             <label>Overdraft Limit</label>
             <input class="form-control" type="text" style="text-align:right;" id="pOverdraft" title="Overdraft Limit"
-             formControlName="pOverdraft" placeholder="0.00"
-              (input)="onInputChange($event, 'pOverdraft')" (blur)="onInputBlur($event, 'pOverdraft')"
-              (keypress)="allowNumbersOnly($event)" (paste)="blockNonNumericPaste($event)"
-             [ngClass]="{
+              formControlName="pOverdraft" placeholder="0.00" (input)="onInputChange($event, 'pOverdraft')"
+              (blur)="onInputBlur($event, 'pOverdraft')" (keypress)="allowNumbersOnly($event)"
+              (paste)="blockNonNumericPaste($event)" [ngClass]="{
       'is-invalid': bankmasterform.get('pOverdraft')?.invalid 
       && bankmasterform.get('pOverdraft')?.touched
-    }"
-              >
-             <div class="invalid-feedback"
-       *ngIf="bankmasterform.get('pOverdraft')?.invalid && bankmasterform.get('pOverdraft')?.touched">
-       
-    <span *ngIf="bankmasterform.get('pOverdraft')?.errors?.['pattern']">
-      Enter valid amount (max 2 decimals)
-    </span>
+    }">
+            <div class="invalid-feedback"
+              *ngIf="bankmasterform.get('pOverdraft')?.invalid && bankmasterform.get('pOverdraft')?.touched">
 
-  </div>
+              <span *ngIf="bankmasterform.get('pOverdraft')?.errors?.['pattern']">
+                Enter valid amount (max 2 decimals)
+              </span>
+
+            </div>
           </div>
-            <!-- value="Overdraft Limit" -->
+          <!-- value="Overdraft Limit" -->
           <!-- appRoundecimal="12@2" appMycurrencyFormatter
               appNumbersonly  -->
 
@@ -413,10 +426,10 @@
               [ngClass]="{ 'is-invalid': submitted &&   bankmastervalidations.pUpiid}" placeholder="xyz@okicici"
               formControlName="pUpiid"> -->
 
-              <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
-  pattern= "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$" maxlength="150"
-  [ngClass]="{  'is-invalid': submitted && bankmasterform.controls['pUpiid'].invalid  }" placeholder="xyz@okicici"
-  formControlName="pUpiid">
+            <input class="form-control" type="text" value="" appEmailFormat appEmailpattern
+              pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$" maxlength="150"
+              [ngClass]="{  'is-invalid': submitted && bankmasterform.controls['pUpiid'].invalid  }"
+              placeholder="xyz@okicici" formControlName="pUpiid">
             <div class="invalid-feedback">
               <span *ngIf="bankmastervalidations.pUpiid">{{bankmastervalidations?.pUpiid}}</span>
             </div>

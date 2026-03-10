@@ -360,6 +360,13 @@ export class IssuedChequeComponent implements OnInit {
 
   checkedCancel(event: any, row: any) {
     const isChecked = event.target.checked;
-    row.pchequestatus = isChecked;
+  row.isSelected = isChecked;
+  if (isChecked) {
+    this.DataForCancel.push(row);
+  } else {
+    this.DataForCancel = this.DataForCancel.filter(
+      r => r.pchequenumber !== row.pchequenumber
+    );
+  }
   }
 }

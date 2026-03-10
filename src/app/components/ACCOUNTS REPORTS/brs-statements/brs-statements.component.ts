@@ -298,6 +298,7 @@ get f() { return this.BrsStatementsReport.controls; }
     const bankid = this.BrsStatementsReport.value.pbankname??'';
     const transtype = this.BrsStatementsReport.value.Bank??'';
     // const branchschema = this._CommonService.getschemaname();
+    const branchcode = transtype === 'CREDIT' ? 'KIT' : 'KLC01';
 
     this._bankBookService
       .GetBrsReportBankDebitsBankCredits(
@@ -307,7 +308,7 @@ get f() { return this.BrsStatementsReport.controls; }
         transtype,
         'accounts',
         'global',
-        'KLC01',
+        branchcode,
         'KAPILCHITS'
       )
       .subscribe({
