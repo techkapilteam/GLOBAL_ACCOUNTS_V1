@@ -1,137 +1,178 @@
 <div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>Petty Cash Receipt Cancel</h2>
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
+
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Petty Cash Receipt Cancel</h2>
     </div>
+
     <div class="screen-content">
       <form [formGroup]="PettyCashCancel" autocomplete="off">
-        <div class="row">
-          <div class="col-lg-12 col-md-12">
-            <div class="screen-content">
-              <div class="row g-3 align-items-end">
-                <div class="col-md-4">
-                  <label id="receiptid" title="Receipt No." class="required-field">Receipt No.</label>
-                  <ng-select [items]="receiptdata" bindLabel="receiptnumber" bindValue="receiptid"
-                    formControlName="receiptid" (change)="getreceiptdata($event)" [multiple]="false"
-                    placeholder="Select" [searchable]="true" [clearable]="true" appendTo="body"
-                    dropdownPosition="bottom" [clearOnBackspace]="true">
-                  </ng-select>
-                </div>
-                <div class="col-md-2">
-                  <button type="button" class="btn btn-primary mb-1" (click)="showdata()">
-                    Show
-                  </button>
-                </div>
-                <div class="col-md-4">
-                  <label id="ppaymentdate" title="Date" class="required-field">Date</label>
-                  <fieldset [disabled]="!disabletransactiondate">
-                    <input class="form-control" type="text" bsDatepicker [bsConfig]="pDobConfig"
-                      formControlName="ppaymentdate" maxlength="10" readonly />
-                  </fieldset>
-                </div>
-              </div>
 
+        <!-- Filter Panel -->
+        <div class="row align-items-end mb-4"
+          style="border: 2px solid #e1e9fb; border-radius: 8px; padding: 15px; margin: 0 0 16px 0; background-color: #f8faff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+
+          <!-- Receipt No -->
+          <div class="col-md-4">
+            <div class="form-group mb-0">
+              <label id="receiptid" title="Receipt No." style="font-weight:500; color:#495057; font-size:13px;">
+                Receipt No. <span style="color:red;">*</span>
+              </label>
+              <ng-select [items]="receiptdata" bindLabel="receiptnumber" bindValue="receiptid"
+                formControlName="receiptid" (change)="getreceiptdata($event)" [multiple]="false" placeholder="Select"
+                [searchable]="true" [clearable]="true" appendTo="body" dropdownPosition="bottom"
+                [clearOnBackspace]="true">
+              </ng-select>
             </div>
           </div>
 
-          <div class="section-content mt-2" *ngIf="show">
-            <div class="row">
-              <div class="col-md-6 col-xl-6">
-                <div class="form-group m-0">
-                  <label class="w-25">Credit To</label>
-                  <label class="bc-2">: {{ creditto }}</label>
-                </div>
-                <div class="form-group">
-                  <label class="w-25">Received From</label>
-                  <label class="bc-2">: {{ receivedfrom }}</label>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-xl-6 text-end">
-                <div class="form-group">
-                  <label>Receipt Date :</label>
-                  <label class="bc-2">{{ receiptdate | date:'dd-MMM-yyyy' }}</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 col-xl-12">
-                <ngx-datatable class="material expandable table" [rows]="lstdetails" [headerHeight]="50"
-                  [rowHeight]="50" [footerHeight]="50" [offset]="pageCriteria.offset" [limit]="pageCriteria.pageSize">
-
-                  <ngx-datatable-column name="S.No" sortable="false">
-                    <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                      <span>{{ rowIndex + 1 }}</span>
-                    </ng-template>
-                  </ngx-datatable-column>
-
-                  <ngx-datatable-column name="Particulars" prop="pAccountname" [width]="300" sortable="false"></ngx-datatable-column>
-
-                  <ngx-datatable-column name="Amount" prop="pLedgeramount" [width]="275" sortable="false">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <span>{{ currencysymbol }} {{ row.pLedgeramount | currency: currencysymbol:'symbol':'1.2-2'
-                        }}</span>
-                    </ng-template>
-                  </ngx-datatable-column>
-
-                  <ngx-datatable-footer *ngIf="lstdetails?.length">
-                    <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-curPage="curPage">
-                      <div class="p-2" *ngIf="lstdetails.length > 0">
-                        Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }} ({{
-                        pageCriteria.totalrows }} items)
-                      </div>
-                      <!-- <datatable-pager
-                    [page]="curPage"
-                    [size]="pageCriteria.pageSize"
-                    [count]="rowCount"
-                    (change)="onFooterPageChange($event)">
-                  </datatable-pager> -->
-                    </ng-template>
-                  </ngx-datatable-footer>
-                </ngx-datatable>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-end">
-              <div class="col-md-4 col-xl-3">
-                <div class="form-group">
-                  <label>Total Amount :</label>
-                  <label class="sec-head-bold ms-2">{{ showtotalamount | currency: currencysymbol:'symbol':'1.2-2'}}</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 col-xl-6">
-                <label>Narration :</label>
-                <div class="font-14 bc-2">{{ narration }}</div>
-              </div>
-
-              <div class="col-md-3 col-xl-3">
-                <label>Mode of Transaction :</label>
-                <div class="font-14 bc-2">{{ pmodofPayment }}</div>
-              </div>
-
-              <div class="col-md-3 col-xl-3">
-                <label>Done By :</label>
-                <div class="font-14 bc-2">{{ doneby }}</div>
-              </div>
+          <!-- Show Button -->
+          <div class="col-md-2">
+            <div class="form-group mb-0">
+              <button type="button" class="btn btn-primary w-100" (click)="showdata()"
+                style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; height:36px;">
+                Show
+              </button>
             </div>
           </div>
 
-          <div class="section-content mt-2" *ngIf="show">
-            <div class="row">
-              <div class="col-md-6 col-xl-6">
-                <label id="cancellationreason" class="required-field">Reason</label>
-                <textarea class="form-control" formControlName="cancellationreason" maxlength="250"
-                  [ngClass]="{ 'is-invalid': pettycashValidation['cancellationreason'] }">
-            </textarea>
-                <!-- <app-validation-message [messgae]="pettycashValidation?.cancellationreason"></app-validation-message> -->
-              </div>
+          <!-- Date -->
+          <div class="col-md-4">
+            <div class="form-group mb-0">
+              <label id="ppaymentdate" title="Date" style="font-weight:500; color:#495057; font-size:13px;">
+                Date <span style="color:red;">*</span>
+              </label>
+              <fieldset [disabled]="!disabletransactiondate">
+                <input class="form-control" type="text" bsDatepicker [bsConfig]="pDobConfig"
+                  formControlName="ppaymentdate" maxlength="10" readonly
+                  style="height:36px; padding:6px 12px; font-size:14px; border:1px solid #ced4da;" />
+              </fieldset>
+            </div>
+          </div>
 
-              <div class="col-md-4 col-xl-4">
-                <label id="autorizedcontactid" class="required-field">Authorised by</label>
+        </div>
+
+        <!-- Detail Section -->
+        <div *ngIf="show">
+
+          <!-- Info Row -->
+          <div class="row mb-3 align-items-start"
+            style="border: 1px solid #dce8fd; border-radius: 8px; padding: 12px 16px; background-color: #f8faff;">
+            <div class="col-md-6">
+              <div class="mb-1">
+                <span style="font-size:13px; color:#495057; font-weight:500; display:inline-block; width:110px;">Credit
+                  To</span>
+                <span style="font-size:13px; color:#162246; font-weight:700;">: {{ creditto }}</span>
+              </div>
+              <div>
+                <span
+                  style="font-size:13px; color:#495057; font-weight:500; display:inline-block; width:110px;">Received
+                  From</span>
+                <span style="font-size:13px; color:#162246; font-weight:700;">: {{ receivedfrom }}</span>
+              </div>
+            </div>
+            <div class="col-md-6 text-end">
+              <span style="font-size:13px; color:#495057; font-weight:500;">Receipt Date: </span>
+              <b style="color:#162246; font-size:13px;">{{ receiptdate | date:'dd-MMM-yyyy' }}</b>
+            </div>
+          </div>
+
+          <!-- Table Card -->
+          <div class="border rounded p-3 bg-white mb-3"
+            style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
+
+            <ngx-datatable class="material expandable table" [rows]="lstdetails" [headerHeight]="50" [rowHeight]="50"
+              [footerHeight]="50" [offset]="pageCriteria.offset" [limit]="pageCriteria.pageSize">
+
+              <ngx-datatable-column name="S.No" sortable="false">
+                <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  <span style="font-size:13px; color:#162246;">{{ rowIndex + 1 }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Particulars" prop="pAccountname" [width]="300" sortable="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span style="font-size:13px; color:#162246;">{{ value }}</span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Amount" prop="pLedgeramount" [width]="275" sortable="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <span style="font-size:13px; color:#162246;">
+                    {{ currencysymbol }} {{ row.pLedgeramount | currency: currencysymbol:'symbol':'1.2-2' }}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-footer *ngIf="lstdetails?.length">
+                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-curPage="curPage">
+                  <div class="p-2" style="font-size:12px; color:#8fa0c4;" *ngIf="lstdetails.length > 0">
+                    Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }}
+                    ({{ pageCriteria.totalrows }} items)
+                  </div>
+                </ng-template>
+              </ngx-datatable-footer>
+
+            </ngx-datatable>
+          </div>
+
+          <!-- Total Amount -->
+          <div class="d-flex justify-content-end mb-3">
+            <div style="border:1px solid #dce8fd; border-radius:8px; padding:10px 20px; background:#f8faff;">
+              <span style="font-size:13px; color:#495057; font-weight:500;">Total Amount: </span>
+              <span style="font-size:14px; color:#162246; font-weight:800; margin-left:8px;">
+                {{ showtotalamount | currency: currencysymbol:'symbol':'1.2-2' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Narration / Mode / Done By -->
+          <div class="row mb-4"
+            style="border: 1px solid #dce8fd; border-radius: 8px; padding: 12px 16px; background-color: #f8faff;">
+            <div class="col-md-6">
+              <div class="mb-1">
+                <span style="font-size:13px; color:#495057; font-weight:500;">Narration:</span>
+              </div>
+              <div style="font-size:13px; color:#162246; font-weight:600;">{{ narration }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-1">
+                <span style="font-size:13px; color:#495057; font-weight:500;">Mode of Transaction:</span>
+              </div>
+              <div style="font-size:13px; color:#162246; font-weight:600;">{{ pmodofPayment }}</div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-1">
+                <span style="font-size:13px; color:#495057; font-weight:500;">Done By:</span>
+              </div>
+              <div style="font-size:13px; color:#162246; font-weight:600;">{{ doneby }}</div>
+            </div>
+          </div>
+
+          <!-- Reason & Authorised By -->
+          <div class="row mb-4"
+            style="border: 2px solid #e1e9fb; border-radius: 8px; padding: 15px; margin: 0 0 16px 0; background-color: #f8faff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label id="cancellationreason" style="font-weight:500; color:#495057; font-size:13px;">
+                  Reason <span style="color:red;">*</span>
+                </label>
+                <textarea class="form-control" formControlName="cancellationreason" maxlength="250" rows="3"
+                  [ngClass]="{ 'is-invalid': pettycashValidation['cancellationreason'] }"
+                  style="font-size:13px; border:1px solid #ced4da; border-radius:6px; resize:vertical;">
+                </textarea>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-0">
+                <label id="autorizedcontactid" style="font-weight:500; color:#495057; font-size:13px;">
+                  Authorised By <span style="color:red;">*</span>
+                </label>
                 <ng-select class="custom-ng-select" [items]="(authorizedbylist$ | async) ?? []"
                   bindLabel="subintroducedname" bindValue="subintroducedid" formControlName="autorizedcontactid"
                   [typeahead]="contactSearchevent" [multiple]="false" [searchable]="true" [clearable]="true"
@@ -140,39 +181,41 @@
 
                   <ng-template ng-header-tmp>
                     <div class="row">
-                      <span class="col-3">Code</span>
-                      <span class="col-3">Contact Name</span>
-                      <span class="col-3 text-center">Mobile No.</span>
-                      <span class="col-3">Email Id</span>
+                      <span class="col-3" style="font-size:12px; font-weight:600;">Code</span>
+                      <span class="col-3" style="font-size:12px; font-weight:600;">Contact Name</span>
+                      <span class="col-3 text-center" style="font-size:12px; font-weight:600;">Mobile No.</span>
+                      <span class="col-3" style="font-size:12px; font-weight:600;">Email Id</span>
                     </div>
                   </ng-template>
 
                   <ng-template ng-option-tmp let-item="item">
                     <div class="row">
-                      <span class="col-3">{{ item.subintroducedcode }}</span>
-                      <span class="col-3">{{ item.subintroducedname }}</span>
-                      <span class="col-3 text-center">{{ item.subintroducedmobilenumber }}</span>
-                      <span class="col-3">{{ item.subintroducedemailid }}</span>
+                      <span class="col-3" style="font-size:12px;">{{ item.subintroducedcode }}</span>
+                      <span class="col-3" style="font-size:12px;">{{ item.subintroducedname }}</span>
+                      <span class="col-3 text-center" style="font-size:12px;">{{ item.subintroducedmobilenumber
+                        }}</span>
+                      <span class="col-3" style="font-size:12px;">{{ item.subintroducedemailid }}</span>
                     </div>
                   </ng-template>
-                </ng-select>
 
-                <!-- <app-validation-message [messgae]="pettycashValidation?.autorizedcontactid"></app-validation-message> -->
+                </ng-select>
               </div>
             </div>
+
           </div>
 
-          <div class="row mt-3" *ngIf="show">
-            <div class="col-md-12 col-xl-12">
-              <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-g-icon me-4 px-3 border-0" (click)="clear()">Cancel</button>
-                <button type="button" (click)="Save()" class="btn btn-s-icon px-3 border-0"
-                  [disabled]="disablesavebutton">
-                  <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': disablesavebutton }"></i>
-                  {{ ButtonType }}
-                </button>
-              </div>
-            </div>
+          <!-- Action Buttons -->
+          <div class="d-flex justify-content-end gap-3 mt-2">
+            <button type="button" class="btn px-4" (click)="clear()" style="border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px; 
+               border:1px solid #162246; color:#fff; background-color:#162246;"
+              onmouseover="this.style.backgroundColor='#162246';" onmouseout="this.style.backgroundColor='#162246';">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary px-4" (click)="Save()" [disabled]="disablesavebutton"
+              style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px; display:flex; align-items:center; gap:6px;">
+              <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': disablesavebutton }"></i>
+              {{ ButtonType }}
+            </button>
           </div>
 
         </div>

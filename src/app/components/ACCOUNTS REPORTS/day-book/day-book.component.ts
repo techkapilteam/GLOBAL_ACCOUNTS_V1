@@ -206,7 +206,7 @@ ChequesAmount: number = 0;
 
   loginBranchschema!: string;
 kgms: boolean = false;
-dte:boolean=false;
+dte:boolean=true;
   EndDate!: string | null;
   StartDate!: string | null;
   printedDate: boolean = true;

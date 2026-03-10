@@ -112,13 +112,24 @@ GetChequesInBankData(bankid: any, startindex: any, endindex: any, modeofreceipt:
   }
   GetReceiptsandPaymentsLoadingDatapettycash(formname: any, BranchSchema: any, companyCode: 'KAPILCHITS', branchCode: 'KLC01', GlobalSchema: 'global', TaxesSchema: 'taxes'): Observable<any> {
     const params = new HttpParams().set('formname', formname).set('BranchSchema', BranchSchema).set('companyCode', companyCode).set('branchCode', branchCode).set('GlobalSchema', GlobalSchema)
-      .set('TaxesSchema', TaxesSchema);
+    .set('TaxesSchema', TaxesSchema);
     return this._CommonService.getAPI('/Accounts/GetReceiptsandPaymentsLoadingDatapettycash', params, 'YES');
   }
-  getReceiptNumber() {
-    debugger
-    const params = new HttpParams().set("LocalSchema", this._CommonService.getschemaname());
-    return this._CommonService.getAPI("/AccountingTransactions/getReceiptNumber", params, 'YES');
+  getchequesrowcount( depositedBankId: any, GlobalSchema: 'global', branchSchema: any , searchtext: any ,BrsFromDate: any, 
+    BrsToDate: any ,formname: any, modeofreceipt: any , companyCode: 'KAPILCHITS', branchCode: 'KLC01'): Observable<any> {
+    const params = new HttpParams().set('depositedBankId', depositedBankId).set('GlobalSchema', GlobalSchema).set('branchSchema',branchSchema)
+    .set('searchtext', searchtext).set('BrsFromDate', BrsFromDate).set('BrsToDate', BrsToDate).set('formname', formname).
+    set('modeofreceipt', modeofreceipt).set('companyCode', companyCode).set('branchCode', branchCode);
+    return this._CommonService.getAPI('/Accounts/getchequesrowcount', params, 'YES');
+  }
+  getbankbalance( brstodate: any, _recordid: any, branchSchema: any, branchCode: 'KLC01',companyCode: 'KAPILCHITS'){
+    const params = new HttpParams().set('brstodate', brstodate).set('_recordid', _recordid).set('branchSchema', branchSchema)
+    .set('branchCode', branchCode).set('companyCode', companyCode);
+    return this._CommonService.getAPI('/Accounts/getbankbalance', params, 'YES');
+  }
+  getReceiptNumber(GlobalSchema: any, BranchSchema: any, CompanyCode: any, BranchCode: any) {
+  const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set("CompanyCode", CompanyCode)
+  .set("BranchCode", BranchCode);return this._CommonService.getAPI("/Accounts/getReceiptNumber", params, 'YES');
   }
 
   // GetSubLedgerDataACCOUNTS(pledgerid: any, BranchSchema: any, CompanyCode: any, BranchCode: any, GlobalSchema: any): Observable<any> {
@@ -443,7 +454,9 @@ SaveChequesIssued(data: any) {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/ChitTransactions/getBranchType', params, 'YES');
   }
+ getChequesIssued(){
 
+}
   getChequeReturnCharges(GlobalSchema: string, companyCode: string, branchCode: string): Observable<any> {
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('companyCode', companyCode)
       .set('branchCode', branchCode);

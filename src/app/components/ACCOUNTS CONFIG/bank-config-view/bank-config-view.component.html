@@ -1,130 +1,134 @@
-<!-- <form [formGroup]="BankViewForm" autocomplete="off"> -->
-  <div class="row">
-  <div class="col-lg-12 col-md-12">
-    <div class="section-content">
-      <div class="row ">
-        <div class="col-md-12 col-xl-12">
-        
-        <div class="row">
-            <div class="col-8 d-flex flex-wrap align-items-center">
-              <!-- <a (click)="addHandler($event)" class="btn btn-b-icon border-0">
-                <img src="assets/images/icon-add-blue-rounded.svg" class="mr-2" width="20px" height="20px"> ffffff</a> -->
-            <a routerLink="/dashboard/accounts/accounts-config/bank-config"
-            class="btn btn-primary border-0">New</a>
-            
-            
-              </div>
-          </div>         
-          
-          <div class="row mt-3 mb-4">
-            <div class="col-md-6 col-xl-6">
-              <div class="form-group mr-0 custom-search">
-                <input type="text" class="form-control" (keyup)="filterDatatable($event)">
-              </div>
-            </div>
-            <!-- <div class="col-md-8 col-xl-8">
-                <div class="d-flex justify-content-end">
-                  <a href="" class="export-icons"><img class="" src="assets/images/pdf-icon-blue.svg " title="pdf"
-                      width="18px"></a>
-                  <a href="" class="export-icons"><img class="" src="assets/images/icon-excel.svg " title="Excel"
-                      width="18px"></a>
-                  <a href="" class="export-icons"><img class="" src="assets/images/print-icon-blue.svg " title="Print"
-                      width="18px"></a>
-                </div>
-              </div> -->
-          </div>
-
-        </div>
-       
-
-
-        <div class="col-md-12 col-xl-12">
-
-  <p-table
-    [value]="gridData"
-    [paginator]="true"
-    [rows]="pageCriteria.pageSize"
-    [rowsPerPageOptions]="[5,10,20,50]"
-    [responsiveLayout]="'scroll'"
-    [style]="{ height: '400px' }"
-    [sortMode]="'single'"
-  >
+<div class="screen-container">
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
 
     <!-- Header -->
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width:60px">Actions</th>
-        <th pSortableColumn="pBankname">Bank Name <p-sortIcon field="pBankname"></p-sortIcon></th>
-        <th pSortableColumn="pAccountnumber">Account No. <p-sortIcon field="pAccountnumber"></p-sortIcon></th>
-        <th>Name of the Account</th>
-        <th>A/C Status</th>
-        <th>A/C Type</th>
-      </tr>
-    </ng-template>
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Bank View</h2>
+    </div>
 
-    <!-- Body -->
-    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
-      <tr>
+    <div class="row mb-4 align-items-center">
 
-        <!-- Actions -->
-        <td>
-          <button
-            pButton
-            icon="pi pi-pencil"
-            class="p-button-text p-button-sm"
-            (click)="editHandler($event, row, rowIndex)">
-            <i class="pi pi-pencil"></i>
-          </button>
-        </td>
+      <!-- Search -->
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Search..."
+          (keyup)="filterDatatable($event)"
+          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+      </div>
 
-        
+      <!-- New Button -->
+      <div class="col-md-6 text-end">
+        <a routerLink="/dashboard/accounts/accounts-config/bank-config"
+          class="btn btn-primary px-4"
+          style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+          + New
+        </a>
+      </div>
 
-        <!-- Bank Name -->
-        <td>{{ row.bankName }}</td>
+    </div>
 
-        <!-- Account No -->
-        <td>{{ row.account_number }}</td>
+    <!-- Table Card -->
+    <div class="row">
+      <div class="col-12">
+        <div class="border rounded p-3 bg-white"
+          style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
 
-        <!-- Account Name -->
-        <td>{{ row.account_name }}</td>
+          <p-table
+            [value]="gridData"
+            [paginator]="true"
+            [rows]="pageCriteria.pageSize"
+            [rowsPerPageOptions]="[5,10,20,50]"
+            [sortMode]="'single'"
+            responsiveLayout="scroll"
+            [loading]="loading"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            styleClass="p-datatable-sm p-datatable-gridlines">
 
-        <!-- Status -->
-        <td>
-          {{ row.pStatusname ? 'Active' : 'Inactive' }}
-        </td>
+            <!-- Header -->
+            <ng-template pTemplate="header">
+              <tr>
+                <th class="text-center"
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Actions
+                </th>
+                <th pSortableColumn="pBankname"
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Bank Name <p-sortIcon field="pBankname"></p-sortIcon>
+                </th>
+                <th pSortableColumn="pAccountnumber"
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Account No. <p-sortIcon field="pAccountnumber"></p-sortIcon>
+                </th>
+                <th
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  Name of the Account
+                </th>
+                <th
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  A/C Status
+                </th>
+                <th
+                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                  A/C Type
+                </th>
+              </tr>
+            </ng-template>
 
-        <!-- A/C Type -->
-        <td>
-          <span *ngIf="row.isprimary">Primary Bank</span>
-          <span *ngIf="row.isintrestpaymentbank">Interest Payment Bank</span>
-          <span *ngIf="row.isformanbank">Foreman Bank</span>
-          <span *ngIf="row.isforemanpaymentbank">Foreman Payment Bank</span>
-        </td>
+            <!-- Body -->
+            <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+              <tr>
+                <td class="text-center" style="padding:8px 12px; font-size:13px;">
+                  <button class="btn btn-sm btn-primary"
+                    (click)="editHandler($event, row, rowIndex)"
+                    style="background:#0d6efd; border-color:#0d6efd; border-radius:6px; font-size:12px; font-weight:600; padding:4px 14px;">
+                    Edit
+                  </button>
+                </td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                  {{ row.bankName || '--' }}
+                </td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                  {{ row.account_number || '--' }}
+                </td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                  {{ row.account_name || '--' }}
+                </td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                  {{ row.pStatusname ? 'Active' : 'Inactive' }}
+                </td>
+                <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                  <span *ngIf="row.isprimary">Primary Bank</span>
+                  <span *ngIf="row.isintrestpaymentbank">Interest Payment Bank</span>
+                  <span *ngIf="row.isformanbank">Foreman Bank</span>
+                  <span *ngIf="row.isforemanpaymentbank">Foreman Payment Bank</span>
+                </td>
+              </tr>
+            </ng-template>
 
-      </tr>
-    </ng-template>
+            <!-- Empty State -->
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6" class="text-center py-4"
+                  style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
 
-  </p-table>
-
-</div>
-
-
+          </p-table>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
-<!-- </form> -->
 
 <div class="my-container">
   <ng-template #customLoadingTemplate>
     <div class="custom-class">
-      <h3>
-        Loading...
-      </h3>
-
+      <h3>Loading...</h3>
     </div>
   </ng-template>
-  <!-- <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" [template]="customLoadingTemplate">
-  </ngx-loading> -->
-
 </div>

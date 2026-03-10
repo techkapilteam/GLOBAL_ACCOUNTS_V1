@@ -176,8 +176,23 @@
     </div>
   </div>
 
-  <div class="card shadow-sm mt-4" *ngIf="showpayments">
+  <div class="card shadow-sm mt-4" *ngIf="showpayments && gstpaymentsdata.length > 0">
     <div class="card-body p-0">
+      <div class="col-md-12 col-xl-12">
+    <div class="d-flex justify-content-end" *ngIf="showicons">
+      
+      <a (click)="pdfOrprintPayments('Pdf')" class="export-icons">
+  <img src="assets/images/pdf-icon-blue.svg" title="PDF" width="18" alt="PDF Export">
+</a>
+<a (click)="pdfOrprintPayments('Print')" class="export-icons">
+  <img src="assets/images/print-icon-blue.svg" title="Print" width="18" alt="Print">
+</a>
+<a (click)="exportPayments()" class="export-icons">
+  <img src="assets/images/icon-excel.svg" title="Excel" width="18" alt="Excel Export">
+</a>
+
+    </div>
+  </div>
       <p-table
   [value]="gstpaymentsdata"
   responsiveLayout="scroll"
@@ -199,15 +214,15 @@
 
   <ng-template pTemplate="body" let-row>
     <tr>
-      <td>{{ row.pgstvoucherno }}</td>
-      <td>{{ row.vendorname }}</td>
-      <td>{{ row.state }}</td>
-      <td>{{ row.gstVoucherDate | date:'dd-MM-yyyy' }}</td>
-      <td>{{ row.taxableAmount }}</td>
-      <td>{{ row.cgstAmount }}</td>
-      <td>{{ row.sgstAmount }}</td>
-      <td>{{ row.igstAmount }}</td>
-      <td>{{ row.invoice_total_amount }}</td>
+      <td>{{ row.gstVoucherNo }}</td>
+    <td>{{ row.contactName }}</td>
+    <td>{{ row.stateName }}</td>
+    <td>{{ row.invoiceDate | date:'dd-MM-yyyy' }}</td>
+    <td>{{ row.taxableValue }}</td>
+    <td>{{ row.cgstAmount }}</td>
+    <td>{{ row.sgstAmount }}</td>
+    <td>{{ row.igstAmount }}</td>
+    <td>{{ row.totalAmount }}</td>
     </tr>
   </ng-template>
 

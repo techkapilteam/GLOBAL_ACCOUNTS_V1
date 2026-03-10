@@ -80,7 +80,7 @@ export class GstReportComponent implements OnInit {
     this.GstReportForm = this.fb.group({
       month: [firstday, Validators.required],
       pledgerid: [null, Validators.required],
-      pledgername: ['', Validators.required],
+      pledgername: [''],
       receiptsPayments: ['receipts'],
       fromdate: [today,Validators.required],
       todate: [today,Validators.required]
@@ -133,8 +133,14 @@ export class GstReportComponent implements OnInit {
     this.reportService.GetGstLedgerAccountList('GST REPORT','accounts','KAPILCHITS','KLC01')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: res => this.ledgeraccountslist = res ?? [],
-        error: err => this.commonService.showErrorMessage(err)
+        next: res => {
+        this.ledgeraccountslist = res ?? [];
+        console.log('Ledgers loaded:', this.ledgeraccountslist); 
+      },
+        error: err => {
+        console.error('Ledger API error:', err);
+        this.commonService.showErrorMessage(err);
+      }
       });
   }
 
@@ -248,11 +254,13 @@ return;
     .subscribe({
       next: (result: any[]) => {
         this.gstpaymentsdata = result ?? [];
+        this.showicons = this.gstpaymentsdata.length > 0;
         this.updatePagination(this.gstpaymentsdata.length);
         this.disablesavebutton = false;
         this.savebutton = 'GST Print';
       },
       error: () => {
+         this.showicons = false; 
         this.disablesavebutton = false;
         this.savebutton = 'GST Print';
       }
@@ -317,16 +325,25 @@ gstReportType(type: string): void {
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
   this.gstpaymentsdata = [];
+  this.showpayments = false;
   this.showhidegstreport = false;
+  this.showicons = false;
 
   if (type === 'receipts') {
 
     this.showreceipts = true;
     this.showpayments = false;
+    this.gstpaymentsdata = [];
 
     this.GstReportForm.get('pledgerid')?.setValidators([Validators.required]);
+    this.GstReportForm.get('month')?.setValidators([Validators.required]);
     this.GstReportForm.get('fromdate')?.clearValidators();
     this.GstReportForm.get('todate')?.clearValidators();
+
+    this.GstReportForm.get('pledgerid')?.updateValueAndValidity();
+    this.GstReportForm.get('month')?.updateValueAndValidity();
+    this.GstReportForm.get('fromdate')?.updateValueAndValidity();
+    this.GstReportForm.get('todate')?.updateValueAndValidity();
 
   } else {
 
@@ -342,6 +359,11 @@ gstReportType(type: string): void {
     this.GstReportForm.get('fromdate')?.setValidators([Validators.required]);
     this.GstReportForm.get('todate')?.setValidators([Validators.required]);
     this.GstReportForm.get('pledgerid')?.clearValidators();
+    this.GstReportForm.get('month')?.clearValidators();
+    this.GstReportForm.get('fromdate')?.updateValueAndValidity();
+    this.GstReportForm.get('todate')?.updateValueAndValidity();
+    this.GstReportForm.get('pledgerid')?.updateValueAndValidity();
+    this.GstReportForm.get('month')?.updateValueAndValidity();
   }
 
   this.GstReportForm.updateValueAndValidity();
@@ -587,6 +609,75 @@ export(): void {
   });
 
   this.commonService.exportAsExcelFile(rows, 'GST');
+}
+exportPayments(): void {
+  const rows: any[] = [];
+
+  this.gstpaymentsdata?.forEach(element => {
+    rows.push({
+      'GST Voucher No': element.gstVoucherNo,
+      'Name': element.contactName,
+      'State': element.stateName,
+      'GST Voucher Date': element.invoiceDate,
+      'Taxable Amount': element.taxableValue,
+      'CGST Amount': element.cgstAmount,
+      'SGST Amount': element.sgstAmount,
+      'IGST Amount': element.igstAmount,
+      'Total Amount': element.totalAmount
+    });
+  });
+
+  this.commonService.exportAsExcelFile(rows, 'GSTPayments');
+}
+
+pdfOrprintPayments(printorpdf: 'Pdf' | 'Print'): void {
+  const rows: any[] = [];
+  const reportname = 'GST Payments';
+
+  const gridheaders = [
+    'GST Voucher No.', 'Name', 'State',
+    'GST Voucher Date', 'Taxable Amount',
+    'CGST Amount', 'SGST Amount', 'IGST Amount', 'Total Amount'
+  ];
+
+  const colWidthHeight = {
+    0: { cellWidth: 'auto', halign: 'left' },
+    1: { cellWidth: 'auto', halign: 'left' },
+    2: { cellWidth: 'auto', halign: 'left' },
+    3: { cellWidth: 'auto', halign: 'left' },
+    4: { cellWidth: 'auto', halign: 'right' },
+    5: { cellWidth: 'auto', halign: 'right' },
+    6: { cellWidth: 'auto', halign: 'right' },
+    7: { cellWidth: 'auto', halign: 'right' },
+    8: { cellWidth: 'auto', halign: 'right' }
+  };
+
+  this.gstpaymentsdata?.forEach(element => {
+    rows.push([
+      element.gstVoucherNo,
+      element.contactName,
+      element.stateName,
+      element.invoiceDate,
+      element.taxableValue,
+      element.cgstAmount,
+      element.sgstAmount,
+      element.igstAmount,
+      element.totalAmount
+    ]);
+  });
+
+  const fromdate = this.commonService.getFormatDateNormal(this.GstReportForm.value.fromdate);
+  const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
+
+  this.commonService.downloadgstsummarypdf(
+    reportname,
+    `${fromdate} - ${todate}`,
+    rows,
+    gridheaders,
+    colWidthHeight,
+    'landscape',
+    printorpdf
+  );
 }
 }
 
