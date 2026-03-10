@@ -131,47 +131,22 @@ export class GeneralReceiptComponent implements OnInit {
   //   window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
   // }
 
-  // viewRow(row: any): void {
+  viewRow(row: any): void  {
+    debugger
+  if (!row?.receipt_number) {
+    console.error('Invalid row data');
+    return;
+  }
 
-  //   const receipt = btoa(
-  //     `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
-  //   );
-
-  //   this.router.navigate(['/GeneralReceiptReport'], {
-  //     queryParams: { id: receipt }
-  //   });
-  // }
-viewRow(row: any): void {
-debugger;
-  const receipt = btoa(
-    `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
-  );
+  const receipt = btoa(`${row.receipt_number},General Receipt`);
 
   const url = this.router.serializeUrl(
-    this.router.createUrlTree(['/GeneralReceiptReport'], {
-      queryParams: { id: receipt }
-    })
+    this.router.createUrlTree(['/GeneralReceiptReport', receipt])
   );
-
-  console.log("Opening URL:", url);
 
   window.open(url, '_blank');
 }
 
-  //   viewRow( row: any): void {
-  //   if (!row?.paymentId) {
-  //     console.error('Invalid row data');
-  //     return;
-  //   }
-
-  //   const receipt = btoa(`${row.paymentId},Payment Voucher`);
-
-  //   const url = this.router.serializeUrl(
-  //     this.router.createUrlTree(['/GeneralReceiptReport', receipt])
-  //   );
-
-  //   window.open(url, '_blank');
-  // }
   private resetGrid(): void {
     this.gridView = [];
     this.allGridView = [];
