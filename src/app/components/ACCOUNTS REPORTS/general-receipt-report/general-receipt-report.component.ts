@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { CompanyDetailsService } from '../../../services/company-details.service';
 import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-general-receipt-report',
@@ -69,35 +70,60 @@ getTotalAmount(list: any[]): number {
     //   this.schemaName = split[3];
     //   this.getGeneralreceiptDatabyId(this.generalreceiptID);
     // });
-    this.activatedRoute.queryParams.subscribe({
-  next: (params) => {
+//     this.activatedRoute.queryParams.subscribe({
+//   next: (params) => {
 
-    const encodedId = params?.['id'];
+//     const encodedId = params?.['id'];
 
-    if (!encodedId) {
-      console.warn('No ID found in query params');
-      return;
+//     if (!encodedId) {
+//       console.warn('No ID found in query params');
+//       return;
+//     }
+
+//     try {
+
+//       const cleaned = encodedId.replace(/\s/g, '+');
+//       const decoded = atob(cleaned);
+
+//       const split = decoded.split(',');
+
+//       this.generalreceiptID = split?.[0] ?? '';
+//       this.receiptName = split?.[1] ?? '';
+//       this.schemaName = split?.[3] ?? '';
+
+//       if (this.generalreceiptID) {
+//         this.getGeneralreceiptDatabyId(this.generalreceiptID);
+//       }
+
+//     } catch (error) {
+//       console.error('Invalid Base64 ID:', error);
+//     }
+
+//   }
+// });
+this.activatedRoute.paramMap.pipe(take(1)).subscribe(params => {
+  const encodedId = params.get('id') ?? '';
+
+  if (!encodedId) {
+    console.warn('No ID found in params');
+    return;
+  }
+
+  try {
+    const cleaned = encodedId.replace(/\s/g, '+');
+    const decoded = atob(cleaned);
+    const split = decoded.split(',');
+
+    this.generalreceiptID = split?.[0] ?? '';
+    this.receiptName = split?.[1] ?? '';
+    this.schemaName = split?.[3] ?? '';
+
+    if (this.generalreceiptID) {
+      this.getGeneralreceiptDatabyId(this.generalreceiptID);
     }
 
-    try {
-
-      const cleaned = encodedId.replace(/\s/g, '+');
-      const decoded = atob(cleaned);
-
-      const split = decoded.split(',');
-
-      this.generalreceiptID = split?.[0] ?? '';
-      this.receiptName = split?.[1] ?? '';
-      this.schemaName = split?.[3] ?? '';
-
-      if (this.generalreceiptID) {
-        this.getGeneralreceiptDatabyId(this.generalreceiptID);
-      }
-
-    } catch (error) {
-      console.error('Invalid Base64 ID:', error);
-    }
-
+  } catch (error) {
+    console.error('Invalid Base64 ID:', error);
   }
 });
   }

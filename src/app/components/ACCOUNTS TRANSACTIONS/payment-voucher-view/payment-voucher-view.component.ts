@@ -2562,53 +2562,53 @@ export class PaymentVoucherViewComponent implements OnInit {
 
 
       const paymentVoucherData = {
-  global_schema: this._commonService.getschemaname(),
-  branch_schema: this._commonService.getbranchname(),
-  company_code: this._commonService.getCompanyCode(),
-  branch_code: this._commonService.getBranchCode(),
+        global_schema: this._commonService.getschemaname(),
+        branch_schema: this._commonService.getbranchname(),
+        company_code: this._commonService.getCompanyCode(),
+        branch_code: this._commonService.getBranchCode(),
 
-  pbankid: this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH'
-    ? 0
-    : this.paymentVoucherForm.controls['pbankid'].value || 0,
+        pbankid: this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH'
+          ? 0
+          : this.paymentVoucherForm.controls['pbankid'].value || 0,
 
-  pCreatedby: 1,
-  // pCreatedby: this._commonService.getCreatedBy(),
-  // pipaddress: this._commonService.getIpAddress(),
-  pipaddress: "192.168.1.101",
+        pCreatedby: 1,
+        // pCreatedby: this._commonService.getCreatedBy(),
+        // pipaddress: this._commonService.getIpAddress(),
+        pipaddress: "192.168.1.101",
 
-  pjvdate: this._commonService.getFormatDateNormal(
-    this.paymentVoucherForm.controls['ppaymentdate'].value
-  ),
+        pjvdate: this._commonService.getFormatDateNormal(
+          this.paymentVoucherForm.controls['ppaymentdate'].value
+        ),
 
-  pmodofpayment: this.paymentVoucherForm.controls['pmodofpayment'].value,
+        pmodofpayment: this.paymentVoucherForm.controls['pmodofpayment'].value,
 
-  bank_id: this.paymentVoucherForm.controls['pbankid'].value || 0,
+        bank_id: this.paymentVoucherForm.controls['pbankid'].value || 0,
 
-  ptotalpaidamount: totalPaid,
+        ptotalpaidamount: totalPaid,
 
-  pChequenumber: this.paymentVoucherForm.controls['pChequenumber'].value || '',
-  pnarration: this.paymentVoucherForm.controls['pnarration'].value || '',
-  pUpiname: this._commonService.getCreatedBy(),
+        pChequenumber: this.paymentVoucherForm.controls['pChequenumber'].value || '',
+        pnarration: this.paymentVoucherForm.controls['pnarration'].value || '',
+        pUpiname: this._commonService.getCreatedBy(),
 
-  subscriberjoinedbranchid: 0,
+        subscriberjoinedbranchid: 0,
 
-  ppaymentsslistcontrols: this.paymentslist.map((payment: any) => ({
-    ppartyid: payment.ppartyid || 0,
-    psubledgerid: payment.psubledgerid || 0,
-    pamount: Number(payment.pamount || payment.ptotalamount || 0),
+        ppaymentsslistcontrols: this.paymentslist.map((payment: any) => ({
+          ppartyid: payment.ppartyid || 0,
+          psubledgerid: payment.psubledgerid || 0,
+          pamount: Number(payment.pamount || payment.ptotalamount || 0),
 
-    pistdsapplicable: payment.pistdsapplicable ?? false,
-    pTdsSection: payment.pTdsSection || '',
-    ptdsamount: Number(payment.ptdsamount || 0),
+          pistdsapplicable: payment.pistdsapplicable ?? false,
+          pTdsSection: payment.pTdsSection || '',
+          ptdsamount: Number(payment.ptdsamount || 0),
 
-    pisgstapplicable: payment.pisgstapplicable ?? false,
+          pisgstapplicable: payment.pisgstapplicable ?? false,
 
-    ptdscalculationtype: payment.ptdscalculationtype || '',
+          ptdscalculationtype: payment.ptdscalculationtype || '',
 
-    ppartyreferenceid: payment.ppartyreferenceid || '',
-    ppartyname: payment.ppartyname || ''
-  }))
-};
+          ppartyreferenceid: payment.ppartyreferenceid || '',
+          ppartyname: payment.ppartyname || ''
+        }))
+      };
 
       console.log('Payload to be sent:', paymentVoucherData);
 

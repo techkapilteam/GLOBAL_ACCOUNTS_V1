@@ -1032,6 +1032,9 @@ export class GeneralReceiptNewComponent implements OnInit {
                         const receipt = btoa(payload.preceiptid + ',General Receipt,,' + this._commonService.getschemaname());
                         window.open('/#/GeneralReceiptReport?id=' + receipt, '_blank');
                         this.ClearGenerealReceipt();
+                        setTimeout(() => {
+                        this.router.navigate(['/GeneralReceiptReport']);
+                    }, 1000);
                     }
                     this.disablesavebutton = false; this.savebutton = 'Save';
                 },

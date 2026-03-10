@@ -9,6 +9,7 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
 import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
 import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
+import { take } from 'rxjs';
 @Component({
   selector: 'app-journal-voucher-report',
   imports: [ CommonModule,
@@ -94,24 +95,46 @@ printedDate: boolean = true;
     this.todayDate =
       this.commonService.getFormatDateGlobal(this.today);
 
-    this.activatedroute.queryParams.subscribe(params => {
+    // this.activatedroute.queryParams.subscribe(params => {
 
-      if (!params['id']) return;
+    //   if (!params['id']) return;
 
-      const routeParams =
-        atob(params['id'].replace(/\s/g, '+'));
+    //   const routeParams =
+    //     atob(params['id'].replace(/\s/g, '+'));
 
-      const splitData = routeParams.split(',');
+    //   const splitData = routeParams.split(',');
 
-      this.pJvnumber = splitData[0];
-      this.receiptName = splitData[1];
+    //   this.pJvnumber = splitData[0];
+    //   this.receiptName = splitData[1];
 
-      if (splitData.length === 3) {
-        this.duplicate = splitData[2];
-      }
+    //   if (splitData.length === 3) {
+    //     this.duplicate = splitData[2];
+    //   }
 
-      this.GetJvReportbyid(this.pJvnumber);
-    });
+    //   this.GetJvReportbyid(this.pJvnumber);
+    // });
+    this.activatedroute.paramMap.pipe(take(1)).subscribe(params => {
+  const encodedId = params.get('id') ?? '';
+
+  if (!encodedId) return;
+
+  try {
+    const decoded = atob(encodedId.replace(/\s/g, '+'));
+    const splitData = decoded.split(',');
+
+    this.pJvnumber = splitData[0];
+    this.receiptName = splitData[1];
+
+    if (splitData.length === 3) {
+      this.duplicate = splitData[2];
+    }
+
+    this.GetJvReportbyid(this.pJvnumber);
+
+  } catch (error) {
+    console.error('Invalid Base64 ID:', error);
+  }
+});
   }
 
   getCompanyName(): void {
