@@ -159,7 +159,7 @@ export class AccountingMasterService {
   GetCheckDuplicateDebitCardNo(bankinformationdata: any): Observable<any> {
     
     return this._CommonService.postAPI(
-      '/BankInformation/GetCheckDuplicateDebitCardNo',
+      '/Accounts/GetCheckDuplicateDebitCardNo',
       bankinformationdata
     );
   }

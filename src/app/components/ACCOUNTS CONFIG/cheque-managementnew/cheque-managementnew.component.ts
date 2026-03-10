@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
 import { AccountingMasterService } from '../../../services/accounting-master.service';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -11,7 +11,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-cheque-managementnew',
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, TableModule, ButtonModule, NgSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, 
+    NgxDatatableModule, TableModule, ButtonModule, NgSelectModule,RouterModule],
   templateUrl: './cheque-managementnew.component.html',
   styleUrl: './cheque-managementnew.component.css',
 })
@@ -482,7 +483,8 @@ export class ChequeManagementnewComponent implements OnInit {
         branch_code: this.commonService.getBranchCode(),
         // company_code: form.company_code,
         // branch_code: form.branch_code,
-        branch_id: form.branch_id,
+        // branch_id: form.branch_id,
+        branch_id: 1,
 
         pBankId: Number(grid.pBankId),
         pNoofcheques: Number(grid.pNoofcheques),
@@ -494,10 +496,11 @@ export class ChequeManagementnewComponent implements OnInit {
         pChequeGenerateDate: this.date,
 
         pCreatedby: form.pCreatedby,
-        pipaddress: form.pipaddress
+        pipaddress: form.pipaddress,
+        ptypeofoperation: grid.ptypeofoperation
       }
 
-console.log('chequemanagementdata data :',chequemanagementdata);
+      console.log('chequemanagementdata data :', chequemanagementdata);
 
 
       this.accountingMasterService.SaveChequeManagement(chequemanagementdata).subscribe(
@@ -508,7 +511,10 @@ console.log('chequemanagementdata data :',chequemanagementdata);
             this.disablesaveactivebutton = false;
             this.disablesavebutton = false;
             this.commonService.showSuccessMessage();
-            this.router.navigateByUrl("/configuration/chequemanagement");
+            // this.router.navigateByUrl("/configuration/chequemanagement");
+            this.router.navigate([
+              '/dashboard/accounts/accounts-config/cheque-management'
+            ]);
           }
         },
         (error) => {

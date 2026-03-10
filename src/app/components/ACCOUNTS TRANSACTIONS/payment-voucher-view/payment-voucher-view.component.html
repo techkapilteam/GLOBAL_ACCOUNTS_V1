@@ -377,13 +377,13 @@
                         <input class="form-check-input" type="radio" id="procgstinc"
                           formControlName="pgstcalculationtype" name="pgstcalculationtype" value="INCLUDE"
                           (change)="claculategsttdsamounts()"
-                          [ngClass]="{ 'is-invalid': formValidationMessages.pgstcalculationtype }" id="procgstinc">
+                          [ngClass]="{ 'is-invalid': formValidationMessages.pgstcalculationtype }" >
                         <label class="mt-1" for="procgstinc"> Include</label>
                       </div>
                       <div class="form-check form-check-inline radio-btn-secondary mr-4 mb-2 mt-2">
                         <input class="form-check-input" type="radio" id="procgstexc"
                           formControlName="pgstcalculationtype" name="pgstcalculationtype" value="EXCLUDE"
-                          (change)="claculategsttdsamounts()" id="procgstexc"
+                          (change)="claculategsttdsamounts()" 
                           [ngClass]="{ 'is-invalid': formValidationMessages.pgstcalculationtype }">
                         <label class="mt-1" for="procgstexc"> Exclude </label>
                       </div>
@@ -393,6 +393,8 @@
 
                     </div>
                   </fieldset>
+
+                  
                   <div class="col-md-12 col-xl-12">
                     <div class="row">
                       <div class="form-group col-md-4">
@@ -427,7 +429,7 @@
                       <div class="form-group col-md-4">
                         <label class="required-field">GST(%)</label>
                         <ng-select class="form-control" id="pgstpercentage" title="GST(%)"
-                          formControlName="pgstpercentage" (change)="gst_Change($event)"
+                          formControlName="pgstpercentage" (change)="gst_Change($event)"  (clear)="gst_Change(null)"
                           [ngClass]="{ 'is-invalid': formValidationMessages.pgstpercentage }">
                           <ng-option value="">Select</ng-option>
                           <ng-option *ngFor="let gst of gstlist" [value]="gst.pgstpercentage">

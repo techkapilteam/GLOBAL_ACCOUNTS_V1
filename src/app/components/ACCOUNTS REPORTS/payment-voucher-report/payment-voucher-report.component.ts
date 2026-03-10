@@ -79,29 +79,58 @@ export class PaymentVoucherReportComponent implements OnInit {
       'dd-MMM-yyyy h:mm:ss a'
     );
 
-    this.activatedroute.queryParams.pipe(take(1)).subscribe(params => {
+    // this.activatedroute.queryParams.pipe(take(1)).subscribe(params => {
 
-      const routeParams = atob(params['id'].replace(/\s/g, '+'));
-      const splitData = routeParams.split(',');
+    //   const routeParams = atob(params['id'].replace(/\s/g, '+'));
+    //   const splitData = routeParams.split(',');
 
-      this.pvnumber = splitData[0];
-      this.receiptName = splitData[1];
+    //   this.pvnumber = splitData[0];
+    //   this.receiptName = splitData[1];
 
-      if (splitData.length === 3) {
-        this.duplicate = splitData[2];
-      }
+    //   if (splitData.length === 3) {
+    //     this.duplicate = splitData[2];
+    //   }
 
-      if (this.receiptName === 'Petty Cash') {
-        this.GetPettyCashReportDataById(this.pvnumber);
-        this.showgrid = true;
-      } else if (this.receiptName === 'Chit Payment') {
-        this.GetChitPaymentVoucherReportDataById(this.pvnumber);
-        this.showgrid = false;
-      } else {
-        this.GetPaymentVoucherReportDataById(this.pvnumber);
-        this.showgrid = true;
-      }
-    });
+    //   if (this.receiptName === 'Petty Cash') {
+    //     this.GetPettyCashReportDataById(this.pvnumber);
+    //     this.showgrid = true;
+    //   } else if (this.receiptName === 'Chit Payment') {
+    //     this.GetChitPaymentVoucherReportDataById(this.pvnumber);
+    //     this.showgrid = false;
+    //   } else {
+    //     this.GetPaymentVoucherReportDataById(this.pvnumber);
+    //     this.showgrid = true;
+    //   }
+    // });
+  
+  this.activatedroute.paramMap.pipe(take(1)).subscribe(params => {
+  const encodedId = params.get('id') ?? '';
+  if (!encodedId) {
+    console.error('No id param found');
+    return;
+  }
+  const routeParams = atob(encodedId.replace(/\s/g, '+'));
+  const splitData = routeParams.split(',');
+
+  this.pvnumber = splitData[0];
+  this.receiptName = splitData[1];
+  if (splitData.length === 3) {
+    this.duplicate = splitData[2];
+  }
+
+  if (this.receiptName === 'Petty Cash') {
+    this.GetPettyCashReportDataById(this.pvnumber);
+    this.showgrid = true;
+  } else if (this.receiptName === 'Chit Payment') {
+    this.GetChitPaymentVoucherReportDataById(this.pvnumber);
+    this.showgrid = false;
+  } else {
+    this.GetPaymentVoucherReportDataById(this.pvnumber);
+    this.showgrid = true;
+  }
+});
+  
+  
   }
 
   showErrorMessage(msg: string) {

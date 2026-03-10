@@ -98,6 +98,7 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { AccountingReportsService } from 'src/app/services/Transactions/AccountingReports/accounting-reports.service';
 
 @Component({
   selector: 'app-payment-voucher',
@@ -126,6 +127,7 @@ export class PaymentVoucherComponent implements OnInit {
   constructor(
     private _commonService: CommonService,
     private _AccountingTransactionsService: AccountingTransactionsService,
+    private _AccountingReportsService: AccountingReportsService,
     private router: Router,
     private currencyPipe: CurrencyPipe
   ) { }
@@ -172,8 +174,54 @@ ngOnInit(): void {
       }
     });
 }
+// removeHandler(event: any, row: any): void {
+// debugger
+//   if (!row?.paymentId) {
+//     console.error('Invalid row data');
+//     return;
+//   }
+
+//   const receipt = btoa(`${row.paymentId},Payment Voucher`);
+
+//   window.open(`/#/PaymentVoucherReport?id=${receipt}`, '_blank');
+// }
+formatCurrency(amount: number): string {
+    return this.currencyPipe.transform(amount, 'INR', 'symbol', '1.2-2') || '';
+  }
+
+
+
+// removeHandler(event: any, row: any): void {
+//   if (!row?.paymentId) {
+//     console.error('Invalid row data');
+//     return;
+//   }
+
+//   const transNo = row.paymentId;
+
+//   this._AccountingReportsService.GetPaymentVoucherbyId(
+//     transNo,
+//     'accounts',
+//     'KAPILCHITS',
+//     'KLC01',
+//     'global'
+//   ).subscribe(res => {
+//     if (res?.length > 0) {
+//       const receipt = btoa(`${transNo},Payment Voucher,Reprint`);
+
+//       // Pass 'receipt' as a path parameter
+//       const url = this.router.serializeUrl(
+//         this.router.createUrlTree(['/PaymentVoucherReport', receipt])
+//       );
+
+//       window.open(url, '_blank'); // Opens in a new tab
+//     } else {
+//       alert('Transaction No. Does Not Exist!');
+//     }
+//   });
+// }
+
 removeHandler(event: any, row: any): void {
-debugger
   if (!row?.paymentId) {
     console.error('Invalid row data');
     return;
@@ -181,10 +229,10 @@ debugger
 
   const receipt = btoa(`${row.paymentId},Payment Voucher`);
 
-  window.open(`/#/PaymentVoucherReport?id=${receipt}`, '_blank');
-}
-formatCurrency(amount: number): string {
-    return this.currencyPipe.transform(amount, 'INR', 'symbol', '1.2-2') || '';
-  }
+  const url = this.router.serializeUrl(
+    this.router.createUrlTree(['/PaymentVoucherReport', receipt])
+  );
 
+  window.open(url, '_blank');
+}
 }
