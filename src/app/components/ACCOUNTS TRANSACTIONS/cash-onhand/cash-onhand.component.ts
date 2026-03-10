@@ -271,7 +271,7 @@ export class CashOnhandComponent implements OnInit {
     this._accountingtransaction.GetBankBalance(
             '29-02-2024',
       bankid,
-      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
+      this._commonService.getbranchname(),'KLC01','KAPILCHITS'
     ).subscribe(bankdetails => {
       debugger
       this.bankbalancedetails = bankdetails;

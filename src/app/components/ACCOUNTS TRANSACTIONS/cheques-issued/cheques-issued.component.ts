@@ -218,12 +218,9 @@ ngOnInit(): void {
   });
 
   this._accountingtransaction
-    .GetBanksntList(this._commonService.getbranchname(),this._commonService.getschemaname()
-      ,this._commonService.getCompanyCode(),this._commonService.getBranchCode())
-    .subscribe({
-      next: (banks: any) => {
-        this.BanksList = banks || [];
-      },
+    .GetBanksntList(this._commonService.getbranchname(),this._commonService.getschemaname(),this._commonService.getCompanyCode(),
+    this._commonService.getBranchCode()).subscribe({ next: (banks: any) => {
+    this.BanksList = banks || []; },
       error: (err) => this._commonService.showErrorMessage(err)
     });
 
@@ -272,19 +269,9 @@ pageSetUp() {
 }
 
 GetBankBalance(bankid: number) {
-  this._accountingtransaction
-    .GetBankBalance(
-           '29-02-2024',
-      bankid,
-      this._commonService.getbranchname(),this._commonService.getBranchCode(),this._commonService.getCompanyCode()
-
-    )
-    .subscribe({
-      next: (bankdetails: any) => {
-
-        this.bankbalancedetails = bankdetails;
-
-        const balance = bankdetails._BankBalance || 0;
+  this._accountingtransaction.GetBankBalance('29-02-2024', bankid, this._commonService.getbranchname(),'KLC01','KAPILCHITS').subscribe({
+      next: (bankdetails: any) => { this.bankbalancedetails = bankdetails;
+        let balance = bankdetails._BankBalance || 0;
 
         if (balance < 0) {
           this.bankbalance = Math.abs(balance);
@@ -312,6 +299,11 @@ GetChequesIssued_Load(bankid: number) {
 
   this.gridLoading = true;
 
+  const GlobalSchema = this._commonService.getschemaname();
+  const BranchSchema = this._commonService.getbranchname();
+  const CompanyCode = this._commonService.getCompanyCode();
+  const BranchCode = this._commonService.getBranchCode();
+
   forkJoin([
     this._accountingtransaction.GetChequesIssuedData(
       bankid,
@@ -321,21 +313,22 @@ GetChequesIssued_Load(bankid: number) {
       this._searchText,
       ''
     ),
+
     this._accountingtransaction.GetChequesRowCount(
-      // bankid,
-      // this._searchText,
-      // '',
-      // '',
-      // 'CHEQUESISSUED',
-      // this.modeofreceipt
-
-
-   bankid,this._commonService.getschemaname(), this._commonService.getbranchname(),this._searchText,this.fromdate,this.todate,
-   'CHEQUESISSUED',this.modeofreceipt
-    ,this._commonService.getCompanyCode(),this._commonService.getBranchCode()
-
+      bankid,
+      GlobalSchema,
+      BranchSchema,
+      this._searchText,
+      this.fromdate,
+      this.todate,
+      'CHEQUESISSUED',
+      this.modeofreceipt,
+      CompanyCode,
+      BranchCode
     )
+
   ]).subscribe({
+
     next: ([data, count]: any) => {
 
       this.gridLoading = false;
@@ -354,10 +347,12 @@ GetChequesIssued_Load(bankid: number) {
       this.totalElements = +count?.total_count || 0;
       this.page.totalElements = this.totalElements;
     },
+
     error: (err) => {
       this.gridLoading = false;
       this._commonService.showErrorMessage(err);
     }
+
   });
 }
 
@@ -371,10 +366,11 @@ GetChequesIssued(bankid: any, startindex: number, endindex: number, searchText: 
       startindex,
       endindex,
       this.modeofreceipt,
-      this._searchText,
+      searchText,
       ''
     )
     .subscribe({
+
       next: (data: any) => {
 
         this.gridLoading = false;
@@ -396,11 +392,14 @@ GetChequesIssued(bankid: any, startindex: number, endindex: number, searchText: 
         if (this.fromFormName === 'fromChequesStatusInformationForm') {
           this.chequesStatusInfoGridForChequesIssued();
         }
+
       },
+
       error: (err) => {
         this.gridLoading = false;
         this._commonService.showErrorMessage(err);
       }
+
     });
 }
 

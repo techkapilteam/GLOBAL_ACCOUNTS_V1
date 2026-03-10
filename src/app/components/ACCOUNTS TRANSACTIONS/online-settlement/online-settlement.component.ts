@@ -177,11 +177,11 @@ export class OnlineSettlementComponent implements OnInit {
         const CompanyCode = this._CommonService.getCompanyCode();
 
         this._Accountservice.GetBankBalance(
-          brstodate,
+          '2026-02-26',
           value,
-          BranchSchema,
-          BranchCode,
-          CompanyCode
+          'accounts',
+          'KLC01',
+          'KAPILCHITS'
         ).subscribe((res: any) => {
 
           this.bankbalance = res?.bankbalance || 0;
