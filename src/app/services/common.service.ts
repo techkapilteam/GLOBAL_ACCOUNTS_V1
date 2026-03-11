@@ -774,8 +774,8 @@ const companyBranch = company?.uniqueBranchName ?? '';
       'Header Color': '#0b4093',
       'Header Color1': 'white',
       'Header Alignment': 'center',
-      'Header Fontsize': 7,
-      'Cell Fontsize': 7,
+      'Header Fontsize': 10,
+      'Cell Fontsize': 9,
       'Address Fontsize': 8
     };
     if (!config[propertyType]) {
@@ -1002,7 +1002,8 @@ const companyBranch = company?.uniqueBranchName ?? '';
     // });
     let address = this.getcompanyaddress();
     let Companyreportdetails = this._getCompanyDetails();
-    const doc = new jsPDF('p', 'mm', 'a4');
+    // const doc = new jsPDF('p', 'mm', 'a4');
+    const doc = new jsPDF(pagetype === 'landscape' ? 'l' : 'p', 'mm', 'a4');
     let totalPagesExp = '{total_pages_count_string}';
     let today = this.pdfProperties("Date");
     let kapil_logo = this.getKapilGroupLogo();
@@ -1020,6 +1021,7 @@ const companyBranch = company?.uniqueBranchName ?? '';
         halign: this.pdfProperties("Header Alignment") as 'center',
         fontSize: Number(this.pdfProperties("Header Fontsize"))
       },
+       tableWidth: doc.internal.pageSize.getWidth() - 30,
       styles: {
         cellWidth: 'wrap',
         fontSize: Number(this.pdfProperties("Cell Fontsize")),
@@ -1059,12 +1061,14 @@ const companyBranch = company?.uniqueBranchName ?? '';
             doc.text('Month : ' + month, 15, 44);
             doc.text('Branch : ' + Companyreportdetails.branchName,  pageWidth - 15, 44, { align: 'right' });
             doc.setDrawColor(0, 0, 0);
-            pdfInMM = 233;
-            doc.line(10, 46, (pdfInMM - lMargin - rMargin), 46);
+            // pdfInMM = 233;
+            pdfInMM = doc.internal.pageSize.getWidth();
+            // doc.line(10, 46, (pdfInMM - lMargin - rMargin), 46);
+            doc.line(10, 46, doc.internal.pageSize.getWidth() - 10, 46);
           }
 
           if (pagetype == "landscape") {
-             pdfInMM = 315;
+            //  pdfInMM = 315;
   const centerX = pageWidth / 2;
             doc.addImage(kapil_logo, 'JPEG',10,  10, 20, 20);
             doc.setTextColor('black');
@@ -1081,9 +1085,11 @@ const companyBranch = company?.uniqueBranchName ?? '';
             doc.text(reportName, centerX, 40, { align: 'center' });
             doc.setFontSize(10);
             doc.text('Branch : ' + Companyreportdetails.branchName, pageWidth - 15, 46, { align: 'right' });
-            pdfInMM = 315;
+            // pdfInMM = 315;
+            pdfInMM = doc.internal.pageSize.getWidth();
             doc.setDrawColor(0, 0, 0);
-            doc.line(10, 48, (pdfInMM - lMargin - rMargin), 48);
+            // doc.line(10, 48, (pdfInMM - lMargin - rMargin), 48);
+            doc.line(10, 48, pdfInMM - 10, 48);
           }
         } else {
           data.settings.margin.top = 20;
@@ -1207,6 +1213,9 @@ const companyBranch = company?.uniqueBranchName ?? '';
       startY: 48,
       showHead: 'everyPage',
       columnStyles: colWidthHeight,
+       tableWidth: pagetype === 'landscape' 
+    ? doc.internal.pageSize.getWidth() - 30   
+    : doc.internal.pageSize.getWidth() - 30, 
 
       headStyles: {
         fillColor: this.pdfProperties('Header Color'),
@@ -1217,9 +1226,11 @@ const companyBranch = company?.uniqueBranchName ?? '';
       styles: {
         cellPadding: 1,
         fontSize: Number(this.pdfProperties('Cell Fontsize')),
-        cellWidth: 'wrap',
-        overflow: 'linebreak'
+       cellWidth: 'auto',        
+    overflow: 'linebreak',
+    minCellWidth: 10,
       },
+      margin: { left: 15, right: 15 },
 
       didDrawPage: (data: any) => {
 
@@ -3796,7 +3807,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
       },
       styles: {
         cellPadding: 1,
-        fontSize: 6,
+        fontSize: 8,
         cellWidth: 'wrap',
 
         overflow: 'linebreak'

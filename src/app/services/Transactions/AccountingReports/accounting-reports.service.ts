@@ -1002,7 +1002,8 @@ const registrationAddr  = Companyreportdetails?.registrationAddress   ?? '';
           doc.text(reportName, 90, 38);
           doc.setFontSize(10);
           const lines = doc.splitTextToSize(subreportname, 90);
-          doc.text(lines, 30, 45);
+          // doc.text(lines, 30, 45);
+          doc.text(lines, pageWidth / 2, 45, { align: 'center' });
 
           // doc.setFontSize(10);
           // doc.text('Branch : ' + Companyreportdetails?.pBranchname, 163, 57);
@@ -1578,7 +1579,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
       columnStyles: columnStyles,
       tableWidth: 250,
       margin: { left: 10, right: 10 },
-      styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
+      styles: { fontSize: 9, cellPadding: 2, overflow: 'linebreak' },
       headStyles: { fillColor: [0, 168, 168], textColor: 255, fontSize: 8 },
       didParseCell: (data: any) => {
         if (data.row.raw?.isSubtotal === true) {

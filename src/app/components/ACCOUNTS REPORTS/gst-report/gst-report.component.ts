@@ -159,12 +159,12 @@ export class GstReportComponent implements OnInit {
 
   click_GstReport(): void {
     this.submitted = true;
-  if (this.GstReportForm.invalid) return;
+ 
     if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+ if (this.GstReportForm.invalid) return;
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
   this.GstReportDetailsforAll = [];
@@ -235,12 +235,12 @@ private cleanObjectValues(data: any[]): void {
 }
 private loadGstPayments(): void {
   this.submitted = true;
-  if (this.GstReportForm.invalid) return;
+
   if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+  if (this.GstReportForm.invalid) return;
   this.disablesavebutton = true;
   this.savebutton = 'Processing';
   this.gstpaymentsdata = [];
@@ -268,12 +268,12 @@ return;
 }
 click_GstSummary(): void {
   this.submitted = true;
-  if (this.GstReportForm.invalid) return;
+  
   if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+if (this.GstReportForm.invalid) return;
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
 
@@ -641,15 +641,15 @@ pdfOrprintPayments(printorpdf: 'Pdf' | 'Print'): void {
   ];
 
   const colWidthHeight = {
-    0: { cellWidth: 'auto', halign: 'left' },
-    1: { cellWidth: 'auto', halign: 'left' },
-    2: { cellWidth: 'auto', halign: 'left' },
-    3: { cellWidth: 'auto', halign: 'left' },
-    4: { cellWidth: 'auto', halign: 'right' },
-    5: { cellWidth: 'auto', halign: 'right' },
-    6: { cellWidth: 'auto', halign: 'right' },
-    7: { cellWidth: 'auto', halign: 'right' },
-    8: { cellWidth: 'auto', halign: 'right' }
+    0: { cellWidth: 28, halign: 'left' },   
+    1: { cellWidth: 45, halign: 'left' },   
+    2: { cellWidth: 28, halign: 'left' },   
+    3: { cellWidth: 32, halign: 'left' },   
+    4: { cellWidth: 27, halign: 'right' },  
+    5: { cellWidth: 27, halign: 'right' },  
+    6: { cellWidth: 27, halign: 'right' },  
+    7: { cellWidth: 27, halign: 'right' }, 
+    8: { cellWidth: 26, halign: 'right' }
   };
 
   this.gstpaymentsdata?.forEach(element => {
