@@ -127,10 +127,6 @@ export class PettyCashComponent implements OnInit {
     private router: Router,
     private _AccountingTransactionsService: AccountingTransactionsService
   ) {}
-
-  // ════════════════════════════════════════════════════════════════════════════
-  //  LIFECYCLE
-  // ════════════════════════════════════════════════════════════════════════════
   ngOnInit(): void {
     this.currencySymbol = this._commonService.currencysymbol || '';
 
@@ -166,10 +162,6 @@ export class PettyCashComponent implements OnInit {
     this.BlurEventAllControll(this.paymentVoucherForm);
     this.getLoadData();
   }
-
-  // ════════════════════════════════════════════════════════════════════════════
-  //  FORM GROUP — LINE ITEM
-  // ════════════════════════════════════════════════════════════════════════════
   addppaymentsslistcontrols(): FormGroup {
     return this._FormBuilder.group({
       psubledgerid      : [null],
@@ -205,12 +197,6 @@ export class PettyCashComponent implements OnInit {
       ptotalamount      : ['']
     });
   }
-
-  // ════════════════════════════════════════════════════════════════════════════
-  //  VALIDATION HELPERS
-  // ════════════════════════════════════════════════════════════════════════════
-
-  /** Subscribe valueChanges on every control — triggers message refresh on typing */
   BlurEventAllControll(fromgroup: FormGroup): void {
     Object.keys(fromgroup.controls).forEach((key: string) => {
       const control = fromgroup.get(key);
@@ -224,7 +210,6 @@ export class PettyCashComponent implements OnInit {
     });
   }
 
-  /** Validate one control and write message into formValidationMessages */
   GetValidationByControl(formGroup: FormGroup, key: string): boolean {
     try {
       const control = formGroup.get(key);
@@ -253,17 +238,11 @@ export class PettyCashComponent implements OnInit {
     return true;
   }
 
-  /**
-   * Run GetValidationByControl on every control in a FormGroup recursively.
-   * Returns true only if every control is valid.
-   * The ppaymentsslistcontrols sub-group is handled separately in validateaddPaymentDetails.
-   */
   checkValidations(group: FormGroup, isValid: boolean): boolean {
     try {
       Object.keys(group.controls).forEach((key: string) => {
         const control = group.get(key);
         if (control instanceof FormGroup) {
-          // Skip the sub-group when validating the root form (validated independently)
           if (key !== 'ppaymentsslistcontrols') {
             isValid = this.checkValidations(control, isValid);
           }
@@ -279,9 +258,6 @@ export class PettyCashComponent implements OnInit {
     return isValid;
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  BALANCE DISPLAY — stored as formatted string "1,234.00 Dr / Cr"
-  // ════════════════════════════════════════════════════════════════════════════
   setBalances(balancetype: string, balanceamount: any): void {
     if (balanceamount === null || balanceamount === undefined || balanceamount === '') {
       balanceamount = 0;
@@ -304,9 +280,6 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  LOAD DATA
-  // ════════════════════════════════════════════════════════════════════════════
   getLoadData(): void {
     this._AccountingTransactionsService
       .GetReceiptsandPaymentsLoadingDatapettycash(
@@ -340,9 +313,6 @@ export class PettyCashComponent implements OnInit {
     return index;
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  MODE OF PAYMENT
-  // ════════════════════════════════════════════════════════════════════════════
   modeofPaymentChange(): void {
     const mode = this.paymentVoucherForm.controls['pmodofpayment'].value;
 
@@ -460,9 +430,6 @@ export class PettyCashComponent implements OnInit {
     this.GetValidationByControl(this.paymentVoucherForm, 'ptypeofpayment');
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  BANK
-  // ════════════════════════════════════════════════════════════════════════════
   bankName_Change($event: any): void {
     const pbankid = $event?.target?.value;
 
@@ -851,11 +818,6 @@ export class PettyCashComponent implements OnInit {
     return (this.statelist || []).find((s: any) => s.pStateId == pstateid) || null;
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  TDS
-  // ════════════════════════════════════════════════════════════════════════════
-
-  /** Called when TDS checkbox is clicked */
   istdsapplicable_Checked(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
@@ -869,7 +831,6 @@ export class PettyCashComponent implements OnInit {
     this.istdsapplicableChange();
   }
 
-  /** Handles TDS checkbox value change — sets showtds flag and validators */
   istdsapplicableChange(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
@@ -931,9 +892,6 @@ export class PettyCashComponent implements OnInit {
     this.claculategsttdsamounts();
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  AMOUNT CALCULATIONS
-  // ════════════════════════════════════════════════════════════════════════════
   pamount_change(): void {
     this.claculategsttdsamounts();
   }
@@ -1022,9 +980,6 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  ADD PAYMENT TO GRID
-  // ════════════════════════════════════════════════════════════════════════════
   validateaddPaymentDetails(): boolean {
     let isValid = true;
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
@@ -1113,9 +1068,6 @@ export class PettyCashComponent implements OnInit {
     this.addbutton        = 'Add';
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  CLEAR HELPERS
-  // ════════════════════════════════════════════════════════════════════════════
   clearPaymentDetailsparticular(): void {
     const control = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     this.showsubledger = true;
@@ -1204,9 +1156,6 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  REMOVE GRID ROW
-  // ════════════════════════════════════════════════════════════════════════════
   removeHandler(rowIndex: number): void {
     if (!this.paymentslist || !this.paymentslist1) return;
 
@@ -1226,9 +1175,6 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  JOURNAL ENTRY + GRID TOTALS
-  // ════════════════════════════════════════════════════════════════════════════
   getPaymentListColumnWisetotals(): void {
     this.paymentlistcolumnwiselist['ptotalamount'] = this.paymentslist.reduce(
       (s: number, c: any) => s + parseFloat(c.ptotalamount || 0), 0);
@@ -1298,7 +1244,6 @@ export class PettyCashComponent implements OnInit {
         }
       });
 
-      // Total paid & cash/bank credit entry
       const totalPaid = this.paymentslist.reduce(
         (s: number, p: any) => s + this._commonService.removeCommasInAmount(p.ptotalamount), 0);
       if (totalPaid > 0) {
@@ -1312,22 +1257,16 @@ export class PettyCashComponent implements OnInit {
       }
 
       this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
-
-      // FIX: loadgrid was throwing "Method not implemented." — now just triggers change detection
-      this.loadgrid();
+        this.loadgrid();
     } catch (e) {
       this._commonService.showErrorMessage(e);
     }
   }
 
-  /** Triggers Angular change detection for partyjournalentrylist p-table */
   loadgrid(): void {
     this.partyjournalentrylist = [...this.partyjournalentrylist];
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  SAVE
-  // ════════════════════════════════════════════════════════════════════════════
   validatesavePaymentVoucher(): boolean {
     let isValid = true;
     try {
@@ -1339,7 +1278,6 @@ export class PettyCashComponent implements OnInit {
       }
 
       if (this.paymentVoucherForm.get('pmodofpayment')?.value === 'CASH') {
-        // cashBalance is a string like "1,234.00 Dr" — strip non-numeric chars for comparison
         const rawBalance      = (this.cashBalance || '0').toString().replace(/[^\d.]/g, '');
         const numericBalance  = parseFloat(rawBalance) || 0;
         const paidvalue       = Number(this.paymentVoucherForm.get('ptotalpaidamount')?.value) || 0;
@@ -1414,9 +1352,6 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  FILE UPLOAD
-  // ════════════════════════════════════════════════════════════════════════════
   uploadAndProgress(event: Event): void {
     try {
       const target = event.target as HTMLInputElement;
@@ -1461,9 +1396,6 @@ export class PettyCashComponent implements OnInit {
     return ['jpg', 'png', 'pdf'].includes(ext || '');
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  //  MISC
-  // ════════════════════════════════════════════════════════════════════════════
   showErrorMessage(msg: any): void   { this._commonService.showErrorMessage(msg); }
   showWarningMessage(msg: string): void { this._commonService.showWarningMessage(msg); }
 
@@ -1472,7 +1404,6 @@ export class PettyCashComponent implements OnInit {
   }
 
   saveJournalVoucher(): void {
-    // stub — implement if needed
     console.log('saveJournalVoucher called');
   }
 }

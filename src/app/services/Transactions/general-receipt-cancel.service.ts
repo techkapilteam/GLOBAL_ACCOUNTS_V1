@@ -7,45 +7,27 @@ import { CommonService } from '../common.service';
   providedIn: 'root'
 })
 export class GeneralReceiptCancelService {
+  cancelReceipt(GeneralReceiptCancelData: any) : Observable<any[]> {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(private _commonService: CommonService) {}
 
   
   getReceiptNumber(): Observable<any[]> {
-
     debugger;
-
-    const params = new HttpParams()
-      .set('GlobalSchema', 'global')
-      .set('BranchSchema', this._commonService.getschemaname())
-      .set('CompanyCode', this._commonService.getCompanyCode())
-      .set('BranchCode', this._commonService.getBranchCode());
-
-    return this._commonService.getAPI(
-      '/Accounts/GetReceiptNumber',
-      params,
-      'YES'
-    );
+    const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', 'accounts')
+      .set('CompanyCode', 'KAPILCHITS').set('BranchCode', 'KLC01');
+     return this._commonService.getAPI('/Accounts/GetReceiptNumber', params,'YES');
   }
 
  
  getreceiptdata(receiptId: any): Observable<any> {
-
+  debugger;
   console.log('ReceiptId sent to API:', receiptId);
-
-  const params = new HttpParams()
-    .set('GlobalSchema', 'global')
-    .set('BranchSchema', this._commonService.getschemaname())
-    .set('TaxSchema', 'taxes')
-    .set('CompanyCode', this._commonService.getCompanyCode())
-    .set('BranchCode', this._commonService.getBranchCode())
-    .set('ReceiptId', receiptId.toString());
-
-  return this._commonService.getAPI(
-    '/Accounts/GetGeneralReceiptsData',
-    params,
-    'YES'
-  );
+  const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', 'KLC01')
+    .set('TaxSchema', 'taxes').set('CompanyCode', 'KAPILCHITS').set('BranchCode', 'accounts');
+  return this._commonService.getAPI('/Accounts/GetGeneralReceiptsData', params,'YES');
 }
 
   getEmployeeName(searchtype: string): Observable<any[]> {
