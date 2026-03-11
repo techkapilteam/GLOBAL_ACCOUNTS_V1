@@ -325,7 +325,7 @@ export class ChequesInbankComponent implements OnInit {
 
     this.currencySymbol = this._commonService.currencysymbol;
 
-   
+  
     this.ChequesInBankForm = this.fb.group({
       ptransactiondate: [new Date(), Validators.required],
       pchequecleardate: [new Date(), Validators.required],

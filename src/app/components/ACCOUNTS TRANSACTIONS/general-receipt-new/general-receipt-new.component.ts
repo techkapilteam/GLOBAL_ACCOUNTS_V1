@@ -154,6 +154,7 @@ export class GeneralReceiptNewComponent implements OnInit {
     bankexists: boolean | undefined;
     availableAmount: any
     this: any;
+    onlyNumberValidator: any | string;
 
     constructor(private _CommonService: CommonService, public datepipe: DatePipe, private _FormBuilder: FormBuilder, private _Accountservice: AccountingTransactionsService, private _commonService: CommonService, private _routes: Router, private _accountingmasterserive: AccountingMasterService, private router: Router, private _SubscriberJVService: SubscriberjvService, private _AccountingTransactionsService: AccountingTransactionsService) {
         // this.dpConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
@@ -219,7 +220,8 @@ export class GeneralReceiptNewComponent implements OnInit {
             ptranstype: [''],
             //ptypeofpayment: [''],
             ptypeofpayment: [null],
-            pAccountnumber: [''],
+           // pAccountnumber: [''],
+           pAccountnumber: ['', [Validators.required, this.onlyNumberValidator]],
             pChequenumber: [''],
             pchequedate: [this.today],
             //pbankid: [0],
