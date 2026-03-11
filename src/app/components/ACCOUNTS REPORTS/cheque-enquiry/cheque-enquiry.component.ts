@@ -537,7 +537,7 @@ debugger
     this.gridLoading = true;
 
     this.accountservice
-      .GetChequeEnquiryData(this.bankid, 0, 1, 'RETURN', searchText)
+      .GetChequeEnquiryData(this.bankid, 0, 999999, 'RETURN', searchText)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (res: any) => {
@@ -590,15 +590,37 @@ debugger
 
   chequesStatusInfoGrid() {
 
-    const grid = this.ChequesInBankData
-      ?.filter(item => item.ptotalreceivedamount !== 0)
-      ?.map(item => ({
-        ...item,
-        chequeStatus:
-          item.pchequestatus === 'N' ? 'Deposited' :
-          item.pchequestatus === 'Y' ? 'Cleared' :
-          item.pchequestatus === 'R' ? 'Returned' : ''
-      })) ?? [];
+    // const grid = this.ChequesInBankData
+    //   ?.filter(item => item.ptotalreceivedamount !== 0)
+    //   ?.map(item => ({
+    //     ...item,
+    //     chequeStatus:
+    //       item.pchequestatus === 'N' ? 'Deposited' :
+    //       item.pchequestatus === 'Y' ? 'Cleared' :
+    //       item.pchequestatus === 'R' ? 'Returned' : ''
+    //   })) ?? [];
+    const onHand = this.ChequesInBankData
+    ?.filter(item => item.ptotalreceivedamount !== 0)
+    ?.map(item => ({
+      ...item,
+      pbranchname: typeof item.pbranchname === 'string' && item.pbranchname ? item.pbranchname : '--NA--',
+      chequeStatus:
+        item.pchequestatus === 'N' ? 'Deposited' :
+        item.pchequestatus === 'Y' ? 'Cleared' :
+        item.pchequestatus === 'R' ? 'Returned' : ''
+    })) ?? [];
+
+  const clearReturn = this.ChequesClearReturnDataInBank 
+    ?.filter(item => item.ptotalreceivedamount !== 0)
+    ?.map(item => ({
+      ...item,
+      pbranchname: typeof item.pbranchname === 'string' && item.pbranchname ? item.pbranchname : '--NA--',
+      chequeStatus:
+        item.pchequestatus === 'Y' ? 'Cleared' :
+        item.pchequestatus === 'R' ? 'Returned' : ''
+    })) ?? [];
+
+  const grid = [...onHand, ...clearReturn];
 
     this.displayGridDataBasedOnForm = grid;
     this.displayGridDataBasedOnFormBackup = [...grid];
