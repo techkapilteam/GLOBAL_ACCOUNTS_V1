@@ -15,7 +15,7 @@ export class MainLayoutComponent implements OnInit {
   selectedModule: Module | null = null;
   selectedSubModule: SubModule | null = null;
   selectedScreen: Screen | null = null;
-  sidebarCollapsed: boolean = false;
+  sidebarCollapsed: boolean = true; // ✅ FIX 1: Start collapsed — no auto-open on login
   username: string = '';
   expandedSubModules: Set<string> = new Set();
 
@@ -23,43 +23,15 @@ export class MainLayoutComponent implements OnInit {
     private navigationService: NavigationService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.modules = this.navigationService.getModules();
     this.username = this.authService.getUsername();
 
-    // --- Default sidebar with dashboard ---
-const defaultModule = this.modules.find(m => m.name.toLowerCase() === 'accounts');
-if (defaultModule) {
-  this.selectedModule = defaultModule;
-  this.navigationService.selectModule(defaultModule);
-  if (defaultModule.subModules && defaultModule.subModules.length > 0) {
-    const firstSubModule = defaultModule.subModules[0];
-    this.expandedSubModules.add(firstSubModule.id);
-    this.selectedSubModule = firstSubModule;
-    this.navigationService.selectSubModule(firstSubModule);
-  }
-}
-
-let dashboardScreen: Screen | undefined;
-for (const module of this.modules) {
-  for (const subModule of module.subModules || []) {
-    const foundScreen = subModule.screens?.find(screen => screen.name.toLowerCase() === 'dashboard');
-    if (foundScreen) {
-      dashboardScreen = foundScreen;
-      break;
-    }
-  }
-  if (dashboardScreen) break;
-}
-if (dashboardScreen) {
-  this.selectedScreen = dashboardScreen;
-  this.navigationService.selectScreen(dashboardScreen);
-  this.router.navigate([dashboardScreen.route]);
-}
-  // --- Default sidebar with dashboard ---
-
+    // ✅ FIX 2: Removed ALL auto-selection logic from here.
+    // Do NOT auto-select module/submodule/screen on login.
+    // User should land on a blank/welcome state.
 
     this.navigationService.selectedModule$.subscribe(module => {
       this.selectedModule = module;
@@ -75,17 +47,34 @@ if (dashboardScreen) {
   }
 
   selectModule(module: Module): void {
-    this.navigationService.selectModule(module);
-    this.expandedSubModules.clear();
+    if (this.selectedModule?.id === module.id) {
+      // ✅ FIX 3: Clicking same module toggles the sidebar open/close
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+    } else {
+      // New module selected — open sidebar, clear old submodule selections
+      this.selectedSubModule = null;
+      this.selectedScreen = null;
+      this.expandedSubModules.clear();
+      this.navigationService.selectModule(module);
+      this.sidebarCollapsed = false; // ✅ Open sidebar when new module clicked
+    }
   }
 
   toggleSubModule(subModule: SubModule): void {
+    // ✅ FIX 4: Open sidebar if it's collapsed when submodule clicked
+    if (this.sidebarCollapsed) {
+      this.sidebarCollapsed = false;
+    }
+
     if (this.expandedSubModules.has(subModule.id)) {
+      // Clicking same submodule collapses its flyout
       this.expandedSubModules.delete(subModule.id);
     } else {
+      // New submodule — clear others, expand this one
+      this.expandedSubModules.clear();
       this.expandedSubModules.add(subModule.id);
+      this.navigationService.selectSubModule(subModule);
     }
-    this.navigationService.selectSubModule(subModule);
   }
 
   isSubModuleExpanded(subModuleId: string): boolean {
@@ -99,6 +88,16 @@ if (dashboardScreen) {
 
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
+
+    if (this.sidebarCollapsed) {
+      // Closing — collapse flyout too
+      this.expandedSubModules.clear();
+    } else {
+      // Opening via hamburger — auto-select first module if none selected
+      if (!this.selectedModule && this.modules.length > 0) {
+        this.navigationService.selectModule(this.modules[0]);
+      }
+    }
   }
 
   logout(): void {
