@@ -259,12 +259,13 @@ export class ChequeEnquiryComponent implements OnInit {
   displayAllChequesDataBasedOnForm: any[] = [];
   displayGridDataBasedOnForm: any[] = [];
   displayAllChequesDataBasedOnFormBackup: any[] = [];
+    displayGridDataBasedOnFormBackup: any[] = [];
 
   showOrHideIssuedCheques = true;
   showOrHideReceivedCheques = false;
   brsdateshowhidecancelled = false;
 
-  bankid = 0;
+  bankid = 2;
   bankname = '';
   bankbalance = 0;
   bankbalancetype = '';
@@ -276,7 +277,10 @@ spinner = false;
   loading = false;
   gridLoading = false;
 
-  pageCriteria = new PageCriteria();
+  // pageCriteria = new PageCriteria();
+  issuedPageCriteria = new PageCriteria();
+  receivedPageCriteria = new PageCriteria();
+
   currencySymbol = this.commonService.currencysymbol;
 
   ngOnInit(): void {
@@ -327,45 +331,109 @@ spinner = false;
   this.totalamount = this.displayAllChequesDataBasedOnForm.reduce(
     (sum, c) => sum + (c?.ptotalreceivedamount || 0), 0
   );
-   this.updatePagination(this.displayAllChequesDataBasedOnForm.length);
+   this.updateIssuedPagination(this.displayAllChequesDataBasedOnForm.length);
 }
 
+// onSearchForChequeReceived(value: string) {
+//   this.spinner = true;
+//   this.GetChequesInBank(value);
+//   this.spinner = false;
+// }
 onSearchForChequeReceived(value: string) {
-  this.spinner = true;
-  this.GetChequesInBank(value);
-  this.spinner = false;
+  if (!value || value.trim() === '') {
+    this.displayGridDataBasedOnForm = [...this.displayGridDataBasedOnFormBackup];
+  } else {
+    this.displayGridDataBasedOnForm = this.displayGridDataBasedOnFormBackup.filter(c =>
+      c.pChequenumber?.toString().toLowerCase().includes(value.trim().toLowerCase())
+    );
+  }
+  this.amounttotal = this.displayGridDataBasedOnForm.reduce(
+    (sum, c) => sum + (c?.ptotalreceivedamount || 0), 0
+  );
+  this.updateReceivedPagination(this.displayGridDataBasedOnForm.length);
 }
 
   setPageModel() {
-    this.pageCriteria.pageSize = this.commonService.pageSize;
-    this.pageCriteria.offset = 0;
-    this.pageCriteria.pageNumber = 1;
-    this.pageCriteria.CurrentPage = 1;
+    // this.pageCriteria.pageSize = this.commonService.pageSize;
+    // this.pageCriteria.offset = 0;
+    // this.pageCriteria.pageNumber = 1;
+    // this.pageCriteria.CurrentPage = 1;
+     const pageSize = this.commonService.pageSize;
+
+    this.issuedPageCriteria.pageSize = pageSize;
+    this.issuedPageCriteria.offset = 0;
+    this.issuedPageCriteria.pageNumber = 1;
+    this.issuedPageCriteria.CurrentPage = 1;
+
+    this.receivedPageCriteria.pageSize = pageSize;
+    this.receivedPageCriteria.offset = 0;
+    this.receivedPageCriteria.pageNumber = 1;
+    this.receivedPageCriteria.CurrentPage = 1;
   }
 
-  private updatePagination(totalRows: number) {
-    this.pageCriteria.totalrows = totalRows;
-    this.pageCriteria.TotalPages = Math.ceil(
-      totalRows / this.pageCriteria.pageSize
-    );
-    this.pageCriteria.currentPageRows =
-      totalRows < this.pageCriteria.pageSize
-        ? totalRows
-        : this.pageCriteria.pageSize;
+  // private updatePagination(totalRows: number) {
+  //   this.pageCriteria.totalrows = totalRows;
+  //   this.pageCriteria.TotalPages = Math.ceil(
+  //     totalRows / this.pageCriteria.pageSize
+  //   );
+  //   this.pageCriteria.currentPageRows =
+  //     totalRows < this.pageCriteria.pageSize
+  //       ? totalRows
+  //       : this.pageCriteria.pageSize;
+  // }
+  private updateIssuedPagination(totalRows: number) {
+    this.issuedPageCriteria.totalrows = totalRows;
+    this.issuedPageCriteria.TotalPages = Math.ceil(totalRows / this.issuedPageCriteria.pageSize);
+    this.issuedPageCriteria.currentPageRows =
+      totalRows < this.issuedPageCriteria.pageSize ? totalRows : this.issuedPageCriteria.pageSize;
   }
 
+  private updateReceivedPagination(totalRows: number) {
+    this.receivedPageCriteria.totalrows = totalRows;
+    this.receivedPageCriteria.TotalPages = Math.ceil(totalRows / this.receivedPageCriteria.pageSize);
+    this.receivedPageCriteria.currentPageRows =
+      totalRows < this.receivedPageCriteria.pageSize ? totalRows : this.receivedPageCriteria.pageSize;
+  }
+
+  // selectChequesType(type: 'Issued' | 'Received') {
+
+  //   this.showOrHideIssuedCheques = type === 'Issued';
+  //   this.showOrHideReceivedCheques = type === 'Received';
+  //   this.brsdateshowhidecancelled = type === 'Received';
+
+  //   if (type === 'Issued') {
+  //     this.GetChequesIssued(this.bankid);
+  //   } else {
+  //     this.GetChequesInBank();
+  //   }
+  // }
   selectChequesType(type: 'Issued' | 'Received') {
+  this.showOrHideIssuedCheques = type === 'Issued';
+  this.showOrHideReceivedCheques = type === 'Received';
+  this.brsdateshowhidecancelled = type === 'Received';
 
-    this.showOrHideIssuedCheques = type === 'Issued';
-    this.showOrHideReceivedCheques = type === 'Received';
-    this.brsdateshowhidecancelled = type === 'Received';
-
-    if (type === 'Issued') {
-      this.GetChequesIssued(this.bankid);
+  if (type === 'Issued') {
+    if (this.displayAllChequesDataBasedOnFormBackup.length > 0) {
+      this.displayAllChequesDataBasedOnForm = [...this.displayAllChequesDataBasedOnFormBackup];
+      this.totalamount = this.displayAllChequesDataBasedOnForm.reduce(
+        (sum, c) => sum + (c?.ptotalreceivedamount || 0), 0
+      );
+      this.updateIssuedPagination(this.displayAllChequesDataBasedOnForm.length);
     } else {
-      this.GetChequesInBank();
+      this.GetChequesIssued(this.bankid); 
+    }
+  } else {
+    if (this.displayGridDataBasedOnFormBackup.length > 0) {
+      this.displayGridDataBasedOnForm = [...this.displayGridDataBasedOnFormBackup];
+      this.amounttotal = this.displayGridDataBasedOnForm.reduce(
+        (sum, c) => sum + (c?.ptotalreceivedamount || 0), 0
+      );
+      this.updateReceivedPagination(this.displayGridDataBasedOnForm.length);
+    } else {
+      this.GetChequesInBank(); 
     }
   }
+}
 
   SelectBank(event: Event) {
 
@@ -423,7 +491,7 @@ onSearchForChequeReceived(value: string) {
   }
 
   GetChequesIssued(bankId: number) {
-
+debugger
     this.gridLoading = true;
       const fromDate = '01-01-2000';
   const toDate = '09-03-2026';
@@ -464,12 +532,12 @@ onSearchForChequeReceived(value: string) {
       });
   }
 
-  GetChequesInBank(searchText: string = '') {
+  GetChequesInBank(searchText: string = '0') {
 
     this.gridLoading = true;
 
-    this.accountingService
-      .GetChequeEnquiryData(this.bankid, 0, 999999, '', searchText)
+    this.accountservice
+      .GetChequeEnquiryData(this.bankid, 0, 1, 'RETURN', searchText)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (res: any) => {
@@ -517,7 +585,7 @@ onSearchForChequeReceived(value: string) {
       0
     );
 
-    this.updatePagination(grid.length);
+    this.updateIssuedPagination(grid.length);
   }
 
   chequesStatusInfoGrid() {
@@ -533,6 +601,7 @@ onSearchForChequeReceived(value: string) {
       })) ?? [];
 
     this.displayGridDataBasedOnForm = grid;
+    this.displayGridDataBasedOnFormBackup = [...grid];
 
     this.totalreceivedcheques = grid.reduce(
       (sum, c) => sum + (c?.ptotalreceivedamount || 0),
@@ -541,7 +610,7 @@ onSearchForChequeReceived(value: string) {
 
     this.amounttotal = this.totalreceivedcheques;
 
-    this.updatePagination(grid.length);
+    this.updateReceivedPagination(grid.length);
   }
 
   private setupSearchListener() {
@@ -612,7 +681,7 @@ onSearchForChequeReceived(value: string) {
     const totalReceivedAmt =
       element?.ptotalreceivedamount && element.ptotalreceivedamount !== 0
         ? this.commonService.convertAmountToPdfFormat(
-            this.commonService.currencyformat(element.ptotalreceivedamount)
+            this.commonService.currencyFormat(element.ptotalreceivedamount)
           )
         : '';
 
