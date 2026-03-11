@@ -7,6 +7,8 @@ import { NumberToWordsPipe } from '../re-print/number-to-words.pipe';
 import autoTable from 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { CompanyDetailsService } from '../../../services/company-details.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-general-receipt-report',
@@ -27,18 +29,22 @@ export class GeneralReceiptReportComponent {
   private datePipe = inject(DatePipe);
   private numberToWords = inject(NumberToWordsPipe);
 
-  // @ViewChild(CompanyDetailsComponent) companyDetailsComponent!: CompanyDetailsComponent;
+  @ViewChild(CompanyDetailsComponent) companyDetailsComponent!: CompanyDetailsComponent;
 
   GeneralReceiptServiceData: any[] = [];
   generalreceiptID!: string;
   receiptName!: string;
   schemaName!: string;
-  pBranchname: string ='CA-Hyderabad';
-  pCinNo!: string;
+  // pBranchname: string ='CA-Hyderabad';
+  // pCinNo!: string;
+  companyName!:string;
+  cinNumber!:string;
   todayDate!: string;
   printFileName!: string;
-  pCompanyName: string = '';
-  pAddress1: string = '';
+  // pCompanyName: string = '';
+  // pAddress1: string = '';
+  branchName!:string;
+  registrationAddress!:string;
   printedon: string = '';
   currencySymbol: string = '₹';
   cancelled: boolean = false;
@@ -64,46 +70,80 @@ getTotalAmount(list: any[]): number {
     //   this.schemaName = split[3];
     //   this.getGeneralreceiptDatabyId(this.generalreceiptID);
     // });
-    this.activatedRoute.queryParams.subscribe({
-  next: (params) => {
+//     this.activatedRoute.queryParams.subscribe({
+//   next: (params) => {
 
-    const encodedId = params?.['id'];
+//     const encodedId = params?.['id'];
 
-    if (!encodedId) {
-      console.warn('No ID found in query params');
-      return;
+//     if (!encodedId) {
+//       console.warn('No ID found in query params');
+//       return;
+//     }
+
+//     try {
+
+//       const cleaned = encodedId.replace(/\s/g, '+');
+//       const decoded = atob(cleaned);
+
+//       const split = decoded.split(',');
+
+//       this.generalreceiptID = split?.[0] ?? '';
+//       this.receiptName = split?.[1] ?? '';
+//       this.schemaName = split?.[3] ?? '';
+
+//       if (this.generalreceiptID) {
+//         this.getGeneralreceiptDatabyId(this.generalreceiptID);
+//       }
+
+//     } catch (error) {
+//       console.error('Invalid Base64 ID:', error);
+//     }
+
+//   }
+// });
+this.activatedRoute.paramMap.pipe(take(1)).subscribe(params => {
+  const encodedId = params.get('id') ?? '';
+
+  if (!encodedId) {
+    console.warn('No ID found in params');
+    return;
+  }
+
+  try {
+    const cleaned = encodedId.replace(/\s/g, '+');
+    const decoded = atob(cleaned);
+    const split = decoded.split(',');
+
+    this.generalreceiptID = split?.[0] ?? '';
+    this.receiptName = split?.[1] ?? '';
+    this.schemaName = split?.[3] ?? '';
+
+    if (this.generalreceiptID) {
+      this.getGeneralreceiptDatabyId(this.generalreceiptID);
     }
 
-    try {
-
-      const cleaned = encodedId.replace(/\s/g, '+');
-      const decoded = atob(cleaned);
-
-      const split = decoded.split(',');
-
-      this.generalreceiptID = split?.[0] ?? '';
-      this.receiptName = split?.[1] ?? '';
-      this.schemaName = split?.[3] ?? '';
-
-      if (this.generalreceiptID) {
-        this.getGeneralreceiptDatabyId(this.generalreceiptID);
-      }
-
-    } catch (error) {
-      console.error('Invalid Base64 ID:', error);
-    }
-
+  } catch (error) {
+    console.error('Invalid Base64 ID:', error);
   }
 });
   }
 
   loadCompanyDetails() {
-    // this.companyService.GetCompanyData().subscribe(() => {
+    this.companyService.GetCompanyData().subscribe((response: any) => {
+      
     //   this.commonService._setCompanyDetails();
     //   const company = this.commonService.comapnydetails;
-    //   this.pCinNo = company?.pCinNo;
-    //   this.pBranchname = company?.pBranchname;
-    // });
+    //   this.cinNumber = company?.cinNumber;
+    //   this.branchName = company?.branchName;
+    //   this.companyName = company?.companyName;         
+    // this.registrationAddress = company?.registrationAddress;
+    const company = response[0];
+    
+    this.cinNumber = company?.cinNumber;
+    this.branchName = company?.uniqueBranchName;  
+    this.companyName = company?.companyName;
+    this.registrationAddress = company?.registrationAddress;
+    });
   }
 
   getGeneralreceiptDatabyId(id: string) {
@@ -168,6 +208,7 @@ getTotalAmount(list: any[]): number {
       this.getKapilGroupLogo();
 
     const doc = new jsPDF('p', 'mm', 'a4');
+    const Companyreportdetails = this.commonService._getCompanyDetails();
 
     this.GeneralReceiptServiceData.forEach((data, index) => {
       doc.addImage(
@@ -177,19 +218,24 @@ getTotalAmount(list: any[]): number {
               5, 20, 20
             );
 
+      const companyName = Companyreportdetails?.companyName ?? '';
+const companyAddress = Companyreportdetails?.registrationAddress ?? '';
+const companyCIN = Companyreportdetails?.cinNumber ?? '';
+const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
+
       const pageSize = doc.internal.pageSize;
       const pageWidth = pageSize.getWidth();
       doc.setFontSize(15);
           doc.setFont('helvetica', 'bold');
-          doc.text('KAPIL CHITS (HYDERABAD) PVT. LTD.',  pageWidth / 2, 15, { align: 'center' });
+          doc.text(companyName,  pageWidth / 2, 15, { align: 'center' });
           doc.setFontSize(9);
           doc.setFont('helvetica', 'normal');
           doc.text(
-            'Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy.',
+            companyAddress,
             pageWidth / 2,21,
             { align: 'center' }
           );
-          doc.text('CIN : U65992TG2008PTC060803',  pageWidth / 2, 26, { align: 'center' });
+          doc.text(`CIN : ${companyCIN}`,  pageWidth / 2, 26, { align: 'center' });
 
       doc.setFontSize(12);
       doc.text(reportname, 105, 35, { align: 'center' });

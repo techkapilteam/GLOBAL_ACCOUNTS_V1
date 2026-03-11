@@ -1,0 +1,35 @@
+<div class="rounded pl-4 pt-2 pr-4">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="temp-head text-center pt-3">
+        <h2 class="font-18 text-dark text-center m-0 font-weight-bold">
+          <!-- {{ pCompanyName }} -->
+            {{companyName}}
+        </h2>
+
+        <p class="font-16 text-dark text-center m-0">
+          <!-- {{ address }} -->
+            {{registrationAddress}}
+        </p>
+
+        @if (cinNumber !== '') {
+          <p class="font-14 text-dark text-center">
+            CIN : {{ cinNumber }}
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-6"></div>
+
+    <div class="col-md-6 d-flex justify-content-end align-items-center">
+      @if (PrintedDateShowhide) {
+        <p class="font-14 text-right m-0 font-weight-bold">
+          Branch : {{ branchName | titlecase }}
+        </p>
+      }
+    </div>
+  </div>
+</div>

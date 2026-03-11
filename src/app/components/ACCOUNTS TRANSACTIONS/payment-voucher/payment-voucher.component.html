@@ -1,77 +1,109 @@
 <div class="screen-container">
   <div class="screen-card">
-    <div class="screen-header">
-      <h2>Payment Voucher </h2>
+
+    <!-- HEADER -->
+    <div class="screen-header"
+      style="padding:14px 28px; display:flex; align-items:center; gap:10px; border-bottom:3px solid #0d6efd;">
+      <h2 style="margin:0; font-size:20px; font-weight:700; color:#070707;">Payment Voucher View</h2>
     </div>
-    <div class="screen-content">
-      <div class="row">
-        <div class="col-8 d-flex flex-wrap align-items-center">
-          <a routerLink="/dashboard/accounts/accounts-transactions/payment-voucher-view"
-            class="btn btn-primary border-0">New</a>
+
+    <div style="padding:20px 24px;">
+      <div class="row mb-4 align-items-center">
+
+        <!-- New Button (Left) -->
+        <div class="col-md-6">
+          <a routerLink="/dashboard/accounts/accounts-transactions/payment-voucher-view" class="btn btn-primary px-4"
+            style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+            + New
+          </a>
         </div>
+
+        <!-- Search (Right) -->
+        <div class="col-md-6 text-end">
+          <input type="text" class="form-control" placeholder="Search..."
+            style="font-size:15px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246; max-width:260px; display:inline-block;">
+        </div>
+
       </div>
-      <div class="row mt-3">
-        <div class="col-md-12 col-xl-12">
-          <div class="row">
-            <div class="col-md-12 col-xl-12">
-              <div class="row mb-4">
-                <div class="col-md-6 col-xl-6">
-                  <div class="form-group mr-0 custom-search">
-                    <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Search...">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div
+            style="border:1px solid #dce8fd; border-radius:10px; box-shadow:0 2px 8px rgba(13,110,253,0.07); overflow:hidden; background:#fff;">
+            <p-table [value]="gridData" dataKey="ppaymentid" [paginator]="true" [rows]="pageCriteria.pageSize"
+              [totalRecords]="pageCriteria.totalrows" [rowsPerPageOptions]="[10,20,50]" [showCurrentPageReport]="true"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [resizableColumns]="true"
+              columnResizeMode="fit" scrollable="true" scrollHeight="400px"
+              styleClass="p-datatable-sm p-datatable-gridlines">
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th class="text-center"
+                    style="width:100px; background:#0b4093 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    Actions</th>
+                  <th
+                    style="background:#0b4093 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    Payment Date</th>
+                  <th class="text-center"
+                    style="background:#0b4093 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    Voucher No.</th>
+                  <th
+                    style="background:#0b4093 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    Payment Details</th>
+                  <th
+                    style="background:#0b4093 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    Bank Name</th>
+                  <th class="text-end"
+                    style="background:#0b4093 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; white-space:nowrap; text-align:right !important;">
+                    Paid Amount</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-row>
+                <tr>
+                  <td class="text-center" style="padding:8px 12px; font-size:13px;">
+                    <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm p-button-primary"
+                      (click)="removeHandler($event, row)" style="color:#0d6efd;">
+                    </button>
+                  </td>
+                  <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                    {{ row.paymentDate || '--' }}
+                  </td>
+                  <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">
+                    {{ row.paymentId || '--' }}
+                  </td>
+                  <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                    <ng-container *ngIf="row.pmodofPayment === 'CASH'; else nonCash">
+                      CASH
+                    </ng-container>
+                    <ng-template #nonCash>
+                      {{ row.modeOfPayment || '--' }}
+                      <span *ngIf="row.typeOfPayment">
+                        ({{ row.typeOfPayment }}
+                        <span *ngIf="row.pChequenumber"> - {{ row.pChequenumber }}</span>)
+                      </span>
+                    </ng-template>
+                  </td>
+                  <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                    {{ row.bankName || '-- NA --' }}
+                  </td>
+                  <td class="text-end"
+                    style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    {{ formatCurrency(row.totalPaidAmount) }}
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="6" style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+                    No records found
+                  </td>
+                </tr>
+              </ng-template>
+
+            </p-table>
           </div>
-          <p-table [value]="gridData" dataKey="ppaymentid" [paginator]="false" [rows]="pageCriteria.pageSize"
-            [totalRecords]="pageCriteria.totalrows" [rowsPerPageOptions]="[10, 20, 50]" [showCurrentPageReport]="true"
-            [resizableColumns]="true" columnResizeMode="fit" scrollable="true" scrollHeight="400px"
-            styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
-            <!--   currentPageReportTemplate="Page {currentPage} of {totalPages} ({totalRecords} items)"  -->
-
-            <ng-template pTemplate="header">
-              <tr>
-                <th style="width:100px" class="text-center">Actions</th>
-                <th class="text-left">Payment Date</th>
-                <th class="text-center">Voucher No.</th>
-                <th class="text-left">Payment Details</th>
-                <th class="text-left">Bank Name</th>
-                <th class="text-right">Paid Amount</th>
-              </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-row>
-              <tr>
-                <td class="text-center">
-                  <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm"
-                    (click)="removeHandler($event, row)"></button>
-                </td>
-                <td class="text-left">{{ row.paymentDate }}</td>
-                <td class="text-center">{{ row.paymentId }}</td>
-                <td class="text-left">
-                  <ng-container *ngIf="row.pmodofPayment === 'CASH'">
-                    {{ row.modeOfPayment }}
-                  </ng-container>
-                  <ng-template #chequeDetails>
-                    {{ row.modeOfPayment }} ({{ row.typeOfPayment }} - {{ row.pChequenumber }})
-                  </ng-template>
-                </td>
-                <td class="text-left">{{ row.bankName ? row.bankName : '-- NA --' }}</td>
-                <td class="text-right">{{ formatCurrency(row.totalPaidAmount) }}</td>
-              </tr>
-            </ng-template>
-
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="6" class="text-center">No records found</td>
-              </tr>
-            </ng-template>
-
-          </p-table>
-
-
         </div>
       </div>
 

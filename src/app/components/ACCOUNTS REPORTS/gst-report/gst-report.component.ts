@@ -55,6 +55,7 @@ export class GstReportComponent implements OnInit {
   dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
   dpConfig2: Partial<BsDatepickerConfig> = {};
+  submitted: boolean=false;
 
   ngOnInit(): void {
     this.initDatePickers();
@@ -132,8 +133,14 @@ export class GstReportComponent implements OnInit {
     this.reportService.GetGstLedgerAccountList('GST REPORT','accounts','KAPILCHITS','KLC01')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: res => this.ledgeraccountslist = res ?? [],
-        error: err => this.commonService.showErrorMessage(err)
+        next: res => {
+        this.ledgeraccountslist = res ?? [];
+        console.log('Ledgers loaded:', this.ledgeraccountslist); 
+      },
+        error: err => {
+        console.error('Ledger API error:', err);
+        this.commonService.showErrorMessage(err);
+      }
       });
   }
 
@@ -148,13 +155,16 @@ export class GstReportComponent implements OnInit {
   ledgerName_Change(event: any) {
     this.GstReportForm.patchValue({ pledgername: event?.pledgername || '' });
   }
+  get f() { return this.GstReportForm.controls; }
 
   click_GstReport(): void {
+    this.submitted = true;
+ 
     if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+ if (this.GstReportForm.invalid) return;
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
   this.GstReportDetailsforAll = [];
@@ -224,11 +234,13 @@ private cleanObjectValues(data: any[]): void {
   });
 }
 private loadGstPayments(): void {
+  this.submitted = true;
+
   if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+  if (this.GstReportForm.invalid) return;
   this.disablesavebutton = true;
   this.savebutton = 'Processing';
   this.gstpaymentsdata = [];
@@ -242,22 +254,26 @@ return;
     .subscribe({
       next: (result: any[]) => {
         this.gstpaymentsdata = result ?? [];
+        this.showicons = this.gstpaymentsdata.length > 0;
         this.updatePagination(this.gstpaymentsdata.length);
         this.disablesavebutton = false;
         this.savebutton = 'GST Print';
       },
       error: () => {
+         this.showicons = false; 
         this.disablesavebutton = false;
         this.savebutton = 'GST Print';
       }
     });
 }
 click_GstSummary(): void {
+  this.submitted = true;
+  
   if (this.GstReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+if (this.GstReportForm.invalid) return;
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
 
@@ -309,16 +325,25 @@ gstReportType(type: string): void {
   this.GstReportDetails = [];
   this.GstSummaryDetails = [];
   this.gstpaymentsdata = [];
+  this.showpayments = false;
   this.showhidegstreport = false;
+  this.showicons = false;
 
   if (type === 'receipts') {
 
     this.showreceipts = true;
     this.showpayments = false;
+    this.gstpaymentsdata = [];
 
     this.GstReportForm.get('pledgerid')?.setValidators([Validators.required]);
+    this.GstReportForm.get('month')?.setValidators([Validators.required]);
     this.GstReportForm.get('fromdate')?.clearValidators();
     this.GstReportForm.get('todate')?.clearValidators();
+
+    this.GstReportForm.get('pledgerid')?.updateValueAndValidity();
+    this.GstReportForm.get('month')?.updateValueAndValidity();
+    this.GstReportForm.get('fromdate')?.updateValueAndValidity();
+    this.GstReportForm.get('todate')?.updateValueAndValidity();
 
   } else {
 
@@ -334,6 +359,11 @@ gstReportType(type: string): void {
     this.GstReportForm.get('fromdate')?.setValidators([Validators.required]);
     this.GstReportForm.get('todate')?.setValidators([Validators.required]);
     this.GstReportForm.get('pledgerid')?.clearValidators();
+    this.GstReportForm.get('month')?.clearValidators();
+    this.GstReportForm.get('fromdate')?.updateValueAndValidity();
+    this.GstReportForm.get('todate')?.updateValueAndValidity();
+    this.GstReportForm.get('pledgerid')?.updateValueAndValidity();
+    this.GstReportForm.get('month')?.updateValueAndValidity();
   }
 
   this.GstReportForm.updateValueAndValidity();
@@ -579,6 +609,75 @@ export(): void {
   });
 
   this.commonService.exportAsExcelFile(rows, 'GST');
+}
+exportPayments(): void {
+  const rows: any[] = [];
+
+  this.gstpaymentsdata?.forEach(element => {
+    rows.push({
+      'GST Voucher No': element.gstVoucherNo,
+      'Name': element.contactName,
+      'State': element.stateName,
+      'GST Voucher Date': element.invoiceDate,
+      'Taxable Amount': element.taxableValue,
+      'CGST Amount': element.cgstAmount,
+      'SGST Amount': element.sgstAmount,
+      'IGST Amount': element.igstAmount,
+      'Total Amount': element.totalAmount
+    });
+  });
+
+  this.commonService.exportAsExcelFile(rows, 'GSTPayments');
+}
+
+pdfOrprintPayments(printorpdf: 'Pdf' | 'Print'): void {
+  const rows: any[] = [];
+  const reportname = 'GST Payments';
+
+  const gridheaders = [
+    'GST Voucher No.', 'Name', 'State',
+    'GST Voucher Date', 'Taxable Amount',
+    'CGST Amount', 'SGST Amount', 'IGST Amount', 'Total Amount'
+  ];
+
+  const colWidthHeight = {
+    0: { cellWidth: 28, halign: 'left' },   
+    1: { cellWidth: 45, halign: 'left' },   
+    2: { cellWidth: 28, halign: 'left' },   
+    3: { cellWidth: 32, halign: 'left' },   
+    4: { cellWidth: 27, halign: 'right' },  
+    5: { cellWidth: 27, halign: 'right' },  
+    6: { cellWidth: 27, halign: 'right' },  
+    7: { cellWidth: 27, halign: 'right' }, 
+    8: { cellWidth: 26, halign: 'right' }
+  };
+
+  this.gstpaymentsdata?.forEach(element => {
+    rows.push([
+      element.gstVoucherNo,
+      element.contactName,
+      element.stateName,
+      element.invoiceDate,
+      element.taxableValue,
+      element.cgstAmount,
+      element.sgstAmount,
+      element.igstAmount,
+      element.totalAmount
+    ]);
+  });
+
+  const fromdate = this.commonService.getFormatDateNormal(this.GstReportForm.value.fromdate);
+  const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
+
+  this.commonService.downloadgstsummarypdf(
+    reportname,
+    `${fromdate} - ${todate}`,
+    rows,
+    gridheaders,
+    colWidthHeight,
+    'landscape',
+    printorpdf
+  );
 }
 }
 

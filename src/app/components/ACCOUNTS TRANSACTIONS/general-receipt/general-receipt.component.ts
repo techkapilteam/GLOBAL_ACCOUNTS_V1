@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { CommonService } from '../../../services/common.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-general-receipt',
   standalone: true,
@@ -28,8 +28,9 @@ export class GeneralReceiptComponent implements OnInit {
 
   constructor(
     private commonService: CommonService,
-    private accountingTransactionsService: AccountingTransactionsService
-  ) {}
+    private accountingTransactionsService: AccountingTransactionsService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.currencySymbol = this.commonService.currencysymbol || '₹';
@@ -41,8 +42,10 @@ export class GeneralReceiptComponent implements OnInit {
     this.loading = true;
 
     this.accountingTransactionsService
-      .GetGeneralReceiptsData('global', 'accounts', 'taxes', 'KAPILCHITS','KLC01' )
-      .subscribe({ next: (data: any[]) => { this.loading = false;
+      .GetGeneralReceiptsData('global', 'accounts', 'taxes', 'KAPILCHITS', 'KLC01')
+      .subscribe({
+        next: (data: any[]) => {
+          this.loading = false;
           if (!data || data.length === 0) {
             this.resetGrid();
             return;
@@ -119,14 +122,31 @@ export class GeneralReceiptComponent implements OnInit {
 
     this.gridView = filtered.slice(0, this.pageCriteria.pageSize);
   }
-  viewRow(row: any): void {
+  // viewRow(row: any): void {
 
-    const receipt = btoa(
-      `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
+  //   const receipt = btoa(
+  //     `${row.preceiptid},General Receipt,,${this.commonService.getschemaname()}`
+  //   );
+
+  //   window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
+  // }
+
+  viewRow(row: any): void {
+    debugger
+    if (!row?.receipt_number) {
+      console.error('Invalid row data');
+      return;
+    }
+
+    const receipt = btoa(`${row.receipt_number},General Receipt`);
+
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/GeneralReceiptReport', receipt])
     );
 
-    window.open(`/#/GeneralReceiptReport?id=${receipt}`, '_blank');
+    window.open(url, '_blank');
   }
+
   private resetGrid(): void {
     this.gridView = [];
     this.allGridView = [];

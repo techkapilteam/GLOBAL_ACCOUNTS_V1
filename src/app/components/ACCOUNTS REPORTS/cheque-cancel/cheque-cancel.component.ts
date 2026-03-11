@@ -9,9 +9,10 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 @Component({
   selector: 'app-cheque-cancel',
-  imports: [CommonModule,TableModule, FormsModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule],
+  imports: [CommonModule,TableModule, FormsModule, NgxDatatableModule, ReactiveFormsModule, BsDatepickerModule,CompanyDetailsComponent],
   standalone: true,
   templateUrl: './cheque-cancel.component.html',
   styleUrl: './cheque-cancel.component.css',
@@ -46,6 +47,7 @@ export class ChequeCancelComponent implements OnInit {
   showHide = true;
   showicons = false;
   currencysymbol: string;
+  printedDate: boolean = true;
 
   constructor() {
     this.currencysymbol = '₹';

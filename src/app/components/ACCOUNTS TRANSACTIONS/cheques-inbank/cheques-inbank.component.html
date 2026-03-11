@@ -112,7 +112,7 @@
                 <div class="col-md-2 col-xl-2 mb-3">
                     <button (click)="showSearchText('search')" class="btn btn-primary btn-s-icon border-0"
                         [disabled]="searchloading"
-                        style="height: 36px; padding: 0 20px; font-weight: 500; border-radius: 4px;">
+                        style="height: 34px; padding: 0 18px; font-weight: 500; border-radius: 4px;">
                         {{gridData.length > 0 ? 'Search' : 'Show'}}
                     </button>
                 </div>
@@ -120,19 +120,23 @@
 
                 <div class="col-md-6 col-xl-6 mb-3">
                     <div class="d-flex justify-content-end mr-3" *ngIf="showicons">
-                        <ul class="temp-ul d-flex flex-row list-unstyled mb-0">
-                            <li class="temp-ico ml-2">
+                        <ul class="temp-ul d-flex flex-row list-unstyled mb-0 gap-3">
+
+                            <li class="temp-ico">
                                 <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
-                                    style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
+                                    style="cursor:pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
                             </li>
-                            <li class="temp-ico ml-2">
+
+                            <li class="temp-ico">
                                 <img src="assets/images/print-icon-blue.svg" width="18px" class="pt-2" title="print"
-                                    (click)="pdfOrprint('Print')" style="cursor: pointer;" />
+                                    (click)="pdfOrprint('Print')" style="cursor:pointer;" />
                             </li>
-                            <li class="temp-ico ml-2">
+
+                            <li class="temp-ico">
                                 <img src="assets/images/icon-excel.svg" width="18px" class="pt-2" title="excel"
-                                    (click)="export()" style="cursor: pointer;" />
+                                    (click)="export()" style="cursor:pointer;" />
                             </li>
+
                         </ul>
                     </div>
                 </div>
@@ -455,53 +459,53 @@
                                                             <input type="checkbox" [checked]="preferdrows"
                                                                 (change)="preferedselection($event)" />
                                                         </th>
-                                                        <th style="width:60px; background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                        <th style="width:60px; background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             class="cell-center header-center"
                                                             *ngIf="!showhidegridcolumns">
                                                             Clear
                                                         </th>
-                                                        <th style="width:60px; background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                        <th style="width:60px; background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             class="cell-center header-center"
                                                             *ngIf="!showhidegridcolumns2">
                                                             Return
                                                         </th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             *ngIf="!showhidegridcolumns">
                                                             Reference no</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Cheque/Reference No.</th>
                                                         <th class="cell-left header-left"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Branch Name</th>
                                                         <th class="cell-right header-right"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Amount</th>
                                                         <th class="cell-left header-left"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Party</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Receipt Date</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Deposited Date</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             *ngIf="!hiddendate">
                                                             {{datetitle}}</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Receipt Id</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Transaction Mode</th>
                                                         <th class="cell-left header-left"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Cheque Bank Name</th>
                                                         <th class="cell-left header-left"
-                                                            style="background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
                                                             Cheque Branch Name</th>
                                                     </tr>
                                                 </ng-template>

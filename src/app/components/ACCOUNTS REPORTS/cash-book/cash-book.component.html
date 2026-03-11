@@ -79,7 +79,7 @@
           </div>
 
         </form>
-        <div class="section-content mt-4" *ngIf="gridView?.length">
+        <div class="section-content mt-4" *ngIf="gridView">
 
           <div class="mb-3 text-end" *ngIf="showicons">
             <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">PDF</button>
@@ -89,7 +89,7 @@
             <button class="btn btn-outline-success" (click)="export()">Excel</button>
           </div>
 
-          <div class="text-center mb-1 fw-bold fs-5">
+          <!-- <div class="text-center mb-1 fw-bold fs-5">
             KAPIL CHITS (HYDERABAD) PVT. LTD.
           </div>
           <div class="text-center mb-1">
@@ -97,9 +97,13 @@
           </div>
           <div class="text-center mb-2 fw-semibold">
             CIN : U65992TG2008PTC060803
-          </div>
+          </div> -->
+          <app-company-details *ngIf="gridView?.length" [PrintedDateShowhide]="printedDate"></app-company-details>
           <hr>
-          <p-table [value]="gridView" [paginator]="true" [rows]="10" [loading]="isLoading" [rowGroupMode]="'subheader'"
+          <div *ngIf="gridView.length === 0" class="text-center text-muted mt-3">
+    No Records to Display
+  </div>
+          <p-table *ngIf="gridView.length > 0" [value]="gridView" [paginator]="true" [rows]="10" [loading]="isLoading" [rowGroupMode]="'subheader'"
             groupRowsBy="ptransactiondate" sortField="ptransactiondate" responsiveLayout="scroll">
 
             <!-- Group Header -->

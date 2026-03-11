@@ -14,7 +14,7 @@ export class AccountReportsService {
     return this._CommonService.getAPI('/Accounts/GetChequesIssued', params, 'YES')
   }
   GetBankBalance(bankid: any) {
-    const params = new HttpParams().set('brstodate', '09-01-2026').set('_recordid', bankid).set('BranchSchema', this._CommonService.getbranchname()).set('branchCode', this._CommonService.getBranchCode()).set('companyCode', this._CommonService.getCompanyCode());
+    const params = new HttpParams().set('brstodate', '09-03-2026').set('_recordid', bankid).set('BranchSchema', this._CommonService.getbranchname()).set('branchCode', this._CommonService.getBranchCode()).set('companyCode', this._CommonService.getCompanyCode());
     return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
   }
   Getgstvocuherprint(Branchschema: any, Gstvoucherno: any): Observable<any> {
@@ -24,6 +24,25 @@ export class AccountReportsService {
   public getTDSReportDetails(localSchema:any, sectionid:any, fromdate:any, todate:any, grouptype:any,reporttype:any) {
     const params = new HttpParams().set("localSchema", localSchema).set("sectionid", sectionid).set("fromdate", fromdate).set("todate", todate).set("grouptype", grouptype).set("reporttype", reporttype).set("globalSchema", this._CommonService.getschemaname()).set("companyCode", this._CommonService.getCompanyCode()).set("branchCode", this._CommonService.getBranchCode());
     return this._CommonService.getAPI('/Accounts/getTDSReportDetails', params, 'YES');
+  }
+  GetSubscriberGroups(caobranchschema: string): Observable<any> {
+
+    const params = new HttpParams({
+      fromObject: {
+        GlobalSchema: this._CommonService.getschemaname(),
+      LocalSchema: this._CommonService.getbranchname(),
+      CaoSchema: caobranchschema,
+      CompanyCode: this._CommonService.getCompanyCode(),
+      BranchCode: this._CommonService.getBranchCode(),
+        
+      }
+    });
+
+    return this._CommonService.getAPI(
+      '/Accounts/GetSubscriberGroupCodes',
+      params,
+      'Yes'
+    );
   }
   
 }

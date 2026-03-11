@@ -41,10 +41,10 @@
 
                 <div class="text-center mb-3">
                   <img src="assets/images/kapillogo.png" class="img-fluid mb-2" width="120">
-                  <!-- <h4 class="font-weight-bold m-0">{{ pCompanyName }}</h4>
-                  <p class="m-0">{{ pAddress1 }}</p>
-                  <p class="m-0">CIN : {{ pCinNo }}</p> -->
-                  <div class="text-center mb-1 fw-bold fs-5">
+                  <h4 class="font-weight-bold m-0">{{ companyName }}</h4>
+                  <p class="m-0">{{ registrationAddress }}</p>
+                  <p class="m-0">CIN : {{ cinNumber }}</p>
+                  <!-- <div class="text-center mb-1 fw-bold fs-5">
         KAPIL CHITS (HYDERABAD) PVT. LTD.
       </div>
 
@@ -54,15 +54,15 @@
 
       <div class="text-center mb-2 fw-semibold">
         CIN: U65992TG2008PTC060803
-      </div>
+      </div> -->
                 </div>
 
                 <div class="row mb-2">
                   <div class="col-md-6">
                     <strong>Printed On :</strong> {{ printedon }}
                   </div>
-                  <div class="col-md-6 text-right">
-                    <strong>Branch :</strong> {{ pBranchname | titlecase }}
+                  <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    <strong>Branch :</strong> {{ branchName | titlecase }}
                   </div>
                 </div>
 
@@ -89,7 +89,7 @@
                       <strong>Receipt No :</strong>
                       {{ receiptdata.receiptid }}
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-md-6 d-flex justify-content-end align-items-center">
                       <strong>Date :</strong>
                       {{ receiptdata.receipt_date | date }}
                     </div>
@@ -143,24 +143,23 @@
 
                   <p>
                     <strong>Narration :</strong>
-                    {{ receiptdata.narration?.narration || '' }}
+                    {{ (typeof receiptdata.narration === 'string' ? receiptdata.narration :
+                    receiptdata.narration?.narration) || '' }}
                   </p>
 
                   <p>
                     <strong>Mode of Payment :</strong>
-                    <span *ngIf="receiptdata.modeof_receipt === 'CASH'">
-                      {{ receiptdata.modeof_receipt }}
+                    <span *ngIf="receiptdata.modeof_receipt === 'C'">
+                      CASH
                     </span>
 
-                    <span *ngIf="receiptdata.modeof_receipt !== 'CASH'">
-                      {{ receiptdata.typeofpayment }}
+                    <span *ngIf="receiptdata.modeof_receipt !== 'C'">
+                      {{ typeof receiptdata.typeofpayment === 'string' ? receiptdata.typeofpayment : '' }}
                     </span>
 
-                    <span *ngIf="receiptdata.reference_number">
-                      (Ref No :
-                      {{ receiptdata.reference_number }},
-                      Bank :
-                      {{ receiptdata.cheque_bank }})
+                    <span *ngIf="typeof receiptdata.reference_number === 'string' && receiptdata.reference_number">
+                      (Ref No : {{ receiptdata.reference_number }},
+                      Bank : {{ typeof receiptdata.cheque_bank === 'string' ? receiptdata.cheque_bank : '' }})
                     </span>
                   </p>
 

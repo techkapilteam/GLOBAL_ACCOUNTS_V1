@@ -1,189 +1,216 @@
-<form [formGroup]="ChequesInBankForm" class="container mt-3">
+<div class="screen-container">
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
 
-  
-  <div class="row">
-
-   
-    <div class="col-md-4">
-
-      <div class="form-group">
-        <label class="required-field">Transaction Date</label>
-        <input type="text"
-               class="form-control"
-               formControlName="ptransactiondate"
-               bsDatepicker
-               [bsConfig]="ptransactiondateConfig"
-               readonly>
-      </div>
-
-      <div class="form-group">
-        <label class="required-field">Receipt Date</label>
-        <input type="text"
-               class="form-control"
-               formControlName="pchequereceiptdate"
-               bsDatepicker
-               [bsConfig]="pchequecleardateConfig"
-               readonly>
-      </div>
-
-      <div class="form-group">
-        <label class="required-field">Clear Date</label>
-        <input type="text"
-               class="form-control"
-               formControlName="pchequecleardate"
-               bsDatepicker
-               [bsConfig]="pchequecleardateConfig"
-               readonly>
-      </div>
-
-      
-      <div class="form-group">
-        <label>Bank</label>
-        <ng-select
-          [items]="bankList"
-          bindLabel="pdepositbankname"
-          bindValue="paccountid"
-          formControlName="bankname"
-          placeholder="Select"
-          class="w-100">
-        </ng-select>
-      </div>
-
-      
-      <div class="form-group">
-        <label>Online Account</label>
-        <ng-select
-          [items]="PaytmList"
-          bindLabel="pdepositbankname"
-          bindValue="paccountid"
-          formControlName="paytmname"
-          placeholder="Select"
-          class="w-100">
-        </ng-select>
-      </div>
-
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Online Settlement</h2>
     </div>
 
-    
-    <div class="col-md-8">
+    <form [formGroup]="ChequesInBankForm">
 
-      <div class="border rounded shadow-sm bg-light p-3 mb-3">
-        <div class="form-group mb-2">
-          <label>Balance:</label>
-          <span class="ml-2 font-weight-bold">
-            {{currencySymbol}} {{bankbalance | number:'1.2-2'}} {{bankbalancetype}}
-          </span>
+      <!-- Form Fields + Balance Section -->
+      <div class="border rounded p-3 bg-white mb-4"
+        style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
+
+        <div class="row">
+
+          <!-- Left: Inputs -->
+          <div class="col-md-4">
+
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Transaction Date</label>
+              <input type="text" class="form-control" formControlName="ptransactiondate"
+                bsDatepicker [bsConfig]="ptransactiondateConfig" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Receipt Date</label>
+              <input type="text" class="form-control" formControlName="pchequereceiptdate"
+                bsDatepicker [bsConfig]="pchequecleardateConfig" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Clear Date</label>
+              <input type="text" class="form-control" formControlName="pchequecleardate"
+                bsDatepicker [bsConfig]="pchequecleardateConfig" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            </div>
+
+            <div class="form-group mb-3">
+              <label style="font-size:13px; font-weight:600; color:#162246;">Bank</label>
+              <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="paccountid"
+                formControlName="bankname" placeholder="Select" class="w-100">
+              </ng-select>
+            </div>
+
+            <div class="form-group mb-0">
+              <label style="font-size:13px; font-weight:600; color:#162246;">Online Account</label>
+              <ng-select [items]="PaytmList" bindLabel="pdepositbankname" bindValue="paccountid"
+                formControlName="paytmname" placeholder="Select" class="w-100">
+              </ng-select>
+            </div>
+
+          </div>
+
+          <!-- Right: Balance Info -->
+          <div class="col-md-8">
+            <div class="p-3"
+              style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:10px;">
+
+              <div class="mb-2">
+                <span style="font-size:13px; font-weight:600; color:#162246;">Balance:</span>
+                <span class="ml-2"
+                  style="font-size:13px; font-weight:700; color:#0d6efd;">
+                  {{ currencySymbol }} {{ bankbalance | number:'1.2-2' }} {{ bankbalancetype }}
+                </span>
+              </div>
+
+              <div>
+                <span style="font-size:13px; font-weight:600; color:#162246;">BRS Date:</span>
+                <span class="ml-2"
+                  style="font-size:13px; font-weight:700; color:#0d6efd;">
+                  {{ brsdate }}
+                </span>
+              </div>
+
+            </div>
+          </div>
+
         </div>
 
-        <div class="form-group mb-0">
-          <label>BRS Date:</label>
-          <span class="ml-2 font-weight-bold">{{brsdate}}</span>
+      </div>
+
+      <!-- Radio + Search + Table Section -->
+      <div class="border rounded p-3 bg-white mb-4"
+        style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
+
+        <!-- Radio Buttons -->
+        <div class="row mb-3">
+          <div class="col-md-12 d-flex align-items-center" style="gap:24px;">
+
+            <div class="d-flex align-items-center" style="gap:6px;">
+              <input type="radio" value="A" formControlName="chequeintype"
+                style="accent-color:#0d6efd; width:15px; height:15px; cursor:pointer;">
+              <label class="mb-0"
+                style="font-size:13px; font-weight:600; color:#162246; cursor:pointer;">All</label>
+            </div>
+
+            <div class="d-flex align-items-center" style="gap:6px;">
+              <input type="radio" value="D" formControlName="chequeintype"
+                style="accent-color:#0d6efd; width:15px; height:15px; cursor:pointer;">
+              <label class="mb-0"
+                style="font-size:13px; font-weight:600; color:#162246; cursor:pointer;">Cleared</label>
+            </div>
+
+            <div class="d-flex align-items-center" style="gap:6px;">
+              <input type="radio" value="ND" formControlName="chequeintype"
+                style="accent-color:#0d6efd; width:15px; height:15px; cursor:pointer;">
+              <label class="mb-0"
+                style="font-size:13px; font-weight:600; color:#162246; cursor:pointer;">Pending</label>
+            </div>
+
+          </div>
         </div>
+
+        <!-- Search -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <input type="search" class="form-control" placeholder="Search..."
+              (input)="onSearch($event.target.value)"
+              style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+          </div>
+        </div>
+
+        <!-- Table -->
+        <p-table
+          [value]="gridData"
+          [(selection)]="selected"
+          dataKey="preceiptid"
+          [scrollable]="true"
+          scrollHeight="350px"
+          [rowHover]="true"
+          styleClass="p-datatable-sm p-datatable-gridlines">
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width:50px; background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Chit Receipt No</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Reference No</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Branch</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Party</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Date</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Deposited Date</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Clear Date</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Id</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Mode</th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">UPI</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-row>
+            <tr>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">
+                <p-tableCheckbox [value]="row"></p-tableCheckbox>
+              </td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.chitReceiptNo}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pChequenumber}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pbranchname || '--NA--'}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{currencySymbol}} {{row.ptotalreceivedamount | number:'1.2-2'}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.ppartyname}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.preceiptdate}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pdepositeddate}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pCleardate}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.preceiptid}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.ptypeofpayment}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.cheque_bank}}</td>
+            </tr>
+          </ng-template>
+
+        </p-table>
+
+        <!-- Selected Summary -->
+        <div class="mt-3 p-2 d-inline-block"
+          style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:7px;">
+          <div style="font-size:13px; font-weight:600; color:#162246;">
+            Selected Rows Count is:
+            <span style="color:#0d6efd;">{{selected.length}}</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#162246; margin-top:4px;">
+            Selected Total Value is:
+            <span style="color:#0d6efd;">
+              {{currencySymbol}} {{getSelectedTotal() | number:'1.2-2'}}
+            </span>
+          </div>
+        </div>
+
       </div>
-    </div>
-  </div>
 
-  
-  <div class="row mt-3">
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end" style="gap:12px;">
 
-    <div class="col-md-12">
-      <div class="form-check form-check-inline">
-        <input type="radio" value="A" formControlName="chequeintype">
-        <label class="ml-1">All</label>
+        <button type="button" (click)="clearSelection()"
+          style="background:#6c757d; border-color:#6c757d; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px; color:#fff; border:none; cursor:pointer;">
+          Clear
+        </button>
+
+        <button type="button" (click)="Save()"
+          style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px; color:#fff; border:none; cursor:pointer;">
+          Save
+        </button>
+
       </div>
 
-      <div class="form-check form-check-inline ml-4">
-        <input type="radio" value="D" formControlName="chequeintype">
-        <label class="ml-1">Cleared</label>
-      </div>
-
-      <div class="form-check form-check-inline ml-4">
-        <input type="radio" value="ND" formControlName="chequeintype">
-        <label class="ml-1">Pending</label>
-      </div>
-    </div>
+    </form>
 
   </div>
-
-  
-  <div class="row mt-3">
-    <div class="col-md-6">
-      <input type="search"
-             class="form-control"
-             placeholder="Search"
-             (input)="onSearch($event.target.value)">
-    </div>
-  </div>
-
-  <p-table
-    [value]="gridData"
-    [(selection)]="selected"
-    dataKey="preceiptid"
-    [scrollable]="true"
-    scrollHeight="350px"
-    [rowHover]="true">
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width:50px">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th>Chit Receipt No</th>
-        <th>Reference No</th>
-        <th>Branch</th>
-        <th>Amount</th>
-        <th>Party</th>
-        <th>Receipt Date</th>
-        <th>Deposited Date</th>
-        <th>Clear Date</th>
-        <th>Receipt Id</th>
-        <th>Mode</th>
-        <th>UPI</th>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="body" let-row>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="row"></p-tableCheckbox>
-        </td>
-        <td>{{row.chitReceiptNo}}</td>
-        <td>{{row.pChequenumber}}</td>
-        <td>{{row.pbranchname || '--NA--'}}</td>
-        <td>{{currencySymbol}} {{row.ptotalreceivedamount | number:'1.2-2'}}</td>
-        <td>{{row.ppartyname}}</td>
-        <td>{{row.preceiptdate}}</td>
-        <td>{{row.pdepositeddate}}</td>
-        <td>{{row.pCleardate}}</td>
-        <td>{{row.preceiptid}}</td>
-        <td>{{row.ptypeofpayment}}</td>
-        <td>{{row.cheque_bank}}</td>
-      </tr>
-    </ng-template>
-
-  </p-table>
-
-  <div class="font-weight-bold mt-3">
-    Selected Rows Count is: {{selected.length}}
-  </div>
-
-  <div class="font-weight-bold mt-1">
-    Selected Total Value is:
-    {{currencySymbol}} {{getSelectedTotal() | number:'1.2-2'}}
-  </div>
-
-  <div class="d-flex justify-content-end mt-3">
-    <button type="button"
-            class="btn btn-dark"
-            (click)="clearSelection()">
-      Clear
-    </button>
-
-    <button type="button"
-            class="btn btn-primary ml-3"
-            (click)="Save()">
-      Save
-    </button>
-  </div>
-
-</form>
+</div>

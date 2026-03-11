@@ -1,240 +1,260 @@
 <form [formGroup]="CashOnHandForm">
-    <!-- <app-loading [loading]="gridLoading"></app-loading> -->
-    <div class="section-content">
-        <div class="row">
-            <div class="col-md-12 col-xl-12">
-                <!-- <p class="bc-2">Bank Pay-in (Cheques On Hand)</p> -->
-            </div>
-        </div>
+  <div class="screen-container">
+    <div class="screen-card card shadow-sm p-4"
+      style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
 
-        <div class="row" *ngIf="pcashonhandbalance!==0">
-            <div class="col-md-6 col-xl-4" *ngIf="bankDropdowmHide">
-                <div class="form-group">
-                    <label class="required-field">Bank</label>
-                    <select class="form-control" id="banknameForLegal" formControlName="banknameForLegal" title="Bank"
-                        (change)="BankChange($event)">
-                        <option value="">Select</option>
-                        <option *ngFor="let bank of BankNamesList" [value]="bank.pdepositbankname">
-                            {{bank.pdepositbankname}}
-                        </option>
-                    </select>
-                    <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.banknameForLegal }"
-                     <app-validation-message [messgae]="CashOnHandValidation?.banknameForLegal"></app-validation-message> -->
-                </div>
-            </div>
-            <div class="col-md-3 col-xl-3">
-                <div class="form-group mt-4 ml-4">
-                    <input class="form-check-input" type="checkbox" title="As On Date" id="asondate"
-                        (change)="asOnChange($event)" formControlName="asondate">
-                    <label class="required-field ml-3">As on</label>
-                </div>
-            </div>
-            <div class="col-md-3 col-xl-3" *ngIf="fromdatevisible">
-                <div class="form-group">
-                    <label class="required-field">From Date</label>
-                    <input class="form-control w-auto" type="text" id="fromdate" formControlName="fromdate"
-                        placeholder="" readonly (ngModelChange)="fromdateChange($event)" [bsConfig]="fromdate"
-                        #dp="bsDatepicker" bsDatepicker placement="bottom">
-                    <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.fromdate }"
-                        <app-validation-message [messgae]="CashOnHandValidation?.fromdate"></app-validation-message> -->
-                </div>
-                <!-- (ngModelChange)="change_date($event)" -->
-            </div>
-            <div class="col-md-3 col-xl-3">
-                <div class="form-group">
-                    <label class="required-field">{{datelable}}</label>
-                    <input class="form-control w-auto" type="text" title="Date" id="todate" formControlName="todate"
-                        placeholder="" readonly [bsConfig]="todate" #dp="bsDatepicker" bsDatepicker placement="bottom"
-                       > 
-                       <!-- [disabled]="true" -->
-                    <!-- [ngClass]="{ 'is-invalid': CashOnHandValidation.todate }" 
-                        <app-validation-message [messgae]="CashOnHandValidation?.todate"></app-validation-message> -->
-                </div>
-                <!-- (ngModelChange)="change_date($event)" -->
-            </div>
-        </div>
-        <div class="row" *ngIf="pcashonhandbalance!==0">
-            <div class="col-md-3 col-xl-3">
-                <div class="form-group">
-                    <label class="required-field">CAO </label>
-                    <select class="form-control" (change)="SelectBank($event)" id="bankname" formControlName="bankname"
-                        title="Bank" [ngClass]="{ 'is-invalid': CashOnHandValidation.bankname }">
-                        <option value="">Select</option>
-                        <option *ngFor="let bank of BanksList" [value]="bank.branchName">{{bank.branchName}}</option>
+      <!-- Header -->
+      <div class="screen-header mb-4"
+        style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+        <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Cash On Hand</h2>
+      </div>
 
-                    </select>
-                    <!--
-                     <app-validation-message [messgae]="CashOnHandValidation?.bankname"></app-validation-message> -->
-                    <!-- <div *ngIf="ShowBankErrorMsg" style="color:red">Select Bank</div> -->
-                </div>
+      <!-- Section 1: Filters -->
+      <div class="border rounded p-3 bg-white mb-4"
+        style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
+
+        <div class="row align-items-end" *ngIf="pcashonhandbalance!==0">
+
+          <!-- Bank Dropdown -->
+          <div class="col-md-3" *ngIf="bankDropdowmHide">
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Bank</label>
+              <select class="form-control" id="banknameForLegal" formControlName="banknameForLegal"
+                title="Bank" (change)="BankChange($event)"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+                <option value="">Select</option>
+                <option *ngFor="let bank of BankNamesList" [value]="bank.pdepositbankname">
+                  {{ bank.pdepositbankname }}
+                </option>
+              </select>
             </div>
-            <div class="col-md-3 col-xl-3">
-                <div class="form-group">
-                    <label class="required-field">Transaction Date</label>
-                    <input class="form-control w-auto" type="text" title="Date" id="ptransactiondate"
-                        [disabled]="!pdatepickerenablestatus" (ngModelChange)="change_date($event)"
-                        formControlName="ptransactiondate" placeholder="" readonly [bsConfig]="dpConfig"
-                        #dp="bsDatepicker" bsDatepicker placement="bottom">
-                    <!--  [ngClass]="{ 'is-invalid': CashOnHandValidation.ptransactiondate }"
-                        <app-validation-message [messgae]="CashOnHandValidation?.ptransactiondate"></app-validation-message> -->
-                </div>
+          </div>
+
+          <!-- As On Checkbox -->
+          <div class="col-md-2">
+            <div class="form-group mb-3 d-flex align-items-center" style="margin-top:30px;">
+              <input class="form-check-input" type="checkbox" title="As On Date" id="asondate"
+                (change)="asOnChange($event)" formControlName="asondate"
+                style="width:16px; height:16px; cursor:pointer; accent-color:#0d6efd;">
+              <label class="mb-0 ms-2"
+                style="font-size:13px; font-weight:600; color:#162246; margin-left:8px;">As on</label>
             </div>
-            <div class="col-md-3 col-xl-3">
-                <div class="d-flex justify-content mt-4">
-                    <button (click)="getCashOnHandData()" class="btn btn-s-icon px-3 border-0"
-                        [disabled]="disableShowbutton">
-                        <i class="fa" [ngClass]="{'fa-spin fa-spinner': disableShowbutton}"></i>{{showbuttontext}}
-                    </button>
-                </div>
+          </div>
+
+          <!-- From Date -->
+          <div class="col-md-3" *ngIf="fromdatevisible">
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">From Date</label>
+              <input class="form-control" type="text" id="fromdate" formControlName="fromdate"
+                placeholder="" readonly (ngModelChange)="fromdateChange($event)"
+                [bsConfig]="fromdate" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+              <div class="text-danger" style="font-size:12px; margin-top:4px;"
+                *ngIf="CashOnHandForm.controls['fromdate'].touched && CashOnHandForm.controls['fromdate'].invalid">
+                From Date is required
+              </div>
             </div>
+          </div>
+
+          <!-- To Date -->
+          <div class="col-md-3">
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">{{ datelable }}</label>
+              <input class="form-control" type="text" title="Date" id="todate" formControlName="todate"
+                placeholder="" readonly [bsConfig]="todate" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+              <div class="text-danger" style="font-size:12px; margin-top:4px;"
+                *ngIf="CashOnHandForm.controls['todate'].touched && CashOnHandForm.controls['todate'].invalid">
+                To Date is required
+              </div>
+            </div>
+          </div>
 
         </div>
+
+        <div class="row align-items-end" *ngIf="pcashonhandbalance!==0">
+
+          <!-- CAO -->
+          <div class="col-md-3">
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">CAO</label>
+              <select class="form-control" (change)="SelectBank($event)" id="bankname"
+                formControlName="bankname" title="Bank"
+                [ngClass]="{ 'is-invalid': CashOnHandValidation.bankname }"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+                <option value="">Select</option>
+                <option *ngFor="let bank of BanksList" [value]="bank.branchName">{{ bank.branchName }}</option>
+              </select>
+              <div class="text-danger" style="font-size:12px; margin-top:4px;"
+                *ngIf="CashOnHandForm.controls['bankname'].touched && CashOnHandForm.controls['bankname'].invalid">
+                CAO is required
+              </div>
+            </div>
+          </div>
+
+          <!-- Transaction Date -->
+          <div class="col-md-3">
+            <div class="form-group mb-3">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Transaction Date</label>
+              <input class="form-control" type="text" title="Date" id="ptransactiondate"
+                [disabled]="!pdatepickerenablestatus" (ngModelChange)="change_date($event)"
+                formControlName="ptransactiondate" placeholder="" readonly
+                [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+              <div class="text-danger" style="font-size:12px; margin-top:4px;"
+                *ngIf="CashOnHandForm.controls['ptransactiondate'].touched && CashOnHandForm.controls['ptransactiondate'].invalid">
+                Transaction Date is required
+              </div>
+            </div>
+          </div>
+
+          <!-- Show Button -->
+          <div class="col-md-3">
+            <div class="form-group mb-3" style="margin-top:24px;">
+              <button (click)="getCashOnHandData()" [disabled]="disableShowbutton"
+                class="btn btn-primary px-4"
+                style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disableShowbutton}"></i>
+                {{ showbuttontext }}
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Cash On Hand Balance -->
         <div class="row" *ngIf="pcashonhandbalance!=0">
-            <div class="col-md-6 col-xl-4">
-                <div class="form-group">
-                    <label>
-                        Cash On Hand Balance :
-                        {{pcashonhandbalance| currency:currencyCode:'symbol':'1.2-2' }}
-                    </label>
-                    <!-- {{ pcashonhandbalance | currency:currencyCode:'symbol':'1.2-2' }} -->
-
-                </div>
+          <div class="col-md-6">
+            <div class="p-2 rounded"
+              style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:7px !important; display:inline-block;">
+              <span style="font-size:13px; font-weight:600; color:#162246;">
+                Cash On Hand Balance :
+                <span style="color:#0d6efd;">
+                  {{ pcashonhandbalance | currency:currencyCode:'symbol':'1.2-2' }}
+                </span>
+              </span>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="section-content mt-2">
-        <div class="row" *ngIf="false">
-            <div class="col-md-6">
-                <div class="form-group mr-0 custom-search">
+      </div>
 
+      <!-- Section 2: Table -->
+      <div class="border rounded p-3 bg-white mb-4"
+        style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
 
-                    <input (input)="onSearch($event)" type="search"
-                     #search id="search" class="form-control">
+        <p-table [value]="gridData" dataKey="preceiptid" [rows]="10" [paginator]="false"
+          [resizableColumns]="true" columnResizeMode="fit" scrollable="true" scrollHeight="400px"
+          styleClass="p-datatable-sm p-datatable-gridlines">
 
-                </div>
-            </div>
-            <div class="d-flex justify-content-end mr-3 mt-4">
-                <ul class="temp-ul">
-                    <li class="temp-ico ml-2">
-                        <img src="assets/images/pdf-icon-blue.svg " width="18px" class="pt-2" title="pdf"
-                            style="cursor: pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
-                    </li>
-                    <li class="temp-ico ml-2">
-                        <img src="assets/images/print-icon-blue.svg " width="18px" class="pt-2" title="print"
-                            (click)="pdfOrprint('Print')" style="cursor: pointer;" />
-                    </li>
-                    <li class="temp-ico ml-2">
-                        <img src="assets/images/icon-excel.svg " title="Excel" class="pt-2" width="18px"
-                            (click)="export()" style="cursor: pointer;">
-                    </li>
-                </ul>
+          <!-- Header -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Subscriber Name
+              </th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Amount
+              </th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Receipt No
+              </th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Receipt Id
+              </th>
+              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                Receipt Date
+              </th>
+            </tr>
+          </ng-template>
 
-            </div>
-        </div>
-        <!-- <ul class="nav filtered-tab nav-tabs">
-            <li class="active"> <a class="active" (click)="All()" data-toggle="tab" href="#all" role="tab" aria-controls="fresh" aria-selected="true">All <span class="badge badge-warning ml-2">{{all}}</span></a></li>
+          <!-- Body -->
+          <ng-template pTemplate="body" let-row>
+            <tr>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row.ppartyname }}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row.ptotalreceivedamount | currency:'INR':'symbol':'1.2-2' }}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row.preceiptno }}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row.preceiptid }}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row.preceiptdate | date:'dd/MMM/yyyy' }}</td>
+            </tr>
+          </ng-template>
 
-            <li><a data-toggle="tab" href="#all" (click)="ChequesReceived()">Cheques Received<span
-            class="badge badge-secondary ml-2">{{chequesreceived}}</span></a></li>
-            <li><a data-toggle="tab" href="#all" (click)="OnlineReceipts()">Online Receipts <span
-            class="badge badge-primary ml-2">{{onlinereceipts}}</span></a></li>
-            <li><a data-toggle="tab" href="#all" (click)="Deposited()">Deposited <span
-            class="badge badge-success ml-2">{{deposited}}</span></a></li>
-            <li><a data-toggle="tab" href="#all" (click)="Cancelled()">Cancelled <span
-            class="badge badge-danger ml-2">{{cancelled}}</span></a></li>
+          <!-- Empty State -->
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="text-center py-4"
+                style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+                No records found
+              </td>
+            </tr>
+          </ng-template>
 
-        </ul>
-        <br /> -->
+        </p-table>
 
+      </div>
 
-        <!-- <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade active show " id="all" role="tabpanel" aria-labelledby="fresh-tab"> -->
-        <div class="row">
-            <div class="col-md-12 col-xl-12">
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-end gap-2" style="gap:12px;">
 
+        <a (click)="Clear()" data-toggle="tab" role="tab" aria-controls="hot" aria-selected="false"
+          class="btn px-4"
+          style="background:#6c757d; border-color:#6c757d; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px; color:#fff; cursor:pointer;">
+          <img src="assets/images/icon-cancel-white.svg" class="mr-2" width="16px" height="16px">
+          Clear
+        </a>
 
-
-                <p-table [value]="gridData" dataKey="preceiptid" [rows]="10" [paginator]="false"
-                    [resizableColumns]="true" columnResizeMode="fit" scrollable="true" scrollHeight="400px"
-                    styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Subscriber Name</th>
-                            <th>Amount</th>
-                            <th>Receipt No</th>
-                            <th>Receipt Id</th>
-                            <th>Receipt Date</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-row>
-                        <tr>
-                            <td>{{ row.ppartyname }}</td>
-                            <td>{{ row.ptotalreceivedamount | currency:'INR':'symbol':'1.2-2' }}</td>
-                            <td>{{ row.preceiptno }}</td>
-                            <td>{{ row.preceiptid }}</td>
-                            <td>{{ row.preceiptdate | date:'dd/MMM/yyyy' }}</td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="5" class="text-center">No records found</td>
-                        </tr>
-                    </ng-template>
-
-                </p-table>
-            </div>
-
-        </div>
-        <!-- </div> -->
-
-
-        <!-- </div> -->
-
-    </div>
-
-    <div class=" d-flex justify-content-end mt-3">
-        <a (click)="Clear()" data-toggle="tab" class="btn btn-g-icon mr-4 px-3 border-0" role="tab" aria-controls="hot"
-            aria-selected="false"><img src="assets/images/icon-cancel-white.svg" class="mr-3" width="20px"
-                height="20px">Clear</a>
         <div *ngIf="saveshowhide">
-            <!-- <button (click)="Save()" data-toggle="tab" class="btn btn-b-icon px-3 ml-3 border-0" role="tab" aria-controls="hot"
-          aria-selected="false" [disabled]="disablesavebutton">
-          <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton,'fa-check': !disablesavebutton}"></i>
-          <span *ngIf="!disablesavebutton">
-          </span>{{buttonname}}
-    
-        </button> -->
-
-            <button (click)="Save()" class="btn btn-s-icon px-3 border-0" [disabled]="disablesavebutton">
-                <img src="assets/images/icon-check-white.svg" class="mr-3" width="20px" height="20px"
-                    *ngIf="!disablesavebutton">
-                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i> {{buttonname}}
-            </button>
+          <button (click)="Save()" [disabled]="disablesavebutton"
+            class="btn btn-primary px-4"
+            style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+            <img src="assets/images/icon-check-white.svg" class="mr-2" width="16px" height="16px"
+              *ngIf="!disablesavebutton">
+            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
+            {{ buttonname }}
+          </button>
         </div>
+
+      </div>
+
     </div>
+  </div>
 
+  <!-- Cancel Charges Modal -->
+  <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="margin-right:0px !important;">
+      <div class="model-cst modal-content"
+        style="border-radius:12px; border:1px solid #dce8fd;">
+        <div class="modal-body" style="padding:24px;">
 
-    <!-- The Modal -->
-    <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
-        <div class="modal-dialog" style="margin-right:0px !important; ">
-            <div class="model-cst modal-content">
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <div class="form-group">
-                        <label for="">Enter The Cancel Amount Charges For The Cheque:{{chequenumber}}</label>
-                        <input type="text" class="form-control" style="text-align:right;" name="cancelcharges"
-                            maxlength="3" id="cancelcharges" #ref appNumbersonly appMycurrencyFormatter>
-                    </div>
-                    <div class="d-flex justify-content-end mt-4">
-                        <a (click)="CancelChargesOk(ref.value)" data-toggle="tab"
-                            class="btn btn-b-icon px-3 border-0 mr-3" role="tab" aria-controls="hot"
-                            aria-selected="false" data-dismiss="modal"><img src="assets/images/icon-check-white.svg"
-                                class="mr-3" width="20px" height="20px">Ok</a>
-                    </div>
-                </div>
-            </div>
+          <button type="button" class="close" data-dismiss="modal"
+            style="font-size:18px; color:#162246;">&times;</button>
+
+          <div class="form-group mb-4">
+            <label style="font-size:13px; font-weight:600; color:#162246;">
+              Enter The Cancel Amount Charges For The Cheque: {{ chequenumber }}
+            </label>
+            <input type="text" class="form-control" style="text-align:right; font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;"
+              name="cancelcharges" maxlength="3" id="cancelcharges"
+              #ref appNumbersonly appMycurrencyFormatter>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <a (click)="CancelChargesOk(ref.value)" data-toggle="tab" data-dismiss="modal"
+              class="btn btn-primary px-4"
+              style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+              <img src="assets/images/icon-check-white.svg" class="mr-2" width="16px" height="16px">
+              Ok
+            </a>
+          </div>
+
         </div>
+      </div>
     </div>
+  </div>
+
 </form>

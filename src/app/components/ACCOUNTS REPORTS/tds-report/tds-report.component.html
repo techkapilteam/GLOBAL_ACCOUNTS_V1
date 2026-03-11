@@ -32,8 +32,12 @@
                 formControlName="sectionid"
                 (change)="onsectionidchange($event)"
                 appendTo="body"
+                [ngClass]="{ 'is-invalid': f['sectionid'].errors && submitted }"
                >
               </ng-select>
+              <div class="invalid-feedback d-block" *ngIf="submitted && f['sectionid'].errors?.['required']">
+  Section is required
+</div>
 
             </div>
           </div>

@@ -13,10 +13,19 @@ export class CompanyDetailsService {
 
   constructor(private http: HttpClient, private _CommonService: CommonService) { }
 
-  GetCompanyData(): Observable<any> {
+  // GetCompanyData(): Observable<any> {
    
      
-      let params = new HttpParams().set('LocalSchema', this._CommonService.getschemaname());
+  //     let params = new HttpParams().set('LocalSchema', this._CommonService.getschemaname());
+  //     return this._CommonService.getAPI('/Common/GetcompanyNameandaddressDetails', params, 'YES') .pipe(
+  //       catchError((e:any) => {
+  //         this._CommonService.showErrorMessage(e);
+  //         return throwError(() => e);
+  //       })
+  //     );
+  // }
+  GetCompanyData(): Observable<any> {  
+      let params = new HttpParams().set('GlobalSchema', 'global').set('CompanyCode', 'KAKATIYA').set('BranchCode', 'KLC01');
       return this._CommonService.getAPI('/Common/GetcompanyNameandaddressDetails', params, 'YES') .pipe(
         catchError((e:any) => {
           this._CommonService.showErrorMessage(e);

@@ -9,11 +9,12 @@ import { CommonService } from '../../../services/common.service';
 import { BankBookService } from '../../../services/Transactions/AccountingReports/bank-book.service';
 import { PageCriteria } from '../../../Models/pageCriteria';
 import { BrStatementService } from '../../../services/br-statement.service';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-brs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, BsDatepickerModule, TableModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxDatatableModule, BsDatepickerModule, TableModule,CompanyDetailsComponent],
   templateUrl: './brs.component.html',
   styleUrls: ['./brs.component.css'],
   providers: [DatePipe]
@@ -147,6 +148,8 @@ private datePipe = inject(DatePipe);
     loading = false;
   BRStatmentForm!: FormGroup;
   submitted = false;
+  printedDate: boolean = true;
+  
 
   dpConfig: Partial<BsDatepickerConfig> = {};
   dpConfig1: Partial<BsDatepickerConfig> = {};
@@ -160,7 +163,7 @@ private datePipe = inject(DatePipe);
   startDate!: Date;
   bankname = '';
 
-  @Output() printedDate = new EventEmitter<boolean>();
+  // @Output() printedDate = new EventEmitter<boolean>();
   @ViewChild('myTable') table: any;
 
   pBankBookBalance: any;
@@ -208,7 +211,7 @@ private datePipe = inject(DatePipe);
   this.dbdate = sessionStorage.getItem('Dbtime');
   this.roleid = sessionStorage.getItem('roleid') || '';
 
-  this.printedDate.emit(true);
+  // this.printedDate.emit(true);
 
   this.setPageModel();
 
@@ -224,13 +227,19 @@ private datePipe = inject(DatePipe);
   this.bankBookDetails();
 }
 private dateRangeValidator(group: FormGroup) {
-const from = group.get('fromDate')?.value;
-const to = group.get('toDate')?.value;
+const fromControl = group.get('fromDate');
+const toControl  = group.get('toDate');
+const from = fromControl?.value;
+  const to = toControl?.value;
+  if (!fromControl?.touched && !toControl?.touched) {
+    return null;
+  }
 
 if (from && to && new Date(from) > new Date(to)) {
-return { dateRangeInvalid: true };
-}
-return null;
+    return { dateRangeInvalid: true };
+  }
+
+  return null;
 }
 private initializeDatePicker(): void {
 
@@ -266,6 +275,8 @@ setPageModel(): void {
 
   ChequesInfo(event: any): void {
     this.chequesInfo = event.target.checked;
+    this.gridView = [];
+    this.Showhide = true;
     this.BRStatmentForm.patchValue({
       fromDate: new Date(),
       pbankbalance: 0,
@@ -328,11 +339,11 @@ setPageModel(): void {
 
   this.chequesdepositedbutnotcredited = res
     .filter(r => r.pGroupType === 'CHEQUES DEPOSITED BUT NOT CREDITED')
-    .reduce((sum, r) => sum + (r.ptotalreceivedamount || 0), 0);
+    .reduce((sum, r) => sum + parseFloat(r.ptotalreceivedamount || 0), 0);
 
   this.CHEQUESISSUEDBUTNOTCLEARED = res
     .filter(r => r.pGroupType === 'CHEQUES ISSUED BUT NOT CLEARED')
-    .reduce((sum, r) => sum + (r.ptotalreceivedamount || 0), 0);
+    .reduce((sum, r) => sum + parseFloat(r.ptotalreceivedamount || 0), 0);
 
   this.Balanceasperbankbook = this.pBankBookBalance
     - this.chequesdepositedbutnotcredited
@@ -353,8 +364,15 @@ setPageModel(): void {
 
       this.brstatement.GetBrStatementReportByDatesChequesInfo(fromDate, toDate, _pBankAccountId,'accounts','global','KAPILCHITS','KLC01')
         .subscribe({
-          next: (res: never[]) => {
-            this.ChequesInfoDetails = res || [];
+          next: (res: any[]) => {
+            // this.ChequesInfoDetails = res || [];
+            const from = new Date(this.BRStatmentForm.value.fromDate);
+    const to = new Date(this.BRStatmentForm.value.toDate);
+            this.ChequesInfoDetails = (res || []).filter(item => {
+      if (!item.depositeddate) return false;
+      const dep = new Date(item.depositeddate);
+      return dep >= from && dep <= to;
+    });
             this.loading = false;
             this.isLoading = false;
             this.savebutton = 'Generate Report';
@@ -374,11 +392,19 @@ setPageModel(): void {
 
     this.ChequesInfoDetails.forEach(element => {
       rows.push({
-        "Branch Name": element.pBranchName,
-        "Contact Name": element.contact_name,
-        "Receipt Date": this.commonService.getFormatDateGlobal(element.receiptdate),
-        "Total Received Amount": this.commonService.currencyformat(element.total_received_amount),
-        "Cheque Date": this.commonService.getFormatDateGlobal(element.chequedate)
+      "Branch Name":            element.branch_name,
+      "Contact Name":           element.contact_name,
+      "Receipt ID":             element.receiptid,
+      "Receipt Date":           this.commonService.getFormatDateGlobal(element.receiptdate),
+      "Reference Number":       element.reference_number,
+      "Cheque Date":            this.commonService.getFormatDateGlobal(element.chequedate),
+      "Deposited Date":         this.commonService.getFormatDateGlobal(element.depositeddate),
+      "Clear Date":             this.commonService.getFormatDateGlobal(element.clear_date),
+      "Total Received Amount":  this.commonService.currencyformat(element.total_received_amount),
+      "Transaction No":         element.transaction_no,
+      "Transaction Date":       this.commonService.getFormatDateGlobal(element.transaction_date),
+      "Mode of Receipt":        element.modeof_receipt,
+      "Cleared By":             element.user || '--'
       });
     });
 

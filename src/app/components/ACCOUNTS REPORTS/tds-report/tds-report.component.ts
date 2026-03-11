@@ -54,6 +54,7 @@ export class TdsReportComponent implements OnInit{
   tdsamount = 0;
   reportpaidamount = 0;
  private reportservice=inject(AccountReportsService);
+  submitted: boolean=false;
 
   constructor(
     private fb: FormBuilder,
@@ -130,7 +131,7 @@ return fromTime > toTime
 
   getTDSSectionDetails(): void {
     this.tdsreportservice.getTDSSectionDetails('global','KAPILCHITS','KLC01')
-      .subscribe((res:never[]) => { this.tdssectiondata = res || []});
+      .subscribe((res:any[]) => { this.tdssectiondata = res || []});
   }
 
   onsectionidchange(event: any): void {
@@ -168,15 +169,16 @@ return fromTime > toTime
   mismatchcheckInfo(event: any): void {
     this.mismatchInfo = event.target.checked;
   }
+  get f() { return this.TdsReportForm.controls; }
 
   Show(): void {
-    debugger
-    // if (this.TdsReportForm.invalid) return;
+    this.submitted = true;
+    
     if (this.TdsReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+if (this.TdsReportForm.invalid) return;
     this.tdsreportdata = [];
     this.disablesavebutton = true;
     this.savebutton = 'Processing';

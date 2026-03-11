@@ -121,7 +121,7 @@ export class JournalVoucherComponent implements OnInit {
     // this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
     this.ppaymentdateConfig.maxDate = new Date();
     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
-    this.ppaymentdateConfig.dateInputFormat = 'DD-MM-YYYY';
+    this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.ppaymentdateConfig.showWeekNumbers = false
 
   }
@@ -194,7 +194,7 @@ pamount:[''],
     return this._FormBuilder.group({
       psubledgerid: [null],
       psubledgername: [''],
-      pledgerid: [null],
+      pledgerid: [null,Validators.required],
       pledgername: ['', Validators.required],
       pamount: [''],
       pactualpaidamount: [''],
@@ -208,7 +208,7 @@ pamount:[''],
       psgstamount: [''],
       putgstamount: [''],
       ppartyname: ['', Validators.required],
-      ppartyid: [null],
+      ppartyid: [null,Validators.required],
       ppartyreftype: [''],
       ppartyreferenceid: [''],
       ppartypannumber: [''],
@@ -234,7 +234,19 @@ pamount:[''],
       ptotalamount: [''],
     })
   }
+allowNumberOnly(event: any) {
+  const input = event.target.value;
+  event.target.value = input.replace(/[^0-9.]/g, '');
+}
+formatCurrency(controlName: string) {
+  const control = this.paymentVoucherForm.get(controlName);
+  let value = control?.value;
 
+  if (value) {
+    value = parseFloat(value).toFixed(2);
+    control?.setValue(value);
+  }
+}
   BlurEventAllControll(fromgroup: FormGroup): any {
 
     try {
@@ -1619,6 +1631,10 @@ pamount:[''],
 addPaymentDetails() {
 
   const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    paymentControls.markAllAsTouched();
+  if (paymentControls.invalid) {
+  return;
+}
 
   const safeNumber = (val: any): number =>
     parseFloat((val ?? '0').toString().replace(/,/g, '')) || 0;
@@ -1677,6 +1693,13 @@ addPaymentDetails() {
 
         this.paymentslist = [...this.paymentslist, data];
 
+
+
+      //  const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+paymentControls.reset();
+paymentControls.markAsPristine();
+paymentControls.markAsUntouched();
+
         // Recalculate totals
         this.calculateTotals();
 
@@ -1686,6 +1709,8 @@ addPaymentDetails() {
         this.disableamounttype('');
         this.validateDebitCreditAmounts();
         this.showhidegrid = true;
+     
+        
 
       } else {
         this._commonService.showWarningMessage("Insufficient Balance");
@@ -1695,7 +1720,104 @@ addPaymentDetails() {
 
   });
 }
+// addPaymentDetails() {
+//   const paymentControls = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
 
+//   const safeNumber = (val: any): number =>
+//     parseFloat((val ?? '0').toString().replace(/,/g, '')) || 0;
+
+//   const ledgerControl = paymentControls.get('pledgerid');
+//   const subledgerControl = paymentControls.get('psubledgerid');
+//   const debitControl = paymentControls.get('pdebitamount');
+//   const creditControl = paymentControls.get('pcreditamount');
+
+//   const debitAmount = safeNumber(debitControl?.value);
+//   const creditAmount = safeNumber(creditControl?.value);
+
+//   // ----- Pre-validation: Mark invalid controls -----
+//   let hasError = false;
+
+//   if (!ledgerControl?.value) {
+//     ledgerControl?.setErrors({ required: true });
+//     ledgerControl?.markAsTouched();
+//     hasError = true;
+//   }
+
+//   if (!subledgerControl?.value) {
+//     subledgerControl?.setErrors({ required: true });
+//     subledgerControl?.markAsTouched();
+//     hasError = true;
+//   }
+
+//   if (debitAmount <= 0 && creditAmount <= 0) {
+//     debitControl?.setErrors({ required: true });
+//     creditControl?.setErrors({ required: true });
+//     debitControl?.markAsTouched();
+//     creditControl?.markAsTouched();
+//     hasError = true;
+//   }
+
+//   if (hasError) {
+//     // Stop execution if any required field is missing
+//     return;
+//   }
+
+//   const numericAmount = debitAmount > 0 ? debitAmount : creditAmount;
+
+//   // ----- Subledger Restriction Check -----
+//   this._AccountingTransactionsService.GetSubLedgerRestrictedStatus(
+//     subledgerControl?.value,
+//     this._commonService.getbranchname(),
+//     this._commonService.getschemaname(),
+//     this._commonService.getBranchCode(),
+//     this._commonService.getCompanyCode()
+//   ).subscribe(res => {
+//     const { credit_restriction_status, debit_restriction_status } = res[0];
+
+//     if ((debitAmount > 0 && debit_restriction_status) ||
+//         (creditAmount > 0 && credit_restriction_status)) {
+//       // optionally, also mark controls invalid
+//       return;
+//     }
+
+//     // ----- Balance Check -----
+//     this._SubscriberJVService.GetdebitchitCheckbalance(
+//       this._commonService.getbranchname(),
+//       ledgerControl?.value,
+//       36,
+//       subledgerControl?.value,
+//       this._commonService.getschemaname(),
+//       this._commonService.getCompanyCode(),
+//       this._commonService.getBranchCode()
+//     ).subscribe(result => {
+
+//       const balanceAmount = safeNumber(result.balanceamount);
+//       const balanceCheckStatus = result.balancecheckstatus !== false;
+
+//       if (!balanceCheckStatus || numericAmount <= balanceAmount) {
+//         const data = paymentControls.value;
+//         this.paymentslist = [...this.paymentslist, data];
+
+//         // Recalculate totals
+//         this.calculateTotals();
+//         this.getpartyJournalEntryData();
+//         this.clearPaymentDetails1();
+//         this.getPaymentListColumnWisetotals();
+//         this.disableamounttype('');
+//         this.validateDebitCreditAmounts();
+//         this.showhidegrid = true;
+
+//       } else {
+//         // optionally, mark debit/credit invalid
+//         debitControl?.setErrors({ balance: true });
+//         creditControl?.setErrors({ balance: true });
+//       }
+
+//     });
+
+//   });
+
+// }
 
 
 calculateTotals() {
@@ -2100,7 +2222,164 @@ calculateTotals() {
 
 
 
-  saveJournalVoucher() {
+//   saveJournalVoucher() {
+
+//   if (!this.validatesaveJournalVoucher()) {
+//     return;
+//   }
+
+//   if (!confirm('Do You Want to Save ?')) {
+//     return;
+//   }
+
+//   this.disablesavebutton = true;
+//   this.savebutton = 'Processing';
+
+//   try {
+
+//     // Ensure bank id
+//     const bankid = this.paymentVoucherForm.controls['pbankid'].value;
+//     if (!bankid) {
+//       this.paymentVoucherForm.controls['pbankid'].setValue(0);
+//     }
+
+//     // Set system values
+//     this.paymentVoucherForm.controls['pCreatedby']
+//       .setValue(this._commonService.pCreatedby);
+
+//     this.paymentVoucherForm.controls['pipaddress']
+//       .setValue(this._commonService.getIpAddress());
+
+//     this.paymentVoucherForm.controls['schemaname']
+//       .setValue(this._commonService.getschemaname());
+
+//     // ==============================
+//     // Debit / Credit Validation
+//     // ==============================
+
+//     const totalDebitAmount = Number(
+//       this.paymentslist.reduce(
+//         (sum: number, item: any) =>
+//           sum + Number(item.ptotaldebitamount || 0),
+//         0
+//       ).toFixed(2)
+//     );
+
+//     const totalCreditAmount = Number(
+//       this.paymentslist.reduce(
+//         (sum: number, item: any) =>
+//           sum + Number(item.ptotalcreditamount || 0),
+//         0
+//       ).toFixed(2)
+//     );
+
+//     if (totalDebitAmount !== totalCreditAmount) {
+
+//       this._commonService
+//         .showWarningMessage("Total Debit amount and Credit amount mismatch.");
+
+//       this.disablesavebutton = false;
+//       this.savebutton = 'Save';
+//       return;
+//     }
+
+//     // ==============================
+//     // CREATE BACKEND PAYLOAD
+//     // ==============================
+
+//     const payload = {
+
+//       global_schema: this._commonService.getschemaname(),
+//       branch_schema: this._commonService.getbranchname(),
+//       company_code: this._commonService.getCompanyCode(),
+//       branch_code: this._commonService.getBranchCode(),
+
+//       journal_voucher_no: this.paymentVoucherForm.value.ppaymentid || '',
+//       journal_voucher_date: this._commonService
+//         .getFormatDateNormal(this.paymentVoucherForm.value.pjvdate),
+
+//       narration: this.paymentVoucherForm.value.pnarration,
+//       type_of_operation: this.paymentVoucherForm.value.ptypeofoperation,
+//       mode_of_transaction: this.paymentVoucherForm.value.pmodofpayment,
+//       reference_no: '',
+
+//       // branch_id: 0,
+//       branch_id: 1,
+//       // created_by: 0,--sessonstronge
+//       created_by: 1,
+//       ip_address: this._commonService.getIpAddress(),
+//       // form_name: 'Journal Voucher',
+//       form_name: 'LEGAL EXPENSES JV',
+
+//       journal_voucher_details: this.paymentslist.map((item: any) => ({
+
+//         ppartyid: Number(item.ppartyid || 0),
+
+//         pamount: Number(
+//           item.pdebitamount ||
+//           item.pcreditamount ||
+//           item.pamount ||
+//           0
+//         ),
+
+//         psubledgerid: Number(item.psubledgerid || 0),
+//         ptranstype: item.ptranstype,
+//         pledgername: item.pledgername,
+//         paccountname: item.psubledgername
+
+//       }))
+//     };
+
+//     console.log("FINAL BACKEND PAYLOAD", payload);
+
+//     // ==============================
+//     // API CALL
+//     // ==============================
+
+//     this._AccountingTransactionsService
+//       .saveJournalVoucher(payload)
+//       .subscribe(
+
+//         (res: any) => {
+
+//           if (res && res[0] === 'TRUE') {
+
+//             this._commonService
+//               .showInfoMessage("Saved successfully");
+
+//             this.clearPaymentVoucher();
+
+//             const receipt = btoa(res[1] + ',' + 'Journal Voucher');
+//             window.open('/#/JournalVoucherReport?id=' + receipt, "_blank");
+//           }
+
+//           this.disablesavebutton = false;
+//           this.savebutton = 'Save';
+//         },
+
+//         (error: any) => {
+
+//           this._commonService.showErrorMessage(error);
+//           this.disablesavebutton = false;
+//           this.savebutton = 'Save';
+//         }
+
+//       );
+
+//   } catch (error) {
+
+//     this._commonService.showErrorMessage(error);
+//     this.disablesavebutton = false;
+//     this.savebutton = 'Save';
+//   }
+// }
+
+
+
+
+
+saveJournalVoucher() {
+  debugger
 
   if (!this.validatesaveJournalVoucher()) {
     return;
@@ -2115,46 +2394,25 @@ calculateTotals() {
 
   try {
 
-    // Ensure bank id
-    const bankid = this.paymentVoucherForm.controls['pbankid'].value;
-    if (!bankid) {
-      this.paymentVoucherForm.controls['pbankid'].setValue(0);
-    }
-
-    // Set system values
-    this.paymentVoucherForm.controls['pCreatedby']
-      .setValue(this._commonService.pCreatedby);
-
-    this.paymentVoucherForm.controls['pipaddress']
-      .setValue(this._commonService.getIpAddress());
-
-    this.paymentVoucherForm.controls['schemaname']
-      .setValue(this._commonService.getschemaname());
-
-    // ==============================
-    // Debit / Credit Validation
-    // ==============================
-
     const totalDebitAmount = Number(
       this.paymentslist.reduce(
-        (sum: number, item: any) =>
-          sum + Number(item.ptotaldebitamount || 0),
+        (sum: number, item: any) => sum + Number(item.ptotaldebitamount || 0),
         0
       ).toFixed(2)
     );
 
     const totalCreditAmount = Number(
       this.paymentslist.reduce(
-        (sum: number, item: any) =>
-          sum + Number(item.ptotalcreditamount || 0),
+        (sum: number, item: any) => sum + Number(item.ptotalcreditamount || 0),
         0
       ).toFixed(2)
     );
 
     if (totalDebitAmount !== totalCreditAmount) {
 
-      this._commonService
-        .showWarningMessage("Total Debit amount and Credit amount mismatch.");
+      this._commonService.showWarningMessage(
+        "Total Debit amount and Credit amount mismatch."
+      );
 
       this.disablesavebutton = false;
       this.savebutton = 'Save';
@@ -2162,49 +2420,89 @@ calculateTotals() {
     }
 
     // ==============================
-    // CREATE BACKEND PAYLOAD
+    // NEW BACKEND PAYLOAD (SWAGGER)
     // ==============================
 
     const payload = {
 
-      global_schema: this._commonService.getschemaname(),
-      branch_schema: this._commonService.getbranchname(),
-      company_code: this._commonService.getCompanyCode(),
-      branch_code: this._commonService.getBranchCode(),
+      pjvnumber: this.paymentVoucherForm.value.ppaymentid || "",
 
-      journal_voucher_no: this.paymentVoucherForm.value.ppaymentid || '',
-      journal_voucher_date: this._commonService
-        .getFormatDateNormal(this.paymentVoucherForm.value.pjvdate),
+      pjvdate: this._commonService.getFormatDateNormal(
+        this.paymentVoucherForm.value.pjvdate
+      ),
 
-      narration: this.paymentVoucherForm.value.pnarration,
-      type_of_operation: this.paymentVoucherForm.value.ptypeofoperation,
-      mode_of_transaction: this.paymentVoucherForm.value.pmodofpayment,
-      reference_no: '',
+      ptotalpaidamount: totalDebitAmount.toFixed(2),
 
-      // branch_id: 0,
-      branch_id: 1,
-      // created_by: 0,--sessonstronge
-      created_by: 1,
-      ip_address: this._commonService.getIpAddress(),
-      // form_name: 'Journal Voucher',
-      form_name: 'LEGAL EXPENSES JV',
+      pnarration: this.paymentVoucherForm.value.pnarration,
+
+      pmodoftransaction: this.paymentVoucherForm.value.pmodofpayment,
+
+      pFilename: "",
+      pFilepath: "",
+      pFileformat: "",
+
+      referenceno: "",
+
+      tdsVoucherStatus: "",
 
       journal_voucher_details: this.paymentslist.map((item: any) => ({
 
-        ppartyid: Number(item.ppartyid || 0),
+        pgstnumber: "",
+        ppartyname: item.ppartyname || "",
 
-        pamount: Number(
+        ppartyid: String(item.ppartyid || ""),
+
+        ppartyreferenceid: String(item.psubledgerid || ""),
+
+        ppartyreftype: "",
+
+        pistdsapplicable: "",
+
+        ptdsamount: item.ptdsamount || "",
+
+        ptdscalculationtype: "",
+
+        ptdsaccountId: "",
+
+        ppartypannumber: "",
+
+        ptdsrefjvnumber: "",
+
+        ledgeramount: String(
           item.pdebitamount ||
           item.pcreditamount ||
           item.pamount ||
           0
         ),
 
-        psubledgerid: Number(item.psubledgerid || 0),
-        ptranstype: item.ptranstype,
-        pledgername: item.pledgername,
-        paccountname: item.psubledgername
+        totalreceivedamount: String(
+          item.pdebitamount ||
+          item.pcreditamount ||
+          item.pamount ||
+          0
+        ),
 
+        pFilename: "",
+
+        agentcode: "",
+
+        ticketno: "",
+
+        chitgroupid: "1",
+
+        schemesubscriberid: "1",
+
+        interbranchsubledgerid: "1",
+
+        interbranchid: 2,
+
+        pformname: "LEGAL EXPENSES JV",
+
+        paccountname: item.pledgername || "",
+
+        pgstvoucherno: "",
+
+        pChequenumber: ""
       }))
     };
 
@@ -2216,18 +2514,21 @@ calculateTotals() {
 
     this._AccountingTransactionsService
       .saveJournalVoucher(payload)
-      .subscribe(
+      .subscribe({
 
-        (res: any) => {
+       next: (res: any) => {
+        console.log('Response from saveJournalVoucher:', res); 
 
-          if (res && res[0] === 'TRUE') {
+          // if (res && res[0] === 'true') {
+        if (res === true) {
 
-            this._commonService
-              .showInfoMessage("Saved successfully");
+
+            this._commonService.showInfoMessage("Saved successfully");
 
             this.clearPaymentVoucher();
 
             const receipt = btoa(res[1] + ',' + 'Journal Voucher');
+
             window.open('/#/JournalVoucherReport?id=' + receipt, "_blank");
           }
 
@@ -2235,18 +2536,21 @@ calculateTotals() {
           this.savebutton = 'Save';
         },
 
-        (error: any) => {
+       error: (error: any) => {
 
           this._commonService.showErrorMessage(error);
+
           this.disablesavebutton = false;
           this.savebutton = 'Save';
         }
+      }
 
       );
 
   } catch (error) {
 
     this._commonService.showErrorMessage(error);
+
     this.disablesavebutton = false;
     this.savebutton = 'Save';
   }

@@ -1,309 +1,228 @@
-<!-- <div class="screen-container">
-  <div class="screen-card">
+<div class="screen-container">
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
 
-    <div class="screen-header">
-      <h2>Bank Transfer</h2>
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Bank Transfer</h2>
     </div>
 
-    <div class="screen-content">
-
-     
-      <form autocomplete="off">
-        <div class="card shadow-sm p-3 mb-4">
-          <div class="row g-3 align-items-end">
-
-            <div class="col-md-3">
-              <label class="required-field">Date</label>
-              <input
-                type="text"
-                class="form-control"
-                bsDatepicker
-                [(ngModel)]="transferDate"
-                name="transferDate"
-                [bsConfig]="dpConfig"
-                readonly
-                onkeydown="return false">
-            </div>
-
-            <div class="col-md-4">
-              <label class="required-field">Transfer Type</label>
-              <select
-                class="form-select"
-                [(ngModel)]="transferType"
-                name="transferType">
-                <option value="">Select</option>
-                <option>Type 1</option>
-                <option>Type 2</option>
-                <option>Type 3</option>
-              </select>
-            </div>
-
-            <div class="col-auto">
-              <button
-                type="button"
-                class="btn btn-primary btn-sm"
-                (click)="show()">
-                Show
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </form>
-
-     
-      <div class="card shadow-sm" *ngIf="showReport">
-        <div class="card-body">
-
-          
-          <div class="d-flex justify-content-end mb-2">
-            <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
-              <i class="fa fa-file-pdf me-1"></i> PDF
-            </button>          
-
-            <button class="btn btn-outline-secondary" (click)="pdfOrprint('Print')">
-              <i class="fa fa-print me-1"></i> Print
-            </button>
-             <button class="btn btn-outline-success me-2" (click)="exportExcel()">
-              <i class="fa fa-file-excel me-1"></i> Excel
-            </button>
-          </div>
-
-          
-          <div class="text-center fw-bold fs-5">
-            KAPIL CHITS (HYDERABAD) PVT. LTD.
-          </div>
-
-          <div class="text-center">
-            Above TVS Showroom, 1st Floor, Opp: R&B Guest House, Old NK-07, Kamareddy
-          </div>
-
-          <div class="text-center fw-semibold mb-2">
-            CIN : U65992TG2008PTC060803
-          </div>
-
-          <hr>
-          <h6 class="text-center fw-bold mb-3">
-            Bank Transfer Report
-          </h6> -->
-
-<!-- NO DATA -->
-<!--         <div class="text-center text-muted fw-semibold py-5">
-            No Data Available
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div> -->
-
-
-<div class="section-content">
-  <div class="screen-container">
-    <div class="screen-card">
-
-      <div class="screen-header">
-        <h2>Bank Transfer</h2>
-      </div>
+    <!-- Filter Form Section -->
+    <div class="border rounded p-3 bg-white mb-4"
+      style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
 
       <form [formGroup]="BankTransferForm" autocomplete="off">
-        <div class="row">
+        <div class="row align-items-end">
 
           <div class="col-md-3">
-            <label class="required-field">Date</label>
-            <input id="todate" class="form-control" bsDatepicker [bsConfig]="dpConfig" formControlName="todate"
-              (bsValueChange)="fromDateChange()" readonly>
+            <div class="form-group mb-0">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Date</label>
+              <input id="todate" class="form-control" bsDatepicker [bsConfig]="dpConfig"
+                formControlName="todate" (bsValueChange)="fromDateChange()" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            </div>
           </div>
 
           <div class="col-md-6">
-            <label class="required-field">Transfer Type</label>
-            <ng-select id="transferType" [items]="transferTypeList" bindLabel="banktransfername"
-              bindValue="banktransfername" formControlName="transferType" placeholder="Select" [searchable]="true"
-              [clearable]="false" (change)="transferType_change($event)"
-              [ngClass]="{ 'is-invalid': BankTransfervalidation?.transferType }">
-            </ng-select>
-
-            <!-- <app-validation-message
-          [messgae]="BankTransfervalidation?.transferType">
-        </app-validation-message> -->
+            <div class="form-group mb-0">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Transfer Type</label>
+              <ng-select id="transferType" [items]="transferTypeList" bindLabel="banktransfername"
+                bindValue="banktransfername" formControlName="transferType" placeholder="Select"
+                [searchable]="true" [clearable]="false" (change)="transferType_change($event)"
+                [ngClass]="{ 'is-invalid': BankTransfervalidation?.transferType }">
+              </ng-select>
+            </div>
           </div>
 
-          <div class="col-md-3 d-flex align-items-end">
-            <button type="button" (click)="onCLick()" class="btn btn-s-icon px-3 border-0">
-              <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}">
-              </i>
-              {{savebutton}}
-            </button>
+          <div class="col-md-3">
+            <div class="form-group mb-0">
+              <button type="button" (click)="onCLick()"
+                class="btn btn-primary px-4"
+                style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+                <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
+                {{ savebutton }}
+              </button>
+            </div>
           </div>
 
         </div>
       </form>
 
-      <hr class="light">
+    </div>
 
-      <div class="section-content mt-2">
+    <!-- Table Section -->
+    <div class="border rounded p-3 bg-white mb-4"
+      style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
 
-        <div class="row">
-          <div class="col-md-4" *ngIf="showhidetable">
-            <input pInputText type="text" class="form-control" placeholder="Search by Chit Number"
-              (input)="PSBankTransferDetailsFilter($event.target.value)">
-          </div>
+      <!-- Search + Export Row -->
+      <div class="row mb-3 align-items-center">
+
+        <div class="col-md-6">
+          <input *ngIf="showhidetable" pInputText type="text" class="form-control"
+            placeholder="Search by Chit Number"
+            (input)="PSBankTransferDetailsFilter($event.target.value)"
+            style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
         </div>
 
-        <div class="col-md-12 mt-4">
-
-          <div class="d-flex justify-content-end mr-3">
-            <ul class="temp-ul">
-
-              <li class="temp-ico ml-2">
-                <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" style="cursor:pointer"
-                  (click)="pdfOrprint('Pdf')" />
-              </li>
-
-              <li class="temp-ico ml-2">
-                <img src="assets/images/print-icon-blue.svg" width="18" title="Print" style="cursor:pointer"
-                  (click)="pdfOrprint('Print')" />
-              </li>
-
-              <li class="temp-ico ml-2">
-                <img src="assets/images/icon-excel.svg" width="18" title="Excel" style="cursor:pointer"
-                  (click)="export()" />
-              </li>
-
-            </ul>
-          </div>
-
-          <div *ngIf="dataisempty">No Records to Display</div>
-
-          <p-table *ngIf="showhidetable" [value]="BankTransferDetails" [(selection)]="selected"
-            dataKey="chitreceiptnumber" selectionMode="multiple" [paginator]="true" [rows]="pageCriteria.pageSize"
-            [rowsPerPageOptions]="[10,20,50]" responsiveLayout="scroll" (selectionChange)="onSelect($event)">
-
-            <ng-template pTemplate="header">
-              <tr>
-                <th style="width:50px">
-                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th>Transaction Date</th>
-                <th>Transaction Number</th>
-                <th class="text-end">Transaction Amount</th>
-                <th *ngIf="bidpaybleamt" class="text-end">
-                  Bid Payable Amount
-                </th>
-                <th>Particular</th>
-              </tr>
-            </ng-template>
-
-            <ng-template pTemplate="body" let-row>
-              <tr>
-                <td>
-                  <p-tableCheckbox [value]="row"></p-tableCheckbox>
-                </td>
-
-                <td>
-                  {{ row.transactiondate | date }}
-                </td>
-
-                <td>
-                  {{ row.chitreceiptnumber }}
-                </td>
-
-                <td class="text-end">
-                  {{currencysymbol}}
-                  {{ row.transactionamount?.toFixed(2) | currency: currencyCode:'symbol':'1.2-2' }}
-                </td>
-
-                <td *ngIf="bidpaybleamt" class="text-end">
-                  {{currencysymbol}}
-                  {{ row.pbidpayableamount?.toFixed(2) | currency: currencyCode:'symbol':'1.2-2' }}
-                </td>
-
-                <td>
-                  {{ row.pparticulars || '--NA--' }}
-                </td>
-              </tr>
-            </ng-template>
-
-            <ng-template pTemplate="footer">
-              <tr>
-                <td colspan="3" class="text-end">
-                  <strong>Total</strong>
-                </td>
-                <td class="text-end">
-                  {{currencysymbol}}
-                  {{ totalamount.toFixed(2) | currency: currencyCode:'symbol':'1.2-2' }}
-                </td>
-                <td *ngIf="bidpaybleamt"></td>
-                <td></td>
-              </tr>
-            </ng-template>
-
-          </p-table>
-
-          <div class="mt-2" *ngIf="showhidetable && BankTransferDetails.length > 0">
-            Page {{pageCriteria.pageNumber}}
-            of {{pageCriteria.TotalPages}}
-            ({{BankTransferDetails.length}} items)
-          </div>
-
+        <div class="col-md-6 d-flex justify-content-end" style="gap:10px;">
+          <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF"
+            style="cursor:pointer;" (click)="pdfOrprint('Pdf')" />
+          <img src="assets/images/print-icon-blue.svg" width="18" title="Print"
+            style="cursor:pointer;" (click)="pdfOrprint('Print')" />
+          <img src="assets/images/icon-excel.svg" width="18" title="Excel"
+            style="cursor:pointer;" (click)="export()" />
         </div>
+
       </div>
 
-      <form *ngIf="showhidetable" [formGroup]="BankDetailsForm" class="mt-4">
+      <!-- No Records -->
+      <div *ngIf="dataisempty"
+        style="text-align:center; padding:30px; color:#8fa0c4; font-size:13px;">
+        No Records to Display
+      </div>
 
-        <div class="row">
+      <!-- Table -->
+      <p-table *ngIf="showhidetable" [value]="BankTransferDetails" [(selection)]="selected"
+        dataKey="chitreceiptnumber" selectionMode="multiple" [paginator]="true"
+        [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10,20,50]"
+        responsiveLayout="scroll" (selectionChange)="onSelect($event)"
+        styleClass="p-datatable-sm p-datatable-gridlines">
 
-          <div class="col-md-3">
-            <label class="required-field">Bank</label>
-            <input class="form-control" [value]="bankname" readonly>
-          </div>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width:50px; background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              Transaction Date
+            </th>
+            <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              Transaction Number
+            </th>
+            <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              Transaction Amount
+            </th>
+            <th *ngIf="bidpaybleamt" class="text-end"
+              style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              Bid Payable Amount
+            </th>
+            <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+              Particular
+            </th>
+          </tr>
+        </ng-template>
 
-          <div class="col-md-3">
-            <label class="required-field">Cheque No.</label>
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td style="padding:8px 12px; font-size:13px; color:#162246;">
+              <p-tableCheckbox [value]="row"></p-tableCheckbox>
+            </td>
+            <td style="padding:8px 12px; font-size:13px; color:#162246;">
+              {{ row.transactiondate | date }}
+            </td>
+            <td style="padding:8px 12px; font-size:13px; color:#162246;">
+              {{ row.chitreceiptnumber }}
+            </td>
+            <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246;">
+              {{ currencysymbol }} {{ row.transactionamount?.toFixed(2) | currency: currencyCode:'symbol':'1.2-2' }}
+            </td>
+            <td *ngIf="bidpaybleamt" class="text-end" style="padding:8px 12px; font-size:13px; color:#162246;">
+              {{ currencysymbol }} {{ row.pbidpayableamount?.toFixed(2) | currency: currencyCode:'symbol':'1.2-2' }}
+            </td>
+            <td style="padding:8px 12px; font-size:13px; color:#162246;">
+              {{ row.pparticulars || '--NA--' }}
+            </td>
+          </tr>
+        </ng-template>
 
-            <ng-select [items]="chequenumberslist" bindLabel="pChequenumber" bindValue="pChequenumber"
-              formControlName="chequeNo" (change)="SelectCheque($event)" placeholder="Select" [clearable]="false">
-            </ng-select>
+        <ng-template pTemplate="footer">
+          <tr style="background:#f0f5ff;">
+            <td colspan="3" class="text-end"
+              style="padding:8px 12px; font-size:13px; font-weight:700; color:#162246;">
+              Total
+            </td>
+            <td class="text-end"
+              style="padding:8px 12px; font-size:13px; font-weight:700; color:#0d6efd;">
+              {{ currencysymbol }} {{ totalamount.toFixed(2) | currency: currencyCode:'symbol':'1.2-2' }}
+            </td>
+            <td *ngIf="bidpaybleamt"></td>
+            <td></td>
+          </tr>
+        </ng-template>
 
-            <!-- <app-validation-message
-          [messgae]="BankTransfervalidation?.chequeNo">
-        </app-validation-message> -->
-          </div>
+      </p-table>
 
-          <div class="col-md-6">
-            <label class="required-field">Narration</label>
-            <textarea class="form-control" formControlName="narration" rows="2" maxlength="150">
-        </textarea>
-
-            <!-- <app-validation-message
-          [messgae]="BankTransfervalidation?.narration">
-        </app-validation-message> -->
-          </div>
-        </div>
-      </form>
-
-      <div *ngIf="showhidetable" class="row mt-4">
-        <div class="col-md-12 text-end">
-
-          <a (click)="clearBankTransferDetails()" class="btn btn-g-icon mr-4 px-3 border-0">
-            Cancel
-          </a>
-
-          <button type="button" appButtonDoubleClick (debounceClick)="saveBankTransferDetails()"
-            class="btn btn-s-icon px-3 border-0">
-
-            <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}">
-            </i>
-
-            {{saveBankTransferDetailsbutton}}
-          </button>
-
-
-        </div>
+      <!-- Pagination Info -->
+      <div class="mt-2" *ngIf="showhidetable && BankTransferDetails.length > 0"
+        style="font-size:13px; color:#162246;">
+        Page {{ pageCriteria.pageNumber }} of {{ pageCriteria.TotalPages }}
+        ({{ BankTransferDetails.length }} items)
       </div>
 
     </div>
+
+    <!-- Bank Details Form Section -->
+    <div *ngIf="showhidetable" class="border rounded p-3 bg-white mb-4"
+      style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
+
+      <form [formGroup]="BankDetailsForm">
+        <div class="row align-items-end">
+
+          <div class="col-md-3">
+            <div class="form-group mb-0">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Bank</label>
+              <input class="form-control" [value]="bankname" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group mb-0">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Cheque No.</label>
+              <ng-select [items]="chequenumberslist" bindLabel="pChequenumber"
+                bindValue="pChequenumber" formControlName="chequeNo"
+                (change)="SelectCheque($event)" placeholder="Select" [clearable]="false">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group mb-0">
+              <label class="required-field"
+                style="font-size:13px; font-weight:600; color:#162246;">Narration</label>
+              <textarea class="form-control" formControlName="narration" rows="2" maxlength="150"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246; resize:none;">
+              </textarea>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div *ngIf="showhidetable" class="d-flex justify-content-end" style="gap:12px;">
+
+      <a (click)="clearBankTransferDetails()"
+        class="btn px-4"
+        style="background:#6c757d; border-color:#6c757d; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px; color:#fff; cursor:pointer;">
+        Cancel
+      </a>
+
+      <button type="button" appButtonDoubleClick (debounceClick)="saveBankTransferDetails()"
+        class="btn btn-primary px-4"
+        style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
+        <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton1}"></i>
+        {{ saveBankTransferDetailsbutton }}
+      </button>
+
+    </div>
+
   </div>
 </div>

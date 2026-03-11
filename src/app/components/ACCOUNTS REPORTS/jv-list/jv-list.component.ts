@@ -11,6 +11,7 @@ import { PageCriteria } from '../../../Models/pageCriteria';
 import { finalize } from 'rxjs';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
 
 @Component({
   selector: 'app-jv-list',
@@ -21,7 +22,7 @@ import { TableModule } from 'primeng/table';
     BsDatepickerModule,
     NgxDatatableModule,
     TableModule,
-    PaginatorModule,ReactiveFormsModule
+    PaginatorModule,ReactiveFormsModule,CompanyDetailsComponent
   ],
   templateUrl: './jv-list.component.html',
   providers: [DatePipe]
@@ -60,6 +61,7 @@ export class JvListComponent implements OnInit {
 
   currencysymbol: string = '';
   showHide = true;
+  
 
   pageCriteria: PageCriteria = new PageCriteria();
   // commencementgridPage = new Page();
@@ -104,6 +106,10 @@ export class JvListComponent implements OnInit {
     this.pageCriteria.offset = 0;
     this.pageCriteria.pageNumber = 1;
     this.pageCriteria.footerPageHeight = 50;
+  }
+  isDateRow(row: any): boolean {
+  const value = row.formOrModulename || row.pparticulars;
+  return /^\d{4}-\d{2}-\d{2}$/.test(value?.trim());
   }
 
   onFooterPageChange(event: any): void {

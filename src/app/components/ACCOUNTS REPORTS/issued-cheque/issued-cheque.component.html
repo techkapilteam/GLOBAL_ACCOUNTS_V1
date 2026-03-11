@@ -61,17 +61,19 @@
             <th>Cheque No.</th>
             <th>Bank Name</th>
             <th>Cheque Book ID</th>
+            <th>Status</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-row>
           <tr>
             <td class="text-center">
-              <input type="checkbox" [checked]="row.pchequestatus === true" (change)="checkedCancel($event, row)" />
+              <input type="checkbox" [checked]="row.isSelected === true" (change)="checkedCancel($event, row)" />
             </td>
             <td>{{ row.pchequenumber }}</td>
             <td>{{ row.pbankname }}</td>
             <td>{{ row.pchkBookId }}</td>
+            <td>{{ row.pchequestatus }}</td>
           </tr>
         </ng-template>
 
@@ -114,7 +116,7 @@
           <i class="fa fa-print me-1"></i> Print
         </button>
       </div>
-      <div class="text-center mb-1 fw-bold fs-5">
+      <!-- <div class="text-center mb-1 fw-bold fs-5">
         KAPIL CHITS (HYDERABAD) PVT. LTD.
       </div>
 
@@ -124,7 +126,8 @@
 
       <div class="text-center mb-2 fw-semibold">
         CIN: U65992TG2008PTC060803
-      </div>
+      </div> -->
+      <app-company-details [PrintedDateShowhide]="printedDate"></app-company-details>
 
       <hr class="mt-2 mb-3">
 

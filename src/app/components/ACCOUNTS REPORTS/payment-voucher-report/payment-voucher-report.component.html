@@ -50,20 +50,20 @@
 
                 <div class="temp-head text-center pt-3">
 
-                  <!-- <h2 class="font-18 text-dark fw-bold m-0">
-                    {{ pCompanyName }}
+                  <h2 class="font-18 text-dark fw-bold m-0">
+                    {{ companyName }}
                   </h2>
 
                   <p class="font-16 text-dark m-0">
-                    {{ pAddress1 }}
+                    {{ registrationAddress }}
                   </p>
 
                   <p
-                    *ngIf="pCinNo"
+                    *ngIf="cinNumber"
                     class="font-14 text-dark text-center">
-                    CIN : {{ pCinNo }}
-                  </p> -->
-                   <div class="text-center mb-1 fw-bold fs-5">
+                    CIN : {{ cinNumber }}
+                  </p>
+                   <!-- <div class="text-center mb-1 fw-bold fs-5">
         KAPIL CHITS (HYDERABAD) PVT. LTD.
       </div>
 
@@ -73,7 +73,7 @@
 
       <div class="text-center mb-2 fw-semibold">
         CIN: U65992TG2008PTC060803
-      </div>
+      </div> -->
 
                 </div>
 
@@ -93,7 +93,7 @@
                 <div class="col-md-6 text-end">
                   <p class="font-14 fw-bold m-0">
                     Branch :
-                    {{ pBranchname | titlecase }}
+                    {{ branchName | titlecase }}
                   </p>
                 </div>
 

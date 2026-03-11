@@ -9,6 +9,8 @@ import { AccountingReportsService } from '../../../services/Transactions/Account
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { CommonService } from '../../../services/common.service';
 import { Router } from '@angular/router';
+import { CompanyDetailsComponent } from 'src/app/common/company-details/company-details.component';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-account-ledger',
@@ -18,7 +20,7 @@ import { Router } from '@angular/router';
     FormsModule,
     NgSelectModule,
     NgxDatatableModule,
-    BsDatepickerModule,TableModule,ReactiveFormsModule
+    BsDatepickerModule,TableModule,ReactiveFormsModule,CompanyDetailsComponent
   ],
   templateUrl: './account-ledger.component.html',
   providers: [DatePipe]
@@ -44,6 +46,7 @@ today = new Date();
   this.expandedGroups[date] =
     !this.expandedGroups[date];
 }
+printedDate: boolean = true;
 pageCriteria = {
   pageSize: 10
 };

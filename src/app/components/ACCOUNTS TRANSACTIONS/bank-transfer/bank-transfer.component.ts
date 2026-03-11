@@ -138,7 +138,8 @@ export class BankTransferComponent implements OnInit {
   SelectBank() {
 
     this._accountingtransaction
-      .GetBankDetailsbyId(this.bankid)
+      .GetBankDetailsbyId1(this.bankid,this._commonService.getbranchname(),this._commonService.getschemaname()
+    ,this._commonService.getCompanyCode(),this._commonService.getBranchCode())
       .subscribe({
         next: (res) => {
           this.chequenumberslist = res?.chequeslist || [];
