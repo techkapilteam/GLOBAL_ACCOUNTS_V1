@@ -8,22 +8,20 @@
       <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Bank View</h2>
     </div>
 
-    <div class="row mb-4 align-items-center">
+    <div class="row align-items-center" style="margin-bottom:20px;">
 
-      <!-- Search -->
+      <!-- New Button (Left) -->
       <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Search..."
-          (keyup)="filterDatatable($event)"
-          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
-      </div>
-
-      <!-- New Button -->
-      <div class="col-md-6 text-end">
-        <a routerLink="/dashboard/accounts/accounts-config/bank-config"
-          class="btn btn-primary px-4"
+        <a routerLink="/dashboard/accounts/accounts-config/bank-config" class="btn btn-primary px-4"
           style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 18px;">
           + New
         </a>
+      </div>
+
+      <!-- Search (Right) -->
+      <div class="col-md-6 text-end">
+        <input type="text" class="form-control" placeholder="Search..." (keyup)="filterDatatable($event)"
+          style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246; max-width:260px; display:inline-block;">
       </div>
 
     </div>
@@ -34,14 +32,8 @@
         <div class="border rounded p-3 bg-white"
           style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow: 0 2px 8px rgba(13,110,253,0.07);">
 
-          <p-table
-            [value]="gridData"
-            [paginator]="true"
-            [rows]="pageCriteria.pageSize"
-            [rowsPerPageOptions]="[5,10,20,50]"
-            [sortMode]="'single'"
-            responsiveLayout="scroll"
-            [loading]="loading"
+          <p-table [value]="gridData" [paginator]="true" [rows]="pageCriteria.pageSize"
+            [rowsPerPageOptions]="[5,10,20,50]" [sortMode]="'single'" responsiveLayout="scroll" [loading]="loading"
             [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             styleClass="p-datatable-sm p-datatable-gridlines">
@@ -50,27 +42,27 @@
             <ng-template pTemplate="header">
               <tr>
                 <th class="text-center"
-                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Actions
                 </th>
                 <th pSortableColumn="pBankname"
-                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Bank Name <p-sortIcon field="pBankname"></p-sortIcon>
                 </th>
                 <th pSortableColumn="pAccountnumber"
-                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Account No. <p-sortIcon field="pAccountnumber"></p-sortIcon>
                 </th>
                 <th
-                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Name of the Account
                 </th>
                 <th
-                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   A/C Status
                 </th>
                 <th
-                  style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                  style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
                   A/C Type
                 </th>
               </tr>
@@ -80,8 +72,7 @@
             <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
               <tr>
                 <td class="text-center" style="padding:8px 12px; font-size:13px;">
-                  <button class="btn btn-sm btn-primary"
-                    (click)="editHandler($event, row, rowIndex)"
+                  <button class="btn btn-sm btn-primary" (click)="editHandler($event, row, rowIndex)"
                     style="background:#0d6efd; border-color:#0d6efd; border-radius:6px; font-size:12px; font-weight:600; padding:4px 14px;">
                     Edit
                   </button>

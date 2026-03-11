@@ -131,7 +131,7 @@ return fromTime > toTime
 
   getTDSSectionDetails(): void {
     this.tdsreportservice.getTDSSectionDetails('global','KAPILCHITS','KLC01')
-      .subscribe((res:never[]) => { this.tdssectiondata = res || []});
+      .subscribe((res:any[]) => { this.tdssectiondata = res || []});
   }
 
   onsectionidchange(event: any): void {
@@ -173,12 +173,12 @@ return fromTime > toTime
 
   Show(): void {
     this.submitted = true;
-    if (this.TdsReportForm.invalid) return;
+    
     if (this.TdsReportForm.errors?.['dateRangeInvalid']) {
 alert('From Date should not be greater than To Date');
 return;
 }
-
+if (this.TdsReportForm.invalid) return;
     this.tdsreportdata = [];
     this.disablesavebutton = true;
     this.savebutton = 'Processing';
