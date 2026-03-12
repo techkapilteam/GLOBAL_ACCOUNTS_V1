@@ -19,41 +19,59 @@
           <!-- Left: Inputs -->
           <div class="col-md-4">
 
-            <div class="form-group mb-3">
+            <!-- <div class="form-group mb-3">
               <label class="required-field"
-                style="font-size:13px; font-weight:600; color:#162246;">Transaction Date</label>
+                style="font-size:13px; font-weight:600; color:#162246;" >Transaction Date</label>
               <input type="text" class="form-control" formControlName="ptransactiondate"
-                bsDatepicker [bsConfig]="ptransactiondateConfig" readonly
+                bsDatepicker [bsConfig]="ptransactiondateConfig" readonlyinput
                 style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            </div> -->
+
+            <div class="form-group mb-3">
+              <label class="required-field" style="font-size:13px; font-weight:600; color:#162246;">
+                Transaction Date
+              </label>
+
+              <!-- <input type="text" class="form-control" formControlName="ptransactiondate" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;"> -->
+              <input type="text" class="form-control" formControlName="ptransactiondate" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px;">
             </div>
 
             <div class="form-group mb-3">
-              <label class="required-field"
-                style="font-size:13px; font-weight:600; color:#162246;">Receipt Date</label>
-              <input type="text" class="form-control" formControlName="pchequereceiptdate"
-                bsDatepicker [bsConfig]="pchequecleardateConfig" readonly
-                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+              <label class="required-field" style="font-size:13px; font-weight:600; color:#162246;">Receipt Date</label>
+              <!-- <input type="text" class="form-control" formControlName="pchequereceiptdate" bsDatepicker
+                [bsConfig]="pchequecleardateConfig" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;"> -->
+              <input type="text" class="form-control" formControlName="pchequereceiptdate" bsDatepicker
+                [bsConfig]="pchequecleardateConfig" readonly onkeydown="return false"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px;">
             </div>
 
             <div class="form-group mb-3">
-              <label class="required-field"
-                style="font-size:13px; font-weight:600; color:#162246;">Clear Date</label>
-              <input type="text" class="form-control" formControlName="pchequecleardate"
-                bsDatepicker [bsConfig]="pchequecleardateConfig" readonly
-                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+              <label class="required-field" style="font-size:13px; font-weight:600; color:#162246;">Clear Date</label>
+              <!-- <input type="text" class="form-control" formControlName="pchequecleardate" bsDatepicker
+                [bsConfig]="pchequecleardateConfig" readonly
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;"> -->
+              <input type="text" class="form-control" formControlName="pchequecleardate" bsDatepicker
+                [bsConfig]="pchequecleardateConfig" readonly onkeydown="return false"
+                style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px;">
             </div>
 
             <div class="form-group mb-3">
               <label style="font-size:13px; font-weight:600; color:#162246;">Bank</label>
-              <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="paccountid"
+              <!-- <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="paccountid"
                 formControlName="bankname" placeholder="Select" class="w-100">
+              </ng-select> -->
+              <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="paccountid"
+                formControlName="bankname" (change)="onBankChange($event)" placeholder="Select" class="w-100">
               </ng-select>
             </div>
 
             <div class="form-group mb-0">
               <label style="font-size:13px; font-weight:600; color:#162246;">Online Account</label>
-              <ng-select [items]="PaytmList" bindLabel="pdepositbankname" bindValue="paccountid"
-                formControlName="paytmname" placeholder="Select" class="w-100">
+              <ng-select [items]="PaytmList" bindLabel="upiname" bindValue="recordid" formControlName="paytmname"
+                placeholder="Select" class="w-100">
               </ng-select>
             </div>
 
@@ -61,25 +79,36 @@
 
           <!-- Right: Balance Info -->
           <div class="col-md-8">
-            <div class="p-3"
-              style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:10px;">
+            <!-- <div class="p-3" style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:10px;">
+
 
               <div class="mb-2">
                 <span style="font-size:13px; font-weight:600; color:#162246;">Balance:</span>
-                <span class="ml-2"
-                  style="font-size:13px; font-weight:700; color:#0d6efd;">
+                <span class="ml-2" style="font-size:13px; font-weight:700; color:#0d6efd;">
                   {{ currencySymbol }} {{ bankbalance | number:'1.2-2' }} {{ bankbalancetype }}
                 </span>
               </div>
 
               <div>
                 <span style="font-size:13px; font-weight:600; color:#162246;">BRS Date:</span>
-                <span class="ml-2"
-                  style="font-size:13px; font-weight:700; color:#0d6efd;">
+                <span class="ml-2" style="font-size:13px; font-weight:700; color:#0d6efd;">
                   {{ brsdate }}
                 </span>
               </div>
 
+            </div> -->
+            <div class="balance-box">
+              <div>
+                <strong></strong> {{ selectedBankName }}
+              </div>
+
+              <div>
+                Balance: ₹ {{ bankBalance }}
+              </div>
+
+              <div>
+                BRS Date: {{ brsDate }}
+              </div>
             </div>
           </div>
 
@@ -98,8 +127,7 @@
             <div class="d-flex align-items-center" style="gap:6px;">
               <input type="radio" value="A" formControlName="chequeintype"
                 style="accent-color:#0d6efd; width:15px; height:15px; cursor:pointer;">
-              <label class="mb-0"
-                style="font-size:13px; font-weight:600; color:#162246; cursor:pointer;">All</label>
+              <label class="mb-0" style="font-size:13px; font-weight:600; color:#162246; cursor:pointer;">All</label>
             </div>
 
             <div class="d-flex align-items-center" style="gap:6px;">
@@ -122,38 +150,60 @@
         <!-- Search -->
         <div class="row mb-3">
           <div class="col-md-6">
-            <input type="search" class="form-control" placeholder="Search..."
-              (input)="onSearch($event.target.value)"
+            <input type="search" class="form-control" placeholder="Search..." (input)="onSearch($event.target.value)"
               style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
+            <button type="button" (click)="ALL()"
+              style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:800; padding:6px 18px; color:#fff; border:none; cursor:pointer;">
+              ALL
+            </button>
           </div>
+
+
         </div>
 
         <!-- Table -->
-        <p-table
-          [value]="gridData"
-          [(selection)]="selected"
-          dataKey="preceiptid"
-          [scrollable]="true"
-          scrollHeight="350px"
-          [rowHover]="true"
-          styleClass="p-datatable-sm p-datatable-gridlines">
+        <p-table [value]="gridData" [(selection)]="selected" dataKey="preceiptid" [scrollable]="true"
+          scrollHeight="350px" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines">
 
           <ng-template pTemplate="header">
             <tr>
-              <th style="width:50px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              <th
+                style="width:50px; background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Chit Receipt No</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Reference No</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Branch</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Party</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Date</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Deposited Date</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Clear Date</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Id</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Mode</th>
-              <th style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">UPI</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Chit Receipt No</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Reference No</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Branch</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Amount</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Party</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Receipt Date</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Deposited Date</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Clear Date</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Receipt Id</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                Mode</th>
+              <th
+                style="background:#162246 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                UPI</th>
             </tr>
           </ng-template>
 
@@ -165,7 +215,8 @@
               <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.chitReceiptNo}}</td>
               <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.pChequenumber}}</td>
               <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.pbranchname || '--NA--'}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{currencySymbol}} {{row.ptotalreceivedamount | number:'1.2-2'}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#162246;">{{currencySymbol}} {{row.ptotalreceivedamount
+                | number:'1.2-2'}}</td>
               <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.ppartyname}}</td>
               <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.preceiptdate}}</td>
               <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.pdepositeddate}}</td>
@@ -179,8 +230,7 @@
         </p-table>
 
         <!-- Selected Summary -->
-        <div class="mt-3 p-2 d-inline-block"
-          style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:7px;">
+        <div class="mt-3 p-2 d-inline-block" style="background:#f0f5ff; border:1px solid #cdd8f0; border-radius:7px;">
           <div style="font-size:13px; font-weight:600; color:#162246;">
             Selected Rows Count is:
             <span style="color:#0d6efd;">{{selected.length}}</span>
