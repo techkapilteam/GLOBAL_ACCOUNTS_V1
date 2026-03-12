@@ -82,11 +82,22 @@
         <div class="section-content mt-4" *ngIf="gridView">
 
           <div class="mb-3 text-end" *ngIf="showicons">
-            <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">PDF</button>
+            <!-- <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">PDF</button>
 
             <button class="btn btn-outline-secondary me-2" (click)="pdfOrPrint('Print')">Print</button>
 
-            <button class="btn btn-outline-success" (click)="export()">Excel</button>
+            <button class="btn btn-outline-success" (click)="export()">Excel</button> -->
+            <a (click)="pdfOrPrint('Pdf')" class="export-icons me-2">
+        <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" />
+      </a>
+
+      <a (click)="pdfOrPrint('Print')" class="export-icons me-2">
+        <img src="assets/images/print-icon-blue.svg" width="18" title="Print" />
+      </a>
+
+      <a (click)="export()" class="export-icons">
+        <img src="assets/images/icon-excel.svg" width="18" title="Excel" />
+      </a>
           </div>
 
           <!-- <div class="text-center mb-1 fw-bold fs-5">

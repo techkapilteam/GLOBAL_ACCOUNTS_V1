@@ -3155,7 +3155,7 @@ const companyBranch = Companyreportdetails?.uniqueBranchName ?? '';
       ...colWidthHeight,
       3: {
         ...colWidthHeight[3],
-        cellPadding: { top: 1, bottom: 1, left: 6, right: 1 }, // left padding > rupee image width (2.5mm) + gap
+        cellPadding: { top: 1, bottom: 1, left: 6, right: 1 }, 
       },
     };
 

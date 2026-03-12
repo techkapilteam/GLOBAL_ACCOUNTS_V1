@@ -171,7 +171,7 @@
     <div *ngIf="showReport" class="mt-4">
 
       <div class="d-flex justify-content-end gap-2 mt-3">
-        <button class="btn btn-outline-danger btn-sm" (click)="pdfOrPrint('Pdf')">
+        <!-- <button class="btn btn-outline-danger btn-sm" (click)="pdfOrPrint('Pdf')">
           <i class="fa fa-file-pdf me-1"></i> PDF
         </button>
 
@@ -180,7 +180,18 @@
         </button>
         <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrPrint('Print')">
           <i class="fa fa-print me-1"></i> Print
-        </button>
+        </button> -->
+        <a (click)="pdfOrPrint('Pdf')" class="export-icons me-2">
+        <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" />
+      </a>
+
+      <a (click)="pdfOrPrint('Print')" class="export-icons me-2">
+        <img src="assets/images/print-icon-blue.svg" width="18" title="Print" />
+      </a>
+
+      <a (click)="export()" class="export-icons">
+        <img src="assets/images/icon-excel.svg" width="18" title="Excel" />
+      </a>
       </div>
       <!-- <div class="text-center mb-1 fw-bold fs-5">
         KAPIL CHITS (HYDERABAD) PVT. LTD.

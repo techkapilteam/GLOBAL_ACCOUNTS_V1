@@ -249,7 +249,7 @@ export class PaymentVoucherReportComponent implements OnInit {
           );
 
 
-          this.tempPaymentData = res;
+          // this.tempPaymentData = res;
 
           this.tempPaymentData.forEach((x: any) => {
 
