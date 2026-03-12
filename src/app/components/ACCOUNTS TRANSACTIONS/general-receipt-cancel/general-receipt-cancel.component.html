@@ -74,21 +74,21 @@
           [rows]="pageCriteria.pageSize"
           [totalRecords]="pageCriteria.totalrows"
           (onPage)="onPrimePageChange($event)"
-          styleClass="p-datatable-gridlines p-datatable-sm">
+          styleClass="p-datatable-gridlines p-datatable-sm " style="width: 650pX;;">
 
           <ng-template pTemplate="header">
             <tr>
               <th style="width:80px">S.No</th>
-              <th>Particulars</th>
-              <th class="text-end">Amount</th>
+              <th style="width:480px">Particulars</th>
+              <th  style="width: 350px;">Amount</th>
             </tr>
           </ng-template>
 
           <ng-template pTemplate="body" let-row let-i="rowIndex">
             <tr>
               <td>{{ i + 1 }}</td>
-              <td>{{ row.parentaccountname }}</td>
-              <td class="text-end">
+              <td>{{ row.contactname }}</td>
+              <td >
                 {{ currencysymbol }} {{ row.totalreceivedamount | number:'1.2-2' }}
               </td>
             </tr>
@@ -101,17 +101,17 @@
 
           <div class="col-md-5">
             <strong>Narration :</strong>
-            <span class="text-primary">{{ lblnarration }}</span>
+            <span class="text-primary ms-2">{{ lblnarration }}</span>
           </div>
 
           <div class="col-md-4">
             <strong>Mode of Transaction :</strong>
-            <span class="text-primary">{{ lblmodeoftransaction }}</span>
+            <span class="text-primary ms-2">{{ lblmodeoftransaction }}</span>
           </div>
 
           <div class="col-md-3">
             <strong>Done By :</strong>
-            <span class="text-primary">{{ lblemployee }}</span>
+            <span class="text-primary ms-2">{{ lblemployee }}</span>
           </div>
 
         </div>

@@ -51,8 +51,8 @@
             </li>
         </ul>
 
-          <p-table [value]="displayAllChequesDataBasedOnForm" [paginator]="true" [rows]="pageCriteria.pageSize"
-            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+          <p-table [value]="displayAllChequesDataBasedOnForm" [paginator]="true" [rows]="issuedPageCriteria.pageSize"
+            [first]="issuedPageCriteria.offset * issuedPageCriteria.pageSize" [totalRecords]="issuedPageCriteria.totalrows"
             [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll" styleClass="p-datatable-gridlines mt-3">
 
             <ng-template pTemplate="header">
@@ -88,20 +88,20 @@
                 </td>
 
                 <td class="text-center">
-                  <span *ngIf="row.ptypeofpayment === 'CHEQUE' && row.pchequestatus === 'P'">
+                  <span *ngIf="row.ptypeofpayment === 'CHEQUE' && row.pchequestatus === 'Y'">
                     {{ row.pdepositeddate | date:'dd-MM-yyyy' }}
                   </span>
                 </td>
 
                 <td class="text-center">
                   <span *ngIf="row.pchequestatus === 'R'">
-                    {{ row.pchequecleardate | date:'dd-MM-yyyy' }}
+                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
                   </span>
                 </td>
 
                 <td class="text-center">
                   <span *ngIf="row.pchequestatus === 'C'">
-                    {{ row.pchequecleardate | date:'dd-MM-yyyy' }}
+                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
                   </span>
                 </td>
 
@@ -126,10 +126,10 @@
                 <td colspan="8"></td>
               </tr>
 
-              <tr *ngIf="pageCriteria.totalrows > 0">
+              <tr *ngIf="issuedPageCriteria.totalrows > 0">
                 <td colspan="11">
-                  Page {{ pageCriteria.CurrentPage }} of {{ pageCriteria.TotalPages }}
-                  ({{ pageCriteria.totalrows }} items)
+                  Page {{ issuedPageCriteria.CurrentPage }} of {{ issuedPageCriteria.TotalPages }}
+                  ({{ issuedPageCriteria.totalrows }} items)
                 </td>
               </tr>
             </ng-template>
@@ -156,8 +156,8 @@
             </div>
           </div>
 
-          <p-table [value]="displayGridDataBasedOnForm" [paginator]="true" [rows]="pageCriteria.pageSize"
-            [first]="pageCriteria.offset * pageCriteria.pageSize" [totalRecords]="pageCriteria.totalrows"
+          <p-table [value]="displayGridDataBasedOnForm" [paginator]="true" [rows]="receivedPageCriteria.pageSize"
+            [first]="receivedPageCriteria.offset * receivedPageCriteria.pageSize" [totalRecords]="receivedPageCriteria.totalrows"
             responsiveLayout="scroll" styleClass="p-datatable-gridlines mt-3">
 
             <ng-template pTemplate="header">
@@ -198,12 +198,12 @@
                 <!-- <td>{{ row.pCleardate | date:'dd-MM-yyyy' }}</td> -->
                  <td>
                   <span *ngIf="row.pchequestatus === 'Y'">
-                    {{ row.pchequecleardate | date:'dd-MM-yyyy' }}
+                    {{ row.pCleardate | date:'dd-MM-yyyy' }}
                   </span>
                 </td>
 
                 <td>
-                  {{ row.pchequestatus === 'R' ? (row.pchequecleardate | date:'dd-MM-yyyy') : '' }}
+                  {{ row.pchequestatus === 'R' ? (row.pCleardate | date:'dd-MM-yyyy') : '' }}
                 </td>
 
                 <td>{{ row.ptypeofpayment }}</td>

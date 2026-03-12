@@ -57,8 +57,8 @@ export class AccountingTransactionsService {
   GetModeoftransactions(): Observable<any> {
     return this._CommonService.getAPI('/AccountingTransactions/GetModeoftransactions', '', 'NO');
   }
-  GetGeneralReceiptsData(GlobalSchema: 'global', BranchSchema: 'accounts', TaxSchema: 'taxes', CompanyCode: 'KAPILCHITS',
-    BranchCode: 'KLC01'): Observable<any> {
+  GetGeneralReceiptsData(GlobalSchema: any, BranchSchema: any, TaxSchema: any, CompanyCode: any,
+    BranchCode: any): Observable<any> {
 
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('TaxSchema', TaxSchema)
       .set('CompanyCode', CompanyCode).set('BranchCode', BranchCode); return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData', params, 'YES');
@@ -330,8 +330,12 @@ export class AccountingTransactionsService {
   //   const params = new HttpParams().set('depositedBankid', bankid).set('BranchSchema', this._CommonService.getschemaname());
   //   return this._CommonService.getAPI('/ChequesOnHand/GetChequeEnquiryData', params, 'YES')
   // }
+  // GetChequeEnquiryData(bankid: any, startindex: any, endindex: any, modeofreceipt: any, searchtext: any): Observable<any> {
+  //   const params = new HttpParams().set('depositedBankid', bankid).set('BranchSchema', this._CommonService.getschemaname()).set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext);
+  //   return this._CommonService.getAPI('/ChequesOnHand/GetChequeEnquiryData', params, 'YES')
+  // }
   GetChequeEnquiryData(bankid: any, startindex: any, endindex: any, modeofreceipt: any, searchtext: any): Observable<any> {
-    const params = new HttpParams().set('depositedBankid', bankid).set('BranchSchema', this._CommonService.getschemaname()).set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext);
+    const params = new HttpParams().set('depositedBankid', bankid).set('BranchSchema', this._CommonService.getbranchname()).set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext).set('BrsFromDate', '01-01-1991').set('BrsTodate', '11-03-2026').set('GlobalSchema', this._CommonService.getschemaname()).set('CompanyCode', this._CommonService.getCompanyCode()).set('BranchCode', this._CommonService.getBranchCode());
     return this._CommonService.getAPI('/ChequesOnHand/GetChequeEnquiryData', params, 'YES')
   }
 
@@ -390,7 +394,7 @@ export class AccountingTransactionsService {
   }
 
   savePettyCash(data: any) {
-    return this._CommonService.postAPI('/AccountingTransactions/SavePettyCash', data)
+    return this._CommonService.postAPI('/Accounts/SavePettyCash', data)
   }
 
   saveGeneralReceipt(data: any) {
@@ -402,6 +406,7 @@ export class AccountingTransactionsService {
   saveJournalVoucher(data: any) {
     return this._CommonService.postAPI('/Accounts/SaveJournalVoucher', data)
   }
+  
   GetJournalVoucherData(
     BranchSchema: any, CompanyCode: any, BranchCode: any
   ): Observable<any> {

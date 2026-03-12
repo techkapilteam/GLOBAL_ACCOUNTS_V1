@@ -5,10 +5,11 @@ import { TableModule } from 'primeng/table';
 import { CommonService } from '../../../services/common.service';
 import { AccountingTransactionsService } from '../../../services/Transactions/AccountingTransaction/accounting-transaction.service';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-general-receipt',
   standalone: true,
-  imports: [CommonModule, RouterModule, TableModule],
+  imports: [CommonModule, RouterModule, ButtonModule ,TableModule],
   templateUrl: './general-receipt.component.html'
 })
 export class GeneralReceiptComponent implements OnInit {

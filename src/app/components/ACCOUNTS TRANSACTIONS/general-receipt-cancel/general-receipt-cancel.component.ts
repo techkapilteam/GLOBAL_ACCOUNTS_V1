@@ -11,13 +11,20 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-//import { ValidationMessageComponent } from 'src/app/common/validation-message/validation-message.component';
 
 @Component({
   selector: 'app-general-receipt-cancel',
   templateUrl: './general-receipt-cancel.component.html',
-  imports: [CommonModule, NgSelectModule, CommonModule, FormsModule, ReactiveFormsModule,
-    BsDatepickerModule, TableModule, ButtonModule, InputTextModule]
+  imports: [
+    CommonModule,
+    NgSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BsDatepickerModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule
+  ]
 })
 export class GeneralReceiptCancelComponent implements OnInit {
 
@@ -30,7 +37,6 @@ export class GeneralReceiptCancelComponent implements OnInit {
   GeneralReceiptCancelForm!: FormGroup;
 
   receiptdata: any[] = [];
-
   generealreceiptdata: any[] = [];
 
   lblcontact: any;
@@ -40,11 +46,8 @@ export class GeneralReceiptCancelComponent implements OnInit {
   lblemployee: any;
 
   ButtonType = "Save";
-
   show = false;
-
   disablesavebutton = false;
-
   isLoading = false;
 
   GeneralReceiptCancelData: any = [];
@@ -58,6 +61,13 @@ export class GeneralReceiptCancelComponent implements OnInit {
   dropDownDataSearchLength: any = 3;
 
   searchplaceholder = 'Please enter 3 or more characters';
+
+  /* Schema variables */
+  Globalschema: any;
+  Branchschema: any;
+  Taxschema: any;
+  CompanyCode: any;
+  BranchCode: any;
 
   constructor(
     private fb: FormBuilder,
@@ -78,6 +88,12 @@ export class GeneralReceiptCancelComponent implements OnInit {
         this._CommonService.comapnydetails.pdatepickerenablestatus;
     }
 
+    /* Load schema values */
+    this.Globalschema = 'global';
+    this.Branchschema = 'accounts';
+    this.Taxschema = 'taxes';
+    this.CompanyCode = 'KAPILCHITS';
+    this.BranchCode = 'KLC01';
   }
 
   ngOnInit(): void {
@@ -125,29 +141,26 @@ export class GeneralReceiptCancelComponent implements OnInit {
     });
 
   }
+
   onPrimePageChange(event: any): void {
     this.pageCriteria.offset = event.first / event.rows;
     this.pageCriteria.pageSize = event.rows;
   }
+
   setPageModel() {
 
     this.pageCriteria.pageSize = this._CommonService.pageSize;
-
     this.pageCriteria.offset = 0;
-
     this.pageCriteria.pageNumber = 1;
-
     this.pageCriteria.footerPageHeight = 50;
 
   }
 
   onFooterPageChange(event: any): void {
-
     this.pageCriteria.offset = event.page - 1;
-
   }
 
-  /* ---------------------------------- RECEIPT NUMBER ---------------------------------- */
+  /* RECEIPT NUMBER */
 
   getReceiptNumber() {
 
@@ -162,7 +175,7 @@ export class GeneralReceiptCancelComponent implements OnInit {
 
   }
 
-  /* ---------------------------------- CONTACT SEARCH ---------------------------------- */
+  /* CONTACT SEARCH */
 
   private contactSearch() {
 
@@ -205,28 +218,36 @@ export class GeneralReceiptCancelComponent implements OnInit {
 
   }
 
-  /* ---------------------------------- RECEIPT DATA ---------------------------------- */
+  /* RECEIPT DATA */
 
   getreceiptdata(receiptId: any) {
 
     if (!receiptId) {
 
       this.generealreceiptdata = [];
-
       this.lblmodeoftransaction = "";
-
       this.lblnarration = "";
-
       this.lblreceiptdate = "";
 
       return;
 
     }
 
-    this._generalreceiptcancelservice.getreceiptdata(receiptId)
+    this.loadReceiptData();
 
+  }
+
+  loadReceiptData(): void {
+
+    this._generalreceiptcancelservice
+      .getreceiptdata(
+        this.Globalschema,
+        this.Branchschema,
+        this.Taxschema,
+        this.CompanyCode,
+        this.BranchCode
+      )
       .subscribe({
-
         next: (res: any[]) => {
 
           this.generealreceiptdata = res || [];
@@ -238,24 +259,20 @@ export class GeneralReceiptCancelComponent implements OnInit {
           const first = this.generealreceiptdata[0];
 
           this.lblcontact = first.contactname;
-
-          this.lblemployee = first.employee;
-
-          this.lblmodeoftransaction = "Cash";
-
+          this.lblemployee = first.contactname;
+          // this.lblemployee = first.employee;
+          this.lblmodeoftransaction = 'Cash';
           this.lblnarration = first.narration;
-
-          this.lblreceiptdate = first.receiptdate;
+          this.lblreceiptdate = first.receipt_date;
 
         },
 
-        error: err => this.showErrorMessage(err)
-
+        error: (err) => this.showErrorMessage(err)
       });
 
   }
 
-  /* ---------------------------------- SHOW ---------------------------------- */
+  /* SHOW */
 
   Show() {
 
@@ -270,9 +287,6 @@ export class GeneralReceiptCancelComponent implements OnInit {
     this.show = true;
 
   }
-
-  /* ---------------------------------- SAVE ---------------------------------- */
-
   Save() {
 
     try {
@@ -284,7 +298,6 @@ export class GeneralReceiptCancelComponent implements OnInit {
         return;
 
       }
-
       this.GeneralReceiptCancelForm.patchValue({
 
         ipaddress: this._CommonService.getIpAddress(),
@@ -296,9 +309,7 @@ export class GeneralReceiptCancelComponent implements OnInit {
       if (this.checkValidations(this.GeneralReceiptCancelForm, true)) {
 
         this.isLoading = true;
-
         this.disablesavebutton = true;
-
         this.ButtonType = "Processing";
 
         const first = this.generealreceiptdata[0];
@@ -373,8 +384,6 @@ export class GeneralReceiptCancelComponent implements OnInit {
 
   }
 
-  /* ---------------------------------- CANCEL ---------------------------------- */
-
   Cancel() {
 
     this.GeneralReceiptCancelForm.reset();
@@ -402,9 +411,6 @@ export class GeneralReceiptCancelComponent implements OnInit {
     this.isLoading = false;
 
   }
-
-  /* ---------------------------------- VALIDATION ---------------------------------- */
-
   checkValidations(group: FormGroup, isValid: boolean): boolean {
 
     Object.keys(group.controls).forEach(key => {
@@ -412,9 +418,7 @@ export class GeneralReceiptCancelComponent implements OnInit {
       const control = group.get(key);
 
       if (control?.invalid) {
-
         isValid = false;
-
       }
 
     });

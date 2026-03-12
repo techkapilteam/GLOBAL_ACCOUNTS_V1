@@ -61,10 +61,8 @@
             <ng-template pTemplate="body" let-row>
               <tr>
                 <td class="text-center" style="padding:8px 12px; font-size:13px;">
-                  <button class="btn btn-sm btn-primary" (click)="viewRow(row)"
-                    style="background:#0d6efd; border-color:#0d6efd; border-radius:6px; font-size:12px; font-weight:600; padding:4px 14px;">
-                    View
-                  </button>
+                  <i class="fa fa-eye" (click)="viewRow(row)" style="cursor:pointer; font-size:16px; color:#0d6efd;">
+                  </i>
                 </td>
                 <td style="padding:8px 12px; font-size:13px; color:black;">
                   {{ row.receipt_date || '--' }}

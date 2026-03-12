@@ -22,13 +22,18 @@ export class GeneralReceiptCancelService {
   }
 
  
- getreceiptdata(receiptId: any): Observable<any> {
-  debugger;
-  console.log('ReceiptId sent to API:', receiptId);
-  const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', 'KLC01')
-    .set('TaxSchema', 'taxes').set('CompanyCode', 'KAPILCHITS').set('BranchCode', 'accounts');
-  return this._commonService.getAPI('/Accounts/GetGeneralReceiptsData', params,'YES');
-}
+//  getreceiptdata(receiptId: any): Observable<any> {
+//   debugger;
+//   console.log('ReceiptId sent to API:', receiptId);
+//   const params = new HttpParams().set('GlobalSchema', 'global').set('BranchSchema', 'KLC01')
+//     .set('TaxSchema', 'taxes').set('CompanyCode', 'KAPILCHITS').set('BranchCode', 'accounts');
+//   return this._commonService.getAPI('/Accounts/GetGeneralReceiptsData', params,'YES');
+// }
+getreceiptdata(GlobalSchema: any, BranchSchema: any, TaxSchema: any, CompanyCode: any,
+    BranchCode: any): Observable<any> {
+    const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('TaxSchema', TaxSchema)
+      .set('CompanyCode', CompanyCode).set('BranchCode', BranchCode); return this._commonService.getAPI('/Accounts/GetGeneralReceiptsData', params, 'YES');
+  }
 
   getEmployeeName(searchtype: string): Observable<any[]> {
 
