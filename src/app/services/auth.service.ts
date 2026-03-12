@@ -1,34 +1,35 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CompanyDetailsService } from './company-details.service';
-import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private companyService: CompanyDetailsService, private commonService:CommonService) { }
-
   private hasToken(): boolean {
-    return !!localStorage.getItem('authToken');
+    return !!sessionStorage.getItem('token');
   }
 
-  login(username: string, password: string): boolean {
-    if (username && password) {
-      localStorage.setItem('authToken', 'dummy-token-' + Date.now());
-      localStorage.setItem('username', username);
-      this.isAuthenticatedSubject.next(true);
-      return true;
-    }
-    return false;
+  // Called by LoginComponent after successful POST /api/Accounts/login
+  setSession(token: string, username: string, companyCode: string, branchCode: string): void {
+    // Store each value individually for easy access anywhere in the app
+    sessionStorage.setItem('token',       token);
+    sessionStorage.setItem('isLoggedIn',  'true');
+    sessionStorage.setItem('username',    username);
+    sessionStorage.setItem('companyCode', companyCode);
+    sessionStorage.setItem('branchCode',  branchCode);
+
+    // Also keep the combined object for backward compatibility
+    sessionStorage.setItem('loggedInUser', JSON.stringify({ username, companyCode, branchCode }));
+
+    this.isAuthenticatedSubject.next(true);
   }
 
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('username');
+    sessionStorage.clear();
     this.isAuthenticatedSubject.next(false);
   }
 
@@ -36,7 +37,24 @@ export class AuthService {
     return this.hasToken();
   }
 
+  getToken(): string {
+    return sessionStorage.getItem('token') || '';
+  }
+
   getUsername(): string {
-    return localStorage.getItem('username') || '';
+    return sessionStorage.getItem('username') || '';
+  }
+
+  getCompanyCode(): string {
+    return sessionStorage.getItem('companyCode') || '';
+  }
+
+  getBranchCode(): string {
+    return sessionStorage.getItem('branchCode') || '';
+  }
+
+  getLoggedInUser(): { username: string; companyCode: string; branchCode: string } | null {
+    const user = sessionStorage.getItem('loggedInUser');
+    return user ? JSON.parse(user) : null;
   }
 }
