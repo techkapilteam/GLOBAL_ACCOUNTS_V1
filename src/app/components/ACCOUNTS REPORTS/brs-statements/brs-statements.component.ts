@@ -361,7 +361,7 @@ get f() { return this.BrsStatementsReport.controls; }
     debugger;
     let rows = [];
     let reportname = this.reportName;
-    let gridheaders = ["Receipt Date", "Receipt No", "Amount", "Cheque No ", "Cheque Date", "Deposit Date", "Cleared Date","Particular"];
+    let gridheaders = ["Receipt Date", "Receipt No", "Cheque No", "Amount", "Cheque Date", "Deposit Date", "Cleared Date","Particular"];
     
     let fromDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['fromDate'].value);
     let toDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['toDate'].value);
@@ -409,11 +409,11 @@ this.pissuedate = this._CommonService.getFormatDateGlobal(dateObj);
         this.pclearDate = "--NA--";
       }
      
-      temp = [this.pissuedate, element.ptransactionno, ptotalamount, element.preferencenumber?element.preferencenumber:"--NA--", element.preferencenumber!=''?this.pissuedate:'-NA-', element.preferencenumber!=''?this.pissuedate:'-NA-', this.pclearDate, element.pparticulars];
+      temp = [this.pissuedate, element.ptransactionno, element.preferencenumber?element.preferencenumber:"--NA--", ptotalamount, this.pclearDate, element.pparticulars];
       rows.push(temp);
     });
 
-    let temp = ["", "Total",  this._CommonService.convertAmountToPdfFormat(this.totalAmount), "","", "", "",""]
+    let temp = ["", "Total",  "", this._CommonService.convertAmountToPdfFormat(this.totalAmount),"", "", "",""]
     rows.push(temp);
     this._CommonService._downloadReportsPdf(reportname, rows, gridheaders, colWidthHeight, "a4", "Between", this.startDate, this.endDate, printorpdf);
   }
@@ -467,8 +467,6 @@ this.pissuedate = this._CommonService.getFormatDateGlobal(dateObj);
     rows.push(temp);
       this._CommonService._downloadReportsPdf(reportname, rows, gridheaders, colWidthHeight, "a4", "Between", this.startDate, this.endDate, printorpdf);
  
-
-
   }
 
     exportBankDebit(): void {

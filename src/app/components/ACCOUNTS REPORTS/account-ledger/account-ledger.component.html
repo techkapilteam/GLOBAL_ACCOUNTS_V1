@@ -125,7 +125,7 @@
           <div class="card-body">
 
             <div class="d-flex justify-content-end mb-2">
-              <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">
+              <!-- <button class="btn btn-outline-danger me-2" (click)="pdfOrPrint('Pdf')">
                 <i class="fa fa-file-pdf me-1"></i> PDF
               </button>
               <button class="btn btn-outline-success me-2" (click)="exportToExcel()">
@@ -133,7 +133,18 @@
               </button>
               <button class="btn btn-outline-secondary" (click)="pdfOrPrint('Print')">
                 <i class="fa fa-print me-1"></i> Print
-              </button>
+              </button> -->
+              <a (click)="pdfOrPrint('Pdf')" class="export-icons me-2">
+        <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" />
+      </a>
+
+      <a (click)="pdfOrPrint('Print')" class="export-icons me-2">
+        <img src="assets/images/print-icon-blue.svg" width="18" title="Print" />
+      </a>
+
+      <a (click)="exportToExcel()" class="export-icons">
+        <img src="assets/images/icon-excel.svg" width="18" title="Excel" />
+      </a>
             </div>
 
 
