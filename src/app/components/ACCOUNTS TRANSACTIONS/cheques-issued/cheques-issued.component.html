@@ -1,458 +1,599 @@
 <div class="screen-container">
-  <div class="screen-card">
-    <div class="screen-header">
-      <h2>Cheques Issued</h2>
+  <div class="screen-card card shadow-sm p-4"
+    style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
+
+    <!-- Header -->
+    <div class="screen-header mb-4"
+      style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
+      <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Cheques Issued</h2>
     </div>
+
     <div class="screen-content">
       <form [formGroup]="ChequesIssuedForm">
-        <div class="section-content card shadow-sm p-3 mb-3">
-          <div class="row">
-            <div class="col-md-2 col-xl-2">
-              <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
-                <label class="fw-bold">Date <span class="text-danger">*</span></label>
-                <input class="form-control w-auto" type="text" id="ptransactiondate" title="Transaction Date" readonly
-                  formControlName="ptransactiondate" bsDatepicker placement="bottom"
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" [ngClass]="{ 'is-invalid': ChequesIssuedForm.get('ptransactiondate')?.invalid
-                                             && ChequesIssuedForm.get('ptransactiondate')?.touched }"
-                  (bsValueChange)="change_date($event)" />
-                <div class="invalid-feedback" *ngIf="ChequesIssuedForm.get('ptransactiondate')?.invalid
-                      && ChequesIssuedForm.get('ptransactiondate')?.touched">
-                  Transaction Date is required.
-                </div>
+
+        <!-- Filter Row -->
+        <div class="row align-items-end mb-4"
+          style="border: 2px solid #e1e9fb; border-radius: 8px; padding: 15px; margin: 0 0 16px 0; background-color: #f8faff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+
+          <!-- Date -->
+          <div class="col-md-2 col-xl-2" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <div class="form-group mb-0">
+              <label style="font-weight:500; color:#495057; font-size:13px;">Date <span style="color:red;">*</span></label>
+              <input class="form-control" type="text" id="ptransactiondate" title="Transaction Date" readonly
+                formControlName="ptransactiondate" bsDatepicker placement="bottom"
+                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                [ngClass]="{ 'is-invalid': ChequesIssuedForm.get('ptransactiondate')?.invalid && ChequesIssuedForm.get('ptransactiondate')?.touched }"
+                (bsValueChange)="change_date($event)"
+                style="height:36px; padding:6px 12px; font-size:14px; border:1px solid #ced4da;" />
+              <div class="invalid-feedback"
+                *ngIf="ChequesIssuedForm.get('ptransactiondate')?.invalid && ChequesIssuedForm.get('ptransactiondate')?.touched">
+                Transaction Date is required.
               </div>
             </div>
-            <div class="col-md-4 col-xl-4">
-              <div class="form-group">
-                <label class="fw-bold">Bank</label>
-                <select class="form-control" id="bankname" title="Bank" formControlName="bankname"
-                  [ngClass]="{ 'is-invalid': ChequesIssuedValidation?.bankname }" (change)="SelectBank($event)">
-                  <option value="">Select</option>
-                  <option *ngFor="let bank of BanksList" [value]="bank.pdepositbankname">
-                    {{ bank.pdepositbankname }}
-                  </option>
-                </select>
-                <div class="invalid-feedback" *ngIf="ChequesIssuedValidation?.bankname">
-                  {{ ChequesIssuedValidation?.bankname }}
-                </div>
+          </div>
+
+          <!-- Bank -->
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group mb-0">
+              <label style="font-weight:500; color:#495057; font-size:13px;">Bank <span style="color:red;">*</span></label>
+              <select class="form-control form-select" id="bankname" title="Bank" formControlName="bankname"
+                [ngClass]="{ 'is-invalid': ChequesIssuedValidation?.bankname }"
+                (change)="SelectBank($event)"
+                style="height:36px; padding:6px 12px; font-size:14px; border:1px solid #ced4da;">
+                <option value="">Select</option>
+                <option *ngFor="let bank of BanksList" [value]="bank.pdepositbankname">
+                  {{ bank.pdepositbankname }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="ChequesIssuedValidation?.bankname">
+                {{ ChequesIssuedValidation?.bankname }}
               </div>
             </div>
-            <div class="col-md-6 col-xl-6">
-              <div class="border rounded shadow-sm bg-light p-3">
-                <span *ngIf="banknameshowhide" class="sec-head-bold font-15 mt-0 overflow-hidden">
-                  {{ bankname }}
-                  <hr class="mt-1 mb-1" />
-                </span>
-                <div class="border rounded shadow-sm bg-light p-3 d-flex justify-content-between align-items-center">
-                  <span class="text-start">
-                    <label class="balance-label">Balance: </label>
-                    <label class="balance-value">
-                      <ng-container *ngIf="bankbalancetype === 'Dr'">
-                        {{ currencySymbol }} {{ bankbalance | currency:'INR':'symbol':'1.2-2' }} Dr
-                      </ng-container>
-                      <ng-container *ngIf="bankbalancetype === 'Cr'">
-                        {{ currencySymbol }} {{ bankbalance | currency:'INR':'symbol':'1.2-2' }} Cr
-                      </ng-container>
-                      <ng-container *ngIf="bankbalancetype === ''">
-                        {{ currencySymbol }} 0.00
-                      </ng-container>
-                    </label>
-                  </span>
-                  <span class="mx-auto text-center">
-                    <label class="balance-label">BRS Date: </label>
-                    <label class="balance-value">{{ brsdate }}</label>
-                  </span>
-                </div>
+          </div>
+
+          <!-- Bank Info Card -->
+          <div class="col-md-5 col-xl-5">
+            <div class="border rounded shadow-sm bg-light"
+              style="background-color:#fff !important; border-color:#b8cff5 !important; padding:12px 16px; border-width:2px !important;">
+              <span *ngIf="banknameshowhide" class="sec-head-bold mt-0 font-15 overflow-hidden">{{ bankname }}
+                <hr class="mt-0 mb-0">
+              </span>
+              <div class="form-group mb-1">
+                <h4 style="color:#0d6efd; margin:0; font-size:1.1rem; text-decoration:underline; font-weight:700;">
+                  Cheques Issued
+                </h4>
+              </div>
+              <div class="form-group mb-0"
+                style="display:flex; align-items:center; color:#495057; font-size:13px;">
+                <label style="margin-bottom:0; font-weight:700; color:#000;">Balance: </label>
+                <label class="sec-head-bold ml-1"
+                  style="margin-bottom:0; display:inline-flex; color:#212529; font-weight:800; font-size:14px;">
+                  <ng-container *ngIf="bankbalancetype === 'Dr'">
+                    {{ currencySymbol }} {{ bankbalance | currency:'INR':'symbol':'1.2-2' }} Dr
+                  </ng-container>
+                  <ng-container *ngIf="bankbalancetype === 'Cr'">
+                    {{ currencySymbol }} {{ bankbalance | currency:'INR':'symbol':'1.2-2' }} Cr
+                  </ng-container>
+                  <ng-container *ngIf="bankbalancetype === ''">
+                    {{ currencySymbol }} 0.00
+                  </ng-container>
+                </label>
+                <label class="ml-4" style="margin-bottom:0; margin-left:20px; font-weight:700; color:#000;">BRS Date: </label>
+                <label class="sec-head-bold ml-1"
+                  style="margin-bottom:0; color:#212529; font-weight:800; font-size:14px;">{{ brsdate }}</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Search + Export Row -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-md-4 col-xl-4">
+            <div class="form-group custom-search m-0" style="position:relative;">
+              <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#6c757d; pointer-events:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+              </span>
+              <input type="search" id="search" class="form-control" placeholder="Search"
+                (input)="onSearch($any($event.target).value)"
+                style="height:36px; border-radius:4px; padding-left:32px !important; font-size:13px; border:1.5px solid #cdd8f0; color:#162246;" />
+            </div>
+          </div>
+
+          <div class="col-md-8 col-xl-8">
+            <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="showicons">
+              <a class="export-icons" (click)="pdfOrprint('pdf')" style="cursor:pointer;">
+                <img src="assets/images/pdf-icon-blue.svg" title="Pdf" width="18" />
+              </a>
+              <a class="export-icons" (click)="pdfOrprint('print')" style="cursor:pointer;">
+                <img src="assets/images/print-icon-blue.svg" title="Print" width="18" />
+              </a>
+              <a class="export-icons" (click)="export()" style="cursor:pointer;">
+                <img src="assets/images/icon-excel.svg" title="Excel" width="18" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs mb-3"
+          style="border-bottom:none; gap:10px; flex-wrap:wrap; margin-top:15px; margin-bottom:15px; padding-left:0;">
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='all'}" (click)="All(); activeTab='all'"
+              [style.border]="activeTab==='all' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='all' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='all' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              All
+              <span class="badge bg-warning ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px; color:#000;">{{ all || 0 }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='chequesissued'}" (click)="ChequesIssued(); activeTab='chequesissued'"
+              [style.border]="activeTab==='chequesissued' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='chequesissued' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='chequesissued' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Cheques Issued
+              <span class="badge bg-secondary ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ chequesissued || 0 }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='onlinepayments'}" (click)="OnlinePayments(); activeTab='onlinepayments'"
+              [style.border]="activeTab==='onlinepayments' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='onlinepayments' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='onlinepayments' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Online Payments
+              <span class="badge bg-primary ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ onlinepayments || 0 }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='cleared'}" (click)="Cleared(); activeTab='cleared'"
+              [style.border]="activeTab==='cleared' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='cleared' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='cleared' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Cleared
+              <span class="badge bg-success ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ cleared || 0 }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='returned'}" (click)="Returned(); activeTab='returned'"
+              [style.border]="activeTab==='returned' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='returned' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='returned' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Returned
+              <span class="badge bg-danger ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ returned || 0 }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='cancelled'}" (click)="Cancelled(); activeTab='cancelled'"
+              [style.border]="activeTab==='cancelled' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='cancelled' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='cancelled' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Cancelled
+              <span class="badge bg-danger ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ cancelled || 0 }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" (click)="allCheques()"
+              style="border:1px solid #ced4da; border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer; background-color:#fff; color:#495057;">
+              Cheques
+              <span class="badge bg-danger ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ displayAllChequesDataBasedOnForm?.length }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="!tabsShowOrHideBasedOnfromFormName">
+            <a class="nav-link" (click)="otherCheques()"
+              style="border:1px solid #ced4da; border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer; background-color:#fff; color:#495057;">
+              Cash / Adjustments
+              <span class="badge bg-danger ms-2"
+                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ otherChequesCount }}</span>
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='bankfileupload'}" (click)="BankUploadExcel(); activeTab='bankfileupload'"
+              [style.border]="activeTab==='bankfileupload' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='bankfileupload' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='bankfileupload' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Bank File Upload
+            </a>
+          </li>
+
+          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
+            <a class="nav-link" [ngClass]="{'active': activeTab==='autobrs'}" (click)="AutoBrs(); activeTab='autobrs'"
+              [style.border]="activeTab==='autobrs' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
+              [style.background-color]="activeTab==='autobrs' ? 'var(--bs-primary)' : '#fff'"
+              [style.color]="activeTab==='autobrs' ? '#fff' : '#495057'"
+              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
+              Auto BRS
+            </a>
+          </li>
+
+        </ul>
+
+        <!-- BRS Cleared Date Range -->
+        <div *ngIf="brsdateshowhidecleared" class="row mb-3 align-items-center">
+          <div class="col-md-3 col-xl-3">
+            <div class="form-group mb-0">
+              <label style="font-weight:500; font-size:13px;">BRS From Date</label>
+              <input class="form-control" type="text" formControlName="pfrombrsdate" readonly bsDatepicker
+                placement="bottom"
+                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                style="height:36px; border-radius:4px;" />
+            </div>
+          </div>
+          <div class="col-md-4 col-xl-4">
+            <div class="form-group mb-0">
+              <label style="font-weight:500; font-size:13px;">BRS To Date</label>
+              <div class="d-flex align-items-center">
+                <input class="form-control" type="text" formControlName="ptobrsdate" readonly bsDatepicker
+                  placement="bottom"
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  style="height:36px; border-radius:4px;" />
+                <button type="button" class="btn ms-3" (click)="ShowBrsClear()"
+                  style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
+                  Show
+                </button>
+              </div>
+              <div *ngIf="validatebrsdateclear" style="color:red; margin-top:4px; font-size:12px;">
+                BRS To Date should be greater than From Date.
               </div>
             </div>
           </div>
         </div>
-        <div class="section-content mt-2">
-          <div class="row align-items-center">
-            <div class="col-md-6 col-xl-6">
-              <div class="form-group custom-search">
-                <input type="search" id="search" class="form-control" placeholder="Search"
-                  (input)="onSearch($any($event.target).value)" />
-              </div>
-            </div>
-            <div class="col-md-6 col-xl-6 text-end">
-              <div class="d-flex justify-content-end mr-3 mt-4" *ngIf="showicons">
-                <button class="btn btn-outline-danger me-2" type="button" (click)="pdfOrprint('pdf')">
-                  <i class="fa fa-file-pdf me-1"></i> PDF
-                </button>
-                <button class="btn btn-outline-success me-2" type="button" (click)="export()">
-                  <i class="fa fa-file-excel me-1"></i> Excel
-                </button>
-                <button class="btn btn-outline-secondary" type="button" (click)="pdfOrprint('print')">
-                  <i class="fa fa-print me-1"></i> Print
-                </button>
-              </div>
-            </div>
-          </div>
-          <ul class="custom-tabs d-flex flex-wrap">
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'all'"
-                (click)="All(); activeTab='all'">
-                All <span class="count">{{ all }}</span>
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'chequesissued'"
-                (click)="ChequesIssued(); activeTab='chequesissued'">
-                Cheques Issued <span class="count">{{ chequesissued }}</span>
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'onlinepayments'"
-                (click)="OnlinePayments(); activeTab='onlinepayments'">
-                Online Payments <span class="count blue">{{ onlinepayments }}</span>
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'cleared'"
-                (click)="Cleared(); activeTab='cleared'">
-                Cleared <span class="count green">{{ cleared }}</span>
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'returned'"
-                (click)="Returned(); activeTab='returned'">
-                Returned <span class="count red">{{ returned }}</span>
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'cancelled'"
-                (click)="Cancelled(); activeTab='cancelled'">
-                Cancelled <span class="count red">{{ cancelled }}</span>
-              </button>
-            </li>
-            <li *ngIf="!tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" (click)="allCheques()">
-                Cheques <span class="count red">{{ displayAllChequesDataBasedOnForm?.length }}</span>
-              </button>
-            </li>
-            <li *ngIf="!tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" (click)="otherCheques()">
-                Cash / Adjustments <span class="count red">{{ otherChequesCount }}</span>
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
-              <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'bankfileupload'"
-                (click)="BankUploadExcel(); activeTab='bankfileupload'">
-                Bank File Upload
-              </button>
-            </li>
-            <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
-              <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'autobrs'"
-                (click)="AutoBrs(); activeTab='autobrs'">
-                Auto BRS
-              </button>
-            </li>
-          </ul>
-          <br />
-          <div *ngIf="brsdateshowhidecleared" class="row mb-3">
-            <div class="col-md-6 col-xl-4">
-              <div class="form-group">
-                <label class="fw-bold">BRS From Date</label>
-                <input class="form-control w-auto" type="text" formControlName="pfrombrsdate" readonly bsDatepicker
+
+        <!-- BRS Returned Date Range -->
+        <form [formGroup]="BrsReturnForm">
+          <div *ngIf="brsdateshowhidereturned" class="row mb-3 align-items-center">
+            <div class="col-md-3 col-xl-3">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; font-size:13px;">BRS From Date</label>
+                <input class="form-control" type="text" formControlName="frombrsdate" readonly bsDatepicker
                   placement="bottom"
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" />
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  style="height:36px; border-radius:4px;" />
               </div>
             </div>
-            <div class="col-md-6 col-xl-4">
-              <div class="form-group">
-                <label class="fw-bold">BRS To Date</label>
-                <input class="form-control w-auto" type="text" formControlName="ptobrsdate" readonly bsDatepicker
-                  placement="bottom"
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" />
-                <div *ngIf="validatebrsdateclear" class="text-danger small mt-1">
+            <div class="col-md-4 col-xl-4">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; font-size:13px;">BRS To Date</label>
+                <div class="d-flex align-items-center">
+                  <input class="form-control" type="text" formControlName="tobrsdate" readonly bsDatepicker
+                    placement="bottom"
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                    style="height:36px; border-radius:4px;" />
+                  <button type="button" class="btn ms-3" (click)="ShowBrsReturn()"
+                    style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
+                    Show
+                  </button>
+                </div>
+                <div *ngIf="validatebrsdatereturn" style="color:red; margin-top:4px; font-size:12px;">
                   BRS To Date should be greater than From Date.
                 </div>
               </div>
             </div>
-            <div class="col-md-2 col-xl-2 d-flex align-items-end">
-              <button type="button" class="btn btn-primary w-100 mb-3" (click)="ShowBrsClear()">
-                Show
+          </div>
+        </form>
+
+        <!-- BRS Cancelled Date Range -->
+        <form [formGroup]="BrsCancelForm">
+          <div *ngIf="brsdateshowhidecancelled" class="row mb-3 align-items-center">
+            <div class="col-md-3 col-xl-3">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; font-size:13px;">BRS From Date</label>
+                <input class="form-control" type="text" formControlName="frombrsdate" readonly bsDatepicker
+                  placement="bottom"
+                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  style="height:36px; border-radius:4px;" />
+              </div>
+            </div>
+            <div class="col-md-4 col-xl-4">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; font-size:13px;">BRS To Date</label>
+                <div class="d-flex align-items-center">
+                  <input class="form-control" type="text" formControlName="tobrsdate" readonly bsDatepicker
+                    placement="bottom"
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                    style="height:36px; border-radius:4px;" />
+                  <button type="button" class="btn ms-3" (click)="ShowBrsCancel()"
+                    style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
+                    Show
+                  </button>
+                </div>
+                <div *ngIf="validatebrsdatecancel" style="color:red; margin-top:4px; font-size:12px;">
+                  BRS To Date should be greater than From Date.
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- Table Card -->
+        <div class="row">
+          <div class="col-12">
+            <div class="border rounded p-3 bg-white"
+              style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
+
+              <!-- Cheques Issued Grid -->
+              <p-table *ngIf="showOrHideChequesIssuedGrid !== false" [value]="gridData" [paginator]="true"
+                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]"
+                [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
+
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                styleClass="p-datatable-sm p-datatable-gridlines">
+
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th *ngIf="!showhidegridcolumns"
+                      style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                      Clear
+                    </th>
+                    <th *ngIf="!showhidegridcolumns && status !== 'autobrs'"
+                      style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                      Return
+                    </th>
+                    <th *ngIf="!showhidegridcolumns"
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Reference No
+                    </th>
+                    <th *ngIf="!showhidegridcolumns && status !== 'autobrs'"
+                      style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                      Cancel
+                    </th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Cheque / Reference No.
+                    </th>
+                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Amount
+                    </th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Party
+                    </th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Payment Id
+                    </th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Payment Date
+                    </th>
+                    <th *ngIf="!hiddendate" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      {{ datetitle }}
+                    </th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                      Transaction Mode
+                    </th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+                  <tr>
+                    <td *ngIf="!showhidegridcolumns" style="padding:8px 12px; text-align:center;">
+                      <input type="checkbox" [checked]="row?.pdepositstatus === true" [disabled]="status === 'autobrs'"
+                        (change)="checkedClear($event, row)" />
+                    </td>
+                    <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="padding:8px 12px; text-align:center;">
+                      <input type="checkbox" [checked]="row?.preturnstatus === true"
+                        (change)="checkedReturn($event, row)" />
+                    </td>
+                    <td *ngIf="!showhidegridcolumns" style="padding:8px 12px; font-size:13px; color:#162246;">
+                      <input *ngIf="status !== 'autobrs'" class="form-control form-control-sm" type="text"
+                        [value]="row?.preferencetext || ''" (keyup)="checkDuplicateValueslatest($event, rowIndex, row)"
+                        maxlength="15" />
+                      <span *ngIf="status === 'autobrs'">{{ row?.preferencetext }}</span>
+                    </td>
+                    <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="padding:8px 12px; text-align:center;">
+                      <input type="checkbox" [checked]="row?.pcancelstatus === true"
+                        (change)="checkedCancel($event, row)" />
+                    </td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pChequenumber }}</td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                      {{ currencySymbol }} {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
+                    </td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ppartyname }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptid }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
+                    <td *ngIf="!hiddendate" style="padding:8px 12px; font-size:13px; color:#162246;">
+                      {{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}
+                    </td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptypeofpayment }}</td>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="footer">
+                  <tr>
+                    <td [attr.colspan]="!showhidegridcolumns ? (status !== 'autobrs' ? 4 : 2) : 0"
+                      *ngIf="!showhidegridcolumns" style="padding:8px 12px;"></td>
+                    <td style="padding:8px 12px; font-size:13px; font-weight:700; color:#162246; text-align:right !important;">
+                      <b>Total</b>
+                    </td>
+                    <td class="text-end"
+                      style="padding:8px 12px; font-size:13px; font-weight:700; color:#162246; text-align:right !important;">
+                      <b>{{ currencySymbol }} {{ (amounttotal || 0) | currency:'INR':'symbol':'1.2-2' }}</b>
+                    </td>
+                    <td colspan="4" style="padding:8px 12px;"></td>
+                    <td *ngIf="!hiddendate" style="padding:8px 12px;"></td>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="11" style="text-align:center; padding:20px;">No Data Available</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+              <!-- All Cheques Grid -->
+              <p-table *ngIf="showOrHideAllChequesGrid" [value]="displayAllChequesDataBasedOnForm" [paginator]="true"
+                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]"
+                [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                styleClass="p-datatable-sm p-datatable-gridlines">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque Status</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque / Reference No.</th>
+                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Id</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Date</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cleared / Returned / Cancelled Date</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Mode</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Party</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.chequeStatus }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pChequenumber }}</td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                      {{ currencySymbol }} {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
+                    </td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptid }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptypeofpayment }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ppartyname }}</td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="8" style="text-align:center; padding:20px;">No Data Available</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+              <!-- Other Cheques Grid -->
+              <p-table *ngIf="showOrHideOtherChequesGrid" [value]="OtherChequesData" [paginator]="true"
+                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]"
+                [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                styleClass="p-datatable-sm p-datatable-gridlines">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction No.</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Date</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Particulars</th>
+                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Debit Amount</th>
+                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Credit Amount</th>
+                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Account Name</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactionnumber }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactiondate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.particulars }}</td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                      {{ currencySymbol }} {{ (row?.debitamount || 0) | currency:'INR':'symbol':'1.2-2' }}
+                    </td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                      {{ currencySymbol }} {{ (row?.creditamount || 0) | currency:'INR':'symbol':'1.2-2' }}
+                    </td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.accountname }}</td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="6" style="text-align:center; padding:20px;">No Data Available</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank File Upload Section -->
+        <div *ngIf="activeTab === 'bankfileupload'" class="mt-3">
+          <div class="row">
+            <div class="col-md-3 col-xl-3">
+              <div class="form-check form-check-inline radio-btn-secondary">
+                <input class="form-check-input" type="radio" value="Upload" formControlName="auto_brs_type"
+                  (change)="auto_brs_typeChange($any($event.target).value)" />
+                <label class="form-check-label mt-1">Upload</label>
+              </div>
+              <div class="form-check form-check-inline radio-btn-secondary">
+                <input class="form-check-input" type="radio" value="Pending" formControlName="auto_brs_type"
+                  (change)="auto_brs_typeChange($any($event.target).value)" />
+                <label class="form-check-label mt-1">Pending</label>
+              </div>
+            </div>
+            <div *ngIf="auto_brs_type_name === 'Pending'" class="col-md-3 d-flex align-items-center">
+              <button type="button" class="btn border-0" (click)="getAutoBrs('N')"
+                style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px;">
+                Get Pending Data
               </button>
             </div>
           </div>
-          <form [formGroup]="BrsReturnForm">
-            <div *ngIf="brsdateshowhidereturned" class="row mb-3">
-              <div class="col-md-6 col-xl-4">
-                <div class="form-group">
-                  <label class="fw-bold">BRS From Date</label>
-                  <input class="form-control w-auto" type="text" formControlName="frombrsdate" readonly bsDatepicker
-                    placement="bottom"
-                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" />
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="form-group">
-                  <label class="fw-bold">BRS To Date</label>
-                  <input class="form-control w-auto" type="text" formControlName="tobrsdate" readonly bsDatepicker
-                    placement="bottom"
-                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" />
-                  <div *ngIf="validatebrsdatereturn" class="text-danger small mt-1">
-                    BRS To Date should be greater than From Date.
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2 col-xl-2 d-flex align-items-end">
-                <button type="button" class="btn btn-primary w-100 mb-3" (click)="ShowBrsReturn()">
-                  Show
-                </button>
-              </div>
+          <div class="row mt-2" *ngIf="auto_brs_type_name === 'Upload'">
+            <div class="col-md-3 col-xl-3">
+              <input type="file" class="form-control" accept=".xlsx,.xls" (change)="onFileChange($event)"
+                style="height:36px; font-size:13px;" />
             </div>
-          </form>
-          <form [formGroup]="BrsCancelForm">
-            <div *ngIf="brsdateshowhidecancelled" class="row mb-3">
-              <div class="col-md-6 col-xl-4">
-                <div class="form-group">
-                  <label class="fw-bold">BRS From Date</label>
-                  <input class="form-control w-auto" type="text" formControlName="frombrsdate" readonly bsDatepicker
-                    placement="bottom"
-                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" />
-                </div>
-              </div>
-              <div class="col-md-6 col-xl-4">
-                <div class="form-group">
-                  <label class="fw-bold">BRS To Date</label>
-                  <input class="form-control w-auto" type="text" formControlName="tobrsdate" readonly bsDatepicker
-                    placement="bottom"
-                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }" />
-                  <div *ngIf="validatebrsdatecancel" class="text-danger small mt-1">
-                    BRS To Date should be greater than From Date.
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-2 col-xl-2 d-flex align-items-end">
-                <button type="button" class="btn btn-primary w-100 mb-3" (click)="ShowBrsCancel()">
-                  Show
-                </button>
-              </div>
+            <div class="col-md-3 col-xl-3">
+              <a type="button" class="btn border-0" (click)="DownloadExcelforPreDefinedBidAmount()"
+                style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; display:inline-flex; align-items:center;">
+                <i class="fa fa-download me-1"></i> Download BRS Format
+              </a>
             </div>
-          </form>
-          <div *ngIf="gridLoading" class="text-center py-4">
-            <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
-            <p class="mt-2 text-muted">Loading...</p>
           </div>
-          <div class="tab-content" *ngIf="!gridLoading">
-            <p-table *ngIf="showOrHideChequesIssuedGrid" [value]="gridData" [paginator]="true"
-              [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true"
-              scrollHeight="500px" responsiveLayout="scroll" [loading]="gridLoading"
-              styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
-
-              <ng-template pTemplate="header">
-                <tr>
-                  <th *ngIf="!showhidegridcolumns" style="width:60px; text-align:center">Clear</th>
-                  <th *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="width:60px; text-align:center">Return
-                  </th>
-                  <th *ngIf="!showhidegridcolumns">Reference No</th>
-                  <th *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="width:60px; text-align:center">Cancel
-                  </th>
-                  <th>Cheque / Reference No.</th>
-                  <th style="text-align:right">Amount</th>
-                  <th>Party</th>
-                  <th>Payment Id</th>
-                  <th>Payment Date</th>
-                  <th *ngIf="!hiddendate">{{ datetitle }}</th>
-                  <th>Transaction Mode</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
-                <tr>
-                  <td *ngIf="!showhidegridcolumns" style="text-align:center">
-                    <input type="checkbox" [checked]="row?.pdepositstatus === true" [disabled]="status === 'autobrs'"
-                      (change)="checkedClear($event, row)" />
-                  </td>
-                  <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="text-align:center">
-                    <input type="checkbox" [checked]="row?.preturnstatus === true"
-                      (change)="checkedReturn($event, row)" />
-                  </td>
-                  <td *ngIf="!showhidegridcolumns">
-                    <input *ngIf="status !== 'autobrs'" class="form-control form-control-sm" type="text"
-                      [value]="row?.preferencetext || ''" (keyup)="checkDuplicateValueslatest($event, rowIndex, row)"
-                      maxlength="15" />
-                    <span *ngIf="status === 'autobrs'">
-                      {{ row?.preferencetext }}
-                    </span>
-                  </td>
-                  <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="text-align:center">
-                    <input type="checkbox" [checked]="row?.pcancelstatus === true"
-                      (change)="checkedCancel($event, row)" />
-                  </td>
-                  <td>{{ row?.pChequenumber }}</td>
-                  <td style="text-align:right">
-                    {{ currencySymbol }}
-                    {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
-                  </td>
-                  <td>{{ row?.ppartyname }}</td>
-                  <td>{{ row?.preceiptid }}</td>
-                  <td>{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
-                  <td *ngIf="!hiddendate">
-                    {{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}
-                  </td>
-                  <td>{{ row?.ptypeofpayment }}</td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="footer">
-                <tr>
-                  <td [attr.colspan]="!showhidegridcolumns ? (status !== 'autobrs' ? 4 : 2) : 0"
-                    *ngIf="!showhidegridcolumns">
-                  </td>
-                  <td colspan="1" style="text-align:right"><b>Total</b></td>
-                  <td style="text-align:right">
-                    <b>{{ currencySymbol }} {{ (amounttotal || 0) | currency:'INR':'symbol':'1.2-2' }}</b>
-                  </td>
-                  <td colspan="4"></td>
-                  <td *ngIf="!hiddendate"></td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td colspan="11" style="text-align:center; padding:20px;">
-                    No Data Available
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-            <p-table *ngIf="showOrHideAllChequesGrid" [value]="displayAllChequesDataBasedOnForm" [paginator]="true"
-              [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true"
-              scrollHeight="500px" responsiveLayout="scroll"
-              styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Cheque Status</th>
-                  <th>Cheque / Reference No.</th>
-                  <th style="text-align:right">Amount</th>
-                  <th>Payment Id</th>
-                  <th>Payment Date</th>
-                  <th>Cleared / Returned / Cancelled Date</th>
-                  <th>Transaction Mode</th>
-                  <th>Party</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-row>
-                <tr>
-                  <td>{{ row?.chequeStatus }}</td>
-                  <td>{{ row?.pChequenumber }}</td>
-                  <td style="text-align:right">
-                    {{ currencySymbol }}
-                    {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
-                  </td>
-                  <td>{{ row?.preceiptid }}</td>
-                  <td>{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
-                  <td>{{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
-                  <td>{{ row?.ptypeofpayment }}</td>
-                  <td>{{ row?.ppartyname }}</td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td colspan="8" style="text-align:center; padding:20px;">No Data Available</td>
-                </tr>
-              </ng-template>
-            </p-table>
-            <p-table *ngIf="showOrHideOtherChequesGrid" [value]="OtherChequesData" [paginator]="true"
-              [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true"
-              scrollHeight="500px" responsiveLayout="scroll"
-              styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Transaction No.</th>
-                  <th>Transaction Date</th>
-                  <th>Particulars</th>
-                  <th style="text-align:right">Debit Amount</th>
-                  <th style="text-align:right">Credit Amount</th>
-                  <th>Account Name</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-row>
-                <tr>
-                  <td>{{ row?.ptransactionnumber }}</td>
-                  <td>{{ row?.ptransactiondate | date:'dd-MMM-yyyy' }}</td>
-                  <td>{{ row?.particulars }}</td>
-                  <td style="text-align:right">
-                    {{ currencySymbol }}
-                    {{ (row?.debitamount || 0) | currency:'INR':'symbol':'1.2-2' }}
-                  </td>
-                  <td style="text-align:right">
-                    {{ currencySymbol }}
-                    {{ (row?.creditamount || 0) | currency:'INR':'symbol':'1.2-2' }}
-                  </td>
-                  <td>{{ row?.accountname }}</td>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td colspan="6" style="text-align:center; padding:20px;">No Data Available</td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-
-          <div *ngIf="activeTab === 'bankfileupload'" class="mt-3">
-            <div class="row">
-              <div class="col-md-3 col-xl-3">
-                <div class="form-check form-check-inline radio-btn-secondary">
-                  <input class="form-check-input" type="radio" value="Upload" formControlName="auto_brs_type"
-                    (change)="auto_brs_typeChange($any($event.target).value)" />
-                  <label class="form-check-label mt-1">Upload</label>
-                </div>
-                <div class="form-check form-check-inline radio-btn-secondary">
-                  <input class="form-check-input" type="radio" value="Pending" formControlName="auto_brs_type"
-                    (change)="auto_brs_typeChange($any($event.target).value)" />
-                  <label class="form-check-label mt-1">Pending</label>
-                </div>
-              </div>
-              <div *ngIf="auto_brs_type_name === 'Pending'" class="col-md-3 d-flex align-items-center">
-                <button type="button" class="btn btn-s-icon px-3 border-0" (click)="getAutoBrs('N')">
-                  Get Pending Data
-                </button>
-              </div>
-            </div>
-            <div class="row mt-2" *ngIf="auto_brs_type_name === 'Upload'">
-              <div class="col-md-3 col-xl-3">
-                <input type="file" class="form-control" accept=".xlsx,.xls" (change)="onFileChange($event)" />
-              </div>
-              <div class="col-md-3 col-xl-3">
-                <a type="button" class="btn btn-g-icon mr-4 border-0" (click)="DownloadExcelforPreDefinedBidAmount()">
-                  <i class="fa fa-download me-1"></i> Download BRS Format
-                </a>
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-12 col-xl-12">
+          <div class="row mt-2">
+            <div class="col-12">
+              <div class="border rounded p-3 bg-white"
+                style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
                 <p-table [value]="PreDefinedAutoBrsArrayData" [paginator]="true" [rows]="pageCriteria2.pageSize"
-                  [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true" scrollHeight="450px" responsiveLayout="scroll"
-                  styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
-
+                  [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true" scrollHeight="450px"
+                  responsiveLayout="scroll"
+                  styleClass="p-datatable-sm p-datatable-gridlines">
                   <ng-template pTemplate="header">
                     <tr>
-                      <th *ngIf="auto_brs_type_name === 'Pending'" style="width:80px; text-align:center">
+                      <th *ngIf="auto_brs_type_name === 'Pending'"
+                        style="width:80px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
                         Action
                       </th>
-                      <th>Date</th>
-                      <th>UTR Number</th>
-                      <th style="text-align:right">Amount</th>
-                      <th>Reference Text</th>
+                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
+                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">UTR Number</th>
+                      <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
+                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Reference Text</th>
                     </tr>
                   </ng-template>
-
                   <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
                     <tr>
-                      <td *ngIf="auto_brs_type_name === 'Pending'" style="text-align:center">
+                      <td *ngIf="auto_brs_type_name === 'Pending'" style="padding:8px 12px; text-align:center;">
                         <input type="checkbox" [checked]="row?.check === true"
                           (change)="checkbox_pending_data(row, $event)" />
                       </td>
-                      <td>{{ row?.transactiondate | date:'dd-MMM-yyyy' }}</td>
-                      <td>{{ row?.chqueno }}</td>
-                      <td style="text-align:right">
+                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.transactiondate | date:'dd-MMM-yyyy' }}</td>
+                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.chqueno }}</td>
+                      <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                         {{ (row?.chequeamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                       </td>
-                      <td>{{ row?.preferencetext }}</td>
+                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preferencetext }}</td>
                     </tr>
                   </ng-template>
-
                   <ng-template pTemplate="emptymessage">
                     <tr>
                       <td [attr.colspan]="auto_brs_type_name === 'Pending' ? 5 : 4"
@@ -464,24 +605,32 @@
                 </p-table>
               </div>
             </div>
-            <div class="d-flex justify-content-end mt-2">
-              <button type="button" class="btn btn-s-icon px-3 border-0 ml-3" (click)="saveAutoBrs()">
-                <i class="fa fa-spin fa-spinner" *ngIf="saveAutoBrsBool"></i>
-                {{ saveAutoBrsBool ? 'Processing' : 'Save' }}
-              </button>
-            </div>
+          </div>
+          <div class="d-flex justify-content-end mt-2">
+            <button type="button" class="btn border-0" (click)="saveAutoBrs()"
+              style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; display:inline-flex; align-items:center; gap:6px;">
+              <i class="fa fa-spin fa-spinner" *ngIf="saveAutoBrsBool"></i>
+              {{ saveAutoBrsBool ? 'Processing' : 'Save' }}
+            </button>
           </div>
         </div>
-        <div class="d-flex justify-content-end mt-3 gap-2">
-          <button type="button" class="btn btn-g-icon px-3 border-1" (click)="Clear()">
-            <i class="fa fa-times me-1"></i> Clear
-          </button>
-          <button *ngIf="saveshowhide" type="button" class="btn btn-s-icon px-3 border-1 ml-3"
-            [disabled]="disablesavebutton" (click)="Save()">
-            <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': disablesavebutton, 'fa-save': !disablesavebutton }"></i>
-            {{ buttonname }}
-          </button>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end mt-4 gap-3">
+          <a (click)="Clear()" class="btn btn-primary px-4 border-0"
+            style="background:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <img src="assets/images/icon-cancel-white.svg" width="16px" height="16px"> Clear
+          </a>
+          <div *ngIf="saveshowhide">
+            <button (click)="Save()" class="btn btn-secondary px-4 border-0" [disabled]="disablesavebutton"
+              style="border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px; display:flex; align-items:center; gap:8px;">
+              <img src="assets/images/icon-check-white.svg" width="16px" height="16px" *ngIf="!disablesavebutton">
+              <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
+              {{ buttonname }}
+            </button>
+          </div>
         </div>
+
       </form>
     </div>
   </div>
