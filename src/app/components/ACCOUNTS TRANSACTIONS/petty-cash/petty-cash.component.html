@@ -7,7 +7,6 @@
         Petty Cash New
       </h2>
 
-      <!-- View Button -->
       <a routerLink="/dashboard/accounts/accounts-transactions/petty-cash-view" class="btn btn-primary"
         style="margin-left:auto; margin-top:4px; background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:5px 16px;">
         View
@@ -15,8 +14,6 @@
     </div>
 
     <form [formGroup]="paymentVoucherForm" autocomplete="off" style="padding:20px 24px;">
-
-      <!-- SECTION 1: Date -->
       <div class="screen-card"
         style="border:1px solid #dce8fd; border-radius:10px; padding:16px 20px; margin-bottom:16px; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
         <p
@@ -53,8 +50,8 @@
         <div class="d-flex gap-3 flex-wrap">
           <label
             style="display:inline-flex; align-items:center; gap:7px; padding:8px 18px; border:1.5px solid #cdd8f0; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; color:#162246; background:#fff; margin:0;">
-            <input class="form-check-input" type="radio" name="pmodofpayment" formControlName="pmodofpayment"
-              id="cash" value="CASH" (change)="modeofPaymentChange()" style="margin:0;" />
+            <input class="form-check-input" type="radio" name="pmodofpayment" formControlName="pmodofpayment" id="cash"
+              value="CASH" (change)="modeofPaymentChange()" style="margin:0;" />
             Cash — {{ currencySymbol }} {{ cashBalance }}
           </label>
           <label *ngIf="showModeofPayment"
@@ -94,12 +91,10 @@
           <div class="row mt-2">
             <div class="col-md-3">
               <div class="form-group" *ngIf="showbankcard">
-                <label
-                  style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">Bank
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">Bank
                   Name</label>
                 <select class="form-control" id="pbankname" title="Bank Name" formControlName="pbankid"
-                  [ngClass]="{ 'is-invalid': formValidationMessages?.pbankname }"
-                  (change)="bankName_Change($event)">
+                  [ngClass]="{ 'is-invalid': formValidationMessages?.pbankname }" (change)="bankName_Change($event)">
                   <option value="">Select</option>
                   <option *ngFor="let bank of banklist; trackBy: trackByFn" [value]="bank.pbankid">
                     {{ bank.pbankname }}
@@ -111,12 +106,10 @@
                 <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">{{
                   displayCardName }}</label>
                 <select class="form-control" id="pCardNumber" title="{{ displayCardName }}"
-                  formControlName="pCardNumber"
-                  [ngClass]="{ 'is-invalid': formValidationMessages?.pCardNumber }"
+                  formControlName="pCardNumber" [ngClass]="{ 'is-invalid': formValidationMessages?.pCardNumber }"
                   (change)="debitCard_Change()">
                   <option value="">Select</option>
-                  <option *ngFor="let debitcard of debitcardlist; trackBy: trackByFn"
-                    [value]="debitcard.pCardNumber">
+                  <option *ngFor="let debitcard of debitcardlist; trackBy: trackByFn" [value]="debitcard.pCardNumber">
                     {{ debitcard.pCardNumber }}
                   </option>
                 </select>
@@ -129,8 +122,7 @@
                 <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">Type
                   of Payment</label>
                 <select class="form-control" id="ptypeofpayment" title="Type of Payment"
-                  formControlName="ptypeofpayment"
-                  [ngClass]="{ 'is-invalid': formValidationMessages?.ptypeofpayment }"
+                  formControlName="ptypeofpayment" [ngClass]="{ 'is-invalid': formValidationMessages?.ptypeofpayment }"
                   (change)="typeofPaymentChange()">
                   <option value="">Select</option>
                   <option *ngFor="let typeofpayment of typeofpaymentlist; trackBy: trackByFn"
@@ -138,8 +130,7 @@
                     {{ typeofpayment.ptypeofpayment }}
                   </option>
                 </select>
-                <app-validation-message
-                  [messgae]="formValidationMessages?.ptypeofpayment"></app-validation-message>
+                <app-validation-message [messgae]="formValidationMessages?.ptypeofpayment"></app-validation-message>
               </div>
             </div>
 
@@ -158,8 +149,8 @@
               <div class="form-group">
                 <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">Bank
                   / Financial Services</label>
-                <input class="form-control" type="text" readonly id="pbankname"
-                  title="Bank / Financial Services" formControlName="pbankname" />
+                <input class="form-control" type="text" readonly id="pbankname" title="Bank / Financial Services"
+                  formControlName="pbankname" />
                 <app-validation-message [messgae]="formValidationMessages?.pbankname"></app-validation-message>
               </div>
             </div>
@@ -169,12 +160,10 @@
                 <label
                   style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">UPI</label>
                 <select class="form-control" id="pUpiname" title="UPI" formControlName="pUpiname"
-                  [ngClass]="{ 'is-invalid': formValidationMessages?.pUpiname }"
-                  (change)="upiName_Change($event)">
+                  [ngClass]="{ 'is-invalid': formValidationMessages?.pUpiname }" (change)="upiName_Change($event)">
                   <option value="">Select</option>
                   <!-- FIX: was upinamzes (typo) → corrected to upinames -->
-                  <option *ngFor="let upinames of upinameslist; trackBy: trackByFn"
-                    [value]="upinames.pUpiname">
+                  <option *ngFor="let upinames of upinameslist; trackBy: trackByFn" [value]="upinames.pUpiname">
                     {{ upinames.pUpiname }}
                   </option>
                 </select>
@@ -202,8 +191,7 @@
                 <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   id="pChequenumber" title="{{ displaychequeno }}">{{ displaychequeno }}</label>
                 <select *ngIf="showchequno" class="form-control" title="{{ displaychequeno }}"
-                  formControlName="pChequenumber"
-                  [ngClass]="{ 'is-invalid': formValidationMessages?.pChequenumber }"
+                  formControlName="pChequenumber" [ngClass]="{ 'is-invalid': formValidationMessages?.pChequenumber }"
                   (change)="chequenumber_Change()">
                   <option value="">Select</option>
                   <option *ngFor="let chequenumbers of chequenumberslist; trackBy: trackByFn"
@@ -211,12 +199,10 @@
                     {{ chequenumbers.pChequenumber }}
                   </option>
                 </select>
-                <input *ngIf="!showchequno" class="form-control" type="text"
-                  placeholder="{{ displaychequeno }}" formControlName="pChequenumber" appAlphanumeric
-                  maxlength="20" [ngClass]="{ 'is-invalid': formValidationMessages?.pChequenumber }"
-                  (blur)="chequenumber_Change()" />
-                <app-validation-message
-                  [messgae]="formValidationMessages?.pChequenumber"></app-validation-message>
+                <input *ngIf="!showchequno" class="form-control" type="text" placeholder="{{ displaychequeno }}"
+                  formControlName="pChequenumber" appAlphanumeric maxlength="20"
+                  [ngClass]="{ 'is-invalid': formValidationMessages?.pChequenumber }" (blur)="chequenumber_Change()" />
+                <app-validation-message [messgae]="formValidationMessages?.pChequenumber"></app-validation-message>
               </div>
             </div>
 
@@ -261,11 +247,10 @@
                   <label id="pledgerid"
                     style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                     class="required-field" title="Ledger">Ledger <span class="text-danger">*</span></label>
-                  <ng-select id="pledgername" title="Ledger" [items]="ledgeraccountslist"
-                    formControlName="pledgerid" groupBy="pAccounttype" bindLabel="pledgername"
-                    bindValue="pledgerid" [multiple]="false" placeholder="Select" [searchable]="true"
-                    [clearable]="false" dropdownPosition="bottom" [clearOnBackspace]="true"
-                    [ngClass]="{ 'is-invalid': formValidationMessages?.pledgername }"
+                  <ng-select id="pledgername" title="Ledger" [items]="ledgeraccountslist" formControlName="pledgerid"
+                    groupBy="pAccounttype" bindLabel="pledgername" bindValue="pledgerid" [multiple]="false"
+                    placeholder="Select" [searchable]="true" [clearable]="false" dropdownPosition="bottom"
+                    [clearOnBackspace]="true" [ngClass]="{ 'is-invalid': formValidationMessages?.pledgername }"
                     (change)="ledgerName_Change($event)">
                     <ng-template ng-optgroup-tmp let-item="item">
                       {{ item.pAccounttype }}
@@ -286,8 +271,7 @@
                 <div style="flex:1;">
                   <label id="psubledgername"
                     style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
-                    class="required-field" title="Sub Ledger">Sub Ledger <span
-                      class="text-danger">*</span></label>
+                    class="required-field" title="Sub Ledger">Sub Ledger <span class="text-danger">*</span></label>
                   <ng-select id="psubledgername" title="Sub Ledger" [items]="subledgeraccountslist"
                     formControlName="psubledgerid" bindLabel="psubledgername" bindValue="psubledgerid"
                     [multiple]="false" placeholder="Select" [searchable]="true" [clearable]="true"
@@ -295,8 +279,7 @@
                     [ngClass]="{ 'is-invalid': formValidationMessages?.psubledgername }"
                     (change)="subledger_Change($event)">
                   </ng-select>
-                  <app-validation-message
-                    [messgae]="formValidationMessages?.psubledgername"></app-validation-message>
+                  <app-validation-message [messgae]="formValidationMessages?.psubledgername"></app-validation-message>
                 </div>
                 <div
                   style="font-style:italic; font-size:12px; color:#0d6efd; font-weight:600; padding-bottom:6px; white-space:nowrap;">
@@ -333,18 +316,16 @@
                 class="required-field">Amount Paid <span class="text-danger">*</span></label>
               <input class="form-control border-warning text-end font-weight-bold" style="width:65%;" type="text"
                 placeholder="" id="pactualpaidamount" title="Amount Paid" formControlName="pactualpaidamount"
-                [ngClass]="{ 'is-invalid': formValidationMessages?.pactualpaidamount }"
-                (blur)="pamount_change()" appRoundecimal="12@0" appMycurrencyFormatter />
-              <app-validation-message
-                [messgae]="formValidationMessages?.pactualpaidamount"></app-validation-message>
+                [ngClass]="{ 'is-invalid': formValidationMessages?.pactualpaidamount }" (blur)="pamount_change()"
+                appRoundecimal="12@0" appMycurrencyFormatter />
+              <app-validation-message [messgae]="formValidationMessages?.pactualpaidamount"></app-validation-message>
             </div>
 
           </div>
 
           <!-- RIGHT: GST -->
           <div class="col-md-6 col-xl-6 offset-xl-1">
-            <div
-              style="background:#f8faff; border:1.5px solid #dce8fd; border-radius:10px; padding:16px 18px;">
+            <div style="background:#f8faff; border:1.5px solid #dce8fd; border-radius:10px; padding:16px 18px;">
 
               <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
                 <span
@@ -352,18 +333,17 @@
                   id="pisgstapplicable" title="GST">GST</span>
                 <fieldset [disabled]="disablegst">
                   <div class="material-switch">
-                    <input id="gst-switch" name="gst-switch" formControlName="pisgstapplicable"
-                      type="checkbox" (change)="isgstapplicable_Checked()" />
-                    <label for="gst-switch" class="badge-success" data-toggle="collapse"
-                      data-target="#gst"></label>
+                    <input id="gst-switch" name="gst-switch" formControlName="pisgstapplicable" type="checkbox"
+                      (change)="isgstapplicable_Checked()" />
+                    <label for="gst-switch" class="badge-success" data-toggle="collapse" data-target="#gst"></label>
                   </div>
                 </fieldset>
               </div>
 
               <div id="gst" *ngIf="!showgst">
                 <fieldset [disabled]="disablegst">
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;"
-                    id="pgstcalculationtype" title="GST Calculation Type">
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;" id="pgstcalculationtype"
+                    title="GST Calculation Type">
                     <label
                       style="display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border:1.5px solid #cdd8f0; border-radius:20px; cursor:pointer; font-size:12.5px; font-weight:600; color:#162246; background:#fff; margin:0;">
                       <input type="radio" id="procgstinc" formControlName="pgstcalculationtype"
@@ -386,16 +366,13 @@
                 <div class="row">
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label
-                        style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
+                      <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                         class="required-field">State <span class="text-danger">*</span></label>
                       <select class="form-control" id="pState" title="State" formControlName="pStateId"
                         [attr.disabled]="disablegst ? true : null"
-                        [ngClass]="{ 'is-invalid': formValidationMessages?.pState }"
-                        (change)="state_change($event)">
+                        [ngClass]="{ 'is-invalid': formValidationMessages?.pState }" (change)="state_change($event)">
                         <option value="">Select</option>
-                        <option *ngFor="let state of statelist; trackBy: trackByFn"
-                          [value]="state.pStateId">
+                        <option *ngFor="let state of statelist; trackBy: trackByFn" [value]="state.pStateId">
                           {{ state.pState }}
                         </option>
                       </select>
@@ -408,22 +385,19 @@
                       <label
                         style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;">GST
                         No.</label>
-                      <input type="text" class="form-control col-md-12" maxlength="15" appAlphanumeric
-                        appUppercase id="pgstno" title="GST No." formControlName="pgstno" name="pgstno"
-                        [ngClass]="{ 'is-invalid': formValidationMessages?.pgstno }"
-                        (blur)="gsno_change()" />
+                      <input type="text" class="form-control col-md-12" maxlength="15" appAlphanumeric appUppercase
+                        id="pgstno" title="GST No." formControlName="pgstno" name="pgstno"
+                        [ngClass]="{ 'is-invalid': formValidationMessages?.pgstno }" (blur)="gsno_change()" />
                       <app-validation-message [messgae]="formValidationMessages?.pgstno"></app-validation-message>
                     </div>
                   </div>
                   <!-- GST % -->
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label
-                        style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
+                      <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                         class="required-field">GST(%) <span class="text-danger">*</span></label>
-                      <ng-select title="GST %" [items]="gstlist" bindLabel="pgstpercentage"
-                        bindValue="pgstpercentage" placeholder="Select" formControlName="pgstpercentage"
-                        [readonly]="disablegst"
+                      <ng-select title="GST %" [items]="gstlist" bindLabel="pgstpercentage" bindValue="pgstpercentage"
+                        placeholder="Select" formControlName="pgstpercentage" [readonly]="disablegst"
                         [ngClass]="{ 'is-invalid': formValidationMessages?.pgstpercentage }"
                         (change)="gst_Change($event)">
                       </ng-select>
@@ -498,14 +472,22 @@
               </div>
             </div>
             <div class="d-flex justify-content-end mt-4">
-              <a data-toggle="tab" class="btn btn-g-icon mr-4 px-3 border-0" role="tab" aria-controls="hot"
-                aria-selected="false" appButtonDoubleClick (debounceClick)="clearPaymentDetails()">
-                <img src="assets/images/icon-cancel-white.svg" width="20px" height="20px" class="mr-3" />
+
+              <button type="button" class="btn btn-g-icon mr-3 px-4 border-0" (click)="clearPaymentDetails()">
+
+                <img src="assets/images/icon-cancel-white.svg" width="18" height="18" class="mr-2" />
+
                 Clear
-              </a>
-              <button type="button" appButtonDoubleClick (debounceClick)="addPaymentDetails()"
-                class="btn btn-b-icon px-3 border-0" [disabled]="disableaddbutton">
-                <i class="fa" [ngClass]="{ 'fa-spin fa-spinner': disableaddbutton, 'fa-plus': !disableaddbutton }"></i>
+              </button>
+              <button type="button" class="btn btn-b-icon px-4 border-0" (click)="addPaymentDetails()"
+                [disabled]="disableaddbutton">
+
+                <i class="fa" [ngClass]="{
+       'fa-spin fa-spinner': disableaddbutton,
+       'fa-plus': !disableaddbutton
+     }">
+                </i>
+
                 {{ addbutton }}
               </button>
             </div>
@@ -513,13 +495,10 @@
         </div>
 
         <hr style="border:none; border-top:1.5px solid #dce8fd; margin:20px 0;">
-
-        <!-- PAYMENTS GRID -->
         <div class="row mt-3">
           <div class="col-12">
-            <p-table [value]="paymentslist1" [paginator]="true" [rows]="5" [scrollable]="true"
-              scrollHeight="400px" [resizableColumns]="true"
-              styleClass="p-datatable-sm p-datatable-gridlines">
+            <p-table [value]="paymentslist1" [paginator]="true" [rows]="5" [scrollable]="true" scrollHeight="400px"
+              [resizableColumns]="true" styleClass="p-datatable-sm p-datatable-gridlines">
               <ng-template pTemplate="header">
                 <tr>
                   <th
@@ -568,14 +547,12 @@
                   <td style="padding:8px 12px; font-size:13px;">{{ row.pledgername }}</td>
                   <td style="padding:8px 12px; font-size:13px;">{{ row.psubledgername }}</td>
                   <td style="padding:8px 12px; font-size:13px; text-align:right;">
-                    <span
-                      title="{{ currencySymbol }} {{ row.ptotalamount | currency:currencyCode:'symbol':'1.2-2' }}">
+                    <span title="{{ currencySymbol }} {{ row.ptotalamount | currency:currencyCode:'symbol':'1.2-2' }}">
                       {{ currencySymbol }} {{ row.ptotalamount | currency:currencyCode:'symbol':'1.2-2' }}
                     </span>
                   </td>
                   <td style="padding:8px 12px; font-size:13px; text-align:right;">
-                    <span
-                      title="{{ currencySymbol }} {{ row.pamount | currency:currencyCode:'symbol':'1.2-2' }}">
+                    <span title="{{ currencySymbol }} {{ row.pamount | currency:currencyCode:'symbol':'1.2-2' }}">
                       {{ currencySymbol }} {{ row.pamount | currency:currencyCode:'symbol':'1.2-2' }}
                     </span>
                   </td>
@@ -638,20 +615,18 @@
                   id="pistdsapplicable" title="TDS">TDS</span>
                 <!-- FIX: wrapped in fieldset consistently; formControlName now resolves inside formGroupName -->
                 <div class="material-switch">
-                  <input id="tds-switch" name="tds-switch" formControlName="pistdsapplicable"
-                    type="checkbox"
+                  <input id="tds-switch" name="tds-switch" formControlName="pistdsapplicable" type="checkbox"
                     [ngClass]="{ 'is-invalid': formValidationMessages?.pistdsapplicable }"
                     (change)="istdsapplicable_Checked()" />
-                  <label for="tds-switch" class="badge-success" data-toggle="collapse"
-                    data-target="#tds"></label>
+                  <label for="tds-switch" class="badge-success" data-toggle="collapse" data-target="#tds"></label>
                 </div>
               </div>
 
               <!-- FIX: *ngIf="!showtds" — make sure showtds=true initially in component -->
               <div id="tds" *ngIf="!showtds">
                 <fieldset [disabled]="disablegst">
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;"
-                    id="ptdscalculationtype" title="TDS Calculation Type">
+                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;" id="ptdscalculationtype"
+                    title="TDS Calculation Type">
                     <label
                       style="display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border:1.5px solid #cdd8f0; border-radius:20px; cursor:pointer; font-size:12.5px; font-weight:600; color:#162246; background:#fff; margin:0;">
                       <input class="form-check-input" type="radio" id="tdsinclude" value="INCLUDE"
@@ -675,36 +650,31 @@
                   <!-- TDS Section -->
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label
-                        style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
+                      <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                         class="required-field">Section <span class="text-danger">*</span></label>
-                      <select class="form-control" id="pTdsSection" title="Section"
-                        formControlName="pTdsSection" [attr.disabled]="disablegst ? true : null"
+                      <select class="form-control" id="pTdsSection" title="Section" formControlName="pTdsSection"
+                        [attr.disabled]="disablegst ? true : null"
                         [ngClass]="{ 'is-invalid': formValidationMessages?.pTdsSection }"
                         (change)="tdsSection_Change($event)">
                         <option value="">Select</option>
-                        <option *ngFor="let tds of tdssectionlist; trackBy: trackByFn"
-                          [value]="tds.pTdsSection">
+                        <option *ngFor="let tds of tdssectionlist; trackBy: trackByFn" [value]="tds.pTdsSection">
                           {{ tds.pTdsSection }}
                         </option>
                       </select>
-                      <app-validation-message
-                        [messgae]="formValidationMessages?.pTdsSection"></app-validation-message>
+                      <app-validation-message [messgae]="formValidationMessages?.pTdsSection"></app-validation-message>
                     </div>
                   </div>
                   <!-- TDS Percentage -->
                   <div class="col-md-4">
                     <div class="form-group">
-                      <label
-                        style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
+                      <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                         class="required-field">Percentage <span class="text-danger">*</span></label>
                       <select class="form-control" id="pTdsPercentage" title="TDS Percentage"
                         formControlName="pTdsPercentage" [attr.disabled]="disablegst ? true : null"
                         [ngClass]="{ 'is-invalid': formValidationMessages?.pTdsPercentage }"
                         (change)="tds_Change($event)">
                         <option value="">Select</option>
-                        <option *ngFor="let tds of tdspercentagelist; trackBy: trackByFn"
-                          [value]="tds.pTdsPercentage">
+                        <option *ngFor="let tds of tdspercentagelist; trackBy: trackByFn" [value]="tds.pTdsPercentage">
                           {{ tds.pTdsPercentage }}
                         </option>
                       </select>
@@ -722,8 +692,7 @@
                         {{ paymentVoucherForm.get('ppaymentsslistcontrols.ptdsamount')?.value
                         | currency:currencyCode:'symbol':'1.2-2' }}
                       </label>
-                      <app-validation-message
-                        [messgae]="formValidationMessages?.ptdsamount"></app-validation-message>
+                      <app-validation-message [messgae]="formValidationMessages?.ptdsamount"></app-validation-message>
                     </div>
                   </div>
                 </div>
@@ -733,8 +702,8 @@
 
             <!-- Journal Entry table -->
             <div style="border:1px solid #dce8fd; border-radius:8px; overflow:hidden;">
-              <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5"
-                [resizableColumns]="true" styleClass="p-datatable-sm p-datatable-gridlines">
+              <p-table [value]="partyjournalentrylist" [paginator]="true" [rows]="5" [resizableColumns]="true"
+                styleClass="p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                   <tr>
                     <th
@@ -773,15 +742,8 @@
                 </ng-template>
               </p-table>
             </div>
-            <!-- END Journal Entry table -->
-
           </div>
-          <!-- END LEFT col -->
-
-          <!-- RIGHT: Upload + Narration -->
           <div class="col-md-6 col-xl-6">
-
-            <!-- Upload Attachment -->
             <div class="form-group" style="max-width:300px;">
               <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                 id="pDocStorePath" title="Upload Document">Upload Attachment</label>
@@ -793,8 +755,8 @@
                     style="background:#eef4ff; border:1.5px solid #cdd8f0; border-left:none; padding:6px 12px; border-radius:0 6px 6px 0; cursor:pointer;">
                     <img src="assets/images/icon-upload-blue.svg" width="18" height="18">
                   </button>
-                  <input style="display:none" type="file" accept=".jpg,.png,.pdf"
-                    (change)="uploadAndProgress($event)" #fileInput />
+                  <input style="display:none" type="file" accept=".jpg,.png,.pdf" (change)="uploadAndProgress($event)"
+                    #fileInput />
                 </div>
               </div>
             </div>
@@ -805,22 +767,14 @@
                 class="required-field">
                 Narration <span class="text-danger">*</span>
               </label>
-              <textarea class="form-control" rows="4" id="pnarration" title="Narration"
-                formControlName="pnarration" maxlength="250" placeholder="Enter narration"
+              <textarea class="form-control" rows="4" id="pnarration" title="Narration" formControlName="pnarration"
+                maxlength="250" placeholder="Enter narration"
                 [ngClass]="{ 'is-invalid': formValidationMessages?.pnarration }"></textarea>
               <app-validation-message [messgae]="formValidationMessages?.pnarration"></app-validation-message>
             </div>
-
           </div>
-          <!-- END RIGHT col -->
-
         </div>
       </div>
-      <!-- END SECTION 4 -->
-
-      <!-- ══════════════════════════════════════════
-           FOOTER ACTIONS
-      ══════════════════════════════════════════ -->
       <div
         style="background:#f0f4fd; border-top:2px solid #dce8fd; border-radius:0 0 10px 10px; padding:14px 4px; display:flex; justify-content:flex-end; align-items:center; gap:12px;">
         <button type="button" appButtonDoubleClick (debounceClick)="clearPaymentVoucher()"
@@ -832,8 +786,7 @@
         <button type="button" (click)="savePaymentVoucher()" [disabled]="disablesavebutton"
           class="btn d-flex align-items-center"
           style="background:#162246; border:1.5px solid #162246; color:#fff; border-radius:7px; padding:8px 28px; font-size:13px; font-weight:700; gap:6px;">
-          <img src="assets/images/icon-check-white.svg" width="18px" height="18px"
-            *ngIf="!disablesavebutton">
+          <img src="assets/images/icon-check-white.svg" width="18px" height="18px" *ngIf="!disablesavebutton">
           <i class="fa" [ngClass]="{'fa-spin fa-spinner': disablesavebutton}"></i>
           {{ savebutton }}
         </button>

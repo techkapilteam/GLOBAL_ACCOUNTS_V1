@@ -47,10 +47,6 @@ export class OnlineSettlementComponent implements OnInit {
   private _Accountservice = inject(AccountingTransactionsService);
   private _CommonService = inject(CommonService);
 
-  // ==================================================
-  // INIT
-  // ==================================================
-
   ngOnInit(): void {
 
     const todayDate = new Date();
@@ -252,6 +248,1460 @@ export class OnlineSettlementComponent implements OnInit {
     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
   }
 }
+
+//refactored
+
+// import { CommonModule, DatePipe } from '@angular/common';
+// import { Component, OnInit, Input, ViewChild, inject } from '@angular/core';
+// import {FormsModule,ReactiveFormsModule,FormBuilder,FormGroup,Validators} from '@angular/forms';
+// import { BsDatepickerModule, BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+// import { TableModule } from 'primeng/table';
+// import { NgSelectModule } from '@ng-select/ng-select';
+// import { DataBindingDirective } from '@progress/kendo-angular-grid';
+// import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+// import { forkJoin } from 'rxjs';
+// import jsPDF from 'jspdf';
+// import { AccountingTransactionsService } from 'src/app/services/Transactions/AccountingTransaction/accounting-transaction.service';
+// import { CommonService } from 'src/app/services/common.service';
+// import { PageCriteria } from 'src/app/Models/pageCriteria';
+// import { NumberToWordsPipe } from '../../ACCOUNTS REPORTS/re-print/number-to-words.pipe';
+
+// declare var $: any;
+
+// interface BankAccount {
+//   paccountid: number | string;
+//   pdepositbankname: string;
+//   pbankbalance: number;
+//   pisprimary?: boolean;
+// }
+
+// interface ReceiptRow {
+//   preceiptid: string | number;
+//   preceiptrecordid?: any;
+//   preceiptdate: string;
+//   pdepositeddate: string;
+//   pChequenumber?: string;
+//   ptypeofpayment: string;
+//   ptotalreceivedamount: number;
+//   pdepositbankid?: number | string;
+//   pchequestatus?: string;
+//   pdepositstatus?: boolean;
+//   preturnstatus?: boolean;
+//   pactualcancelcharges?: number;
+//   pCleardate?: string;
+//   pbranchname?: string;
+//   ppartyname?: string;
+//   cheque_bank?: string;
+//   chitReceiptNo?: string;
+//   chitgroupid?: any;
+//   ticketno?: any;
+//   selfchequestatus?: boolean;
+//   pchequedate?: string;
+//   checkuncheck?: boolean;
+//   chequeStatus?: string;
+//   [key: string]: any;
+// }
+
+// type GridStatus = 'all' | 'chequesdeposited' | 'onlinereceipts' | 'cleared' | 'returned';
+// type ModeOfReceipt = 'ONLINE' | 'CHEQUE' | 'CLEAR' | 'RETURN';
+// type PdfStatus = 'All' | 'Cheques Deposited' | 'Online Receipts' | 'Cleared' | 'Returned';
+
+// // ---------------------------------------------------------------------------
+// // Component
+// // ---------------------------------------------------------------------------
+
+// @Component({
+//   selector: 'app-online-settlement',
+//   standalone: true,
+//   imports: [
+//     CommonModule,
+//     FormsModule,
+//     ReactiveFormsModule,
+//     BsDatepickerModule,
+//     TableModule,
+//     NgSelectModule,
+//   ],
+//   templateUrl: './online-settlement.component.html',
+//   styleUrls: ['./online-settlement.component.css'],
+//   providers: [DatePipe, NumberToWordsPipe],
+// })
+// export class OnlineSettlementComponent implements OnInit {
+
+//   // ---- Kendo binding (kept for backwards-compat with template) ----
+//   @ViewChild(DataBindingDirective, { static: true })
+//   dataBinding: DataBindingDirective | undefined;
+
+//   /** When embedded inside another form, pass the parent form name here. */
+//   @Input() fromFormName: string = '';
+
+//   // ---- Services (inject-style for standalone) ----
+//   private readonly fb             = inject(FormBuilder);
+//   private readonly datePipe       = inject(DatePipe);
+//   private readonly _accountSvc    = inject(AccountingTransactionsService);
+//   private readonly _commonSvc     = inject(CommonService);
+//   private readonly _numberToWords = inject(NumberToWordsPipe);
+
+//   // ---- Exposed enums for template bindings ----
+//   readonly ColumnMode    = ColumnMode;
+//   readonly SelectionType = SelectionType;
+
+//   // ---- Form ----
+//   ChequesInBankForm!: FormGroup;
+//   BrsDateForm!: FormGroup;
+//   ChequesInBankValidation: Record<string, string> = {};
+
+//   // ---- Reference data ----
+//   BanksList:  BankAccount[] = [];
+//   PaytmList:  BankAccount[] = [];
+
+//   // ---- Raw data from API ----
+//   ChequesInBankData:        ReceiptRow[] = [];
+//   ChequesClearReturnData:   ReceiptRow[] = [];
+//   private _countData: any  = {};
+//   private ChequesClearReturnDataBasedOnBrs: ReceiptRow[] = [];
+
+//   // ---- Grid state ----
+//   gridData:     ReceiptRow[] = [];
+//   gridDatatemp: ReceiptRow[] = [];
+//   gridLoading = false;
+
+//   /** Grid used when component is embedded from ChequesStatusInformationForm */
+//   displayGridDataBasedOnForm:     ReceiptRow[] = [];
+//   displayGridDataBasedOnFormTemp: ReceiptRow[] = [];
+
+//   // ---- Selection ----
+//   selected:           ReceiptRow[] = [];
+//   saveGridData:       ReceiptRow[] = [];
+//   checkedAmountTotal  = 0;
+//   checkedRowsCount    = 0;
+//   checkuncheckbool    = true;
+
+//   // ---- Totals / counts ----
+//   amounttotal  = 0;
+//   Totlaamount  = 0;
+//   all          = 0;
+//   chequesdeposited = 0;
+//   onlinereceipts   = 0;
+//   cleared          = 0;
+//   returned         = 0;
+//   totalElements: number | undefined;
+
+//   // ---- Pagination ----
+//   pageCriteria: PageCriteria;
+//   page = { offset: 0, pageNumber: 1, size: 10, totalElements: 10, totalPages: 1 };
+//   startindex = 0;
+//   endindex   = 1000;
+
+//   // ---- UI flags ----
+//   tabsShowOrHideBasedOnfromFormName = true;
+//   displayGridBasedOnFormName        = true;
+//   showhidegridcolumns  = false;
+//   saveshowhide: any;
+//   hiddendate           = true;
+//   banknameshowhide     = false;
+//   paytmshowhide        = false;
+//   brsdateshowhidecleared  = false;
+//   brsdateshowhidereturned = false;
+//   validatebrsdateclear    = false;
+//   validatebrsdatereturn   = false;
+//   showicons               = false;
+//   disablesavebutton       = false;
+//   disabletransactiondate  = false;
+//   buttonname              = 'Save';
+//   userBranchType: any;
+
+//   // ---- Status trackers ----
+//   status: GridStatus       = 'all';
+//   pdfstatus: PdfStatus     = 'All';
+//   modeofreceipt: ModeOfReceipt = 'ONLINE';
+
+//   // ---- Misc ----
+//   currencySymbol  = '₹';
+//   bankbalance     = 0;
+//   paytmbalance    = 0;
+//   bankbalancetype = '';
+//   brsdate         = '';
+//   bankname        = '';
+//   paytmname       = '';
+//   bankid: number | string = 0;
+//   bankdetails: BankAccount | undefined;
+//   paytmdetails:  BankAccount | undefined;
+//   bankbalancedetails: any;
+//   datetitle = '';
+//   validate: boolean | undefined;
+
+//   chequereturncharges = 0;
+//   chequenumber: any;
+//   PopupData: ReceiptRow | undefined;
+//   previewdetails:       any[] = [];
+//   chequerwturnvoucherdetails: any[] = [];
+
+//   _searchText = '';
+//   fromdate    = '';
+//   todate      = '';
+
+//   today     = Date.now();
+//   todayDate: any;
+
+//   // ---- Datepicker configs ----
+//   ptransactiondateConfig:   Partial<BsDatepickerConfig> = {};
+//   pchequecleardateConfig:   Partial<BsDatepickerConfig> = {};
+//   brsfromConfig:            Partial<BsDatepickerConfig> = {};
+//   brstoConfig:              Partial<BsDatepickerConfig> = {};
+
+//   // ===========================================================================
+//   // Lifecycle
+//   // ===========================================================================
+
+//   constructor() {
+//     this.pageCriteria = new PageCriteria();
+//   }
+
+//   ngOnInit(): void {
+//     this.userBranchType = sessionStorage.getItem('userBranchType');
+
+//     this.initDatepickerConfigs();
+//     this.initForms();
+//     this.initTabState();
+//     this.setPageModel();
+//     this.pageSetUp();
+
+//     if (this._commonSvc.comapnydetails != null) {
+//       this.disabletransactiondate = this._commonSvc.comapnydetails.pdatepickerenablestatus;
+//     }
+//     this.currencySymbol = this._commonSvc.currencysymbol;
+
+//     this.loadBankList();
+//     this.loadUPIList();
+//     this.loadChequeReturnCharges();
+//     this.GetBankBalance(this.bankid);
+//     this.BlurEventAllControll(this.ChequesInBankForm);
+//   }
+
+//   // ===========================================================================
+//   // Init helpers
+//   // ===========================================================================
+
+//   private initDatepickerConfigs(): void {
+//     const base: Partial<BsDatepickerConfig> = {
+//       showWeekNumbers: this._commonSvc.datePickerPropertiesSetup('showWeekNumbers'),
+//       maxDate:         new Date(),
+//       dateInputFormat: this._commonSvc.datePickerPropertiesSetup('dateInputFormat'),
+//       containerClass:  this._commonSvc.datePickerPropertiesSetup('containerClass'),
+//     };
+//     this.ptransactiondateConfig = { ...base };
+//     this.pchequecleardateConfig = { ...base };
+//     this.brsfromConfig = { ...base };
+//     this.brstoConfig   = { ...base };
+//   }
+
+//   private initForms(): void {
+//     this.ChequesInBankForm = this.fb.group({
+//       ptransactiondate:    [new Date()],
+//       pchequecleardate:    [new Date(), Validators.required],
+//       pchequereceiptdate:  [new Date()],
+//       bankname:            ['', Validators.required],
+//       paytmname:           ['', Validators.required],
+//       pfrombrsdate:        [''],
+//       ptobrsdate:          [''],
+//       pchequesOnHandlist:  [null],
+//       plstOnlineSettelementDTO: [null],
+//       SearchClear:         [''],
+//       schemaname:          [this._commonSvc.getschemaname()],
+//       pCreatedby:          [this._commonSvc.getCreatedBy()],
+//       pipaddress:          [this._commonSvc.getIpAddress()],
+//       chequeintype:        ['A'],
+//       searchtext:          [''],
+//     });
+
+//     this.BrsDateForm = this.fb.group({
+//       frombrsdate: [''],
+//       tobrsdate:   [''],
+//     });
+
+//     this.ChequesInBankValidation = {};
+//   }
+
+//   private initTabState(): void {
+//     if (this.fromFormName === 'fromChequesStatusInformationForm') {
+//       this.tabsShowOrHideBasedOnfromFormName = false;
+//       this.displayGridBasedOnFormName        = false;
+//       $('#chequescss').addClass('active');
+//       $('#allcss').removeClass('active');
+//     } else {
+//       this.tabsShowOrHideBasedOnfromFormName = true;
+//       this.displayGridBasedOnFormName        = true;
+//       $('#allcss').addClass('active');
+//       $('#chequescss').removeClass('active');
+//     }
+//   }
+
+//   // ===========================================================================
+//   // Data loaders
+//   // ===========================================================================
+
+//   loadBankList(): void {
+//     this._accountSvc.GetBanksList(this._commonSvc.getschemaname()).subscribe((list: BankAccount[]) => {
+//       this.BanksList = list.filter(b => b.pisprimary);
+//     });
+//   }
+
+//   loadUPIList(): void {
+//     this._accountSvc.GetPayTmBanksList(this._commonSvc.getschemaname()).subscribe((list: BankAccount[]) => {
+//       this.PaytmList = list;
+//     });
+//   }
+
+//   loadChequeReturnCharges(): void {
+//     this._accountSvc.getChequeReturnCharges().subscribe((res: any[]) => {
+//       this.chequereturncharges = res?.[0]?.chequereturncharges ?? 0;
+//     });
+//   }
+
+//   GetBankBalance(bankid: number | string): void {
+//     this._accountSvc.GetBankBalance(bankid).subscribe((details: any) => {
+//       this.bankbalancedetails = details;
+
+//       if (this.bankid === 0) {
+//         const bal = details._BankBalance;
+//         this.bankbalance     = bal < 0 ? Math.abs(bal) : bal;
+//         this.bankbalancetype = bal < 0 ? 'Cr' : bal === 0 ? '' : 'Dr';
+//       }
+
+//       this.brsdate = this._commonSvc.getFormatDateGlobal(details.ptobrsdate);
+//       this.ChequesInBankForm.controls['pfrombrsdate'].setValue(
+//         this._commonSvc.getDateObjectFromDataBase(details.pfrombrsdate));
+//       this.ChequesInBankForm.controls['ptobrsdate'].setValue(
+//         this._commonSvc.getDateObjectFromDataBase(details.ptobrsdate));
+//       this.BrsDateForm.controls['frombrsdate'].setValue(
+//         this._commonSvc.getDateObjectFromDataBase(details.pfrombrsdate));
+//       this.BrsDateForm.controls['tobrsdate'].setValue(
+//         this._commonSvc.getDateObjectFromDataBase(details.ptobrsdate));
+//     });
+//   }
+
+//   // ===========================================================================
+//   // Grid loading — primary entry points
+//   // ===========================================================================
+
+//   /**
+//    * Full reload: fetches both data + count in parallel, then refreshes
+//    * whichever tab is currently active.
+//    */
+//   GetPAYTMBank_load(bankid: number | string, chequeintype: string): void {
+//     this.gridLoading = true;
+//     const receiptDate  = this.formatDate(this.ChequesInBankForm.controls['pchequereceiptdate'].value);
+
+//     forkJoin([
+//       this._accountSvc.GetPaytmInBankData(bankid, this.startindex, this.endindex,
+//         this.modeofreceipt, this._searchText, '', receiptDate, chequeintype),
+//       this._accountSvc.GetUPIClearedDataForTotalCount(bankid, this.startindex, this.endindex,
+//         this.modeofreceipt, this._searchText, '', receiptDate, chequeintype),
+//     ]).subscribe({
+//       next: ([bankData, countData]) => {
+//         this.gridLoading = false;
+//         this.ChequesInBankData      = bankData.pchequesOnHandlist ?? [];
+//         this.ChequesClearReturnData = bankData.pchequesclearreturnlist ?? [];
+//         this._countData             = countData;
+
+//         this.applyCheckState(chequeintype);
+//         this.CountOfRecords();
+//         this.syncActiveTab();
+
+//         const total = countData['pchequesOnHandlist']?.[0]?.['total_count'] ?? 0;
+//         this.totalElements       = total;
+//         this.page.totalElements  = total;
+//         this.page.totalPages     = total > 10 ? Math.floor(total / 10) + 1 : 1;
+//       },
+//       error: err => this._commonSvc.showErrorMessage(err),
+//     });
+//   }
+
+//   /**
+//    * Lightweight reload (no count refetch) — used for paging / tab switches
+//    * after the initial load.
+//    */
+//   GetChequesInBank(bankid: number | string, startindex: number, endindex: number,
+//     searchText: string, chequeintype: string): void {
+//     this.gridLoading = true;
+//     const receiptDate = this.formatDate(this.ChequesInBankForm.controls['pchequereceiptdate'].value);
+
+//     this._accountSvc.GetPaytmInBankData(bankid, startindex, endindex,
+//       this.modeofreceipt, this._searchText, '', receiptDate, chequeintype)
+//       .subscribe({
+//         next: (data: any) => {
+//           this.gridLoading            = false;
+//           this.ChequesInBankData      = data.pchequesOnHandlist ?? [];
+//           this.ChequesClearReturnData = data.pchequesclearreturnlist ?? [];
+//           this.ChequesInBankData.forEach(r => r['checkuncheck'] = true);
+//           this.syncActiveTab();
+//         },
+//         error: err => this._commonSvc.showErrorMessage(err),
+//       });
+//   }
+
+//   GetDataOnBrsDates(frombrsdate: string, tobrsdate: string, bankid: number | string): void {
+//     forkJoin([
+//       this._accountSvc.DataFromBrsDatesChequesInBank(frombrsdate, tobrsdate, bankid,
+//         this.modeofreceipt, this._searchText, this.startindex, this.endindex),
+//       this._accountSvc.GetChequesRowCount(bankid, this._searchText, frombrsdate,
+//         tobrsdate, 'CHEQUESINBANK', ''),
+//     ]).subscribe({
+//       next: ([clearData, countData]) => {
+//         const rows = (clearData['pchequesclearreturnlist'] as ReceiptRow[]).filter(r =>
+//           (this.status === 'cleared'  && r.pchequestatus === 'Y') ||
+//           (this.status === 'returned' && r.pchequestatus === 'R'));
+
+//         this._countData = countData;
+//         this.CountOfRecords();
+//         this.gridData = rows.map(r => ({
+//           ...r,
+//           preceiptdate:  this._commonSvc.getFormatDateGlobal(r.preceiptdate),
+//           pdepositeddate: this._commonSvc.getFormatDateGlobal(r.pdepositeddate),
+//           pCleardate:    this._commonSvc.getFormatDateGlobal(r.pCleardate ?? ''),
+//         }));
+
+//         const countKey = this.status === 'cleared' ? 'clear_count' : 'return_count';
+//         const total    = countData[countKey] ?? 0;
+//         this.totalElements      = total;
+//         this.page.totalElements = total;
+//         this.page.totalPages    = total > 10 ? Math.floor(total / 10) + 1 : 1;
+//       },
+//       error: err => this._commonSvc.showErrorMessage(err),
+//     });
+//   }
+
+//   // ===========================================================================
+//   // Tab / status helpers
+//   // ===========================================================================
+
+//   /**
+//    * After data loads, re-run whichever tab view is currently selected.
+//    * Avoids duplicated if/else blocks scattered across load methods.
+//    */
+//   private syncActiveTab(): void {
+//     switch (this.status) {
+//       case 'chequesdeposited': this.renderChequesDeposited(); break;
+//       case 'onlinereceipts':   this.renderOnlineReceipts();   break;
+//       case 'cleared':          this.renderCleared();          break;
+//       case 'returned':         this.renderReturned();         break;
+//       default:                 this.renderAll();              break;
+//     }
+//     if (this.fromFormName === 'fromChequesStatusInformationForm') {
+//       this.chequesStatusInfoGrid();
+//     }
+//   }
+
+//   private applyCheckState(chequeintype: string): void {
+//     const uncheck = chequeintype === 'D' || chequeintype === 'A';
+//     this.ChequesInBankData.forEach(r => r['checkuncheck'] = !uncheck);
+//     this.checkuncheckbool = !uncheck;
+//   }
+
+//   // ===========================================================================
+//   // Public tab actions (bound to template buttons)
+//   // ===========================================================================
+
+//   All(): void {
+//     this.resetDateRange();
+//     this.modeofreceipt = 'ONLINE';
+//     this.status        = 'all';
+//     this.pdfstatus     = 'All';
+//     this.pageSetUp();
+//     this.GetPAYTMBank_load(this.bankid, this.ChequesInBankForm.controls['chequeintype'].value);
+//     this.renderAll();
+//   }
+
+//   ChequesDeposited(): void {
+//     this.resetDateRange();
+//     this.modeofreceipt = 'CHEQUE';
+//     this.status        = 'chequesdeposited';
+//     this.pdfstatus     = 'Cheques Deposited';
+//     this.pageSetUp();
+//     this.GetChequesInBank(this.bankid, this.startindex, this.endindex,
+//       this._searchText, this.ChequesInBankForm.controls['chequeintype'].value);
+//     this.renderChequesDeposited();
+//   }
+
+//   OnlineReceipts(): void {
+//     this.resetDateRange();
+//     this.modeofreceipt = 'ONLINE';
+//     this.status        = 'onlinereceipts';
+//     this.pdfstatus     = 'Online Receipts';
+//     this.pageSetUp();
+//     this.GetChequesInBank(this.bankid, this.startindex, this.endindex,
+//       this._searchText, this.ChequesInBankForm.controls['chequeintype'].value);
+//     this.renderOnlineReceipts();
+//   }
+
+//   Cleared(): void {
+//     this.resetDateRange();
+//     this.modeofreceipt       = 'CLEAR';
+//     this.status              = 'cleared';
+//     this.pdfstatus           = 'Cleared';
+//     this.datetitle           = 'Cleared Date';
+//     this.brsdateshowhidecleared  = true;
+//     this.brsdateshowhidereturned = false;
+//     this.GridColumnsHide();
+//     this.pageSetUp();
+//     this.GetChequesInBank(this.bankid, this.startindex, this.endindex,
+//       this._searchText, this.ChequesInBankForm.controls['chequeintype'].value);
+//     this.restoreBrsDates(this.ChequesInBankForm);
+//     this.renderCleared();
+//   }
+
+//   Returned(): void {
+//     this.resetDateRange();
+//     this.modeofreceipt       = 'RETURN';
+//     this.status              = 'returned';
+//     this.pdfstatus           = 'Returned';
+//     this.datetitle           = 'Returned Date';
+//     this.brsdateshowhidecleared  = false;
+//     this.brsdateshowhidereturned = true;
+//     this.GridColumnsHide();
+//     this.pageSetUp();
+//     this.GetChequesInBank(this.bankid, this.startindex, this.endindex,
+//       this._searchText, this.ChequesInBankForm.controls['chequeintype'].value);
+//     this.restoreBrsDates(this.BrsDateForm, true);
+//     this.renderReturned();
+//   }
+
+//   // ===========================================================================
+//   // Render helpers — populate gridData from the already-loaded arrays
+//   // ===========================================================================
+
+//   private renderAll(): void {
+//     this.gridData     = [];
+//     this.gridDatatemp = [];
+//     this.fromFormName === 'fromChequesStatusInformationForm'
+//       ? this.GridColumnsHide() : this.GridColumnsShow();
+
+//     const grid = this.filterByBank(this.ChequesInBankData);
+//     this.setGridData(grid);
+
+//     const total = this._countData['pchequesOnHandlist']?.[0]?.['total_count'] ?? 0;
+//     this.setPageTotals(total);
+//   }
+
+//   private renderChequesDeposited(): void {
+//     this.gridData     = [];
+//     this.gridDatatemp = [];
+//     this.fromFormName === 'fromChequesStatusInformationForm'
+//       ? this.GridColumnsHide() : this.GridColumnsShow();
+
+//     const grid = this.filterByBankAndType(this.ChequesInBankData, 'CHEQUE');
+//     this.setGridData(grid);
+//     this.setPageTotals(this._countData['cheques_count'] ?? 0);
+//   }
+
+//   private renderOnlineReceipts(): void {
+//     this.gridData     = [];
+//     this.gridDatatemp = [];
+//     this.fromFormName === 'fromChequesStatusInformationForm'
+//       ? this.GridColumnsHide() : this.GridColumnsShow();
+
+//     const grid = this.filterByBankAndType(this.ChequesInBankData, 'CHEQUE', true);
+//     this.setGridData(grid);
+//     this.setPageTotals(this._countData['others_count'] ?? 0);
+//   }
+
+//   private renderCleared(): void {
+//     this.gridData     = [];
+//     this.gridDatatemp = [];
+//     this.GridColumnsHide();
+
+//     const grid = this.filterClearReturn('Y');
+//     this.setGridData(grid);
+//     this.setPageTotals(this._countData['clear_count'] ?? 0);
+//   }
+
+//   private renderReturned(): void {
+//     this.gridData     = [];
+//     this.gridDatatemp = [];
+//     this.GridColumnsHide();
+
+//     const grid = this.filterClearReturn('R');
+//     this.setGridData(grid);
+//     this.setPageTotals(this._countData['return_count'] ?? 0);
+//   }
+
+//   // ===========================================================================
+//   // Filter utilities
+//   // ===========================================================================
+
+//   /** Keep rows matching bankid (pass-all when bankid === 0). */
+//   private filterByBank(rows: ReceiptRow[]): ReceiptRow[] {
+//     return this.bankid === 0 ? rows
+//       : rows.filter(r => r.pdepositbankid == this.bankid);
+//   }
+
+//   /**
+//    * Filter by bank AND payment type.
+//    * @param exclude  When true, keep rows that do NOT match `type`.
+//    */
+//   private filterByBankAndType(rows: ReceiptRow[], type: string, exclude = false): ReceiptRow[] {
+//     return this.filterByBank(rows).filter(r =>
+//       exclude ? r.ptypeofpayment !== type : r.ptypeofpayment === type);
+//   }
+
+//   private filterClearReturn(status: 'Y' | 'R'): ReceiptRow[] {
+//     return this.bankid === 0
+//       ? this.ChequesClearReturnData.filter(r => r.pchequestatus === status)
+//       : this.ChequesClearReturnData.filter(r =>
+//           r.pchequestatus === status && r.pdepositbankid == this.bankid);
+//   }
+
+//   // ===========================================================================
+//   // Grid-state helpers
+//   // ===========================================================================
+
+//   private setGridData(rows: ReceiptRow[]): void {
+//     this.gridData     = JSON.parse(JSON.stringify(rows));
+//     this.gridDatatemp = this.gridData;
+//     this.showicons    = this.gridData.length > 0;
+//     this.amounttotal  = this.gridData.reduce((s, r) => s + r.ptotalreceivedamount, 0);
+//     this.updatePagination(this.gridData.length);
+//   }
+
+//   private updatePagination(count: number): void {
+//     this.pageCriteria.totalrows    = count;
+//     this.pageCriteria.TotalPages   = count > this.pageCriteria.pageSize
+//       ? Math.floor(count / this.pageCriteria.pageSize) + 1 : 1;
+//     this.pageCriteria.currentPageRows = count < this.pageCriteria.pageSize
+//       ? count : this.pageCriteria.pageSize;
+//   }
+
+//   private setPageTotals(total: number): void {
+//     this.totalElements      = total;
+//     this.page.totalElements = total;
+//     this.page.totalPages    = total > 10 ? Math.floor(total / 10) + 1 : 1;
+//   }
+
+//   GridColumnsShow(): void {
+//     this.showhidegridcolumns     = false;
+//     this.saveshowhide            = true;
+//     this.brsdateshowhidecleared  = false;
+//     this.brsdateshowhidereturned = false;
+//     this.hiddendate              = true;
+//   }
+
+//   GridColumnsHide(): void {
+//     this.showhidegridcolumns = true;
+//     this.saveshowhide        = false;
+//     this.hiddendate          = false;
+//   }
+
+//   CountOfRecords(): void {
+//     this.all             = this._countData['pchequesOnHandlist']?.[0]?.['total_count'] ?? 0;
+//     this.onlinereceipts  = this._countData['others_count']  ?? 0;
+//     this.chequesdeposited = this._countData['cheques_count'] ?? 0;
+//     this.cleared         = this._countData['clear_count']   ?? 0;
+//     this.returned        = this._countData['return_count']  ?? 0;
+//   }
+
+//   // ===========================================================================
+//   // Pagination
+//   // ===========================================================================
+
+//   setPageModel(): void {
+//     this.pageCriteria.pageSize        = this._commonSvc.pageSize;
+//     this.pageCriteria.offset          = 0;
+//     this.pageCriteria.pageNumber      = 1;
+//     this.pageCriteria.footerPageHeight = 50;
+//   }
+
+//   pageSetUp(): void {
+//     this.page.offset       = 0;
+//     this.page.pageNumber   = 1;
+//     this.page.size         = this._commonSvc.pageSize;
+//     this.startindex        = 0;
+//     this.endindex          = 1000;
+//     this.page.totalElements = 10;
+//     this.page.totalPages   = 1;
+//   }
+
+//   setPage(pageInfo: any, event: any): void {
+//     this.page.offset      = event.page - 1;
+//     this.page.pageNumber  = pageInfo.page;
+//     this.endindex         = this.page.pageNumber * this.page.size;
+//     this.startindex       = this.endindex - this.page.size;
+//     this.GetChequesInBank(this.bankid, this.startindex, this.endindex, '',
+//       this.ChequesInBankForm.controls['chequeintype'].value);
+//   }
+
+//   onFooterPageChange(event: any): void {
+//     this.pageCriteria.offset      = event.page - 1;
+//     this.pageCriteria.CurrentPage = event.page;
+//     this.pageCriteria.currentPageRows = (this.pageCriteria.totalrows < event.page * this.pageCriteria.pageSize)
+//       ? this.pageCriteria.totalrows % this.pageCriteria.pageSize
+//       : this.pageCriteria.pageSize;
+//   }
+
+//   // ===========================================================================
+//   // Events — bank / UPI selection
+//   // ===========================================================================
+
+//   SelectBank(event: Event): void {
+//     const value = (event.target as HTMLSelectElement).value;
+//     if (!value) {
+//       this.bankname        = '';
+//       this.banknameshowhide = false;
+//       return;
+//     }
+//     this.banknameshowhide = true;
+//     this.bankdetails      = this.BanksList.find(b => String(b.paccountid) === value);
+//     if (!this.bankdetails) return;
+
+//     this.bankname = this.bankdetails.pdepositbankname;
+//     this.setBankBalance(this.bankdetails.pbankbalance);
+//   }
+
+//   SelectPaytm(event: Event): void {
+//     const value = (event.target as HTMLSelectElement).value;
+//     if (!value) return;
+
+//     this.gridLoading  = true;
+//     this.paytmshowhide = true;
+//     this.paytmdetails = this.PaytmList.find(p => String(p.paccountid) === value);
+//     if (!this.paytmdetails) return;
+
+//     this.bankid    = this.paytmdetails.paccountid;
+//     this.paytmname = this.paytmdetails.pdepositbankname;
+//     this.setPaytmBalance(this.paytmdetails.pbankbalance);
+
+//     const chequeintype = this.ChequesInBankForm.controls['chequeintype'].value;
+//     this.GetPAYTMBank_load(this.bankid, chequeintype);
+//     this.GetBankBalance(this.bankid);
+//     this.ChequesInBankForm.controls['SearchClear'].setValue('');
+//   }
+
+//   private setBankBalance(balance: number): void {
+//     this.bankbalance     = balance < 0 ? Math.abs(balance) : balance;
+//     this.bankbalancetype = balance < 0 ? 'Cr' : balance === 0 ? '' : 'Dr';
+//   }
+
+//   private setPaytmBalance(balance: number): void {
+//     this.paytmbalance    = balance < 0 ? Math.abs(balance) : balance;
+//     this.bankbalancetype = balance < 0 ? 'Cr' : balance === 0 ? '' : 'Dr';
+//   }
+
+//   // ===========================================================================
+//   // Events — date changes
+//   // ===========================================================================
+
+//   change_date(_event: any): void {
+//     this.selected = [];
+//     this.gridData.forEach(r => {
+//       r.pdepositstatus = false;
+//       r['pcancelstatus']  = false;
+//       r.pchequestatus  = 'N';
+//     });
+//   }
+
+//   Receipt_change_date(_event: any): void {
+//     this.selected = [];
+//     const chequeintype = this.ChequesInBankForm.controls['chequeintype'].value;
+//     this.GetChequesInBank(this.bankid, this.startindex, this.endindex,
+//       this._searchText, chequeintype);
+//   }
+
+//   chequeintypeChange(event: string): void {
+//     this.ChequesInBankForm.controls['searchtext'].setValue('');
+//     if (event !== undefined) {
+//       this.ChequesInBankForm.controls['chequeintype'].setValue(event);
+//       this.GetChequesInBank(this.bankid, this.startindex, this.endindex,
+//         this._searchText, event);
+//     }
+//     const uncheck = event === 'D' || event === 'A';
+//     this.ChequesInBankData.forEach(r => r['checkuncheck'] = !uncheck);
+//     this.checkuncheckbool = !uncheck;
+//   }
+
+//   // ===========================================================================
+//   // Search
+//   // ===========================================================================
+
+//   onSearch(event: any): void {
+//     const searchText = String(event);
+//     this._searchText = searchText;
+
+//     if (this.fromFormName === 'fromChequesStatusInformationForm') {
+//       this.displayGridDataBasedOnForm = searchText
+//         ? this._commonSvc.transform(this.displayGridDataBasedOnFormTemp, searchText,
+//             this.isNumeric(searchText) ? 'pChequenumber' : '')
+//         : this.displayGridDataBasedOnFormTemp;
+
+//       this.updatePagination(this.displayGridDataBasedOnForm.length);
+//       return;
+//     }
+
+//     const searchThreshold = parseInt(this._commonSvc.searchfilterlength, 10);
+
+//     if (searchText !== '' && searchText.length > searchThreshold) {
+//       this.pageSetUp();
+//       const chequeintype = this.ChequesInBankForm.controls['chequeintype'].value;
+//       this.GetPAYTMBank_load(this.bankid, chequeintype);
+//       this.gridData = this._commonSvc
+//         .transform(this.gridDatatemp, searchText,
+//           this.isNumeric(searchText) ? 'pChequenumber' : '')
+//         .map(r => ({
+//           ...r,
+//           checkuncheck: chequeintype === 'D' ? false : r.checkuncheck,
+//         }));
+//       this.gridData = [...this.gridData];
+//     } else {
+//       if (searchText === '') {
+//         this.ChequesInBankForm.controls['chequeintype'].setValue('A');
+//         this.pageSetUp();
+//         this.GetPAYTMBank_load(this.bankid, 'A');
+//       }
+//       this.gridData = this.gridDatatemp;
+//     }
+
+//     this.amounttotal = this.gridData.reduce((s, r) => s + r.ptotalreceivedamount, 0);
+//   }
+
+//   private isNumeric(value: string): boolean {
+//     const code = value.charCodeAt(value.length - 1);
+//     return code > 47 && code < 58;
+//   }
+
+//   // ===========================================================================
+//   // BRS date filtering
+//   // ===========================================================================
+
+//   ShowBrsClear(): void {
+//     this._searchText = '';
+//     this.gridData    = [];
+//     this.cleared     = 0;
+//     const fromdate = this.ChequesInBankForm.controls['pfrombrsdate'].value;
+//     const todate   = this.ChequesInBankForm.controls['ptobrsdate'].value;
+
+//     if (!fromdate || !todate) {
+//       this._commonSvc.showWarningMessage('select fromdate and todate');
+//       return;
+//     }
+
+//     if (fromdate > todate) {
+//       this.validatebrsdateclear = true;
+//       return;
+//     }
+
+//     this.validatebrsdateclear = false;
+//     this.fromdate = this._commonSvc.getFormatDateNormal(fromdate);
+//     this.todate   = this._commonSvc.getFormatDateNormal(todate);
+//     this.pageSetUp();
+//     this.GetDataOnBrsDates(this.fromdate, this.todate, this.bankid);
+//   }
+
+//   ShowBrsReturn(): void {
+//     $('#search').val('');
+//     this._searchText = '';
+//     this.gridData    = [];
+//     this.returned    = 0;
+//     const fromdate = this.BrsDateForm.controls['frombrsdate'].value;
+//     const todate   = this.BrsDateForm.controls['tobrsdate'].value;
+
+//     if (!fromdate || !todate) {
+//       this._commonSvc.showWarningMessage('select fromdate and todate');
+//       return;
+//     }
+
+//     if (fromdate > todate) {
+//       this.validatebrsdatereturn = true;
+//       return;
+//     }
+
+//     this.validatebrsdatereturn = false;
+//     this.fromdate = this._commonSvc.getFormatDateNormal(fromdate);
+//     this.todate   = this._commonSvc.getFormatDateNormal(todate);
+//     this.pageSetUp();
+//     this.GetDataOnBrsDates(this.fromdate, this.todate, this.bankid);
+//   }
+
+//   private restoreBrsDates(form: FormGroup, useBrsForm = false): void {
+//     const from = this._commonSvc.getDateObjectFromDataBase(this.bankbalancedetails.pfrombrsdate);
+//     const to   = this._commonSvc.getDateObjectFromDataBase(this.bankbalancedetails.ptobrsdate);
+//     form.controls['frombrsdate']?.setValue(from);
+//     form.controls['tobrsdate']?.setValue(to);
+//     if (!useBrsForm) {
+//       form.controls['pfrombrsdate']?.setValue(from);
+//       form.controls['ptobrsdate']?.setValue(to);
+//     }
+//   }
+
+//   private resetDateRange(): void {
+//     this.fromdate = '';
+//     this.todate   = '';
+//   }
+
+//   // ===========================================================================
+//   // Checkbox / selection handlers
+//   // ===========================================================================
+
+//   CheckedClear(event: Event, data: ReceiptRow): void {
+//     const checkbox = event.target as HTMLInputElement;
+//     let isvalid = true;
+//     isvalid = this.checkValidations(this.ChequesInBankForm, isvalid);
+
+//     if (!isvalid) {
+//       this._commonSvc.showWarningMessage('Select the Debited & Credited Banks');
+//       this.resetRowStatus(data);
+//       checkbox.checked = false;
+//       this.updateRow(data);
+//       return;
+//     }
+
+//     if (checkbox.checked) {
+//       const receiptdate    = this._commonSvc.getDateObjectFromDataBase(
+//         this.gridData.find(r => r.preceiptid === data.preceiptid)?.pdepositeddate ?? '');
+//       const chequecleardate = this.ChequesInBankForm.controls['pchequecleardate'].value;
+
+//       if (new Date(chequecleardate) >= new Date(receiptdate)) {
+//         data.pdepositstatus = true;
+//         data.preturnstatus  = false;
+//         data.pchequestatus  = 'Y';
+//       } else {
+//         this.resetRowStatus(data);
+//         checkbox.checked = false;
+//         this._commonSvc.showWarningMessage(
+//           'Cheque Clear Date Should be Greater than or Equal to Deposited Date');
+//       }
+//     } else {
+//       this.resetRowStatus(data);
+//     }
+//     this.updateRow(data);
+//   }
+
+//   CheckedReturn(event: Event, data: ReceiptRow): void {
+//     const checkbox = event.target as HTMLInputElement;
+//     this.PopupData = data;
+
+//     if (checkbox.checked) {
+//       const receiptdate     = this._commonSvc.getDateObjectFromDataBase(
+//         this.gridData.find(r => r.preceiptid === data.preceiptid)?.pdepositeddate ?? '');
+//       const chequecleardate = this.ChequesInBankForm.controls['pchequecleardate'].value;
+
+//       if (new Date(chequecleardate) >= new Date(receiptdate)) {
+//         data.preturnstatus  = true;
+//         data.pdepositstatus = false;
+//         data.pchequestatus  = 'R';
+//         $('#cancelcharges').val(this.chequereturncharges);
+//         this.chequenumber = data.pChequenumber;
+//         $('#add-detail').modal('show');
+//       } else {
+//         data.preturnstatus = false;
+//         data.pchequestatus = 'N';
+//         checkbox.checked   = false;
+//         this._commonSvc.showWarningMessage(
+//           'Cheque Clear Date Should be Greater than or Equal Deposited Date');
+//       }
+//     } else {
+//       data.preturnstatus = false;
+//       data.pchequestatus = 'N';
+//     }
+//     this.updateRow(data);
+//   }
+
+//   private resetRowStatus(data: ReceiptRow): void {
+//     data.pdepositstatus = false;
+//     data.pchequestatus  = 'N';
+//   }
+
+//   private updateRow(data: ReceiptRow): void {
+//     const idx = this.gridData.findIndex(r => r.preceiptid === data.preceiptid);
+//     if (idx !== -1) this.gridData[idx] = data;
+//   }
+
+//   onSelect({ selected }: { selected: ReceiptRow[] }): void {
+//     this.saveGridData       = [...selected];
+//     this.checkedAmountTotal = this.saveGridData.reduce((s, r) => s + r.ptotalreceivedamount, 0);
+//     this.checkedRowsCount   = this.saveGridData.length;
+//   }
+
+//   CancelChargesOk(value: string): void {
+//     if (!value) {
+//       this._commonSvc.showWarningMessage(`Minimum Amount Should Be ${this.chequereturncharges}`);
+//       return;
+//     }
+//     const row = this.gridData.find(r => r.preceiptid === this.PopupData?.preceiptid);
+//     if (row) row.pactualcancelcharges = +value;
+//     $('#add-detail').modal('hide');
+//   }
+
+//   returnCharges_Change(event: Event): void {
+//     const val = (event.target as HTMLInputElement).value;
+//     if (!val || parseFloat(val) < this.chequereturncharges) {
+//       this._commonSvc.showWarningMessage(`Minimum Amount Should Be ${this.chequereturncharges}`);
+//       $('#cancelcharges').val('');
+//     }
+//   }
+
+//   getSelectedTotal(): number {
+//     return this.saveGridData.reduce((s, r) => s + r.ptotalreceivedamount, 0);
+//   }
+
+//   private validateSave(): boolean {
+//     let isvalid = this.checkValidations(this.ChequesInBankForm, true);
+
+//     const chequecleardate = this.ChequesInBankForm.controls['pchequecleardate'].value;
+//     const transactiondate = this.ChequesInBankForm.controls['ptransactiondate'].value;
+
+//     if (new Date(transactiondate) < new Date(chequecleardate)) {
+//       this._commonSvc.showWarningMessage(
+//         'Transaction Date Should be Greater than or Equal to Cheque Clear Date');
+//       isvalid = false;
+//     }
+//     if (isvalid && !confirm('Do You Want To Save ?')) {
+//       isvalid = false;
+//     }
+//     return isvalid;
+//   }
+
+//   Save(): void {
+//     if (!this.validateSave()) return;
+
+//     this.disablesavebutton = true;
+//     this.buttonname        = 'Processing';
+//     this.saveGridData.forEach(r => r.pdepositstatus = true);
+
+//     const payload: any[] = this.saveGridData
+//       .filter(r => r.pdepositstatus)
+//       .map(r => ({
+//         pbranch_id:           this._commonSvc.getbrachid(),
+//         pbranch_name:         r.pbranchname,
+//         pselfchequestatus:    r.selfchequestatus,
+//         preceiptrecordid:     r.preceiptrecordid,
+//         preceiptid:           r.preceiptid,
+//         preceiptdate:         r.preceiptdate,
+//         ptotalreceivedamount: r.ptotalreceivedamount,
+//         pcontactid:           '',
+//         pcontact_name:        r.ppartyname,
+//         pmodeofreceipt:       r.ptypeofpayment,
+//         preferencenumber:     r.pChequenumber,
+//         pchequesdate:         r.pchequedate,
+//         pdeposit_status:      r.pchequestatus,
+//         pdeposit_bankid:      r.pdepositbankid,
+//         pdeposited_date:      r.pdepositeddate,
+//         pcheque_bank:         r.cheque_bank,
+//         preceipt_branch_name: '',
+//         preceived_from:       '',
+//         chit_receipt_number:  r.chitReceiptNo,
+//         chitgroup_id:         r.chitgroupid,
+//         ticketno:             r.ticketno,
+//         ptransactiondate:     this.formatDate(
+//           this.ChequesInBankForm.controls['ptransactiondate'].value),
+//       }));
+
+//     if (payload.length === 0) {
+//       this._commonSvc.showWarningMessage('Select atleast one record');
+//       this.resetSaveButton();
+//       return;
+//     }
+
+//     this.ChequesInBankForm.controls['plstOnlineSettelementDTO'].setValue(payload);
+//     const formData              = this.ChequesInBankForm.value;
+//     const debitAmount           = payload
+//       .filter(p => p.pselfchequestatus)
+//       .reduce((s, p) => s + p.ptotalreceivedamount, 0);
+
+//     formData.debit_account_id   = this.ChequesInBankForm.controls['bankname'].value;
+//     formData.credit_account_id  = this.ChequesInBankForm.controls['paytmname'].value;
+//     formData.account_trans_type = 'D';
+//     formData.debit_amount       = debitAmount.toFixed(2);
+//     formData.credit_amount      = debitAmount.toFixed(2);
+//     formData.transaction_date   = this.formatDate(
+//       this.ChequesInBankForm.controls['ptransactiondate'].value);
+//     formData.jv_type            = 'A';
+//     formData.pmodeoftransaction = 'C';
+
+//     this._accountSvc.SaveOnLineCollection_JV(JSON.stringify(formData)).subscribe({
+//       next: (data: any) => {
+//         if (data) this._commonSvc.showSuccessMessage();
+//         this.Clear();
+//         this.resetSaveButton();
+//       },
+//       error: (err: any) => {
+//         this._commonSvc.showErrorMessage(err);
+//         this.resetSaveButton();
+//       },
+//     });
+//   }
+
+//   private resetSaveButton(): void {
+//     this.disablesavebutton = false;
+//     this.buttonname        = 'Save';
+//   }
+
+//   Clear(): void {
+//     this.ChequesInBankForm.reset();
+//     this.ngOnInit();
+//     $('#bankselection').val('');
+//     $('#search').val('');
+//     this._searchText        = '';
+//     this.fromdate           = '';
+//     this.todate             = '';
+//     this.ChequesInBankValidation = {};
+//     this.checkedRowsCount   = 0;
+//     this.checkedAmountTotal = 0;
+//   }
+
+//   // ===========================================================================
+//   // Info-grid (fromChequesStatusInformationForm mode)
+//   // ===========================================================================
+
+//   chequesStatusInfoGrid(): void {
+//     $('#chequescss').addClass('active');
+//     $('#allcss').removeClass('active');
+
+//     const grid: ReceiptRow[] = [
+//       ...this.ChequesInBankData
+//         .filter(r => r.ptypeofpayment === 'CHEQUE')
+//         .map(r => ({ ...r, chequeStatus: 'Deposited' })),
+//       ...this.ChequesClearReturnData
+//         .filter(r => r.pchequestatus === 'Y')
+//         .map(r => ({ ...r, chequeStatus: 'Cleared' })),
+//       ...this.ChequesClearReturnData
+//         .filter(r => r.pchequestatus === 'R')
+//         .map(r => ({ ...r, chequeStatus: 'Returned' })),
+//     ];
+
+//     this.displayGridDataBasedOnForm     = grid;
+//     this.displayGridDataBasedOnFormTemp = JSON.parse(JSON.stringify(grid));
+//     this.setPageModel();
+//     this.updatePagination(grid.length);
+//   }
+
+//   // ===========================================================================
+//   // PDF / Print / Export
+//   // ===========================================================================
+
+//   pdfOrprint(printorpdf: any): void {
+//     this.Totlaamount = 0;
+//     const receiptDate  = this.formatDate(this.ChequesInBankForm.controls['pchequereceiptdate'].value);
+//     const chequeintype = this.ChequesInBankForm.controls['chequeintype'].value;
+
+//     forkJoin([
+//       this._accountSvc.GetPaytmInBankData(this.bankid, 0, 999999,
+//         this.modeofreceipt, this._searchText, 'PDF', receiptDate, chequeintype),
+//       this._accountSvc.DataFromBrsDatesChequesInBank(this.fromdate, this.todate,
+//         this.bankid, this.modeofreceipt, this._searchText, 0, 99999),
+//     ]).subscribe(([bankData, clearData]) => {
+//       const gridData: ReceiptRow[] =
+//         (this.pdfstatus === 'Cleared' || this.pdfstatus === 'Returned')
+//           ? clearData['pchequesclearreturnlist']
+//           : bankData.pchequesOnHandlist;
+
+//       const isClearedOrReturned = this.pdfstatus === 'Cleared' || this.pdfstatus === 'Returned';
+//       const upiName             = this.resolveUPIName();
+//       const reportname          = `Online Collection Settlement ${upiName}`;
+
+//       const gridheaders = isClearedOrReturned
+//         ? ['Reference No.', 'Branch Name', 'Amount', 'Receipt ID', 'Receipt Date',
+//             'Deposited Date', this.datetitle, 'Transaction \nMode', 'Cheque Bank Name',
+//             'chit Receipt No', 'Party']
+//         : ['Reference No.', 'Branch Name', 'Amount', 'Receipt ID', 'Receipt Date',
+//             'Deposited Date', 'Transaction \nMode', 'Cheque Bank Name', 'Chit Receipt No', 'Party'];
+
+//       let totalAmt = 0;
+//       const rows = gridData.map(r => {
+//         const amt = r.ptotalreceivedamount !== 0
+//           ? this._commonSvc.convertAmountToPdfFormat(this._commonSvc.currencyformat(r.ptotalreceivedamount))
+//           : '';
+//         totalAmt += r.ptotalreceivedamount;
+//         const base = [
+//           r.pChequenumber,
+//           r.pbranchname,
+//           amt,
+//           r.preceiptid,
+//           this._commonSvc.getFormatDateGlobal(r.preceiptdate),
+//           this._commonSvc.getFormatDateGlobal(r.pdepositeddate),
+//         ];
+//         if (isClearedOrReturned) base.push(this._commonSvc.getFormatDateGlobal(r.pCleardate ?? ''));
+//         base.push(r.ptypeofpayment, r.cheque_bank, r.chitReceiptNo, r.ppartyname);
+//         return base;
+//       });
+
+//       const amtFormatted = this._commonSvc.convertAmountToPdfFormat(
+//         this._commonSvc.currencyformat(totalAmt));
+//       rows.push(['', 'Total', amtFormatted, '', '', '', '', '', '', '', '']);
+//       this.amounttotal = totalAmt;
+
+//       this._commonSvc._downloadonlineUPIReportsPdf(
+//         reportname, rows, gridheaders, {}, 'landscape', '', '', '', printorpdf, amtFormatted);
+//     });
+//   }
+
+//   export(): void {
+//     const receiptDate  = this.formatDate(this.ChequesInBankForm.controls['pchequereceiptdate'].value);
+//     const chequeintype = this.ChequesInBankForm.controls['chequeintype'].value;
+
+//     forkJoin([
+//       this._accountSvc.GetPaytmInBankData(this.bankid, 0, 999999,
+//         this.modeofreceipt, this._searchText, 'PDF', receiptDate, chequeintype),
+//       this._accountSvc.DataFromBrsDatesChequesInBank(this.fromdate, this.todate,
+//         this.bankid, this.modeofreceipt, this._searchText, 0, 99999),
+//     ]).subscribe(([bankData, clearData]) => {
+//       const gridData: ReceiptRow[] =
+//         (this.pdfstatus === 'Cleared' || this.pdfstatus === 'Returned')
+//           ? clearData['pchequesclearreturnlist']
+//           : bankData.pchequesOnHandlist;
+
+//       const rows = gridData.map(r => {
+//         const amt = r.ptotalreceivedamount !== 0
+//           ? this._commonSvc.removeCommasInAmount(r.ptotalreceivedamount)
+//           : '';
+//         const base: Record<string, any> = {
+//           'Reference No.':   r.pChequenumber,
+//           'Branch Name':     r.pbranchname,
+//           'Amount':          amt,
+//           'Receipt Id':      r.preceiptid,
+//           'Receipt Date':    this._commonSvc.getFormatDateGlobal(r.preceiptdate),
+//           'Deposited Date':  this._commonSvc.getFormatDateGlobal(r.pdepositeddate),
+//         };
+//         const cleardate = r.pCleardate
+//           ? this._commonSvc.getFormatDateGlobal(r.pCleardate) : '';
+//         if (this.pdfstatus === 'Cleared')  base['Cleared Date']  = cleardate;
+//         if (this.pdfstatus === 'Returned') base['Returned Date'] = cleardate;
+//         base['Transaction Mode']  = r.ptypeofpayment;
+//         base['Cheque Bank Name']  = r.cheque_bank;
+//         base['Chit Receipt No']   = r.chitReceiptNo;
+//         base['Party']             = r.ppartyname;
+//         return base;
+//       });
+
+//       this._commonSvc.exportAsExcelFile(rows, 'Online Collection');
+//     });
+//   }
+
+//   // ===========================================================================
+//   // Cheque-return PDFs
+//   // ===========================================================================
+
+//   pdfContentData(): void {
+//     if (!this.previewdetails.length) return;
+//     const lMargin = 15, rMargin = 15, pdfInMM = 210;
+//     const doc        = new jsPDF();
+//     const company    = this._commonSvc._getCompanyDetails();
+//     const address    = this._commonSvc.getcompanyaddress();
+//     const today      = this._commonSvc.getFormatDateGlobal(new Date());
+//     this.todayDate   = this.datePipe.transform(this.today, 'dd-MMM-yyyy h:mm:ss a');
+
+//     this.previewdetails.forEach((obj, idx) => {
+//       const isLast = idx === this.previewdetails.length - 1;
+//       this.renderChequeReturnNoticePage(doc, obj, company, address, today, pdfInMM, lMargin, rMargin);
+//       isLast ? doc.save('Cheque Return Invoice.pdf') : doc.addPage();
+//     });
+//   }
+
+//   private renderChequeReturnNoticePage(
+//     doc: any, obj: any, company: any, address: string,
+//     today: string, pdfInMM: number, lMargin: number, rMargin: number,
+//   ): void {
+//     const dateStr = `Date  : ${today}`;
+//     const logo    = this._commonSvc.getKapilGroupLogo();
+
+//     doc.addImage(logo, 'JPEG', 10, 5);
+//     doc.setFont('Times-Italic');
+//     doc.setFontStyle('normal');
+//     doc.setFontSize(12);
+//     doc.setTextColor('black');
+//     doc.text(company.pCompanyName, 72, 10);
+//     doc.setFontSize(8);
+//     doc.text(address.substr(0, 115), 110, 15, 0, 0, 'center');
+//     doc.text(address.substring(115), 110, 18);
+//     if (company.pCinNo) doc.text(`CIN : ${company.pCinNo}`, 90, 22);
+//     doc.setFontSize(14);
+//     doc.text('Cheque Return Invoice', 92, 30);
+//     doc.setFontSize(12);
+//     doc.text('To,', 30, 55);
+//     doc.text([`${obj.psubscribername.trim()}, `, `${obj.paddress}.`], 30, 60);
+//     doc.text(dateStr, 160, 45);
+//     doc.text('Dear Sir / Madam', 15, 90);
+//     doc.text('SUB : NOTICE REGARDING RETURN OF YOUR CHEQUE.', 55, 97);
+//     doc.text(`Ref : Chit No. : ${obj.pchitno}`, 70, 104);
+
+//     const content = [
+//       `We regret to inform you that your cheque No : ${obj.preferencenumber} dated : `,
+//       `${this._commonSvc.getFormatDateGlobal(obj.pchequedate)} for Rs. `,
+//       `${this._commonSvc.convertAmountToPdfFormat(obj.ptotalreceivedamount)} drawn on : `,
+//       `${obj.pbankname}  towards subscription to the above Chit : ${obj.pchitno} has been returned by your bank unpaid.\n\n`,
+//       `Kindly arrange payment of the amount of the cheque in cash or demand draft together with penalty of Rs. `,
+//       `${this._commonSvc.convertAmountToPdfFormat(obj.pchequereturnchargesamount)} and Bank Charges immediately on receipt of this letter.\n\n`,
+//       `Please note that our Official Receipt No. ${obj.preceiptid} Date : `,
+//       `${this._commonSvc.getFormatDateGlobal(obj.pchequedate)} issued in this regard stands cancelled. Henceforth payment of subscription may please be made either in cash or by D.D only.\n\n`,
+//       `Please note that under the provision of Section 138B of Negotiable Instruments Act we can/will initiate legal proceeding against you if you fail to pay the dishonoured cheque amount within Fifteen days from the date of this notice.\n\n`,
+//       `We hope you will not allow us to initiate the above proceedings.\n\nWe request your immediate response.\n\n`,
+//     ].join('');
+
+//     const lines = doc.splitTextToSize(content, pdfInMM - lMargin - rMargin);
+//     doc.text(15, 115, lines);
+//     doc.text('Yours faithfully,', 165, 200);
+//     doc.text(`For ${company.pCompanyName}`, 115, 207);
+//     doc.text('Manager', 165, 220);
+//   }
+
+//   chequereturnvoucherpdf(): void {
+//     if (!this.chequerwturnvoucherdetails.length) return;
+//     const doc     = new jsPDF();
+//     const company = this._commonSvc._getCompanyDetails();
+//     const address = this._commonSvc.getcompanyaddress();
+//     this.todayDate = this.datePipe.transform(this.today, 'dd-MMM-yyyy h:mm:ss a');
+
+//     this.chequerwturnvoucherdetails.forEach((obj, idx) => {
+//       const isLast = idx === this.chequerwturnvoucherdetails.length - 1;
+//       this.renderChequeReturnVoucherPage(doc, obj, company, address);
+//       isLast ? doc.save('Cheque Return Voucher.pdf') : doc.addPage();
+//     });
+//   }
+
+//   private renderChequeReturnVoucherPage(
+//     doc: any, obj: any, company: any, address: string,
+//   ): void {
+//     const logo  = this._commonSvc.getKapilGroupLogo();
+//     const today = this._commonSvc.getFormatDateGlobal(new Date());
+
+//     doc.addImage(logo, 'JPEG', 10, 5);
+//     doc.setFont('Times-Italic');
+//     doc.setFontStyle('normal');
+//     doc.setFontSize(12);
+//     doc.setTextColor('black');
+//     doc.text(company.pCompanyName, 72, 10);
+//     doc.setFontSize(8);
+//     doc.text(address.substr(0, 115), 110, 15, 0, 0, 'center');
+//     doc.text(address.substring(115), 110, 18);
+//     if (company.pCinNo) doc.text(`CIN : ${company.pCinNo}`, 90, 22);
+//     doc.setFontSize(14);
+//     doc.text('Cheque Return Voucher', 92, 30);
+//     doc.setFontSize(12);
+//     doc.line(15, 42, 220, 42);
+//     doc.text(`Printed On  :  ${this.todayDate}`, 15, 40);
+//     doc.text(`Date  : ${today}`, 160, 48);
+//     doc.text(`Voucher No. : ${obj.pvoucherno}`, 15, 48);
+//     doc.text(`Debit To       : ${obj.pdebitaccountname}`, 15, 55);
+//     doc.text(`Bank             : ${obj.pcreditaccountname}`, 15, 62);
+//     doc.text(`Amount In Words :  Rupees ${this.titleCase(
+//       this._numberToWords.transform(obj.ptotalreceivedamount))} Only.`, 15, 125);
+
+//     const body = [
+//       ['Cheque No.',   obj.preferencenumber],
+//       ['Cheque Date',  this._commonSvc.getFormatDateGlobal(obj.pchequedate)],
+//       ['Bank',         obj.pbankname],
+//       ['Branch',       obj.pbranchname],
+//       ['Receipt No.',  obj.preceiptid],
+//       ['Receipt Date', this._commonSvc.getFormatDateGlobal(obj.pchequedate)],
+//       [{ content: 'Amount', colSpan: 1, styles: { halign: 'right', fontStyle: 'bold' } },
+//         this._commonSvc.currencyFormat(obj.ptotalreceivedamount)],
+//     ];
+
+//     doc.autoTable({
+//       columns: ['PARTICULARS', ''],
+//       body,
+//       theme: 'grid',
+//       headStyles: {
+//         fillColor: this._commonSvc.pdfProperties('Header Color1'),
+//         halign:    this._commonSvc.pdfProperties('Header Alignment'),
+//         fontSize: 9, lineWidth: 0.1, textColor: 'black',
+//       },
+//       styles: { cellPadding: 1, fontSize: 10, overflow: 'linebreak', textColor: 'black' },
+//       startY: 69,
+//       margin: { right: 35, left: 35 },
+//     });
+
+//     doc.rect(15, 135, 30, 12, 'S');
+//     doc.text('Manager', 55, 145);
+//     doc.text('Accounts Officer', 110, 145);
+//     doc.text('Cashier', 180, 145);
+//   }
+
+//   // ===========================================================================
+//   // Form validation
+//   // ===========================================================================
+
+//   checkValidations(group: FormGroup, isValid: boolean): boolean {
+//     try {
+//       Object.keys(group.controls).forEach(key => {
+//         isValid = this.GetValidationByControl(group, key, isValid);
+//       });
+//     } catch (e) {
+//       this._commonSvc.showErrorMessage(e);
+//       return false;
+//     }
+//     return isValid;
+//   }
+
+//   GetValidationByControl(formGroup: FormGroup, key: string, isValid: boolean): boolean {
+//     try {
+//       const control = formGroup.get(key);
+//       if (!control) return isValid;
+
+//       if (control instanceof FormGroup) {
+//         this.checkValidations(control, isValid);
+//       } else if (control.validator) {
+//         this.ChequesInBankValidation[key] = '';
+//         if (control.errors || control.invalid || control.touched || control.dirty) {
+//           const label = (document.getElementById(key) as HTMLInputElement)?.title ?? key;
+//           for (const errorkey in control.errors) {
+//             const msg = this._commonSvc.getValidationMessage(control, errorkey, label, key, '');
+//             this.ChequesInBankValidation[key] += msg + ' ';
+//             isValid = false;
+//           }
+//         }
+//       }
+//     } catch (e) {
+//       this._commonSvc.showErrorMessage(e);
+//       return false;
+//     }
+//     return isValid;
+//   }
+
+//   BlurEventAllControll(formgroup: FormGroup): void {
+//     try {
+//       Object.keys(formgroup.controls).forEach(key => this.setBlurEvent(formgroup, key));
+//     } catch (e) {
+//       this._commonSvc.showErrorMessage(e);
+//     }
+//   }
+
+//   private setBlurEvent(formgroup: FormGroup, key: string): void {
+//     try {
+//       const control = formgroup.get(key);
+//       if (!control) return;
+//       if (control instanceof FormGroup) {
+//         this.BlurEventAllControll(control);
+//       } else if (control.validator) {
+//         formgroup.get(key)!.valueChanges.subscribe(() =>
+//           this.GetValidationByControl(formgroup, key, true));
+//       }
+//     } catch (e) {
+//       this._commonSvc.showErrorMessage(e);
+//     }
+//   }
+
+//   formatDate(date: Date | string | null): string {
+//     if (!date) return '';
+//     return this.datePipe.transform(date, 'dd-MMM-yyyy') ?? '';
+//   }
+
+//   private resolveUPIName(): string {
+//     const match = this.PaytmList.find(
+//       x => x.paccountid == this.ChequesInBankForm.controls['paytmname'].value);
+//     return match ? `for ${match.pdepositbankname}` : 'for Paytm';
+//   }
+
+//   titleCase(str: string): string {
+//     return str.toLowerCase().split(' ')
+//       .map(w => w.charAt(0).toUpperCase() + w.substring(1))
+//       .join(' ');
+//   }
+
+//   showErrorMessage(msg: string): void {
+//     this._commonSvc.showErrorMessage(msg);
+//   }
+// } 
+
+
+
 
 
 // import { Component, OnInit, ViewChild, Input } from '@angular/core';

@@ -102,8 +102,9 @@
               </button>
             </li>
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'onlinepayments'"
-                (click)="OnlinePayments(); activeTab='onlinepayments'">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'onlinepayment'"
+                (click)="OnlinePayments(); activeTab='onlinepayment'">
+
                 Online Payments <span class="count blue">{{ onlinepayments }}</span>
               </button>
             </li>
@@ -137,8 +138,7 @@
             </li>
             <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
               <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'bankfileupload'"
-                (click)="BankUploadExcel(); activeTab='bankfileupload'">
-                Bank File Upload
+                (click)="BankUploadExcel()" activeTab='bankfileupload'> Bank File Upload
               </button>
             </li>
             <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
