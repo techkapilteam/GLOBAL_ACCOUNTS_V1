@@ -250,11 +250,14 @@ export class PettycashReceiptCancelComponent implements OnInit {
     this.pageCriteria.totalrows = this.lstdetails.length;
   }
 
-  showdata() {
-    if (this.PettyCashCancel.value.receiptid) {
-      this.show = true;
-    }
+ showdata() {
+
+  if (!this.PettyCashCancel.value.receiptid) {
+    this._commonService.showWarningMessage("Select receipt number");
+    return;
   }
+  this.show = true;
+}
 
   clear() {
     this.PettyCashCancel.reset({ ppaymentdate: new Date() });

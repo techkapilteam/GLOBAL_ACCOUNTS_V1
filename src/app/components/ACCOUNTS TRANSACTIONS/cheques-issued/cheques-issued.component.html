@@ -115,140 +115,72 @@
               </a>
             </div>
           </div>
-        </div>
+          <ul class="custom-tabs d-flex flex-wrap">
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'all'"
+                (click)="All(); activeTab='all'">
+                All <span class="count">{{ all }}</span>
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'chequesissued'"
+                (click)="ChequesIssued(); activeTab='chequesissued'">
+                Cheques Issued <span class="count">{{ chequesissued }}</span>
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'onlinepayment'"
+                (click)="OnlinePayments(); activeTab='onlinepayment'">
 
-        <!-- Nav Tabs -->
-        <ul class="nav nav-tabs mb-3"
-          style="border-bottom:none; gap:10px; flex-wrap:wrap; margin-top:15px; margin-bottom:15px; padding-left:0;">
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='all'}" (click)="All(); activeTab='all'"
-              [style.border]="activeTab==='all' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='all' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='all' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              All
-              <span class="badge bg-warning ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px; color:#000;">{{ all || 0 }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='chequesissued'}" (click)="ChequesIssued(); activeTab='chequesissued'"
-              [style.border]="activeTab==='chequesissued' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='chequesissued' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='chequesissued' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Cheques Issued
-              <span class="badge bg-secondary ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ chequesissued || 0 }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='onlinepayments'}" (click)="OnlinePayments(); activeTab='onlinepayments'"
-              [style.border]="activeTab==='onlinepayments' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='onlinepayments' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='onlinepayments' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Online Payments
-              <span class="badge bg-primary ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ onlinepayments || 0 }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='cleared'}" (click)="Cleared(); activeTab='cleared'"
-              [style.border]="activeTab==='cleared' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='cleared' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='cleared' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Cleared
-              <span class="badge bg-success ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ cleared || 0 }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='returned'}" (click)="Returned(); activeTab='returned'"
-              [style.border]="activeTab==='returned' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='returned' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='returned' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Returned
-              <span class="badge bg-danger ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ returned || 0 }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='cancelled'}" (click)="Cancelled(); activeTab='cancelled'"
-              [style.border]="activeTab==='cancelled' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='cancelled' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='cancelled' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Cancelled
-              <span class="badge bg-danger ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ cancelled || 0 }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="!tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" (click)="allCheques()"
-              style="border:1px solid #ced4da; border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer; background-color:#fff; color:#495057;">
-              Cheques
-              <span class="badge bg-danger ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ displayAllChequesDataBasedOnForm?.length }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="!tabsShowOrHideBasedOnfromFormName">
-            <a class="nav-link" (click)="otherCheques()"
-              style="border:1px solid #ced4da; border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer; background-color:#fff; color:#495057;">
-              Cash / Adjustments
-              <span class="badge bg-danger ms-2"
-                style="border-radius:4px; padding:4px 6px; font-size:10px; margin-left:8px;">{{ otherChequesCount }}</span>
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='bankfileupload'}" (click)="BankUploadExcel(); activeTab='bankfileupload'"
-              [style.border]="activeTab==='bankfileupload' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='bankfileupload' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='bankfileupload' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Bank File Upload
-            </a>
-          </li>
-
-          <li class="nav-item" *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
-            <a class="nav-link" [ngClass]="{'active': activeTab==='autobrs'}" (click)="AutoBrs(); activeTab='autobrs'"
-              [style.border]="activeTab==='autobrs' ? '1px solid var(--bs-primary)' : '1px solid #ced4da'"
-              [style.background-color]="activeTab==='autobrs' ? 'var(--bs-primary)' : '#fff'"
-              [style.color]="activeTab==='autobrs' ? '#fff' : '#495057'"
-              style="border-radius:4px; padding:6px 12px; font-weight:500; display:flex; align-items:center; text-decoration:none; cursor:pointer;">
-              Auto BRS
-            </a>
-          </li>
-
-        </ul>
-
-        <!-- BRS Cleared Date Range -->
-        <div *ngIf="brsdateshowhidecleared" class="row mb-3 align-items-center">
-          <div class="col-md-3 col-xl-3">
-            <div class="form-group mb-0">
-              <label style="font-weight:500; font-size:13px;">BRS From Date</label>
-              <input class="form-control" type="text" formControlName="pfrombrsdate" readonly bsDatepicker
-                placement="bottom"
-                [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-                style="height:36px; border-radius:4px;" />
-            </div>
-          </div>
-          <div class="col-md-4 col-xl-4">
-            <div class="form-group mb-0">
-              <label style="font-weight:500; font-size:13px;">BRS To Date</label>
-              <div class="d-flex align-items-center">
-                <input class="form-control" type="text" formControlName="ptobrsdate" readonly bsDatepicker
+                Online Payments <span class="count blue">{{ onlinepayments }}</span>
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'cleared'"
+                (click)="Cleared(); activeTab='cleared'">
+                Cleared <span class="count green">{{ cleared }}</span>
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'returned'"
+                (click)="Returned(); activeTab='returned'">
+                Returned <span class="count red">{{ returned }}</span>
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'cancelled'"
+                (click)="Cancelled(); activeTab='cancelled'">
+                Cancelled <span class="count red">{{ cancelled }}</span>
+              </button>
+            </li>
+            <li *ngIf="!tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" (click)="allCheques()">
+                Cheques <span class="count red">{{ displayAllChequesDataBasedOnForm?.length }}</span>
+              </button>
+            </li>
+            <li *ngIf="!tabsShowOrHideBasedOnfromFormName">
+              <button type="button" class="tab-btn" (click)="otherCheques()">
+                Cash / Adjustments <span class="count red">{{ otherChequesCount }}</span>
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
+              <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'bankfileupload'"
+                (click)="BankUploadExcel()" activeTab='bankfileupload'> Bank File Upload
+              </button>
+            </li>
+            <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
+              <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'autobrs'"
+                (click)="AutoBrs(); activeTab='autobrs'">
+                Auto BRS
+              </button>
+            </li>
+          </ul>
+          <br />
+          <div *ngIf="brsdateshowhidecleared" class="row mb-3">
+            <div class="col-md-6 col-xl-4">
+              <div class="form-group">
+                <label class="fw-bold">BRS From Date</label>
+                <input class="form-control w-auto" type="text" formControlName="pfrombrsdate" readonly bsDatepicker
                   placement="bottom"
                   [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
                   style="height:36px; border-radius:4px;" />

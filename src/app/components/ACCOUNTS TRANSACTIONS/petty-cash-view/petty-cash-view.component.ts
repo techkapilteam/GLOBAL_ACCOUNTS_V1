@@ -238,11 +238,6 @@ export class PettyCashViewComponent implements OnInit {
   ) {
     this.pageCriteria = new PageCriteria();
   }
-
-  // ======================================
-  // INIT
-  // ======================================
-
   ngOnInit(): void {
 
     this.setPageModel();
@@ -252,24 +247,13 @@ export class PettyCashViewComponent implements OnInit {
       ? this._commonService.currencysymbol
       : '₹';
   }
-
-  // ======================================
-  // PAGE MODEL
-  // ======================================
-
   setPageModel() {
 
     this.pageCriteria.pageSize = this._commonService.pageSize;
     this.pageCriteria.offset = 0;
     this.pageCriteria.pageNumber = 1;
     this.pageCriteria.footerPageHeight = 50;
-
   }
-
-  // ======================================
-  // LOAD GRID DATA
-  // ======================================
-
   getLoadData(): void {
 
     const GlobalSchema = this._commonService.getschemaname();
