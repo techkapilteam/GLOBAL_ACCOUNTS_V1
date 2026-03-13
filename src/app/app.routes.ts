@@ -52,7 +52,7 @@ import { ChequeManagementnewComponent } from './components/ACCOUNTS CONFIG/chequ
 import { GeneralReceiptReportComponent } from './components/ACCOUNTS REPORTS/general-receipt-report/general-receipt-report.component';
 import { JournalVoucherReportComponent } from './components/ACCOUNTS REPORTS/journal-voucher-report/journal-voucher-report.component';
 import { PaymentVoucherReportComponent } from './components/ACCOUNTS REPORTS/payment-voucher-report/payment-voucher-report.component';
-import { BankEntriesComponent } from './components/ACCOUNTS REPORTS/bank-entries/bank-entries.component';
+// import { BankEntriesComponent } from './components/ACCOUNTS REPORTS/bank-entries/bank-entries.component';
 
 export const routes: Routes = [
   {
@@ -263,10 +263,10 @@ export const routes: Routes = [
         path: 'accounts/accounts-reports/day-book',
         component: DayBookComponent
       },
-      {
-        path: 'accounts/accounts-reports/bank-entries',
-        component: BankEntriesComponent
-      },
+      // {
+      //   path: 'accounts/accounts-reports/bank-entries',
+      //   component: BankEntriesComponent
+      // },
       {
         path: 'transactions/deposits/:screen',
         component: ScreenViewComponent
