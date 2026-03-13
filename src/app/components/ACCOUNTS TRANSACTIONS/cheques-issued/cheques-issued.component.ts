@@ -12,10 +12,10 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 @Component({
   selector: 'app-cheques-issued',
-  imports: [CommonModule, CurrencyPipe, TableModule, CheckboxModule, FormsModule, ReactiveFormsModule, BsDatepickerModule],
+  imports: [CommonModule, CurrencyPipe, NgSelectModule, TableModule, CheckboxModule, FormsModule, ReactiveFormsModule, BsDatepickerModule],
   templateUrl: './cheques-issued.component.html',
   styleUrl: './cheques-issued.component.css'
 })
@@ -43,7 +43,7 @@ export class ChequesIssuedComponent implements OnInit {
   showicons = false;
   gridData: any[] = [];
   gridDatatemp: any[] = [];
-  BanksList: any[] = [];
+  bankList: any[] = [];
   gridLoading = false;
 
   ChequesIssuedData: any[] = [];
@@ -144,7 +144,7 @@ export class ChequesIssuedComponent implements OnInit {
 
   fromdate: any = '';
   todate: any = '';
-
+  // bankList: any[] = [];
   _countData: any = [];
 
   boolforAutoBrs: boolean = false;
@@ -156,12 +156,17 @@ export class ChequesIssuedComponent implements OnInit {
   dpConfig: Partial<BsDatepickerConfig> = {};
   brsfromConfig: Partial<BsDatepickerConfig> = {};
   brstoConfig: Partial<BsDatepickerConfig> = {};
+  selectedBankName: any;
+  bankid1: any;
+  brsTOdate: any;
+  bankid12: any;
 
   constructor(
     private _accountingtransaction: AccountingTransactionsService,
     private _commonService: CommonService,
     private fb: FormBuilder,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private _Accountservice: AccountingTransactionsService
   ) {
     this.brsfromConfig = { ...this.dpConfig };
     this.brstoConfig = { ...this.dpConfig };
@@ -199,24 +204,27 @@ export class ChequesIssuedComponent implements OnInit {
 
     // ─── FIXED: GetBanksntList now uses correct parameter order ───
     // Service signature: GetBanksntList(BranchSchema, GlobalSchema, CompanyCode, BranchCode)
-    this._accountingtransaction
-      .GetBanksntList(
-        this._commonService.getbranchname(),   // BranchSchema
-        this._commonService.getschemaname(),   // GlobalSchema
-        this._commonService.getCompanyCode(),  // CompanyCode
-        this._commonService.getBranchCode()    // BranchCode
-      )
-      .subscribe({
-        next: (banks: any) => {
-          this.BanksList = banks || [];
-        },
-        error: (err) => this._commonService.showErrorMessage(err)
-      });
+
+    const BranchSchema = this._commonService.getbranchname();
+    const GlobalSchema = this._commonService.getschemaname();
+    const CompanyCode = this._commonService.getCompanyCode();
+    const BranchCode = this._commonService.getBranchCode();
+    this._Accountservice.GetBankntList(
+      BranchSchema,
+      GlobalSchema,
+      CompanyCode,
+      BranchCode
+    ).subscribe((res: any) => {
+
+      // this.bankList = res || [];
+      this.bankList = res.banklist || [];
+    });
+
 
     this.setPageModel();
     this.setPageModel2();
 
-    this.GetBankBalance(this.bankid);
+    // this.GetBankBalance(this.bankid);
     this.GetChequesIssued_Load(this.bankid);
 
     this.boolforAutoBrs = this.companydetails?.pisautobrsimpsapplicable;
@@ -232,6 +240,8 @@ export class ChequesIssuedComponent implements OnInit {
       this.showOrHideAllChequesGrid = false;
       this.showOrHideChequesIssuedGrid = false;
     }
+    // this.setupDependencies();
+
   }
 
   change_date(event: any) {
@@ -256,43 +266,139 @@ export class ChequesIssuedComponent implements OnInit {
     }
     this.pageCriteria.offset = 0;
     this.pageCriteria.pageNumber = 1;
+
   }
 
-  GetBankBalance(bankid: number) {
-    this._accountingtransaction
-      .GetBankBalance(
-        '29-02-2024',
-        bankid,
-        this._commonService.getbranchname(),
-        'KLC01',
-        'KAPILCHITS'
-      )
-      .subscribe({
-        next: (bankdetails: any) => {
-          this.bankbalancedetails = bankdetails;
-          const balance = bankdetails._BankBalance || 0;
+  // GetBankBalance(bankid: number) {
+  //   this._accountingtransaction
+  //     .GetBankBalance(
+  //       '29-02-2024',
+  //       bankid,
+  //       this._commonService.getbranchname(),
+  //       'KLC01',
+  //       'KAPILCHITS'
+  //     )
+  //     .subscribe({
+  //       next: (bankdetails: any) => {
+  //         this.bankbalancedetails = bankdetails;
+  //         const balance = bankdetails._BankBalance || 0;
 
-          if (balance < 0) {
-            this.bankbalance = Math.abs(balance);
-            this.bankbalancetype = 'Cr';
-          } else if (balance === 0) {
-            this.bankbalance = 0;
-            this.bankbalancetype = '';
-          } else {
-            this.bankbalance = balance;
-            this.bankbalancetype = 'Dr';
-          }
+  //         if (balance < 0) {
+  //           this.bankbalance = Math.abs(balance);
+  //           this.bankbalancetype = 'Cr';
+  //         } else if (balance === 0) {
+  //           this.bankbalance = 0;
+  //           this.bankbalancetype = '';
+  //         } else {
+  //           this.bankbalance = balance;
+  //           this.bankbalancetype = 'Dr';
+  //         }
 
-          const from = this._commonService.getDateObjectFromDataBase(bankdetails.pfrombrsdate);
-          const to = this._commonService.getDateObjectFromDataBase(bankdetails.ptobrsdate);
+  //         const from = this._commonService.getDateObjectFromDataBase(bankdetails.pfrombrsdate);
+  //         const to = this._commonService.getDateObjectFromDataBase(bankdetails.ptobrsdate);
 
-          this.ChequesIssuedForm.patchValue({ pfrombrsdate: from, ptobrsdate: to });
-          this.BrsReturnForm.patchValue({ frombrsdate: from, tobrsdate: to });
-          this.BrsCancelForm.patchValue({ frombrsdate: from, tobrsdate: to });
-        },
-        error: (err) => this._commonService.showErrorMessage(err)
+  //         this.ChequesIssuedForm.patchValue({ pfrombrsdate: from, ptobrsdate: to });
+  //         this.BrsReturnForm.patchValue({ frombrsdate: from, tobrsdate: to });
+  //         this.BrsCancelForm.patchValue({ frombrsdate: from, tobrsdate: to });
+  //       },
+  //       error: (err) => this._commonService.showErrorMessage(err)
+  //     });
+  // }
+
+  // onBankChange(bank: any) {
+  //   debugger
+  //   console.log("Selected Bank:", bank);
+  //   this.selectedBankName = bank.pdepositbankname;
+
+  //   this.bankbalance = bank.pbankbalance;
+  //   this.brsdate = bank.pfrombrsdate;
+  //   this.bankid12 = bank.pbankid;
+
+  // }
+
+  onBankChange(bank: any) {
+    if (!bank) {
+      this.selectedBankName = '';
+      this.bankbalance = 0;
+      this.brsdate = '';
+      this.bankid = 0;
+      return;
+    }
+
+    this.selectedBankName = bank.pdepositbankname;
+    this.bankid = bank.pbankid;
+    this.bankid12 = bank.pbankid;
+
+    const transactionDate = this.ChequesIssuedForm.value.ptransactiondate;
+    const formattedDate = this.datepipe.transform(transactionDate, 'yyyy-MM-dd') || '';
+
+    this._Accountservice.GetBankBalance(
+      formattedDate,
+      bank.pbankid ,   
+      'accounts',      
+      'KLC01',         
+      'KAPILCHITS'
+    ).subscribe((res: any) => {
+      this.bankbalance = res?._BankBalance ?? 0;
+      this.brsdate = res?.pfrombrsdate || '';
+      this.brsTOdate = res?.ptobrsdate || '';
+
+      this.ChequesIssuedForm.patchValue({
+        pfrombrsdate: this._commonService.getDateObjectFromDataBase(res?.pfrombrsdate),
+        ptobrsdate: this._commonService.getDateObjectFromDataBase(res?.ptobrsdate)
       });
+
+      this.GetChequesIssued_Load(this.bankid);
+    });
   }
+
+  // setupDependencies(): void {
+
+  //   this.ChequesIssuedForm.get('bankname')?.valueChanges.subscribe(value => {
+
+  //     if (value) {
+
+  //       this.ChequesIssuedForm.get('paytmname')?.enable();
+
+  //       // const brstodate = 
+  //       //   this.ChequesIssuedForm.value.ptransactiondate
+  //       // ;
+
+  //       const BranchSchema = this._commonService.getbranchname();
+  //       const BranchCode = this._commonService.getBranchCode();
+  //       const CompanyCode = this._commonService.getCompanyCode();
+
+  //       this._Accountservice.GetBankBalance(
+  //         '2026-01-01',
+  //         value,
+  //         'accounts',
+  //         'KLC01',
+  //         'KAPILCHITS'
+  //       ).subscribe((res: any) => {
+
+  //         this.bankbalance = res?.pbankbalance || 0;
+  //         this.bankbalancetype = res?.bankbalancetype || '';
+  //         this.brsdate = res?.pfrombrsdate || '';
+  //         this.brsTOdate = res?.ptobrsdate || '';
+  //         // this.brsdate = res?.pfrombrsdate || '';
+
+  //       });
+
+  //     }
+  //     else {
+
+  //       this.ChequesIssuedForm.get('paytmname')?.disable();
+  //       this.ChequesIssuedForm.get('paytmname')?.setValue('');
+
+  //     }
+
+  //   });
+
+  //   // this.ChequesIssuedForm.get('chequeintype')?.valueChanges.subscribe(type => {
+  //   //   this.applyRadioFilter(type);
+  //   // });
+
+  // }
 
   GetChequesIssued_Load(bankid: number) {
 
@@ -310,14 +416,14 @@ export class ChequesIssuedComponent implements OnInit {
       //                                     startindex, endindex, modeofreceipt, searchtext,
       //                                     GlobalSchema, branchcode, companycode)
       this._accountingtransaction.GetChequesIssued(
-        bankid,           // _BankId
-        '',               // BrsFromDate  (empty on initial load)
-        '',               // BrsTodate    (empty on initial load)
+        this.bankid12,           // _BankId
+        this.brsdate,               // BrsFromDate  (empty on initial load)
+        this.brsTOdate,               // BrsTodate    (empty on initial load)
         BranchSchema,     // BranchSchema
-        this.startindex,  // startindex
-        this.endindex,    // endindex
+        0,  // startindex
+        this.pageSize,    // endindex
         this.modeofreceipt, // modeofreceipt
-        this._searchText,   // searchtext
+        3,   // searchtext
         GlobalSchema,     // GlobalSchema
         BranchCode,       // branchcode
         CompanyCode       // companycode
@@ -1032,7 +1138,7 @@ export class ChequesIssuedComponent implements OnInit {
     } else {
       this.banknameshowhide = true;
 
-      this.bankdetails = this.BanksList.find(b => b.pdepositbankname === value);
+      this.bankdetails = this.bankList.find(b => b.pdepositbankname === value);
       this.bankid = this.bankdetails?.pbankid;
       this.bankname = this.bankdetails?.pdepositbankname;
 

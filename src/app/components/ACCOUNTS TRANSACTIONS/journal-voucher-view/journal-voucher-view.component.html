@@ -7,31 +7,33 @@
       <h2 style="margin:0; font-size:20px; font-weight:700; color:#070707;">Journal Voucher View</h2>
     </div>
 
-    <div style="padding:20px 24px;">
+<div style="padding:20px 24px;">
 
-      <!-- NEW BUTTON ROW -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <a
-            routerLink="/dashboard/accounts/accounts-transactions/journal-voucher"
-            class="btn btn-primary"
-            style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:8px 20px;">
-            + New
-          </a>
-        </div>
-      </div>
+  <div class="row mb-4 align-items-center">
 
-      <!-- SEARCH ROW -->
-      <div class="row mb-4">
-        <div class="col-md-6">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search..."
-            (keyup)="filterDatatable($event)"
-            style="font-size:13px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246;">
-        </div>
-      </div>
+    <!-- New Button (Left) -->
+    <div class="col-md-6">
+      <a
+        routerLink="/dashboard/accounts/accounts-transactions/journal-voucher"
+        class="btn btn-primary"
+        style="background:#0d6efd; border-color:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:8px 20px;">
+        + New
+      </a>
+    </div>
+
+    <!-- Search (Right) -->
+    <div class="col-md-6 text-end">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search..."
+        (keyup)="filterDatatable($event)"
+        style="font-size:15px; border:1.5px solid #cdd8f0; border-radius:7px; color:#162246; max-width:260px; display:inline-block;">
+    </div>
+
+  </div>
+
+
 
       <!-- TABLE CARD -->
       <div class="row">
@@ -54,11 +56,11 @@
               <!-- HEADER -->
               <ng-template pTemplate="header">
                 <tr>
-                  <th class="text-center" style="width:100px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Actions</th>
-                  <th class="text-center" style="width:150px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
-                  <th class="text-center" style="width:150px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">JV No.</th>
-                  <th class="text-end" style="width:200px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:right !important;">Amount</th>
-                  <th style="width:500px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; white-space:nowrap;">Narration</th>
+                  <th class="text-center" style="width:100px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Actions</th>
+                  <th class="text-center" style="width:150px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
+                  <th class="text-center" style="width:150px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">JV No.</th>
+                  <th class="text-end" style="width:200px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:right !important;">Amount</th>
+                  <th style="width:500px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Narration</th>
                 </tr>
               </ng-template>
 

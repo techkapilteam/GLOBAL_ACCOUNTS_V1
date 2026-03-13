@@ -159,6 +159,7 @@ export class GeneralReceiptNewComponent implements OnInit {
     bankexists: boolean | undefined;
     availableAmount: any;
     this: any;
+    onlyNumberValidator: any | string;
 
     public Bankbuttondata: any = [
         { id: 1, type: 'Cheque', chequeshowhide: true, onlineshowhide: false, DebitShowhide: false, creditShowhide: false },
@@ -235,8 +236,8 @@ export class GeneralReceiptNewComponent implements OnInit {
             schemaname: [this._commonService.getschemaname()],
             ptranstype: [''],
             ptypeofpayment: [null],
-            pAccountnumber: ['', [Validators.required, digitsOnlyValidator, Validators.minLength(9), Validators.maxLength(40)]],
-            pChequenumber: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]],
+            pAccountnumber: [''],
+            pChequenumber: [''],
             pchequedate: [this.today],
             pbankid: [null],
             pCardNumber: ['', [cardNumberValidator]],

@@ -4641,7 +4641,7 @@ export class OnlineSettlementComponent implements OnInit {
     this.selected = [];
   }
 
-  Save(): void {
+  Save(): void {  
     console.log('Selected Rows:', this.selected);
   }
   ALL():void {

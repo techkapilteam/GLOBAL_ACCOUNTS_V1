@@ -23,14 +23,21 @@
             </div>
             <div class="col-md-4 col-xl-4">
               <div class="form-group">
-                <label class="fw-bold">Bank</label>
+                <!-- <label class="fw-bold">Bank</label>
                 <select class="form-control" id="bankname" title="Bank" formControlName="bankname"
                   [ngClass]="{ 'is-invalid': ChequesIssuedValidation?.bankname }" (change)="SelectBank($event)">
                   <option value="">Select</option>
                   <option *ngFor="let bank of BanksList" [value]="bank.pdepositbankname">
                     {{ bank.pdepositbankname }}
                   </option>
-                </select>
+                </select> -->
+                <label style="font-size:13px; font-weight:600; color:#162246;">Bank</label>
+                <!-- <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="paccountid"
+                formControlName="bankname" placeholder="Select" class="w-100">
+              </ng-select> -->
+                <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="paccountid"
+                  formControlName="bankname" (change)="onBankChange($event)" placeholder="Select" class="w-100">
+                </ng-select>
                 <div class="invalid-feedback" *ngIf="ChequesIssuedValidation?.bankname">
                   {{ ChequesIssuedValidation?.bankname }}
                 </div>
@@ -42,7 +49,7 @@
                   {{ bankname }}
                   <hr class="mt-1 mb-1" />
                 </span>
-                <div class="border rounded shadow-sm bg-light p-3 d-flex justify-content-between align-items-center">
+                <!-- <div class="border rounded shadow-sm bg-light p-3 d-flex justify-content-between align-items-center">
                   <span class="text-start">
                     <label class="balance-label">Balance: </label>
                     <label class="balance-value">
@@ -61,6 +68,32 @@
                     <label class="balance-label">BRS Date: </label>
                     <label class="balance-value">{{ brsdate }}</label>
                   </span>
+                </div> -->
+                <!-- <div class="balance-box">
+                  <div>
+                    <strong></strong> {{ selectedBankName }}
+                  </div>
+
+                  <div>
+                    Balance: ₹ {{ bankbalance }}
+                  </div>
+
+                  <div>
+                    BRS Date: {{ brsdate }}
+                  </div>
+                </div> -->
+
+                <div class="balance-box">
+                  <div>
+                    <strong>{{ selectedBankName }}</strong>
+                  </div>
+                  <div>
+                    Balance: ₹ {{ bankbalance }}
+                    <
+                  </div>
+                  <div>
+                    BRS Date: {{ brsdate }}
+                  </div>
                 </div>
               </div>
             </div>

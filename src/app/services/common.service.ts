@@ -174,7 +174,7 @@ const companyBranch = company?.uniqueBranchName ?? '';
         const pageHeight = doc.internal.pageSize.getHeight();
 
         if (doc.getNumberOfPages() === 1) {
-          doc.addImage(logo, 'JPEG', 10, 5, 25, 15);
+          doc.addImage(logo, 'JPEG', 10, 5, 20, 20);
           // doc.setFontSize(14);
           // doc.text(company?.pCompanyName ?? '', pageWidth / 2, 12, { align: 'center' });
           // const companyName = company?.pCompanyName ?? '';
@@ -775,7 +775,7 @@ const companyBranch = company?.uniqueBranchName ?? '';
       'Header Color1': 'white',
       'Header Alignment': 'center',
       'Header Fontsize': 10,
-      'Cell Fontsize': 9,
+      'Cell Fontsize': 10,
       'Address Fontsize': 8
     };
     if (!config[propertyType]) {
