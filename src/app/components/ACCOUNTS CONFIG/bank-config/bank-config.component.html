@@ -50,11 +50,8 @@
         <label class="required-field" id="pAccountnumber" title="Account No.">Account No.</label>
 
         <input class="form-control" [attr.disabled]="accountno ? '' : null" type="text" value=""
-          formControlName="pAccountnumber"   (input)="allowNumbersOnly1($event)"
-          maxlength="16"
-  inputmode="numeric"
-  pattern="[0-9]*"
-          [ngClass]="{
+          formControlName="pAccountnumber" (input)="allowNumbersOnly1($event)" maxlength="16" inputmode="numeric"
+          pattern="[0-9]*" [ngClass]="{
         'is-invalid': bankmasterform.get('pAccountnumber')?.touched &&
                       bankmasterform.get('pAccountnumber')?.invalid
         }">
@@ -86,7 +83,7 @@
         </select> -->
 
 
-                  <!-- [ngClass]="{ 'is-invalid':bankmastervalidations.bankName}" -->
+        <!-- [ngClass]="{ 'is-invalid':bankmastervalidations.bankName}" -->
 
 
         <ng-select class="form-control" formControlName="bankName" [items]="banksList" bindLabel="bankName"
@@ -404,17 +401,38 @@
             <div class="col-md-6 col-xl-6">
               <h6 class="lc-title text-left">UPI Setup </h6>
             </div>
-            <div class="col-md-6 col-xl-6">
+            <!-- <div class="col-md-6 col-xl-6">
 
 
 
               <div class="material-switch"> <span class="mr-2"> Status </span>
-                <input type="checkbox" formControlName="pIsupiapplicable" (change)="bankupichecked($event)">
+                <input type="checkbox" id="upi" formControlName="pIsupiapplicable" (change)="bankupichecked($event)">
               </div>
               <label for="upi" class="badge-success" data-toggle="collapse" data-target="#upi-switch"></label>
               <div class="invalid-feedback">
                 <span *ngIf="bankmastervalidations.pIsupiapplicable">{{bankmastervalidations?.pIsupiapplicable}}</span>
               </div>
+            </div> -->
+
+            <div class="col-md-6 col-xl-6">
+
+              <div class="d-flex align-items-center">
+
+                <label for="upi" class="mr-3 mb-0">Status</label>
+
+                <div class="form-check form-switch m-0">
+                  <input class="form-check-input" type="checkbox" id="upi" formControlName="pIsupiapplicable"
+                    (change)="bankupichecked($event)">
+                </div>
+
+              </div>
+
+              <div class="invalid-feedback">
+                <span *ngIf="bankmastervalidations.pIsupiapplicable">
+                  {{ bankmastervalidations?.pIsupiapplicable }}
+                </span>
+              </div>
+
             </div>
           </div>
         </div>

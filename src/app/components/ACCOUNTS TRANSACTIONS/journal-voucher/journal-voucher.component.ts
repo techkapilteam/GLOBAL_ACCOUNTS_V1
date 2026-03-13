@@ -2442,8 +2442,8 @@ saveJournalVoucher() {
   tdsVoucherStatus: "",
 
   // ✅ User/Branch fields
-  pbranchid: 1,
-  pCreatedby: 1,
+  pbranchid: "1",
+  pCreatedby: "1",
   pipaddress: "192.168.2.177",
   // pipaddress: this._commonService.getIpAddress() || "::1",
   formname: "LEGAL EXPENSES JV",
