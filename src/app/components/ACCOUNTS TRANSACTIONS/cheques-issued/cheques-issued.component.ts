@@ -114,7 +114,7 @@ interface ChequesIssuedRow {
 type GridStatus =
   | 'all' | 'chequesissued' | 'onlinepayment'
   | 'cleared' | 'returned' | 'cancelled'
-  | 'autobrs' | 'other';
+  | 'autobrs' | 'other' | 'bankfileupload';
 
 // ---------------------------------------------------------------------------
 // Component
