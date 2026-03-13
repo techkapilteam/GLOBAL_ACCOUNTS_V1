@@ -109,7 +109,9 @@ export class PaymentVoucherReportComponent implements OnInit {
     console.error('No id param found');
     return;
   }
-  const routeParams = atob(encodedId.replace(/\s/g, '+'));
+    const decodedParam = decodeURIComponent(encodedId);
+  const routeParams = atob(decodedParam);
+  // const routeParams = atob(encodedId.replace(/\s/g, '+'));
   const splitData = routeParams.split(',');
 
   this.pvnumber = splitData[0];

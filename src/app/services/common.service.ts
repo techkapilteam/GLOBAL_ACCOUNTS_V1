@@ -675,6 +675,22 @@ const companyBranch = company?.uniqueBranchName ?? '';
       ));
 
   }
+  postAPIWithParams(apiPath: any, data: any, params: HttpParams) {
+  let httpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache'
+  });
+
+  return this.loadApiHostUrl().pipe(
+    switchMap(apiBaseUrl => {
+      const fullUrl = apiBaseUrl + apiPath;
+      return this.http.post(fullUrl, data, { headers: httpHeaders, params }).pipe(
+        map((res: any) => this.extractData(res)),
+        catchError(error => this.handleError(error))
+      );
+    })
+  );
+}
 
   callPostAPIMultipleParameters(apiPath: any) {
     let urldata = environment.apiURL;

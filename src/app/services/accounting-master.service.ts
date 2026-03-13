@@ -151,7 +151,7 @@ export class AccountingMasterService {
 
   savebankinformation(bankinformationdata: any): Observable<any> {
     return this._CommonService.postAPI(
-      '/BankInformation/SaveBankInformation',
+      '/Accounts/SaveBankInformation',
       bankinformationdata
     );
   }

@@ -466,8 +466,9 @@ export class RePrintComponent implements OnInit {
           //             { queryParams: { id: receipt } }
           //           )
           //         );
+          const encodedForUrl = encodeURIComponent(receipt);
           const url = this.router.serializeUrl(
-            this.router.createUrlTree(['/PaymentVoucherReport', receipt])
+            this.router.createUrlTree(['/PaymentVoucherReport', encodedForUrl])
           );
 
           window.open(url, '_blank');
