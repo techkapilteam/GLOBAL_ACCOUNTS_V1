@@ -57,8 +57,8 @@ export class AccountingTransactionsService {
   GetModeoftransactions(): Observable<any> {
     return this._CommonService.getAPI('/AccountingTransactions/GetModeoftransactions', '', 'NO');
   }
-  GetGeneralReceiptsData(GlobalSchema: 'global', BranchSchema: 'accounts', TaxSchema: 'taxes', CompanyCode: 'KAPILCHITS',
-    BranchCode: 'KLC01'): Observable<any> {
+  GetGeneralReceiptsData(GlobalSchema: any, BranchSchema: any, TaxSchema: any, CompanyCode: any,
+    BranchCode: any): Observable<any> {
 
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set('TaxSchema', TaxSchema)
       .set('CompanyCode', CompanyCode).set('BranchCode', BranchCode); return this._CommonService.getAPI('/Accounts/GetGeneralReceiptsData', params, 'YES');
@@ -199,7 +199,10 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/GetBankntList', params, 'YES')
   }
-
+  GetBankNameDetails(globalSchema: any, branchSchema: any, BranchCode: any, CompanyCode: any): Observable<any> {
+    const params = new HttpParams().set('globalSchema', globalSchema).set('branchSchema', branchSchema).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode);
+    return this._CommonService.getAPI('/Accounts/GetBankNameDetails', params, 'YES')
+  }
   // GetPayTmBanksList(BranchSchema: any, p0: string, p1: string): Observable<any> {
   //   const params = new HttpParams().set('BranchSchema', BranchSchema);
   //   return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')
@@ -375,7 +378,10 @@ export class AccountingTransactionsService {
     debugger;
     return this._CommonService.postAPI('/Accounts/SavePaymentVoucher', data)
   }
-
+  saveChequesIssued(data: any) {
+    debugger;
+    return this._CommonService.postAPI('/Accounts/saveChequesIssued', data)
+  }
   SaveInterBranchPaymentVoucher(data: any) {
     debugger;
     return this._CommonService.postAPI('/AccountingTransactions/SaveInterBranchPaymentVoucher', data)
@@ -391,7 +397,7 @@ export class AccountingTransactionsService {
   }
 
   savePettyCash(data: any) {
-    return this._CommonService.postAPI('/AccountingTransactions/SavePettyCash', data)
+    return this._CommonService.postAPI('/Accounts/SavePettyCash', data)
   }
 
   saveGeneralReceipt(data: any) {
@@ -403,6 +409,7 @@ export class AccountingTransactionsService {
   saveJournalVoucher(data: any) {
     return this._CommonService.postAPI('/Accounts/SaveJournalVoucher', data)
   }
+  
   GetJournalVoucherData(
     BranchSchema: any, CompanyCode: any, BranchCode: any
   ): Observable<any> {

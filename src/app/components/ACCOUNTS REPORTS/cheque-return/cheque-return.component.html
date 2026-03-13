@@ -48,7 +48,7 @@
           <div class="card-body">
 
             <div class="d-flex justify-content-end mb-3" *ngIf="showicons">
-              <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
+              <!-- <button class="btn btn-outline-danger me-2" (click)="pdfOrprint('Pdf')">
                   <i class="fa fa-file-pdf me-1"></i> PDF
                 </button>
 
@@ -58,7 +58,18 @@
 
                 <button class="btn btn-outline-secondary me-2" (click)="pdfOrprint('Print')">
                   <i class="fa fa-print me-1"></i> Print
-                </button>
+                </button> -->
+                <a (click)="pdfOrprint('Pdf')" class="export-icons me-2">
+        <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" />
+      </a>
+
+      <a (click)="pdfOrprint('Print')" class="export-icons me-2">
+        <img src="assets/images/print-icon-blue.svg" width="18" title="Print" />
+      </a>
+
+      <a (click)="export()" class="export-icons">
+        <img src="assets/images/icon-excel.svg" width="18" title="Excel" />
+      </a>
             </div>
             <!-- <div class="text-center mb-1 fw-bold fs-5">
               KAPIL CHITS (HYDERABAD) PVT. LTD.

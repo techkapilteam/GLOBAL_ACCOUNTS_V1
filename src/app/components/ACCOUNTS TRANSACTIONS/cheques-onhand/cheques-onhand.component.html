@@ -16,11 +16,10 @@
         <!-- Date -->
         <div class="col-md-2 col-xl-2">
           <div class="form-group mb-0">
-            <label style="font-weight:500; color:#495057; font-size:13px;">Date <span style="color:red;">*</span></label>
+            <label style="font-weight:500; color:#495057; font-size:13px;">Date <span
+                style="color:red;">*</span></label>
             <input class="form-control" type="text" title="Date" id="ptransactiondate"
-              [disabled]="!pdatepickerenablestatus"
-              formControlName="ptransactiondate"
-              placeholder="" readonly
+              [disabled]="!pdatepickerenablestatus" formControlName="ptransactiondate" placeholder="" readonly
               [bsConfig]="dpConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
               (ngModelChange)="change_date($event)"
               style="height:36px; padding:6px 12px; font-size:14px; border:1px solid #ced4da;">
@@ -31,10 +30,10 @@
         <!-- Bank -->
         <div class="col-md-3 col-xl-3">
           <div class="form-group mb-0">
-            <label style="font-weight:500; color:#495057; font-size:13px;">Bank <span style="color:red;">*</span></label>
+            <label style="font-weight:500; color:#495057; font-size:13px;">Bank <span
+                style="color:red;">*</span></label>
             <select class="form-control form-select" (change)="SelectBank($event)" id="bankname"
-              formControlName="bankname" title="Bank"
-              [ngClass]="{ 'is-invalid': ChequesOnHandValidation.bankname }"
+              formControlName="bankname" title="Bank" [ngClass]="{ 'is-invalid': ChequesOnHandValidation.bankname }"
               style="height:36px; padding:6px 12px; font-size:14px; border:1px solid #ced4da;">
               <option value="">Select</option>
               <option *ngFor="let bank of BanksList" [value]="bank.bankName">{{bank.bankName}}</option>
@@ -55,16 +54,18 @@
                 Cheques On Hand
               </h4>
             </div>
-            <div class="form-group mb-0"
-              style="display:flex; align-items:center; color:#495057; font-size:13px;">
+            <div class="form-group mb-0" style="display:flex; align-items:center; color:#495057; font-size:13px;">
               <label style="margin-bottom:0; font-weight:700; color:#000;">Balance: </label>
               <label class="sec-head-bold ml-1"
                 style="margin-bottom:0; display:inline-flex; color:#212529; font-weight:800; font-size:14px;">
-                <div *ngIf="bankbalancetype=='Dr'">{{currencySymbol}} {{bankbalance | currency:currencySymbol}} {{bankbalancetype}}</div>
-                <div *ngIf="bankbalancetype=='Cr'">{{currencySymbol}} {{bankbalance | currency:currencySymbol}} {{bankbalancetype}}</div>
+                <div *ngIf="bankbalancetype=='Dr'">{{currencySymbol}} {{bankbalance | currency:currencySymbol}}
+                  {{bankbalancetype}}</div>
+                <div *ngIf="bankbalancetype=='Cr'">{{currencySymbol}} {{bankbalance | currency:currencySymbol}}
+                  {{bankbalancetype}}</div>
                 <div *ngIf="bankbalancetype==''">{{currencySymbol}} 0.00</div>
               </label>
-              <label class="ml-4" style="margin-bottom:0; margin-left:20px; font-weight:700; color:#000;">BRS Date: </label>
+              <label class="ml-4" style="margin-bottom:0; margin-left:20px; font-weight:700; color:#000;">BRS Date:
+              </label>
               <label class="sec-head-bold ml-1"
                 style="margin-bottom:0; color:#212529; font-weight:800; font-size:14px;">{{brsdate}}</label>
             </div>
@@ -78,9 +79,12 @@
     <div class="row mb-3 align-items-center">
       <div class="col-md-4 col-xl-4">
         <div class="form-group custom-search m-0" style="position:relative;">
-          <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#6c757d; pointer-events:none;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          <span
+            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#6c757d; pointer-events:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search"
+              viewBox="0 0 16 16">
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
             </svg>
           </span>
           <input type="search" class="form-control" placeholder="Search for cheque number"
@@ -175,20 +179,17 @@
       <div class="col-md-3 col-xl-3">
         <div class="form-group mb-0">
           <label style="font-weight:500; font-size:13px;">BRS From Date</label>
-          <input class="form-control" type="text" formControlName="pfrombrsdate" readonly
-            [bsConfig]="brsfromConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-            style="height:36px; border-radius:4px;">
+          <input class="form-control" type="text" formControlName="pfrombrsdate" readonly [bsConfig]="brsfromConfig"
+            #dp="bsDatepicker" bsDatepicker placement="bottom" style="height:36px; border-radius:4px;">
         </div>
       </div>
       <div class="col-md-4 col-xl-4">
         <div class="form-group mb-0">
           <label style="font-weight:500; font-size:13px;">BRS To Date</label>
           <div class="d-flex align-items-center">
-            <input class="form-control" type="text" formControlName="ptobrsdate" readonly
-              [bsConfig]="brstoConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
-              style="height:36px; border-radius:4px;">
-            <button type="button" class="btn ms-3"
-              (click)="ShowBrsCancel()"
+            <input class="form-control" type="text" formControlName="ptobrsdate" readonly [bsConfig]="brstoConfig"
+              #dp="bsDatepicker" bsDatepicker placement="bottom" style="height:36px; border-radius:4px;">
+            <button type="button" class="btn ms-3" (click)="ShowBrsCancel()"
               style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
               Show
             </button>
@@ -206,8 +207,8 @@
         <div class="col-md-3 col-xl-3">
           <div class="form-group mb-0">
             <label style="font-weight:500; font-size:13px;">BRS From Date</label>
-            <input class="form-control" type="text" formControlName="frombrsdate" readonly
-              placeholder="" [bsConfig]="brsfromConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+            <input class="form-control" type="text" formControlName="frombrsdate" readonly placeholder=""
+              [bsConfig]="brsfromConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
               style="height:36px; border-radius:4px;">
           </div>
         </div>
@@ -215,11 +216,10 @@
           <div class="form-group mb-0">
             <label style="font-weight:500; font-size:13px;">BRS To Date</label>
             <div class="d-flex align-items-center">
-              <input class="form-control" type="text" formControlName="tobrsdate" readonly
-                placeholder="" [bsConfig]="brstoConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
+              <input class="form-control" type="text" formControlName="tobrsdate" readonly placeholder=""
+                [bsConfig]="brstoConfig" #dp="bsDatepicker" bsDatepicker placement="bottom"
                 style="height:36px; border-radius:4px;">
-              <button type="button" class="btn ms-3"
-                (click)="ShowBrsCancel()"
+              <button type="button" class="btn ms-3" (click)="ShowBrsCancel()"
                 style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
                 Show
               </button>
@@ -238,13 +238,10 @@
         <div class="border rounded p-3 bg-white"
           style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
 
-          <p-table [value]="gridData" [lazy]="true" (onLazyLoad)="setPage($event)"
-            [paginator]="true" [rows]="pageCriteria.pageSize"
-            [first]="pageCriteria.offset * pageCriteria.pageSize"
-            [scrollable]="true" scrollHeight="500px"
-            [resizableColumns]="true" columnResizeMode="fit"
-            sortField="preceiptdate" [sortOrder]="1"
-            [showCurrentPageReport]="true"
+          <p-table [value]="gridData" [lazy]="true" (onLazyLoad)="setPage($event)" [paginator]="true"
+            [rows]="pageCriteria.pageSize" [first]="pageCriteria.offset * pageCriteria.pageSize" [scrollable]="true"
+            scrollHeight="500px" [resizableColumns]="true" columnResizeMode="fit" sortField="preceiptdate"
+            [sortOrder]="1" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             styleClass="p-datatable-sm p-datatable-gridlines">
 
@@ -252,45 +249,56 @@
             <ng-template pTemplate="header">
               <tr>
                 <th *ngIf="chequeboxshoworhide" pFrozenColumn
-                  style="width:60px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important;">
-                  <p-checkbox [(ngModel)]="preferdrows" binary="true" (onChange)="preferedselection($event)"></p-checkbox>
+                  style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important;">
+                  <p-checkbox [(ngModel)]="preferdrows" binary="true"
+                    (onChange)="preferedselection($event)"></p-checkbox>
                 </th>
                 <th *ngIf="!showhidegridcolumns" pFrozenColumn
-                  style="width:70px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="width:70px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Deposit
                 </th>
                 <th *ngIf="!showhidegridcolumns" pFrozenColumn
-                  style="width:70px; background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                  style="width:70px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Cancel
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Cheque/Reference No.
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Branch Name
                 </th>
-                <th class="text-end" style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th class="text-end"
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Amount
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Party
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Receipt Date
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Cheque Date
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Receipt No
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Receipt Id
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                   Transaction Mode
                 </th>
-                <th style="background:#162246 !important; color:#fff !important; font-size:13px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                <th
+                  style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
                   Cheque Bank Name
                 </th>
               </tr>
@@ -301,18 +309,18 @@
               <tr>
                 <td *ngIf="chequeboxshoworhide" pFrozenColumn style="padding:8px 12px;"></td>
                 <td *ngIf="!showhidegridcolumns" pFrozenColumn style="padding:8px 12px;">
-                  <p-checkbox *ngIf="row.clearstatus === 'YES'"
-                    [(ngModel)]="row.pdepositstatus" binary="true"
+                  <p-checkbox *ngIf="row.clearstatus === 'YES'" [(ngModel)]="row.pdepositstatus" binary="true"
                     (onChange)="checkedDeposit($event, row)"></p-checkbox>
                 </td>
                 <td *ngIf="!showhidegridcolumns" pFrozenColumn style="padding:8px 12px;">
-                  <p-checkbox *ngIf="row.cancelstatus === 'YES'"
-                    [(ngModel)]="row.pcancelstatus" binary="true"
+                  <p-checkbox *ngIf="row.cancelstatus === 'YES'" [(ngModel)]="row.pcancelstatus" binary="true"
                     (onChange)="checkedCancel($event, row)"></p-checkbox>
                 </td>
-                <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">{{row.pChequenumber}}</td>
+                <td class="text-center" style="padding:8px 12px; font-size:13px; color:#162246;">{{row.pChequenumber}}
+                </td>
                 <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.pbranchname}}</td>
-                <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                <td class="text-end"
+                  style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                   {{row.ptotalreceivedamount | currency:currencySymbol}}
                 </td>
                 <td style="padding:8px 12px; font-size:13px; color:#162246;">{{row.ppartyname}}</td>
@@ -369,17 +377,15 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="form-group">
           <label for="">Enter The Cancel Amount Charges For The Cheque: {{chequenumber}}</label>
-          <input type="text" class="form-control" style="text-align:right;"
-            name="cancelcharges" maxlength="3" id="cancelcharges"
-            #ref appNumbersonly appMycurrencyFormatter>
+          <input type="text" class="form-control" style="text-align:right;" name="cancelcharges" maxlength="3"
+            id="cancelcharges" #ref appNumbersonly appMycurrencyFormatter>
         </div>
         <div class="d-flex justify-content-end mt-4">
-          <a (click)="CancelChargesOk(ref.value)"
-            class="btn btn-primary px-4 border-0"
+          <a (click)="CancelChargesOk(ref.value)" class="btn btn-primary px-4 border-0"
             style="background:#0d6efd; border-radius:7px; font-size:13px; font-weight:600; padding:6px 20px; display:flex; align-items:center; gap:8px; cursor:pointer;">
             <img src="assets/images/icon-check-white.svg" width="16px" height="16px"> Ok
           </a>
         </div>
       </div>
     </div>
-  </div> 
+  </div>

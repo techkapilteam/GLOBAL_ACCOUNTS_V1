@@ -13,11 +13,6 @@ import { ValidationMessageComponent } from '../../../common/validation-message/v
   styleUrl: './online-receipts.component.css'
 })
 
-
-
-
-
-
 export class OnlineReceiptsComponent implements OnInit {
   data: any = [];
   data1: any = [];

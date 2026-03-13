@@ -74,10 +74,11 @@
           (click)="toggleSubModule(subModule)"
           [style.background]="selectedSubModule?.id === subModule.id ? '#162246' : 'transparent'"
           [style.border-left]="selectedSubModule?.id === subModule.id ? '3px solid #4fc3f7' : '3px solid transparent'"
+          [attr.data-selected]="selectedSubModule?.id === subModule.id ? 'true' : 'false'"
           style="display:flex; flex-direction:column; align-items:center; justify-content:center;
                  padding:12px 4px; cursor:pointer; gap:5px; transition:all 0.2s;"
           onmouseover="this.style.background='#162246'"
-          onmouseout="this.style.background='transparent'">
+          onmouseout="this.style.background=this.getAttribute('data-selected')==='true' ? '#162246' : 'transparent'">
 
           <div style="width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.15);
                       display:flex; align-items:center; justify-content:center; font-size:12px;
@@ -111,10 +112,11 @@
           (click)="selectScreen(screen); $event.stopPropagation()"
           [style.background]="selectedScreen?.id === screen.id ? '#c8e1ff' : 'transparent'"
           [style.border-left]="selectedScreen?.id === screen.id ? '3px solid #0b4093' : '3px solid transparent'"
+          [attr.data-selected]="selectedScreen?.id === screen.id ? 'true' : 'false'"
           style="display:flex; align-items:center; gap:7px; padding:8px 12px; cursor:pointer;
                  font-size:12px; transition:background 0.12s;"
           onmouseover="this.style.background='#dbeeff'"
-          onmouseout="this.style.background='transparent'">
+          onmouseout="this.style.background=this.getAttribute('data-selected')==='true' ? '#c8e1ff' : 'transparent'">
           <span style="width:4px; height:4px; border-radius:50%; background:#0b4093;
                        flex-shrink:0; display:inline-block;"></span>
           <span [style.color]="selectedScreen?.id === screen.id ? '#0b4093' : '#111827'"
