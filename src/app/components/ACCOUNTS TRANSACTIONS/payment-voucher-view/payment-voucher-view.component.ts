@@ -2992,9 +2992,17 @@ savePaymentVoucher() {
           this._commonService.showInfoMessage("Saved successfully");
           this.clearPaymentVoucher();
 
-          const receipt = btoa(res.voucherNo + ',' + 'Payment Voucher');
+          // const receipt = btoa(res.voucherNo + ',' + 'Payment Voucher');
           // window.open('/#/PaymentVoucherReport?id=' + receipt, "_blank");
-          window.open('/#/PaymentVoucherReport/' + receipt, "_blank");
+          const receipt = btoa(res.voucherNo + ',' + 'Payment Voucher');
+const encodedForUrl = encodeURIComponent(receipt);
+// window.open('/#/PaymentVoucherReport/' + encodedForUrl, "_blank");
+          // window.open('/#/PaymentVoucherReport/' + receipt, "_blank");
+          const url = this.router.serializeUrl(
+            this.router.createUrlTree(['/PaymentVoucherReport', encodedForUrl])
+          );
+
+          window.open(url, '_blank');
         } else {
           this.disablesavebutton = false;
           this.savebutton = 'Save';
