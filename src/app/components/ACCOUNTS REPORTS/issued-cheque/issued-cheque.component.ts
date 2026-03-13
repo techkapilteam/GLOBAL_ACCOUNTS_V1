@@ -172,7 +172,7 @@ export class IssuedChequeComponent implements OnInit {
         this.pageCriteria.totalrows = this.gridData.length;
       });
 
-    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILAGRO','KIT')
+    this.reportService.GetIssuedBankDetails(this._BankId, this._ChqBookId, from, to,'accounts','global','KAPILCHITS','KLC01')
       .subscribe((res: any) => {
         this.datagrid = res ?? [];
         this.gridDataDetails = [...this.datagrid];
@@ -231,28 +231,65 @@ export class IssuedChequeComponent implements OnInit {
       return;
     }
     debugger;
+    console.log('>>> Function started');
+  console.log('>>> chequefrom:', this.chequefrom);
+  console.log('>>> _ChqBookId:', this._ChqBookId);
+  console.log('>>> _BankId:', this._BankId);
+  console.log('>>> DataForCancel:', this.DataForCancel);
 
     this.savebutton = 'Processing';
-
-    this.FrmIssuedCheque.patchValue({
-      branchSchema: this.commonService.getschemaname(),
-      lstIssuedCheque: this.DataForCancel
-    });
-
+    const [from, to] = this.chequefrom.split('-');
     const payload = {
-      ...this.FrmIssuedCheque.value,
-      pbankname: this.BankName,
-      pchqfromto: this.chequefrom
-    };
+    pchequeNoFrom: Number(from),
+    pchequeNoTo: Number(to),
+    pchkBookId: this._ChqBookId,
+    pbankaccountid: this._BankId,
+    pbankname: this.BankName,
+    pchqfromto: this.chequefrom,
+    branchSchema: this.commonService.getbranchname(),
+    pchequenumber: '',
+    ppaymentid: '',
+    pparticulars: '',
+    ppaymentdate: '',
+    pcleardate: '',
+    pstatus: 'Cancelled',
+    ppaidamount: 0,
+    pchequestatus: '',
+    lstIssuedCheque: this.DataForCancel.map((row: any) => ({
+      pbankaccountid: this._BankId,
+      pchkBookId: this._ChqBookId,
+      pchequenumber: String(row.pchequenumber)
+    }))
+  };
 
-    this.accountingTransaction.UnusedhequeCancel(JSON.stringify(payload),'KLC01','KAPILCHITS','accounts','global').subscribe({
+  console.log('Cancel payload:', JSON.stringify(payload, null, 2));
+
+    // this.FrmIssuedCheque.patchValue({
+    //   branchSchema: this.commonService.getbranchname(),
+    //   lstIssuedCheque: this.DataForCancel
+    // });
+    console.log('branchSchema value:', this.commonService.getbranchname());
+console.log('getschemaname:', this.commonService.getschemaname());
+console.log('getBranchCode:', this.commonService.getBranchCode());
+console.log('getCompanyCode:', this.commonService.getCompanyCode());
+
+    // const payload = {
+    //   ...this.FrmIssuedCheque.value,
+    //   pbankname: this.BankName,
+    //   pchqfromto: this.chequefrom
+    // };
+console.log('Cancel payload:', payload);
+    // this.accountingTransaction.UnusedhequeCancel(JSON.stringify(payload),'KLC01','KAPILCHITS','accounts','global')
+ this.accountingTransaction.UnusedhequeCancel(payload,'KLC01','KAPILCHITS','accounts','global')
+    .subscribe({
       next: () => {
         this.commonService.showSuccessMsg('Cancelled Successfully');
         this.savebutton = 'Submit';
         this.DataForCancel = [];
         this.GetData();
       },
-      error: (err: any) => this.commonService.showErrorMessage(err)
+      error: (err: any) => {console.log('Error details:', JSON.stringify(err.error));
+        this.commonService.showErrorMessage(err)}
     });
   }
 
