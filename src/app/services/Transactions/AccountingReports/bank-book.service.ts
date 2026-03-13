@@ -120,19 +120,42 @@ export class BankBookService {
         })
       );
   }
-  GetBankEntriesDetails2(fromDate: string, toDate: string, branchName: string, ReportType: string): Observable<any> {
+  // GetBankEntriesDetails2(fromDate: string|null, toDate: string|null, branchName: string, ReportType: string): Observable<any> {
+
+  //   let params = new HttpParams()
+  //     .set('FromDate', fromDate || '')
+  //     .set('ToDate', toDate || '')
+  //     .set('BranchSchema', this._CommonService.getschemaname()).set('ReportType', ReportType || 'S').set('BranchSchema', this._CommonService.getschemaname());
+
+  //   if (branchName) {
+  //     params = params.set('BranchName', branchName);
+  //   }
+
+  //   return this._CommonService.getAPI(
+  //     '/Accounting/AccountingReports/GetBankEntriesDetails',
+  //     params,
+  //     'YES'
+  //   )
+  //     .pipe(
+  //       catchError((e: any) => {
+  //         this._CommonService.showErrorMessage(e);
+  //         return throwError(() => e);
+  //       })
+  //     );
+  // }
+  GetBankEntriesDetails2(fromDate: string|null, toDate: string|null, branchName: string, ReportType: string): Observable<any> {
 
     let params = new HttpParams()
-      .set('FromDate', fromDate || '')
-      .set('ToDate', toDate || '')
-      .set('BranchSchema', this._CommonService.getschemaname()).set('ReportType', ReportType || '');
+      .set('fromDate', fromDate || '')
+      .set('toDate', toDate || '')
+      .set('branchname', this._CommonService.getbranchname()).set('ReportType', ReportType || 'S').set('GlobalSchema', this._CommonService.getschemaname()).set('companycode', this._CommonService.getCompanyCode()).set('branchcode', this._CommonService.getBranchCode());
 
     if (branchName) {
       params = params.set('BranchName', branchName);
     }
 
     return this._CommonService.getAPI(
-      '/Accounting/AccountingReports/GetBankEntriesDetails',
+      '/Accounts/GetBankEntriesDetails',
       params,
       'YES'
     )

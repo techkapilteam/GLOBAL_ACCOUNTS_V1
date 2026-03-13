@@ -1,0 +1,205 @@
+<div class="screen-container">
+    <div class="screen-card">
+
+        <!-- <div *ngIf="loading || pdfLoading" class="text-center my-3">
+    <div class="spinner-border text-primary"></div>
+    <p class="mt-2">Processing, please wait...</p>
+  </div> -->
+        <div class="screen-header d-flex justify-content-between align-items-center">
+            <h2>Bank Entries</h2>
+        </div>
+
+
+
+        <div class="section-content">
+            <form [formGroup]="BanknBookReportForm" autocomplete="off">
+
+                <div class="row">
+
+                    <div class="col-xs-4 col-md-4 pl-0">
+                        <div class="d-flex">
+
+                            <div class="col-md-6 col-xl-6">
+                                <div class="form-group">
+                                    <label>From Date</label>
+                                    <input type="text" class="form-control" formControlName="fromDate"
+                                        placeholder="Select Date" bsDatepicker [bsConfig]="dpConfig" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-xl-6">
+                                <div class="form-group">
+                                    <label>To Date</label>
+                                    <input type="text" class="form-control" formControlName="toDate"
+                                        placeholder="Select Date" bsDatepicker [bsConfig]="dpConfig1" readonly />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-xl-2 mt-4">
+                        <div class="form-check">
+                            <input type="checkbox" (change)="CheckSummery($event)" id="Summery"
+                                class="form-check-input" />
+                            <label class="form-check-label">For Summary</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6 col-md-4 form-group mt-3 pt-2">
+                        <button class="btn btn-primary px-3" (click)="getbankBookReports()" [disabled]="loading">
+
+                            <span *ngIf="!loading">Generate Report</span>
+
+                            <span *ngIf="loading">
+                                <span class="spinner-border spinner-border-sm"></span>
+                                Processing
+                            </span>
+
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+<hr>
+
+        <div id="template" class="section-content mt-2" [hidden]="Showhide">
+
+            <div class="d-flex justify-content-end">
+
+                <a (click)="pdfOrprint('Pdf')" class="export-icons" *ngIf="!SummeryChecked">
+                    <img src="assets/images/pdf-icon-blue.svg" width="18">
+                </a>
+
+                <a (click)="pdfOrprint('Print')" class="export-icons" *ngIf="!SummeryChecked">
+                    <img src="assets/images/print-icon-blue.svg" width="18">
+                </a>
+
+                <a (click)="export()" class="export-icons">
+                    <img src="assets/images/icon-excel.svg" width="18">
+                </a>
+
+            </div>
+
+            <div id="temp-box">
+
+                <div class="section-card">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="font-14 text-left mr-2 fw-bold">Between :</span>
+                            <label>{{ startDate | date }} And {{ endDate | date }}</label>
+                        </div>
+                    </div>
+
+                    <p-table [value]="pagedData" [paginator]="true" [rows]="pageCriteria.pageSize"
+                        [totalRecords]="pageCriteria.totalrows" [lazy]="false" [loading]="loading"
+                        [tableStyle]="{ 'min-width': '60rem' }">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+
+                                <th *ngIf="!SummeryChecked" style="width:80px">Record Id</th>
+
+                                <th style="width:120px">Transaction Date</th>
+
+                                <th *ngIf="!SummeryChecked" style="width:120px">
+                                    Transaction No.
+                                </th>
+
+                                <th style="width:200px">Particulars</th>
+
+                                <th style="width:120px;text-align:right">
+                                    Debit Amount
+                                </th>
+
+                                <th style="width:120px;text-align:right">
+                                    Credit Amount
+                                </th>
+
+                                <th *ngIf="!SummeryChecked" style="width:120px;text-align:right">
+                                    Balance
+                                </th>
+
+                                <th *ngIf="!SummeryChecked" style="width:120px">
+                                    Balance Type
+                                </th>
+
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+
+                            <tr>
+
+                                <td *ngIf="!SummeryChecked">
+                                    {{ (pageCriteria.CurrentPage - 1) * pageCriteria.pageSize + rowIndex + 1 }}
+                                </td>
+
+                                <td>
+                                    {{ row.transactionDate | date:'dd-MMM-yyyy' }}
+                                </td>
+
+                                <td *ngIf="!SummeryChecked">
+                                    {{ (row.transactionNo && row.transactionNo !== '0') ? row.transactionNo : '--NA--' }}
+                                </td>
+
+                                <td>
+                                    {{ row.particulars }}
+                                </td>
+
+                                <td style="text-align:right">
+                                    <div *ngIf="row.debitamount && row.debitamount != 0">
+                                        {{ row.debitamount | number:'1.2-2' }}
+                                    </div>
+                                </td>
+
+                                <td style="text-align:right">
+                                    <div *ngIf="row.creditamount && row.creditamount != 0">
+                                        {{ row.creditamount | number:'1.2-2' }}
+                                    </div>
+                                </td>
+
+                                <td *ngIf="!SummeryChecked" style="text-align:right">
+                                    <div *ngIf="row.balance && row.balance != 0">
+                                        {{ row.balance | number:'1.2-2' }}
+                                    </div>
+                                </td>
+
+                                <td *ngIf="!SummeryChecked">
+                                    {{ row.balancetype || '--NA--' }}
+                                </td>
+
+                            </tr>
+
+                        </ng-template>
+
+                        <ng-template pTemplate="footer">
+
+                            <tr>
+                                <td colspan="8">
+
+                                    <div style="display:flex;justify-content:space-between;align-items:center">
+
+                                        <div>
+                                            Page {{ pageCriteria.CurrentPage }}
+                                            of {{ pageCriteria.TotalPages }}
+                                            ({{ pageCriteria.totalrows }} items)
+                                        </div>
+
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </ng-template>
+
+                    </p-table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

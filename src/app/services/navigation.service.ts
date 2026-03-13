@@ -102,7 +102,8 @@ export class NavigationService {
             { id: 'online-settlement-report', name: 'Online Settlement Report', route: '/dashboard/accounts/accounts-reports/online-settlement-report' },
             { id: 'pending-transfer', name: 'Pending Transfer', route: '/dashboard/accounts/accounts-reports/pending-transfer' },
             { id: 'tds-report', name: 'TDS Report', route: '/dashboard/accounts/accounts-reports/tds-report' },
-            { id: 're-print', name: 'Re-Print', route: '/dashboard/accounts/accounts-reports/re-print' }           
+            { id: 're-print', name: 'Re-Print', route: '/dashboard/accounts/accounts-reports/re-print' },
+            { id: 'bank-entries', name: 'Bank Entries', route: '/dashboard/accounts/accounts-reports/bank-entries' }           
           ]
         }
       ]
