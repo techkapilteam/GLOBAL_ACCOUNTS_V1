@@ -2424,87 +2424,67 @@ saveJournalVoucher() {
     // ==============================
 
     const payload = {
+  // ✅ Schema fields
+  global_schema: this._commonService.getschemaname(),
+  branch_schema: this._commonService.getbranchname(),
+  company_code: this._commonService.getCompanyCode(),
+  branch_code: this._commonService.getBranchCode(),
 
-      pjvnumber: this.paymentVoucherForm.value.ppaymentid || "",
+  // ✅ Voucher fields
+  pjvnumber: this.paymentVoucherForm.value.ppaymentid || "",
+  pjvdate: this._commonService.getFormatDateNormal(
+    this.paymentVoucherForm.value.pjvdate
+  ),
+  pnarration: this.paymentVoucherForm.value.pnarration || "",
+  ptotalpaidamount: totalDebitAmount.toFixed(2),
+  pmodoftransaction: this.paymentVoucherForm.value.pmodofpayment || "",
+  referenceno: "",
+  tdsVoucherStatus: "",
 
-      pjvdate: this._commonService.getFormatDateNormal(
-        this.paymentVoucherForm.value.pjvdate
-      ),
+  // ✅ User/Branch fields
+  pbranchid: 1,
+  pCreatedby: 1,
+  pipaddress: "192.168.2.177",
+  // pipaddress: this._commonService.getIpAddress() || "::1",
+  formname: "LEGAL EXPENSES JV",
 
-      ptotalpaidamount: totalDebitAmount.toFixed(2),
+  // ✅ File fields
+  pFilename: "",
+  pFilepath: "",
+  pFileformat: "",
 
-      pnarration: this.paymentVoucherForm.value.pnarration,
-
-      pmodoftransaction: this.paymentVoucherForm.value.pmodofpayment,
-
-      pFilename: "",
-      pFilepath: "",
-      pFileformat: "",
-
-      referenceno: "",
-
-      tdsVoucherStatus: "",
-
-      journal_voucher_details: this.paymentslist.map((item: any) => ({
-
-        pgstnumber: "",
-        ppartyname: item.ppartyname || "",
-
-        ppartyid: String(item.ppartyid || ""),
-
-        ppartyreferenceid: String(item.psubledgerid || ""),
-
-        ppartyreftype: "",
-
-        pistdsapplicable: "",
-
-        ptdsamount: item.ptdsamount || "",
-
-        ptdscalculationtype: "",
-
-        ptdsaccountId: "",
-
-        ppartypannumber: "",
-
-        ptdsrefjvnumber: "",
-
-        ledgeramount: String(
-          item.pdebitamount ||
-          item.pcreditamount ||
-          item.pamount ||
-          0
-        ),
-
-        totalreceivedamount: String(
-          item.pdebitamount ||
-          item.pcreditamount ||
-          item.pamount ||
-          0
-        ),
-
-        pFilename: "",
-
-        agentcode: "",
-
-        ticketno: "",
-
-        chitgroupid: "1",
-
-        schemesubscriberid: "1",
-
-        interbranchsubledgerid: "1",
-
-        interbranchid: 2,
-
-        pformname: "LEGAL EXPENSES JV",
-
-        paccountname: item.pledgername || "",
-
-        pgstvoucherno: "",
-
-        pChequenumber: ""
-      }))
-    };
+  // ✅ Detail list - note all interbranchid is now STRING
+  pJournalVoucherlist: this.paymentslist.map((item: any) => ({
+    ppartyid: String(item.ppartyid || ""),
+    pamount: String(item.pdebitamount || item.pcreditamount || item.pamount || 0),
+    psubledgerid: String(item.psubledgerid || ""),
+    ptranstype: item.ptranstype || "",          // ✅ NEW field from swagger
+    pledgername: item.pledgername || "",        // ✅ NEW field from swagger
+    paccountname: item.pledgername || "",
+    pgstnumber: "",
+    ppartyname: item.ppartyname || "",
+    ppartyreferenceid: String(item.psubledgerid || ""),
+    ppartyreftype: "",
+    pistdsapplicable: "",
+    ptdsamount: String(item.ptdsamount || ""),
+    ptdscalculationtype: "",
+    ptdsaccountId: "",
+    ppartypannumber: "",
+    ptdsrefjvnumber: "",
+    ledgeramount: String(item.pdebitamount || item.pcreditamount || item.pamount || 0),
+    totalreceivedamount: String(item.pdebitamount || item.pcreditamount || item.pamount || 0),
+    pFilename: "",
+    agentcode: "",
+    ticketno: "",
+    chitgroupid: "1",
+    schemesubscriberid: "1",
+    interbranchsubledgerid: "1",
+    interbranchid: "2",                        // ✅ FIXED: was number 2, now string "2"
+    pformname: "LEGAL EXPENSES JV",
+    pgstvoucherno: "",
+    pChequenumber: ""
+  }))
+};
 
     console.log("FINAL BACKEND PAYLOAD", payload);
 
