@@ -417,10 +417,26 @@ export class AccountingTransactionsService {
   //   debugger
   //   return this._CommonService.postAPI('/Accounting/AccountingReports/UnusedhequeCancel', data)
   // }
+  // UnusedhequeCancel(data: any, BranchCode: any, CompanyCode: any, branchSchema: any, GlobalSchema: any) {
+  //   const body = {
+  //   ...data,
+  //   BranchCode,
+  //   CompanyCode,
+  //   branchSchema,  
+  //   GlobalSchema
+  // };
+  // console.log('Service body:', JSON.stringify(body, null, 2));
+  //   return this._CommonService.postAPI('/Accounts/UnusedhequeCancel', body)
+  // }
   UnusedhequeCancel(data: any, BranchCode: any, CompanyCode: any, branchSchema: any, GlobalSchema: any) {
-    const params = new HttpParams().set('data', data).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode).set('branchSchema', branchSchema).set('GlobalSchema', GlobalSchema);
-    return this._CommonService.postAPI('/Accounts/UnusedhequeCancel', params)
-  }
+  const params = new HttpParams()
+    .set('BranchCode', BranchCode)
+    .set('CompanyCode', CompanyCode)
+    .set('branchSchema', branchSchema)
+    .set('GlobalSchema', GlobalSchema);
+
+  return this._CommonService.postAPIWithParams('/Accounts/UnusedhequeCancel', data, params);
+}
 
   // GetChequeReturnDetails(strFromDate: any, strToDate: any, p0: string, p1: string, p2: string, p3: string) {
   //   const params = new HttpParams().set('fromdate', strFromDate).set('todate', strToDate).set('BranchSchema', this._CommonService.getschemaname());
