@@ -199,7 +199,10 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', BranchSchema).set('GlobalSchema', GlobalSchema).set('CompanyCode', CompanyCode).set('BranchCode', BranchCode);
     return this._CommonService.getAPI('/Accounts/GetBankntList', params, 'YES')
   }
-
+  GetBankNameDetails(globalSchema: any, branchSchema: any, BranchCode: any, CompanyCode: any): Observable<any> {
+    const params = new HttpParams().set('globalSchema', globalSchema).set('branchSchema', branchSchema).set('BranchCode', BranchCode).set('CompanyCode', CompanyCode);
+    return this._CommonService.getAPI('/Accounts/GetBankNameDetails', params, 'YES')
+  }
   // GetPayTmBanksList(BranchSchema: any, p0: string, p1: string): Observable<any> {
   //   const params = new HttpParams().set('BranchSchema', BranchSchema);
   //   return this._CommonService.getAPI('/ChequesOnHand/GetBankUPIList', params, 'YES')

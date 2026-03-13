@@ -56,7 +56,6 @@ export class PettyCashComponent implements OnInit {
   selectedParty: number | string | null = null;
   currencyCode: string = '₹';
 
-
   // Form fields
   amountPaid: number = 0;
   gstEnabled: boolean = false;
@@ -105,26 +104,27 @@ export class PettyCashComponent implements OnInit {
   disableaddbutton = false;
   disablesavebutton = false;
   disabletransactiondate = false;
-  addbutton = "Add";
-  savebutton = "Save";
+  addbutton = 'Add';
+  savebutton = 'Save';
   kycFileName: string = '';
 
   JSONdataItem: any[] = [];
 
-  gstnopattern = "^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}([a-zA-Z0-9]){1}([a-zA-Z]){1}([a-zA-Z0-9]){1}?";
+  gstnopattern = '^(0[1-9]|[1-2][0-9]|3[0-9])([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}([a-zA-Z0-9]){1}([a-zA-Z]){1}([a-zA-Z0-9]){1}?';
 
   public ppaymentdateConfig: Partial<BsDatepickerConfig> = {
     dateInputFormat: 'DD/MMM/YYYY',
     containerClass: 'theme-default',
     showWeekNumbers: false
   };
-    BranchSchema: string = "accounts";
-    CompanyCode:string= "";
-    LocalSchema: string = "accounts";
-    BranchCode: string = "";
-    GlobalSchema: string = "global";
-    paymentVoucherForm!: FormGroup;
-    checkValidations: any;
+
+  BranchSchema: string = 'accounts';
+  CompanyCode: string = '';
+  LocalSchema: string = 'accounts';
+  BranchCode: string = '';
+  GlobalSchema: string = 'global';
+  paymentVoucherForm!: FormGroup;
+  checkValidations: any;
 
   constructor(
     private _FormBuilder: FormBuilder,
@@ -134,21 +134,18 @@ export class PettyCashComponent implements OnInit {
     private router: Router,
     private _AccountingTransactionsService: AccountingTransactionsService
   ) {
-    //   this.ppaymentdateConfig.containerClass = this._commonService.datePickerPropertiesSetup('containerClass');
-    //   this.ppaymentdateConfig.showWeekNumbers = this._commonService.datePickerPropertiesSetup('showWeekNumbers');
-    //   this.ppaymentdateConfig.maxDate = new Date();
-    //   this.ppaymentdateConfig.dateInputFormat = this._commonService.datePickerPropertiesSetup('dateInputFormat');
     this.ppaymentdateConfig.maxDate = new Date();
     this.ppaymentdateConfig.containerClass = 'theme-dark-blue';
     this.ppaymentdateConfig.dateInputFormat = 'DD-MMM-YYYY';
     this.ppaymentdateConfig.showWeekNumbers = false;
-
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // LIFECYCLE
+  // ─────────────────────────────────────────────────────────────────────────────
 
   ngOnInit(): void {
-
-    this.getLoadData()
+    this.getLoadData();
     this.currencySymbol = this._commonService.currencysymbol || '';
 
     if (this._commonService.comapnydetails != null)
@@ -157,7 +154,7 @@ export class PettyCashComponent implements OnInit {
     this.paymentVoucherForm = this._FormBuilder.group({
       ppaymentid: [''],
       schemaname: [this._commonService.getschemaname()],
-      ppaymentdate: [new Date(), Validators.required], // ← set default to today
+      ppaymentdate: [new Date(), Validators.required],
       ptotalpaidamount: [''],
       pnarration: ['', Validators.required],
       pmodofpayment: ['CASH'],
@@ -179,12 +176,13 @@ export class PettyCashComponent implements OnInit {
       pDocStorePath: ['']
     });
 
-    // Optional: Ensure the datepicker sees the current date
     this.paymentVoucherForm.get('ppaymentdate')?.setValue(new Date());
-
     this.BlurEventAllControll(this.paymentVoucherForm);
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // FORM SETUP
+  // ─────────────────────────────────────────────────────────────────────────────
 
   addppaymentsslistcontrols(): FormGroup {
     return this._FormBuilder.group({
@@ -250,170 +248,105 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  setBalances(balancetype: string, balanceamount: any): void {
+  // ─────────────────────────────────────────────────────────────────────────────
+  // BALANCE DISPLAY
+  // ─────────────────────────────────────────────────────────────────────────────
 
+  setBalances(balancetype: string, balanceamount: any): void {
     if (balanceamount === null || balanceamount === undefined || balanceamount === '') {
       balanceamount = 0;
     }
 
     const numericAmount = Number(balanceamount) || 0;
-
     let balancedetails: string = '';
 
     if (numericAmount < 0) {
-      balancedetails =
-        this._commonService.currencyFormat(Math.abs(numericAmount).toFixed(2)) + ' Cr';
+      balancedetails = this._commonService.currencyFormat(Math.abs(numericAmount).toFixed(2)) + ' Cr';
     } else {
-      balancedetails =
-        this._commonService.currencyFormat(numericAmount.toFixed(2)) + ' Dr';
+      balancedetails = this._commonService.currencyFormat(numericAmount.toFixed(2)) + ' Dr';
     }
-
 
     switch (balancetype) {
-
-      case 'CASH': {
-        this.cashBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      case 'BANK': {
-        this.bankBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      case 'BANKBOOK': {
-        this.bankbookBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      case 'PASSBOOK': {
-        this.bankpassbookBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      case 'LEDGER': {
-        this.ledgerBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      case 'SUBLEDGER': {
-        this.subledgerBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      case 'PARTY': {
-        this.partyBalance = Number(balancedetails) || 0;
-        break;
-      }
-
-      default:
-        break;
+      case 'CASH':     { this.cashBalance        = Number(balancedetails) || 0; break; }
+      case 'BANK':     { this.bankBalance         = Number(balancedetails) || 0; break; }
+      case 'BANKBOOK': { this.bankbookBalance     = Number(balancedetails) || 0; break; }
+      case 'PASSBOOK': { this.bankpassbookBalance = Number(balancedetails) || 0; break; }
+      case 'LEDGER':   { this.ledgerBalance       = Number(balancedetails) || 0; break; }
+      case 'SUBLEDGER':{ this.subledgerBalance    = Number(balancedetails) || 0; break; }
+      case 'PARTY':    { this.partyBalance        = Number(balancedetails) || 0; break; }
+      default: break;
     }
-
-
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // MODE OF PAYMENT
+  // ─────────────────────────────────────────────────────────────────────────────
 
   modeofPaymentChange() {
-
-    if (this.paymentVoucherForm.controls['pmodofpayment'].value == "CASH") {
+    if (this.paymentVoucherForm.controls['pmodofpayment'].value === 'CASH') {
       this.paymentVoucherForm['controls']['pbankid'].setValue(0);
-      //this.paymentVoucherForm['controls']['pChequenumber'].setValue(0);
       this.showModeofPayment = false;
       this.showtranstype = false;
-
-    }
-    else if (this.paymentVoucherForm.controls['pmodofpayment'].value == "BANK") {
+    } else if (this.paymentVoucherForm.controls['pmodofpayment'].value === 'BANK') {
       this.paymentVoucherForm['controls']['ptranstype'].setValue('CHEQUE');
       this.showModeofPayment = true;
       this.showtranstype = true;
-    }
-    else {
+    } else {
       this.showModeofPayment = true;
       this.showtranstype = false;
     }
     this.transofPaymentChange();
     this.getpartyJournalEntryData();
-
   }
-  
+
   addModeofpaymentValidations() {
+    let modeofpaymentControl  = <FormGroup>this.paymentVoucherForm['controls']['pmodofpayment'];
+    let transtypeControl      = <FormGroup>this.paymentVoucherForm['controls']['ptranstype'];
+    let bankControl           = <FormGroup>this.paymentVoucherForm['controls']['pbankname'];
+    let chequeControl         = <FormGroup>this.paymentVoucherForm['controls']['pChequenumber'];
+    let cardControl           = <FormGroup>this.paymentVoucherForm['controls']['pCardNumber'];
+    let typeofpaymentControl  = <FormGroup>this.paymentVoucherForm['controls']['ptypeofpayment'];
+    let UpinameControl        = <FormGroup>this.paymentVoucherForm['controls']['pUpiname'];
+    let UpiidControl          = <FormGroup>this.paymentVoucherForm['controls']['pUpiid'];
 
-    let modeofpaymentControl = <FormGroup>this.paymentVoucherForm['controls']['pmodofpayment'];
-    let transtypeControl = <FormGroup>this.paymentVoucherForm['controls']['ptranstype'];
-    let bankControl = <FormGroup>this.paymentVoucherForm['controls']['pbankname'];
-    let chequeControl = <FormGroup>this.paymentVoucherForm['controls']['pChequenumber'];
-    let cardControl = <FormGroup>this.paymentVoucherForm['controls']['pCardNumber'];
-    let typeofpaymentControl = <FormGroup>this.paymentVoucherForm['controls']['ptypeofpayment'];
-    //let branchnameControl = <FormGroup>this.paymentVoucherForm['controls']['pbranchname'];
-
-    let UpinameControl = <FormGroup>this.paymentVoucherForm['controls']['pUpiname'];
-    let UpiidControl = <FormGroup>this.paymentVoucherForm['controls']['pUpiid'];
-
-    if (this.showModeofPayment == true) {
+    if (this.showModeofPayment === true) {
       modeofpaymentControl.setValidators(Validators.required);
       bankControl.setValidators(Validators.required);
       chequeControl.setValidators(Validators.required);
+
       if (this.showtranstype) {
         transtypeControl.setValidators(Validators.required);
-      }
-      else {
+      } else {
         transtypeControl.clearValidators();
       }
+
       if (this.showbankcard) {
-        //bankControl.setValidators(Validators.required);
         cardControl.clearValidators();
-      }
-      else {
+      } else {
         cardControl.setValidators(Validators.required);
-        //bankControl.clearValidators();
       }
+
       if (this.showTypeofPayment) {
         typeofpaymentControl.setValidators(Validators.required);
-      }
-      else {
+      } else {
         typeofpaymentControl.clearValidators();
       }
-      //if (this.showbranch) {
-      //    branchnameControl.setValidators(Validators.required);
-      //}
-      //else {
-      //    branchnameControl.clearValidators();
-      //}
-      //if (this.showfinancial) {
-      //  bankControl.setValidators(Validators.required);
-      //}
-      //else {
-
-      //  if (this.showbankcard) {
-      //    bankControl.setValidators(Validators.required);         
-      //  }
-      //  else {          
-      //    bankControl.clearValidators();
-      //  }
-      //}
-
-      /////
 
       if (this.showupi) {
         UpinameControl.setValidators(Validators.required);
         UpiidControl.setValidators(Validators.required);
-      }
-      else {
+      } else {
         UpinameControl.clearValidators();
         UpiidControl.clearValidators();
       }
-    }
-    else {
+    } else {
       modeofpaymentControl.clearValidators();
       bankControl.clearValidators();
       chequeControl.clearValidators();
-
       UpinameControl.clearValidators();
       UpiidControl.clearValidators();
       typeofpaymentControl.clearValidators();
     }
-
 
     modeofpaymentControl.updateValueAndValidity();
     transtypeControl.updateValueAndValidity();
@@ -421,13 +354,11 @@ export class PettyCashComponent implements OnInit {
     bankControl.updateValueAndValidity();
     chequeControl.updateValueAndValidity();
     typeofpaymentControl.updateValueAndValidity();
-    //branchnameControl.updateValueAndValidity();
-
     UpinameControl.updateValueAndValidity();
     UpiidControl.updateValueAndValidity();
   }
-  transofPaymentChange() {
 
+  transofPaymentChange() {
     this.displayCardName = 'Debit Card';
     this.showTypeofPayment = false;
     this.showbranch = false;
@@ -436,86 +367,85 @@ export class PettyCashComponent implements OnInit {
     this.showbankcard = true;
     this.showupi = false;
     this.displaychequeno = 'Reference No.';
-    if (this.paymentVoucherForm.controls['ptranstype'].value == "CHEQUE") {
+
+    if (this.paymentVoucherForm.controls['ptranstype'].value === 'CHEQUE') {
       this.showbankcard = true;
       this.displaychequeno = 'Cheque No.';
       this.showbranch = true;
       this.showchequno = true;
-    }
-    else if (this.paymentVoucherForm.controls['ptranstype'].value == "ONLINE") {
+    } else if (this.paymentVoucherForm.controls['ptranstype'].value === 'ONLINE') {
       this.showbankcard = true;
       this.showTypeofPayment = true;
       this.showfinancial = false;
-    }
-    else if (this.paymentVoucherForm.controls['ptranstype'].value == "DEBIT CARD") {
+    } else if (this.paymentVoucherForm.controls['ptranstype'].value === 'DEBIT CARD') {
       this.showbankcard = false;
       this.showfinancial = true;
-    }
-    else {
+    } else {
       this.displayCardName = 'Credit Card';
       this.showbankcard = false;
       this.showfinancial = true;
     }
+
     this.addModeofpaymentValidations();
     this.cleartranstypeDetails();
   }
+
   typeofPaymentChange() {
-    debugger;
     let UpinameControl = <FormGroup>this.paymentVoucherForm['controls']['pUpiname'];
-    let UpiidControl = <FormGroup>this.paymentVoucherForm['controls']['pUpiid'];
-    if (this.paymentVoucherForm.controls['ptypeofpayment'].value == 'UPI') {
+    let UpiidControl   = <FormGroup>this.paymentVoucherForm['controls']['pUpiid'];
+
+    if (this.paymentVoucherForm.controls['ptypeofpayment'].value === 'UPI') {
       this.showupi = true;
       UpinameControl.setValidators(Validators.required);
       UpiidControl.setValidators(Validators.required);
-    }
-    else {
+    } else {
       this.showupi = false;
       UpinameControl.clearValidators();
       UpiidControl.clearValidators();
     }
+
     UpinameControl.updateValueAndValidity();
     UpiidControl.updateValueAndValidity();
     this.GetValidationByControl(this.paymentVoucherForm, 'ptypeofpayment');
   }
-  // Called when GST checkbox is clicked
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // GST / TDS TOGGLES
+  // ─────────────────────────────────────────────────────────────────────────────
+
   isgstapplicable_Checked(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
-    // Reset state if needed
     subForm.get('pStateId')?.setValue('');
     if (typeof this.gst_clear === 'function') {
       this.gst_clear();
     }
 
     const ppartyname = subForm.get('ppartyname')?.value;
-    const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname == ppartyname);
+    const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname === ppartyname);
 
     if (griddata.length > 0) {
       subForm.get('pisgstapplicable')?.setValue(griddata[0].pisgstapplicable);
     }
 
-    // Call change handler
     this.isgstapplicableChange();
   }
 
-  // Called when TDS checkbox is clicked
   istdsapplicable_Checked(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
     const ppartyname = subForm.get('ppartyname')?.value;
-    const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname == ppartyname);
+    const griddata = (this.paymentslist || []).filter((x: any) => x.ppartyname === ppartyname);
 
     if (griddata.length > 0) {
       subForm.get('pistdsapplicable')?.setValue(griddata[0].pistdsapplicable);
     }
 
-    // Call change handler
     this.istdsapplicableChange();
   }
 
-  // Handles GST checkbox value change
   isgstapplicableChange(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
@@ -523,28 +453,20 @@ export class PettyCashComponent implements OnInit {
     const data = subForm.get('pisgstapplicable')?.value;
 
     const gstCalculationControl = subForm.get('pgstcalculationtype');
-    const gstpercentageControl = subForm.get('pgstpercentage');
-    const stateControl = subForm.get('pStateId'); // fixed from pState to pStateId
-    const gstamountControl = subForm.get('pgstamount');
+    const gstpercentageControl  = subForm.get('pgstpercentage');
+    const stateControl          = subForm.get('pStateId');
+    const gstamountControl      = subForm.get('pgstamount');
 
     if (data) {
-      this.showgst = true; // <-- template will now check showgst
-
-      if (!this.disablegst) {
-        gstCalculationControl?.setValue('INCLUDE');
-      }
-
+      this.showgst = true;
+      if (!this.disablegst) { gstCalculationControl?.setValue('INCLUDE'); }
       gstCalculationControl?.setValidators(Validators.required);
       gstpercentageControl?.setValidators(Validators.required);
       stateControl?.setValidators(Validators.required);
       gstamountControl?.setValidators(Validators.required);
     } else {
       this.showgst = false;
-
-      if (!this.disablegst) {
-        gstCalculationControl?.setValue('');
-      }
-
+      if (!this.disablegst) { gstCalculationControl?.setValue(''); }
       gstCalculationControl?.clearValidators();
       gstpercentageControl?.clearValidators();
       stateControl?.clearValidators();
@@ -561,7 +483,6 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
-  // Handles TDS checkbox value change
   istdsapplicableChange(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
@@ -569,28 +490,20 @@ export class PettyCashComponent implements OnInit {
     const data = subForm.get('pistdsapplicable')?.value;
 
     const tdsCalculationControl = subForm.get('ptdscalculationtype');
-    const tdspercentageControl = subForm.get('pTdsPercentage');
-    const sectionControl = subForm.get('pTdsSection');
-    const tdsamountControl = subForm.get('ptdsamount');
+    const tdspercentageControl  = subForm.get('pTdsPercentage');
+    const sectionControl        = subForm.get('pTdsSection');
+    const tdsamountControl      = subForm.get('ptdsamount');
 
     if (data) {
       this.showtds = true;
-
-      if (!this.disabletds) {
-        tdsCalculationControl?.setValue('INCLUDE');
-      }
-
+      if (!this.disabletds) { tdsCalculationControl?.setValue('INCLUDE'); }
       tdsCalculationControl?.setValidators(Validators.required);
       tdspercentageControl?.setValidators(Validators.required);
       sectionControl?.setValidators(Validators.required);
       tdsamountControl?.setValidators(Validators.required);
     } else {
       this.showtds = false;
-
-      if (!this.disabletds) {
-        tdsCalculationControl?.setValue('');
-      }
-
+      if (!this.disabletds) { tdsCalculationControl?.setValue(''); }
       tdsCalculationControl?.clearValidators();
       tdspercentageControl?.clearValidators();
       sectionControl?.clearValidators();
@@ -607,54 +520,54 @@ export class PettyCashComponent implements OnInit {
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // LOAD DATA
+  // ─────────────────────────────────────────────────────────────────────────────
+
   getLoadData() {
-debugger
-  this._AccountingTransactionsService
-    .GetReceiptsandPaymentsLoadingDatapettycash(
-      'PETTYCASH','accounts','KAPILCHITS','KLC01','global','taxes'
-     
-    )
-    .subscribe(
-      (json) => {
+    this._AccountingTransactionsService
+      .GetReceiptsandPaymentsLoadingDatapettycash(
+        'PETTYCASH', 'accounts', 'KAPILCHITS', 'KLC01', 'global', 'taxes'
+      )
+      .subscribe(
+        (json) => {
+          if (json) {
+            this.banklist              = json.banklist;
+            this.modeoftransactionslist = json.modeofTransactionslist;
+            this.typeofpaymentlist     = this.gettypeofpaymentdata();
+            this.ledgeraccountslist    = json.accountslist;
+            this.partylist             = json.partylist;
+            this.gstlist               = json.gstlist;
+            this.debitcardlist         = json.bankdebitcardslist;
 
-        if (json) {
-
-          this.banklist = json.banklist;
-          this.modeoftransactionslist = json.modeofTransactionslist;
-          this.typeofpaymentlist = this.gettypeofpaymentdata();
-          this.ledgeraccountslist = json.accountslist;
-          this.partylist = json.partylist;
-          this.gstlist = json.gstlist;
-          this.debitcardlist = json.bankdebitcardslist;
-
-          this.setBalances('CASH', json.cashbalance);
-          this.setBalances('BANK', json.bankbalance);
+            this.setBalances('CASH', json.cashbalance);
+            this.setBalances('BANK', json.bankbalance);
+          }
+        },
+        (error) => {
+          this._commonService.showErrorMessage(error);
         }
-      },
-      (error) => {
-        this._commonService.showErrorMessage(error);
-      }
-    );
-}
+      );
+  }
 
   gettypeofpaymentdata(): any {
-
-    const data = (this.modeoftransactionslist || []).filter((payment: any) => {
-      return payment.ptranstype != payment.ptypeofpayment;
+    return (this.modeoftransactionslist || []).filter((payment: any) => {
+      return payment.ptranstype !== payment.ptypeofpayment;
     });
-
-    return data;
   }
 
   trackByFn(index: number, item: any) {
-    return index; // or item.id
+    return index;
   }
 
-  bankName_Change($event: any): void {
+  // ─────────────────────────────────────────────────────────────────────────────
+  // BANK / CHEQUE / CARD / UPI CHANGES
+  // ─────────────────────────────────────────────────────────────────────────────
 
+  bankName_Change($event: any): void {
     const pbankid = $event?.target?.value;
 
-    this.upinameslist = [];
+    this.upinameslist     = [];
     this.chequenumberslist = [];
 
     this.paymentVoucherForm.get('pChequenumber')?.setValue('');
@@ -662,17 +575,11 @@ debugger
     this.paymentVoucherForm.get('pUpiid')?.setValue('');
 
     if (pbankid && pbankid !== '') {
-
-      const bankname =
-        $event?.target?.options?.[$event.target.selectedIndex]?.text || '';
-
+      const bankname = $event?.target?.options?.[$event.target.selectedIndex]?.text || '';
       this.GetBankDetailsbyId(pbankid);
       this.getBankBranchName(pbankid);
-
       this.paymentVoucherForm.get('pbankname')?.setValue(bankname);
-
     } else {
-
       this.paymentVoucherForm.get('pbankname')?.setValue('');
     }
 
@@ -685,64 +592,85 @@ debugger
   }
 
   debitCard_Change(): void {
-
     const cardNumber = this.paymentVoucherForm.get('pCardNumber')?.value;
-
     const data = this.getbankname(cardNumber);
-
     if (data) {
       this.paymentVoucherForm.get('pbankname')?.setValue(data.pbankname);
       this.paymentVoucherForm.get('pbankid')?.setValue(data.pbankid);
     }
-
     this.GetValidationByControl(this.paymentVoucherForm, 'pCardNumber');
   }
 
   getbankname(cardnumber: any) {
-
     try {
-
       const data = (this.debitcardlist || []).filter((debit: any) => {
-        return debit.pCardNumber == cardnumber;
+        return debit.pCardNumber === cardnumber;
       })[0];
 
-      if (data) {
-        this.getBankBranchName(data.pbankid);
-      }
-
+      if (data) { this.getBankBranchName(data.pbankid); }
       return data;
-
     } catch (e) {
       this._commonService.showErrorMessage(e);
       return null;
     }
   }
 
+  GetBankDetailsbyId(pbankid: any): void {
+    this._AccountingTransactionsService
+      .GetBankDetailsbyId(pbankid)
+      .subscribe(
+        (json: any) => {
+          if (json) {
+            this.upinameslist     = json.bankupilist  || [];
+            this.chequenumberslist = json.chequeslist || [];
+          }
+        },
+        (error) => {
+          this._commonService.showErrorMessage(error);
+        }
+      );
+  }
+
+  getBankBranchName(pbankid: any): void {
+    const data = (this.banklist || []).filter((bank: any) => bank.pbankid === pbankid)[0];
+    if (!data) return;
+
+    this.paymentVoucherForm.get('pbranchname')?.setValue(data.pbranchname);
+    this.setBalances('BANKBOOK', data.pbankbalance);
+    this.setBalances('PASSBOOK', data.pbankpassbookbalance);
+  }
+
+  upiName_Change($event: any): void {
+    const upiname = $event?.target?.value;
+    this.upiidlist = (this.upinameslist || []).filter((res: any) => res.pUpiname === upiname);
+    this.GetValidationByControl(this.paymentVoucherForm, 'pUpiname');
+  }
+
+  upid_change(): void {
+    this.GetValidationByControl(this.paymentVoucherForm, 'pUpiid');
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // LEDGER / SUBLEDGER / PARTY CHANGES
+  // ─────────────────────────────────────────────────────────────────────────────
+
   ledgerName_Change($event: any): void {
     const pledgerid = $event?.pledgerid;
-
-    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    const subForm   = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
-    // Reset subledger selection
     this.subledgeraccountslist = [];
     subForm.get('psubledgerid')?.setValue(null);
     subForm.get('psubledgername')?.setValue('');
-
-    // Reset balances to 0 (numbers)
-    this.ledgerBalance = 0;
+    this.ledgerBalance   = 0;
     this.subledgerBalance = 0;
 
     if (pledgerid) {
       const ledgername = $event.pledgername;
-
-      const data = (this.ledgeraccountslist || []).find((ledger: any) => ledger.pledgerid == pledgerid);
-      if (data) {
-        this.setBalances('LEDGER', data.accountbalance); // accountbalance should be numeric
-      }
+      const data = (this.ledgeraccountslist || []).find((ledger: any) => ledger.pledgerid === pledgerid);
+      if (data) { this.setBalances('LEDGER', data.accountbalance); }
 
       this.GetSubLedgerData(pledgerid);
-
       subForm.get('pledgername')?.setValue(ledgername);
     } else {
       this.setBalances('LEDGER', 0);
@@ -751,44 +679,42 @@ debugger
   }
 
   GetSubLedgerData(pledgerid: any): void {
-    this._AccountingTransactionsService.GetSubLedgerData(pledgerid,'accounts','KAPILCHITS','accounts','KLC01','global').subscribe(
-      (json: any) => {
-        if (!json) return;
+    this._AccountingTransactionsService
+      .GetSubLedgerData(pledgerid, 'accounts', 'KAPILCHITS', 'accounts', 'KLC01', 'global')
+      .subscribe(
+        (json: any) => {
+          if (!json) return;
 
-        this.subledgeraccountslist = json;
-        const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-        if (!subForm) return;
+          this.subledgeraccountslist = json;
+          const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+          if (!subForm) return;
 
-        const subLedgerControl = subForm.get('psubledgername');
+          const subLedgerControl = subForm.get('psubledgername');
 
-        if (this.subledgeraccountslist.length > 0) {
-          this.showsubledger = true;
-          subLedgerControl?.setValidators(Validators.required);
-        } else {
-          subLedgerControl?.clearValidators();
-          this.showsubledger = false;
+          if (this.subledgeraccountslist.length > 0) {
+            this.showsubledger = true;
+            subLedgerControl?.setValidators(Validators.required);
+          } else {
+            subLedgerControl?.clearValidators();
+            this.showsubledger = false;
+            subForm.get('psubledgerid')?.setValue(pledgerid);
+            subForm.get('psubledgername')?.setValue(subForm.get('pledgername')?.value);
+            this.formValidationMessages['psubledgername'] = '';
+          }
 
-          subForm.get('psubledgerid')?.setValue(pledgerid);
-          subForm.get('psubledgername')?.setValue(subForm.get('pledgername')?.value);
-          this.formValidationMessages['psubledgername'] = '';
+          subLedgerControl?.updateValueAndValidity();
+        },
+        (error) => {
+          this._commonService.showErrorMessage(error);
         }
-
-        subLedgerControl?.updateValueAndValidity();
-      },
-      (error) => {
-        this._commonService.showErrorMessage(error);
-      }
-    );
+      );
   }
-
 
   subledger_Change($event: any): void {
     const psubledgerid = $event?.psubledgerid;
-
-    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    const subForm      = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
-    // Reset balance to 0 (number)
     this.subledgerBalance = 0;
 
     if (psubledgerid) {
@@ -798,10 +724,7 @@ debugger
       const data = (this.subledgeraccountslist || []).find(
         (ledger: any) => ledger.psubledgerid === psubledgerid
       );
-
-      if (data) {
-        this.setBalances('SUBLEDGER', data.accountbalance); // accountbalance should be numeric
-      }
+      if (data) { this.setBalances('SUBLEDGER', data.accountbalance); }
     } else {
       subForm.get('psubledgername')?.setValue('');
       this.setBalances('SUBLEDGER', 0);
@@ -810,125 +733,127 @@ debugger
     this.GetValidationByControl(this.paymentVoucherForm, 'psubledgername');
   }
 
+  partyName_Change($event: any): void {
+    const ppartyid = $event?.ppartyid;
+    const subForm  = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!subForm) return;
 
-  upiName_Change($event: any): void {
+    this.statelist        = [];
+    this.tdssectionlist   = [];
+    this.tdspercentagelist = [];
+    this.paymentslist1    = [];
+    this.paymentslist     = [];
 
-    const upiname = $event?.target?.value;
-
-    this.upiidlist = (this.upinameslist || []).filter((res: any) => {
-      return res.pUpiname == upiname;
+    subForm.patchValue({
+      pStateId        : '',
+      pState          : '',
+      pTdsSection     : '',
+      pTdsPercentage  : '',
+      ppartyreferenceid: '',
+      ppartyreftype   : '',
+      ppartypannumber : ''
     });
 
-    this.GetValidationByControl(this.paymentVoucherForm, 'pUpiname');
+    this.partyBalance = 0;
+
+    if (ppartyid) {
+      const partynamename = $event.ppartyname;
+      subForm.get('ppartyname')?.setValue(partynamename);
+
+      const data = (this.partylist || []).find((x: any) => x.ppartyid === ppartyid);
+      if (!data) return;
+
+      subForm.patchValue({
+        ppartyreferenceid: data.ppartyreferenceid,
+        ppartyreftype    : data.ppartyreftype,
+        ppartypannumber  : data.ppartypannumber
+      });
+
+      this.getPartyDetailsbyid(ppartyid);
+      this.setenableordisabletdsgst(partynamename, 'PARTYCHANGE');
+    } else {
+      this.setBalances('PARTY', 0);
+      subForm.get('ppartyname')?.setValue('');
+    }
   }
 
-  upid_change(): void {
-    this.GetValidationByControl(this.paymentVoucherForm, 'pUpiid');
-  }
+  getPartyDetailsbyid(ppartyid: any) {
+    this._AccountingTransactionsService
+      .getPartyDetailsbyid(ppartyid, 'accounts', 'KLC01', 'KAPILCHITS', 'global', 'taxes')
+      .subscribe(
+        (json: any) => {
+          if (!json) return;
 
- GetBankDetailsbyId(pbankid: any): void {
+          this.tdslist = json.lstTdsSectionDetails || [];
 
-  this._AccountingTransactionsService
-    .GetBankDetailsbyId(pbankid)
-    .subscribe(
-      (json: any) => {
+          const newdata = this.tdslist
+            .map((item: any) => item.pTdsSection)
+            .filter((value: any, index: number, self: any[]) => self.indexOf(value) === index);
 
-        if (json) {
-          this.upinameslist = json.bankupilist || [];
-          this.chequenumberslist = json.chequeslist || [];
+          this.tdssectionlist = [];
+          for (let i = 0; i < newdata.length; i++) {
+            this.tdssectionlist.push({ pTdsSection: newdata[i] });
+          }
+
+          this.statelist = json.statelist || [];
+          this.claculategsttdsamounts();
+          this.setBalances('PARTY', json.accountbalance);
+        },
+        (error) => {
+          this._commonService.showErrorMessage(error);
         }
-      },
-      (error) => {
-        this._commonService.showErrorMessage(error);
-      }
-    );
-}
-
-  getBankBranchName(pbankid: any): void {
-
-    const data = (this.banklist || []).filter((bank: any) => {
-      return bank.pbankid == pbankid;
-    })[0];
-
-    if (!data) return;
-
-    this.paymentVoucherForm.get('pbranchname')?.setValue(data.pbranchname);
-
-    this.setBalances('BANKBOOK', data.pbankbalance);
-    this.setBalances('PASSBOOK', data.pbankpassbookbalance);
+      );
   }
 
   setenableordisabletdsgst(ppartyname: any, changetype: any): void {
-
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
     subForm.get('pistdsapplicable')?.setValue(false);
     subForm.get('pisgstapplicable')?.setValue(false);
 
-    const data = (this.paymentslist || []).filter(x => x.ppartyname == ppartyname);
+    const data = (this.paymentslist || []).filter((x: any) => x.ppartyname === ppartyname);
 
     if (data && data.length > 0) {
-
       this.disablegst = true;
       this.disabletds = true;
-
       subForm.get('pistdsapplicable')?.setValue(data[0].pistdsapplicable);
       subForm.get('pisgstapplicable')?.setValue(data[0].pisgstapplicable);
       subForm.get('pgstcalculationtype')?.setValue(data[0].pgstcalculationtype);
       subForm.get('ptdscalculationtype')?.setValue(data[0].ptdscalculationtype);
-
     } else {
-
       this.disablegst = false;
       this.disabletds = false;
     }
 
-    // FIXED: was assignment (=)
     if (changetype === 'PARTYCHANGE') {
       this.isgstapplicableChange();
       this.istdsapplicableChange();
     }
   }
 
-  tdsSection_Change($event: any): void {
+  // ─────────────────────────────────────────────────────────────────────────────
+  // GST FIELDS
+  // ─────────────────────────────────────────────────────────────────────────────
 
-    const ptdssection = $event?.target?.value;
+  gsno_change(): void {
+    this.GetValidationByControl(this.paymentVoucherForm, 'pgstno');
+  }
 
+  gst_clear(): void {
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
-    this.tdspercentagelist = [];
-    subForm.get('pTdsPercentage')?.setValue('');
-
-    if (ptdssection && ptdssection !== '') {
-      this.gettdsPercentage(ptdssection);
-    }
-
-    this.GetValidationByControl(this.paymentVoucherForm, 'pTdsSection');
-  }
-
-  gettdsPercentage(ptdssection: any): void {
-
-    this.tdspercentagelist = (this.tdslist || []).filter((tds: any) => {
-      return tds.pTdsSection == ptdssection;
-    });
-
-    this.claculategsttdsamounts();
-  }
-
-  tds_Change($event: any): void {
-
-    this.GetValidationByControl(this.paymentVoucherForm, 'pTdsPercentage');
-    this.GetValidationByControl(this.paymentVoucherForm, 'ptdsamount');
-
-    this.claculategsttdsamounts();
+    subForm.get('pigstpercentage')?.setValue('');
+    subForm.get('pcgstpercentage')?.setValue('');
+    subForm.get('psgstpercentage')?.setValue('');
+    subForm.get('putgstpercentage')?.setValue('');
+    subForm.get('pgstpercentage')?.setValue('');
+    subForm.get('pgstno')?.setValue('');
   }
 
   gst_Change($event: any): void {
-
     const gstpercentage = $event?.target?.value;
-
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
@@ -937,20 +862,14 @@ debugger
     subForm.get('psgstpercentage')?.setValue('');
     subForm.get('putgstpercentage')?.setValue('');
 
-    if (gstpercentage && gstpercentage !== '') {
-      this.getgstPercentage(gstpercentage);
-    }
+    if (gstpercentage && gstpercentage !== '') { this.getgstPercentage(gstpercentage); }
 
     this.GetValidationByControl(this.paymentVoucherForm, 'pgstpercentage');
-    this.GetValidationByControl(this.paymentVoucherForm, 'pgstamount',);
+    this.GetValidationByControl(this.paymentVoucherForm, 'pgstamount');
   }
 
   getgstPercentage(gstpercentage: any): void {
-
-    const data = (this.gstlist || []).filter((gst: any) => {
-      return gst.pgstpercentage == gstpercentage;
-    })[0];
-
+    const data = (this.gstlist || []).filter((gst: any) => gst.pgstpercentage === gstpercentage)[0];
     if (!data) return;
 
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
@@ -964,122 +883,15 @@ debugger
     this.claculategsttdsamounts();
   }
 
-  partyName_Change($event: any): void {
-    debugger
-    const ppartyid = $event?.ppartyid;
-
-    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-    if (!subForm) return;
-
-    // Reset related lists and form controls
-    this.statelist = [];
-    this.tdssectionlist = [];
-    this.tdspercentagelist = [];
-    this.paymentslist1 = [];
-    this.paymentslist = [];
-
-    subForm.patchValue({
-      pStateId: '',
-      pState: '',
-      pTdsSection: '',
-      pTdsPercentage: '',
-      ppartyreferenceid: '',
-      ppartyreftype: '',
-      ppartypannumber: ''
-    });
-
-    // Reset balance to 0 (number)
-    this.partyBalance = 0;
-
-    if (ppartyid) {
-      const partynamename = $event.ppartyname;
-      subForm.get('ppartyname')?.setValue(partynamename);
-
-      const data = (this.partylist || []).find(x => x.ppartyid === ppartyid);
-      if (!data) return;
-
-      subForm.patchValue({
-        ppartyreferenceid: data.ppartyreferenceid,
-        ppartyreftype: data.ppartyreftype,
-        ppartypannumber: data.ppartypannumber
-      });
-
-      this.getPartyDetailsbyid(ppartyid);
-      this.setenableordisabletdsgst(partynamename, 'PARTYCHANGE');
-    } else {
-      this.setBalances('PARTY', 0);
-      subForm.get('ppartyname')?.setValue('');
-    }
-  }
-
-
-  getPartyDetailsbyid(ppartyid: any,) {
-    debugger
-    this._AccountingTransactionsService.getPartyDetailsbyid(
-      ppartyid, 'accounts', 'KLC01','KAPILCHITS', 'global', 'taxes '
-    ).subscribe(
-        (json: any) => {
-          if (!json) return;
-          this.tdslist = json.lstTdsSectionDetails || [];
-          // this.statelist = json.statelist || [];
-
-          const newdata = this.tdslist
-            .map(item => item.pTdsSection)
-            .filter((value, index, self) =>
-              self.indexOf(value) === index
-            );
-
-          this.tdssectionlist = [];
-
-          for (let i = 0; i < newdata.length; i++) {
-            this.tdssectionlist.push({
-              pTdsSection: newdata[i]
-            });
-          }
-
-          this.statelist = json.statelist || [];
-
-          this.claculategsttdsamounts();
-          this.setBalances('PARTY', json.accountbalance);
-        },
-        (error) => {
-          this._commonService.showErrorMessage(error);
-        }
-      );
-  }
-
-
-  gsno_change(): void {
-    this.GetValidationByControl(this.paymentVoucherForm, 'pgstno');
-  }
-
-  gst_clear(): void {
-
-    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
-    if (!subForm) return;
-
-    subForm.get('pigstpercentage')?.setValue('');
-    subForm.get('pcgstpercentage')?.setValue('');
-    subForm.get('psgstpercentage')?.setValue('');
-    subForm.get('putgstpercentage')?.setValue('');
-    subForm.get('pgstpercentage')?.setValue('');
-    subForm.get('pgstno')?.setValue('');
-  }
-
   state_change($event: any): void {
-
     const pstateid = $event?.target?.value;
-
-    const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    const subForm  = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return;
 
     this.gst_clear();
 
     if (pstateid && pstateid !== '') {
-
-      const statename =
-        $event?.target?.options?.[$event.target.selectedIndex]?.text || '';
-
+      const statename = $event?.target?.options?.[$event.target.selectedIndex]?.text || '';
       subForm.get('pState')?.setValue(statename);
 
       const gstno = statename.split('-')[1];
@@ -1089,9 +901,9 @@ debugger
       if (!data) return;
 
       this.showgstamount = true;
-      this.showigst = false;
-      this.showcgst = false;
-      this.showsgst = false;
+      this.showigst  = false;
+      this.showcgst  = false;
+      this.showsgst  = false;
       this.showutgst = false;
 
       subForm.get('pgsttype')?.setValue(data.pgsttype);
@@ -1100,26 +912,54 @@ debugger
         this.showigst = true;
       } else {
         this.showcgst = true;
-        if (data.pgsttype === 'CGST,SGST') this.showsgst = true;
+        if (data.pgsttype === 'CGST,SGST')  this.showsgst  = true;
         if (data.pgsttype === 'CGST,UTGST') this.showutgst = true;
       }
-
     } else {
       subForm.get('pState')?.setValue('');
     }
 
     this.GetValidationByControl(this.paymentVoucherForm, 'pState');
     this.formValidationMessages['pigstpercentage'] = '';
-
     this.claculategsttdsamounts();
   }
 
   GetStatedetailsbyId(pstateid: any): any {
-
-    return (this.statelist || []).filter((state: any) => {
-      return state.pStateId == pstateid;
-    })[0];
+    return (this.statelist || []).filter((state: any) => state.pStateId === pstateid)[0];
   }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // TDS FIELDS
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  tdsSection_Change($event: any): void {
+    const ptdssection = $event?.target?.value;
+    const subForm     = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
+    if (!subForm) return;
+
+    this.tdspercentagelist = [];
+    subForm.get('pTdsPercentage')?.setValue('');
+
+    if (ptdssection && ptdssection !== '') { this.gettdsPercentage(ptdssection); }
+
+    this.GetValidationByControl(this.paymentVoucherForm, 'pTdsSection');
+  }
+
+  gettdsPercentage(ptdssection: any): void {
+    this.tdspercentagelist = (this.tdslist || []).filter((tds: any) => tds.pTdsSection === ptdssection);
+    this.claculategsttdsamounts();
+  }
+
+  tds_Change($event: any): void {
+    this.GetValidationByControl(this.paymentVoucherForm, 'pTdsPercentage');
+    this.GetValidationByControl(this.paymentVoucherForm, 'ptdsamount');
+    this.claculategsttdsamounts();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // AMOUNT CALCULATIONS
+  // ─────────────────────────────────────────────────────────────────────────────
+
   pamount_change(): void {
     this.claculategsttdsamounts();
   }
@@ -1132,19 +972,17 @@ debugger
       let paidAmount = subForm.get('pactualpaidamount')?.value;
       if (!paidAmount) paidAmount = 0;
       else paidAmount = parseFloat(this._commonService.removeCommasInAmount(paidAmount.toString()));
-
       if (isNaN(paidAmount)) paidAmount = 0;
 
       let actualPaidAmount = paidAmount;
 
-      // GST values
-      const isGstApplicable = subForm.get('pisgstapplicable')?.value;
-      const gstType = subForm.get('pgsttype')?.value;
+      const isGstApplicable    = subForm.get('pisgstapplicable')?.value;
+      const gstType            = subForm.get('pgsttype')?.value;
       const gstCalculationType = subForm.get('pgstcalculationtype')?.value;
 
-      let igstPercentage = parseFloat(subForm.get('pigstpercentage')?.value) || 0;
-      let cgstPercentage = parseFloat(subForm.get('pcgstpercentage')?.value) || 0;
-      let sgstPercentage = parseFloat(subForm.get('psgstpercentage')?.value) || 0;
+      let igstPercentage  = parseFloat(subForm.get('pigstpercentage')?.value)  || 0;
+      let cgstPercentage  = parseFloat(subForm.get('pcgstpercentage')?.value)  || 0;
+      let sgstPercentage  = parseFloat(subForm.get('psgstpercentage')?.value)  || 0;
       let utgstPercentage = parseFloat(subForm.get('putgstpercentage')?.value) || 0;
 
       let igstAmount = 0, cgstAmount = 0, sgstAmount = 0, utgstAmount = 0, gstAmount = 0;
@@ -1152,7 +990,6 @@ debugger
       if (isGstApplicable) {
         if (gstCalculationType === 'INCLUDE') {
           gstAmount = parseFloat(((paidAmount * igstPercentage) / (100 + igstPercentage)).toFixed(2));
-
           if (gstType === 'IGST') {
             igstAmount = Math.ceil(gstAmount);
             actualPaidAmount -= igstAmount;
@@ -1161,29 +998,27 @@ debugger
             sgstAmount = Math.ceil(gstAmount) / 2;
             actualPaidAmount -= (cgstAmount + sgstAmount);
           } else if (gstType === 'CGST,UTGST') {
-            cgstAmount = Math.ceil(gstAmount) / 2;
+            cgstAmount  = Math.ceil(gstAmount) / 2;
             utgstAmount = Math.ceil(gstAmount) / 2;
             actualPaidAmount -= (cgstAmount + utgstAmount);
           }
         } else if (gstCalculationType === 'EXCLUDE') {
           gstAmount = parseFloat(((paidAmount * igstPercentage) / 100).toFixed(2));
-
           if (gstType === 'IGST') igstAmount = Math.ceil(gstAmount);
           else if (gstType === 'CGST,SGST') {
             cgstAmount = Math.ceil(gstAmount) / 2;
             sgstAmount = Math.ceil(gstAmount) / 2;
           } else if (gstType === 'CGST,UTGST') {
-            cgstAmount = Math.ceil(gstAmount) / 2;
+            cgstAmount  = Math.ceil(gstAmount) / 2;
             utgstAmount = Math.ceil(gstAmount) / 2;
           }
         }
       }
 
-      // TDS values
-      const isTdsApplicable = subForm.get('pistdsapplicable')?.value;
+      const isTdsApplicable    = subForm.get('pistdsapplicable')?.value;
       const tdsCalculationType = subForm.get('ptdscalculationtype')?.value;
-      let tdsPercentage = parseFloat(subForm.get('pTdsPercentage')?.value) || 0;
-      let tdsAmount = 0;
+      let tdsPercentage        = parseFloat(subForm.get('pTdsPercentage')?.value) || 0;
+      let tdsAmount            = 0;
 
       if (isTdsApplicable) {
         if (tdsCalculationType === 'INCLUDE') {
@@ -1199,10 +1034,9 @@ debugger
         }
       }
 
-      gstAmount = igstAmount + cgstAmount + sgstAmount + utgstAmount;
-      let totalAmount = actualPaidAmount + gstAmount;
+      gstAmount   = igstAmount + cgstAmount + sgstAmount + utgstAmount;
+      const totalAmount = actualPaidAmount + gstAmount;
 
-      // Update Form
       subForm.get('pamount')?.setValue(actualPaidAmount > 0 ? actualPaidAmount : '');
       subForm.get('pgstamount')?.setValue(gstAmount);
       subForm.get('pigstamount')?.setValue(igstAmount);
@@ -1218,9 +1052,12 @@ debugger
     }
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // ADD / REMOVE GRID ROW
+  // ─────────────────────────────────────────────────────────────────────────────
+
   validateaddPaymentDetails(): boolean {
     let isValid = true;
-
     const subForm = this.paymentVoucherForm.get('ppaymentsslistcontrols') as FormGroup;
     if (!subForm) return false;
 
@@ -1230,59 +1067,52 @@ debugger
 
       isValid = this.checkValidations(subForm, isValid);
 
-      const ledgerName = subForm.get('pledgername')?.value;
+      const ledgerName   = subForm.get('pledgername')?.value;
       const subledgerName = subForm.get('psubledgername')?.value;
-      const subledgerId = subForm.get('psubledgerid')?.value;
-      const partyId = subForm.get('ppartyid')?.value;
+      const subledgerId  = subForm.get('psubledgerid')?.value;
+      const partyId      = subForm.get('ppartyid')?.value;
+      const gridData     = this.paymentslist || [];
 
-      const gridData = this.paymentslist || [];
       let count = 0, fixedCount = 0, bankCount = 0;
 
       for (let i = 0; i < gridData.length; i++) {
-        if (ledgerName === "FIXED DEPOSIT RECEIPTS-CHITS" && gridData.length > 0) {
-          count = 1;
-          fixedCount = 1;
-          break;
+        if (ledgerName === 'FIXED DEPOSIT RECEIPTS-CHITS' && gridData.length > 0) {
+          count = 1; fixedCount = 1; break;
         }
-
-        if ((gridData[i].pledgername === "FIXED DEPOSIT RECEIPTS-CHITS") ||
-          (gridData[i].pledgername === ledgerName && gridData[i].psubledgername === subledgerName && gridData[i].ppartyid === partyId)) {
-          if (gridData[i].pledgername === "FIXED DEPOSIT RECEIPTS-CHITS") fixedCount = 1;
-          count = 1;
-          break;
+        if (
+          (gridData[i].pledgername === 'FIXED DEPOSIT RECEIPTS-CHITS') ||
+          (gridData[i].pledgername === ledgerName && gridData[i].psubledgername === subledgerName && gridData[i].ppartyid === partyId)
+        ) {
+          if (gridData[i].pledgername === 'FIXED DEPOSIT RECEIPTS-CHITS') fixedCount = 1;
+          count = 1; break;
         }
-
         for (let j = 0; j < this.banklist.length; j++) {
           if (this.banklist[j].paccountid === gridData[i].psubledgerid || this.banklist[j].paccountid === subledgerId) {
-            count = 1;
-            bankCount = 1;
-            break;
+            count = 1; bankCount = 1; break;
           }
         }
       }
 
       if (count === 1) {
-        if (fixedCount === 1) this._commonService.showWarningMessage('Fixed deposit receipts accepts only one record in the grid');
-        else if (bankCount === 1) this._commonService.showWarningMessage('Bank Accounts only one record in the grid');
-        else this._commonService.showWarningMessage('Ledger, subledger and party already exists in the grid.');
+        if (fixedCount === 1)       this._commonService.showWarningMessage('Fixed deposit receipts accepts only one record in the grid');
+        else if (bankCount === 1)   this._commonService.showWarningMessage('Bank Accounts only one record in the grid');
+        else                         this._commonService.showWarningMessage('Ledger, subledger and party already exists in the grid.');
         isValid = false;
       }
-
     } catch (e) {
       this._commonService.showErrorMessage(e);
     }
 
     return isValid;
   }
+
   addPaymentDetails() {
     this.disableaddbutton = true;
-    this.addbutton = "Processing";
+    this.addbutton = 'Processing';
 
     const control = <FormGroup>this.paymentVoucherForm.get('ppaymentsslistcontrols');
 
     if (this.validateaddPaymentDetails()) {
-
-      // Ensure default values
       const stateId = control.get('pStateId')?.value || 0;
       control.get('pStateId')?.setValue(stateId);
 
@@ -1292,31 +1122,52 @@ debugger
       const gstPercentage = control.get('pgstpercentage')?.value || 0;
       control.get('pgstpercentage')?.setValue(gstPercentage);
 
-      // Prepare data for grid
       const data = {
-        ppartyname: control.get('ppartyname')?.value,
-        pledgername: control.get('pledgername')?.value,
-        psubledgername: control.get('psubledgername')?.value,
-        ptotalamount: this._commonService.removeCommasInAmount(control.get('ptotalamount')?.value),
-        pamount: this._commonService.removeCommasInAmount(control.get('pamount')?.value),
+        ppartyname         : control.get('ppartyname')?.value,
+        pledgername        : control.get('pledgername')?.value,
+        psubledgername     : control.get('psubledgername')?.value,
+        ptotalamount       : this._commonService.removeCommasInAmount(control.get('ptotalamount')?.value),
+        pamount            : this._commonService.removeCommasInAmount(control.get('pamount')?.value),
         pgstcalculationtype: control.get('pgstcalculationtype')?.value,
-        pTdsSection: control.get('pTdsSection')?.value,
-        pgstpercentage: gstPercentage,
-        ptdsamount: this._commonService.removeCommasInAmount(control.get('ptdsamount')?.value)
+        pTdsSection        : control.get('pTdsSection')?.value,
+        pgstpercentage     : gstPercentage,
+        ptdsamount         : this._commonService.removeCommasInAmount(control.get('ptdsamount')?.value)
       };
 
       this.paymentslist1 = [...this.paymentslist1, data];
       this.paymentslist.push(control.value);
 
-      // Refresh dependent data
       this.getpartyJournalEntryData();
       this.clearPaymentDetailsparticular();
       this.getPaymentListColumnWisetotals();
     }
 
     this.disableaddbutton = false;
-    this.addbutton = "Add";
+    this.addbutton = 'Add';
   }
+
+  removeHandler(rowIndex: number) {
+    if (!this.paymentslist || !this.paymentslist1) return;
+
+    if (rowIndex >= 0 && rowIndex < this.paymentslist.length) {
+      this.paymentslist.splice(rowIndex, 1);
+      this.paymentslist1.splice(rowIndex, 1);
+      this.paymentslist1 = [...this.paymentslist1];
+
+      const totalPaid = this.paymentslist.reduce(
+        (sum: number, p: any) => sum + parseFloat(p.ptotalamount || '0'), 0
+      );
+      this.paymentVoucherForm.get('ptotalpaidamount')?.setValue(totalPaid);
+
+      this.getpartyJournalEntryData();
+      this.clearPaymentDetails();
+      this.getPaymentListColumnWisetotals();
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // CLEAR METHODS
+  // ─────────────────────────────────────────────────────────────────────────────
 
   clearPaymentDetailsparticular() {
     const control = <FormGroup>this.paymentVoucherForm.get('ppaymentsslistcontrols');
@@ -1325,7 +1176,6 @@ debugger
     control.get('pistdsapplicable')?.setValue(false);
     control.get('pisgstapplicable')?.setValue(false);
     control.get('psubledgerid')?.setValue(null);
-
     control.get('pStateId')?.setValue('');
     control.get('pgstpercentage')?.setValue('');
     control.get('pTdsSection')?.setValue('');
@@ -1334,19 +1184,12 @@ debugger
 
     this.setBalances('SUBLEDGER', 0);
 
-    this.showgst = false;
-    this.showtds = false;
+    this.showgst    = false;
+    this.showtds    = false;
     this.disablegst = false;
     this.disabletds = true;
-    this.showgstno = false;
+    this.showgstno  = false;
     this.formValidationMessages = {};
-  }
-
-  getPaymentListColumnWisetotals() {
-    this.paymentlistcolumnwiselist['ptotalamount'] = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptotalamount || 0), 0);
-    this.paymentlistcolumnwiselist['pamount'] = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.pamount || 0), 0);
-    this.paymentlistcolumnwiselist['pgstamount'] = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.pgstamount || 0), 0);
-    this.paymentlistcolumnwiselist['ptdsamount'] = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptdsamount || 0), 0);
   }
 
   clearPaymentDetails() {
@@ -1390,27 +1233,130 @@ debugger
     this.setBalances('PASSBOOK', 0);
   }
 
+  clearPaymentVoucher() {
+    try {
+      this.paymentslist  = [];
+      this.paymentslist1 = [];
+      this.paymentVoucherForm.reset();
+      this.cleartranstypeDetails();
+      this.clearPaymentDetails();
+
+      this.paymentVoucherForm.get('pmodofpayment')?.setValue('CASH');
+      this.modeofPaymentChange();
+      this.paymentVoucherForm.get('ppaymentdate')?.setValue(new Date());
+
+      this.formValidationMessages      = {};
+      this.paymentlistcolumnwiselist   = {};
+      this.bankbookBalance             = 0;
+      this.bankpassbookBalance         = 0;
+      this.ledgerBalance               = 0;
+      this.subledgerBalance            = 0;
+      this.partyBalance                = 0;
+      this.partyjournalentrylist       = [];
+      this.imageResponse               = { name: '', fileType: 'imageResponse', contentType: '', size: 0 };
+    } catch (e: any) {
+      this._commonService.showErrorMessage(e.message || e);
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // COLUMN TOTALS
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  getPaymentListColumnWisetotals() {
+    this.paymentlistcolumnwiselist['ptotalamount'] = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptotalamount || 0), 0);
+    this.paymentlistcolumnwiselist['pamount']      = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.pamount     || 0), 0);
+    this.paymentlistcolumnwiselist['pgstamount']   = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.pgstamount  || 0), 0);
+    this.paymentlistcolumnwiselist['ptdsamount']   = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptdsamount  || 0), 0);
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // JOURNAL ENTRY PREVIEW
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  getpartyJournalEntryData() {
+    try {
+      const ledgerNames = [...new Set(this.paymentslist.map((p: any) => p.pledgername))];
+      const tdsJournalEntries: any[] = [];
+      this.partyjournalentrylist = [];
+
+      ledgerNames.forEach((ledger: any, index: number) => {
+        const journalAmount = this.paymentslist
+          .filter((p: any) => p.pledgername === ledger)
+          .reduce((sum: number, p: any) => sum +
+            this._commonService.removeCommasInAmount(p.pamount) +
+            this._commonService.removeCommasInAmount(p.ptdsamount), 0);
+
+        this.partyjournalentrylist.push({ type: 'Payment Voucher', accountname: ledger, debitamount: journalAmount, creditamount: '' });
+
+        const tdsData     = this.paymentslist.filter((p: any) => p.pledgername === ledger);
+        const tdsSections = [...new Set(tdsData.map((p: any) => p.pTdsSection))];
+
+        tdsSections.forEach((section: any) => {
+          const tdsAmount = tdsData
+            .filter((p: any) => p.pTdsSection === section)
+            .reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
+
+          tdsJournalEntries.push({
+            type        : `Journal Voucher${index + 1}`,
+            accountname : `TDS-${section} RECEIVABLE`,
+            debitamount : tdsAmount,
+            creditamount: ''
+          });
+        });
+
+        const totalTds = tdsData.reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
+        if (totalTds > 0) {
+          tdsJournalEntries.push({ type: `Journal Voucher${index + 1}`, accountname: ledger, debitamount: '', creditamount: totalTds });
+        }
+      });
+
+      const gstAccounts = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
+      const gstNames    = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
+      gstAccounts.forEach((field: string, i: number) => {
+        const amount = this.paymentslist.reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p[field] || 0), 0);
+        if (amount > 0) {
+          this.partyjournalentrylist.push({ type: 'Payment Voucher', accountname: gstNames[i], debitamount: amount, creditamount: '' });
+        }
+      });
+
+      const totalPaid = this.paymentslist.reduce((sum: number, p: any) => sum + this._commonService.removeCommasInAmount(p.ptotalamount), 0);
+      if (totalPaid > 0) {
+        this.paymentVoucherForm.get('ptotalpaidamount')?.setValue(totalPaid);
+        const accountName = this.paymentVoucherForm.get('pmodofpayment')?.value === 'CASH' ? 'PETTY CASH' : 'BANK';
+        this.partyjournalentrylist.push({ type: 'Payment Voucher', accountname: accountName, debitamount: '', creditamount: totalPaid });
+      }
+
+      this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
+      this.loadgrid();
+    } catch (e) {
+      this._commonService.showErrorMessage(e);
+    }
+  }
+
+  loadgrid() {
+    // Intentionally left blank — grid is bound directly via paymentslist1
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // VALIDATION
+  // ─────────────────────────────────────────────────────────────────────────────
+
   validatesavePaymentVoucher(): boolean {
     let isValid = true;
     try {
-      // Run all form validations
       isValid = this.checkValidations(this.paymentVoucherForm, isValid);
 
-      // Ensure at least one payment record
       if (!this.paymentslist || this.paymentslist.length === 0) {
-        this.showWarningMessage('Add at least one record to the grid!');
+        this._commonService.showWarningMessage('Add at least one record to the grid!');
         isValid = false;
       }
 
-      // Check CASH payment against available balance
       const modOfPayment = this.paymentVoucherForm.get('pmodofpayment')?.value;
       if (modOfPayment === 'CASH') {
-        // Clean cashBalance string and convert to number
-        const rawBalance = (this.cashBalance || '0').toString().trim().replace(/[^\d.-]/g, '');
+        const rawBalance        = (this.cashBalance || '0').toString().trim().replace(/[^\d.-]/g, '');
         const numericCashBalance = Number(this._commonService.removeCommasInAmount(rawBalance)) || 0;
-
-        // Get paid amount as number
-        const paidvalue = Number(this.paymentVoucherForm.get('ptotalpaidamount')?.value) || 0;
+        const paidvalue          = Number(this.paymentVoucherForm.get('ptotalpaidamount')?.value) || 0;
 
         if (paidvalue > numericCashBalance) {
           this._commonService.showWarningMessage('Insufficient Cash Balance');
@@ -1424,231 +1370,306 @@ debugger
     return isValid;
   }
 
-
-  clearPaymentVoucher() {
-    try {
-      // Reset lists and form
-      this.paymentslist = [];
-      this.paymentslist1 = [];
-      this.paymentVoucherForm.reset();
-      this.cleartranstypeDetails();
-      this.clearPaymentDetails();
-
-      // Default mode and date
-      this.paymentVoucherForm.get('pmodofpayment')?.setValue('CASH');
-      this.modeofPaymentChange();
-      this.paymentVoucherForm.get('ppaymentdate')?.setValue(new Date());
-
-      // Reset UI state and balances as numbers
-      this.formValidationMessages = {};
-      this.paymentlistcolumnwiselist = {};
-      this.bankbookBalance = 0;
-      this.bankpassbookBalance = 0;
-      this.ledgerBalance = 0;
-      this.subledgerBalance = 0;
-      this.partyBalance = 0;
-      this.partyjournalentrylist = [];
-      this.imageResponse = { name: '', fileType: 'imageResponse', contentType: '', size: 0 };
-    } catch (e: any) {
-      this._commonService.showErrorMessage(e.message || e);
-    }
-  }
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SAVE PETTY CASH  ◄── MAIN SAVE METHOD
+  // ─────────────────────────────────────────────────────────────────────────────
 
   savePaymentVoucher() {
     this.disablesavebutton = true;
     this.savebutton = 'Processing';
 
     try {
-      // Set total paid amount
-      const totalPaid = this.paymentslist.reduce((sum, c) => sum + parseFloat(c.ptotalamount || 0), 0);
+      // ── 1. Recalculate total paid amount ──────────────────────────────────
+      const totalPaid = this.paymentslist.reduce(
+        (sum: number, c: any) => sum + parseFloat(c.ptotalamount || 0), 0
+      );
       this.paymentVoucherForm.get('ptotalpaidamount')?.setValue(totalPaid);
 
+      // ── 2. Validate ───────────────────────────────────────────────────────
       if (!this.validatesavePaymentVoucher()) {
         this.disablesavebutton = false;
         this.savebutton = 'Save';
         return;
       }
 
-      if (!confirm("Do You Want To Save ?")) {
+      if (!confirm('Do You Want To Save ?')) {
         this.disablesavebutton = false;
         this.savebutton = 'Save';
         return;
       }
 
-      // If payment mode is CASH, ensure bank id is 0
-      if (this.paymentVoucherForm.get('pmodofpayment')?.value === 'CASH') {
+      // ── 3. Force bank_id = 0 for CASH ─────────────────────────────────────
+      const modOfPayment = this.paymentVoucherForm.get('pmodofpayment')?.value;
+      if (modOfPayment === 'CASH') {
         this.paymentVoucherForm.get('pbankid')?.setValue(0);
       }
 
-      // Merge payments list with form data
-      const paymentVoucherdata = {
-        ...this.paymentVoucherForm.value,
-        ppaymentslist: this.paymentslist
+      // ── 4. Format dates ───────────────────────────────────────────────────
+      const formattedPaymentDate = this._commonService.getFormatDateNormal(
+        this.paymentVoucherForm.get('ppaymentdate')?.value
+      );
+      const formattedChequeDate = this._commonService.getFormatDateNormal(
+        this.paymentVoucherForm.get('pchequedate')?.value
+      );
+
+      // ── 5. Resolve bank / UPI ─────────────────────────────────────────────
+      const pbankid     = this.paymentVoucherForm.get('pbankid')?.value    || 0;
+      const pBankName   = this.paymentVoucherForm.get('pbankname')?.value  || '';
+      const pbranchname = this.paymentVoucherForm.get('pbranchname')?.value || '';
+      const pUpiname    = this.paymentVoucherForm.get('pUpiname')?.value   || '';
+      const pUpiid      = this.paymentVoucherForm.get('pUpiid')?.value     || '';
+
+      // ── 6. Build ppaymentsslistcontrols (summary per row) ──────────────────
+      const ppaymentsslistcontrols = this.paymentslist.map((item: any) => ({
+        ppartyid            : parseInt(item.ppartyid)           || 0,
+        psubledgerid        : parseInt(item.psubledgerid)        || 0,
+        pamount             : parseFloat(item.pactualpaidamount) || 0,
+        pistdsapplicable    : item.pistdsapplicable === true || item.pistdsapplicable === 'true',
+        pTdsSection         : item.pTdsSection         || '',
+        ptdsamount          : parseFloat(item.ptdsamount)        || 0,
+        pisgstapplicable    : item.pisgstapplicable === true || item.pisgstapplicable === 'true',
+        ptdscalculationtype : item.ptdscalculationtype  || '',
+        ppartyreferenceid   : item.ppartyreferenceid   || '',
+        ppartyname          : item.ppartyname           || ''
+      }));
+
+      // ── 7. Build ppaymentslist (full detail per row) ───────────────────────
+      const ppaymentslist = this.paymentslist.map((item: any) => ({
+        psubledgerid          : item.psubledgerid?.toString()        || '',
+        psubledgername        : item.psubledgername                  || '',
+        pledgerid             : item.pledgerid?.toString()           || '',
+        pledgername           : item.pledgername                     || '',
+        id                    : item.psubledgerid?.toString()        || '',
+        text                  : item.psubledgername                  || '',
+        ptranstype            : this.paymentVoucherForm.get('ptranstype')?.value || 'PAYMENT',
+        accountbalance        : item.ledgeramount?.toString()        || '0.00',
+        pAccounttype          : item.pAccounttype                    || '',
+        legalcellReceipt      : item.legalcellReceipt                || '',
+        pbranchcode           : this.BranchCode                      || 'KLC01',
+        pbranchtype           : 'MAIN',
+        groupcode             : item.groupcode                       || '',
+        pamount               : item.pamount?.toString()             || '0.00',
+        pgsttype              : item.pgsttype                        || '',
+        pgstcalculationtype   : item.pgstcalculationtype             || '',
+        pgstpercentage        : item.pgstpercentage?.toString()      || '0',
+        pigstamount           : item.pigstamount?.toString()         || '0.00',
+        pcgstamount           : item.pcgstamount?.toString()         || '0.00',
+        psgstamount           : item.psgstamount?.toString()         || '0.00',
+        putgstamount          : item.putgstamount?.toString()        || '0.00',
+        pState                : item.pState                          || '',
+        pStateId              : item.pStateId?.toString()            || '',
+        pgstno                : item.pgstno                          || '',
+        pgstamount            : item.pgstamount?.toString()          || '0.00',
+        pigstpercentage       : item.pigstpercentage?.toString()     || '0',
+        pcgstpercentage       : item.pcgstpercentage?.toString()     || '0',
+        psgstpercentage       : item.psgstpercentage?.toString()     || '0',
+        putgstpercentage      : item.putgstpercentage?.toString()    || '0',
+        pactualpaidamount     : item.pactualpaidamount?.toString()   || '0.00',
+        ptotalamount          : item.ptotalamount?.toString()        || '0.00',
+        pisgstapplicable      : (item.pisgstapplicable === true || item.pisgstapplicable === 'true') ? 'true' : 'false',
+        ptdsamountindividual  : item.ptdsamount?.toString()          || '0.00',
+        pTdsSection           : item.pTdsSection                     || '',
+        pTdsPercentage        : item.pTdsPercentage?.toString()      || '0',
+        preferencetext        : item.ppartyreferenceid               || '',
+        pgstnumber            : item.pgstno                          || '',
+        ppartyname            : item.ppartyname                      || '',
+        ppartyid              : item.ppartyid?.toString()            || '',
+        ppartyreferenceid     : item.ppartyreferenceid               || '',
+        ppartyreftype         : item.ppartyreftype                   || '',
+        pistdsapplicable      : (item.pistdsapplicable === true || item.pistdsapplicable === 'true') ? 'true' : 'false',
+        ptdsamount            : item.ptdsamount?.toString()          || '0.00',
+        ptdscalculationtype   : item.ptdscalculationtype             || '',
+        ptdsaccountId         : item.ptdsaccountId?.toString()       || '',
+        ppartypannumber       : item.ppartypannumber                 || '',
+        ptdsrefjvnumber       : item.ptdsrefjvnumber                 || '',
+        ledgeramount          : item.ledgeramount?.toString()        || '0.00',
+        totalreceivedamount   : item.pactualpaidamount?.toString()   || '0.00',
+        pFilename             : this.imageResponse?.name             || '',
+        agentcode             : item.agentcode                       || '',
+        ticketno              : item.ticketno                        || '',
+        chitgroupid           : item.chitgroupid                     || '',
+        schemesubscriberid    : item.schemesubscriberid              || '',
+        interbranchsubledgerid: item.interbranchsubledgerid          || '',
+        interbranchid         : item.interbranchid                   || '',
+        pformname             : 'PETTYCASH',
+        paccountname          : item.paccountname                    || '',
+        pgstvoucherno         : item.pgstvoucherno                   || '',
+        pChequenumber         : this.paymentVoucherForm.get('pChequenumber')?.value || ''
+      }));
+
+      // ── 8. Assemble full payload ───────────────────────────────────────────
+      const payload = {
+        // Record Identity
+        pRecordid             : '',
+        ppaymentid            : this.paymentVoucherForm.get('ppaymentid')?.value || '',
+        ppaymentdate          : formattedPaymentDate,
+        pjvdate               : formattedPaymentDate,
+        formname              : 'PETTYCASH',
+
+        // Schema / Company / Branch
+        global_schema         : this.GlobalSchema,
+        branch_schema         : this.BranchSchema,
+        company_code          : this.CompanyCode  || 'KAPILCHITS',
+        branch_code           : this.BranchCode   || 'KLC01',
+        branchid              : this.BranchCode   || 'KLC01',
+
+        // Payment Mode
+        pmodofpayment         : modOfPayment,
+        ptranstype            : this.paymentVoucherForm.get('ptranstype')?.value || 'PAYMENT',
+        ptypeofpayment        : this.paymentVoucherForm.get('ptypeofpayment')?.value || 'PETTYCASH',
+
+        // Bank / Cheque / Card / UPI
+        pbankid               : pbankid,
+        bank_id               : pbankid,
+        pBankName             : pBankName,
+        bank_name             : pBankName,
+        pbranchname           : pbranchname,
+        pBankconfigurationId  : '',
+        pAccountnumber        : '',
+        pChequenumber         : this.paymentVoucherForm.get('pChequenumber')?.value || '',
+        pchequedate           : formattedChequeDate,
+        pchequedepositdate    : '',
+        pchequecleardate      : '',
+        pchequeEntryid        : '',
+        pchequeno_scheme      : '',
+        pchequedate_scheme    : '',
+        pCardNumber           : this.paymentVoucherForm.get('pCardNumber')?.value || '',
+        pdepositbankid        : '',
+        pdepositbankname      : '',
+        pUpiname              : pUpiname,
+        pUpiid                : pUpiid,
+
+        // Amounts
+        ptotalpaidamount      : totalPaid,
+        totalreceivedamount   : totalPaid.toString(),
+        payableValue          : totalPaid.toString(),
+
+        // Narration
+        pnarration            : this.paymentVoucherForm.get('pnarration')?.value || '',
+
+        // Party / Contact
+        contactid             : ppaymentslist[0]?.ppartyid          || '',
+        contactname           : ppaymentslist[0]?.ppartyname        || '',
+        pContactReferenceId   : ppaymentslist[0]?.ppartyreferenceid || '',
+        pPanNumber            : ppaymentslist[0]?.ppartypannumber    || '',
+        parentaccountname     : ppaymentslist[0]?.paccountname       || '',
+        pparentid             : ppaymentslist[0]?.pledgerid          || '',
+        pAccountName          : ppaymentslist[0]?.pledgername        || '',
+
+        // Contact Bank
+        contactpaytype        : modOfPayment,
+        contactbankname       : '',
+        contactbankaccno      : '',
+        contactbankbranch     : '',
+        contactbankifsc       : '',
+
+        // Chit / Scheme fields
+        chitgroupid           : ppaymentslist[0]?.chitgroupid  || '',
+        groupcode             : ppaymentslist[0]?.groupcode    || '',
+        ticketno              : ppaymentslist[0]?.ticketno     || '',
+        challanaNo            : '',
+        checkedChitScheme     : 'false',
+        toChitNo              : '',
+        pinstallment_no       : '',
+        radioButtonValue      : modOfPayment,
+        subscriberjoinedbranchid: 0,
+
+        // Receipt / File
+        receiptid             : '',
+        pFilename             : this.imageResponse?.name || '',
+        pFilepath             : '/uploads/receipts/',
+        pFileformat           : this.imageResponse?.contentType?.split('/')[1] || '',
+
+        // Audit
+        pCreatedby            : this._commonService.getCreatedBy(),
+        pipaddress            : this._commonService.getIpAddress(),
+
+        // Detail arrays
+        ppaymentsslistcontrols: ppaymentsslistcontrols,
+        ppaymentslist         : ppaymentslist
       };
 
-      // Format dates
-      paymentVoucherdata.ppaymentdate = this._commonService.getFormatDateNormal(paymentVoucherdata.ppaymentdate);
-      paymentVoucherdata.pchequedate = this._commonService.getFormatDateNormal(paymentVoucherdata.pchequedate);
-
-      const data = JSON.stringify(paymentVoucherdata);
-
-      this._AccountingTransactionsService.savePettyCash(data).subscribe(
-        res => {
-          if (res[0] === 'TRUE') {
-            this.JSONdataItem = res;
-            this._commonService.showInfoMessage("Saved successfully");
-
+      // ── 9. Call API ────────────────────────────────────────────────────────
+      this._AccountingTransactionsService.savePettyCash(payload).subscribe(
+        (res: any) => {
+          // New JSON response: { success: true, message: "...", paymentId: "PC_CC_BC124/25" }
+          if (res?.success === true) {
+            this._commonService.showInfoMessage(res.message || 'Petty Cash saved successfully');
+            const receipt = btoa(res.paymentId + ',' + 'Petty Cash');
+            window.open('/#/PaymentVoucherReport?id=' + receipt, '_blank');
             this.clearPaymentVoucher();
             this.ngOnInit();
-
+          } else if (Array.isArray(res) && res[0] === 'TRUE') {
+            // Legacy string-array response fallback
+            this.JSONdataItem = res;
+            this._commonService.showInfoMessage('Saved successfully');
             const receipt = btoa(res[1] + ',' + 'Petty Cash');
-            window.open('/#/PaymentVoucherReport?id=' + receipt, "_blank");
+            window.open('/#/PaymentVoucherReport?id=' + receipt, '_blank');
+            this.clearPaymentVoucher();
+            this.ngOnInit();
+          } else {
+            this._commonService.showErrorMessage(res?.message || 'Save failed. Please try again.');
           }
 
           this.disablesavebutton = false;
           this.savebutton = 'Save';
         },
-        error => {
+        (error: any) => {
           this._commonService.showErrorMessage(error);
           this.disablesavebutton = false;
           this.savebutton = 'Save';
         }
       );
 
-    } catch (e) {
-      this._commonService.showErrorMessage(e);
+    } catch (e: any) {
+      this._commonService.showErrorMessage(e.message || e);
       this.disablesavebutton = false;
       this.savebutton = 'Save';
     }
   }
-  getpartyJournalEntryData() {
-    try {
-      const ledgerNames = [...new Set(this.paymentslist.map(p => p.pledgername))];
-      const tdsJournalEntries: { type: string; accountname: any; debitamount: any; creditamount: any; }[] = [];
-      this.partyjournalentrylist = [];
 
-      ledgerNames.forEach((ledger, index) => {
-        // Total amount + TDS for this ledger
-        const journalAmount = this.paymentslist
-          .filter(p => p.pledgername === ledger)
-          .reduce((sum, p) => sum + this._commonService.removeCommasInAmount(p.pamount) + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
-
-        this.partyjournalentrylist.push({ type: 'Payment Voucher', accountname: ledger, debitamount: journalAmount, creditamount: '' });
-
-        // TDS entries per section
-        const tdsData = this.paymentslist.filter(p => p.pledgername === ledger);
-        const tdsSections = [...new Set(tdsData.map(p => p.pTdsSection))];
-
-        tdsSections.forEach(section => {
-          const tdsAmount = tdsData
-            .filter(p => p.pTdsSection === section)
-            .reduce((sum, p) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
-
-          tdsJournalEntries.push({
-            type: `Journal Voucher${index + 1}`,
-            accountname: `TDS-${section} RECEIVABLE`,
-            debitamount: tdsAmount,
-            creditamount: ''
-          });
-        });
-
-        const totalTds = tdsData.reduce((sum, p) => sum + this._commonService.removeCommasInAmount(p.ptdsamount), 0);
-        if (totalTds > 0) {
-          tdsJournalEntries.push({
-            type: `Journal Voucher${index + 1}`,
-            accountname: ledger,
-            debitamount: '',
-            creditamount: totalTds
-          });
-        }
-      });
-
-      // GST entries
-      const gstAccounts = ['pigstamount', 'pcgstamount', 'psgstamount', 'putgstamount'];
-      const gstNames = ['P-IGST', 'P-CGST', 'P-SGST', 'P-UTGST'];
-      gstAccounts.forEach((field, i) => {
-        const amount = this.paymentslist.reduce((sum, p) => sum + this._commonService.removeCommasInAmount(p[field] || 0), 0);
-        if (amount > 0) {
-          this.partyjournalentrylist.push({ type: 'Payment Voucher', accountname: gstNames[i], debitamount: amount, creditamount: '' });
-        }
-      });
-
-      // Total paid amount & cash/bank entry
-      const totalPaid = this.paymentslist.reduce((sum, p) => sum + this._commonService.removeCommasInAmount(p.ptotalamount), 0);
-      if (totalPaid > 0) {
-        this.paymentVoucherForm.get('ptotalpaidamount')?.setValue(totalPaid);
-        const accountName = this.paymentVoucherForm.get('pmodofpayment')?.value === 'CASH' ? 'PETTY CASH' : 'BANK';
-        this.partyjournalentrylist.push({ type: 'Payment Voucher', accountname: accountName, debitamount: '', creditamount: totalPaid });
-      }
-
-      // Append TDS entries at the end
-      this.partyjournalentrylist = [...this.partyjournalentrylist, ...tdsJournalEntries];
-      this.loadgrid();
-    } catch (e) {
-      this._commonService.showErrorMessage(e);
-    }
-  }
-  loadgrid() {
-    throw new Error('Method not implemented.');
-  }
-
-  removeHandler(rowIndex: number) {
-    if (!this.paymentslist || !this.paymentslist1) return; // safety check
-
-    if (rowIndex >= 0 && rowIndex < this.paymentslist.length) {
-      // Remove from arrays
-      this.paymentslist.splice(rowIndex, 1);
-      this.paymentslist1.splice(rowIndex, 1);
-      this.paymentslist1 = [...this.paymentslist1];
-
-      // Recalculate total paid amount
-      const totalPaid = this.paymentslist.reduce((sum: number, p: any) => sum + parseFloat(p.ptotalamount || '0'), 0);
-      this.paymentVoucherForm.get('ptotalpaidamount')?.setValue(totalPaid);
-
-      // Call dependent methods safely
-      if (this.getpartyJournalEntryData) this.getpartyJournalEntryData();
-      if (this.clearPaymentDetails) this.clearPaymentDetails();
-      if (this.getPaymentListColumnWisetotals) this.getPaymentListColumnWisetotals();
-    }
-  }
+  // ─────────────────────────────────────────────────────────────────────────────
+  // FILE UPLOAD
+  // ─────────────────────────────────────────────────────────────────────────────
 
   uploadAndProgress(event: Event) {
     try {
       const target = event.target as HTMLInputElement;
-      const file = target?.files?.[0];
+      const file   = target?.files?.[0];
+
       if (!file || !this.validateFile(file.name)) {
-        this.showWarningMessage("Upload jpg, png, or pdf files only");
+        this._commonService.showWarningMessage('Upload jpg, png, or pdf files only');
         return;
       }
 
-      // Read file for preview
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.imageResponse = {
-          name: file.name,
-          fileType: "imageResponse",
+          name       : file.name,
+          fileType   : 'imageResponse',
           contentType: file.type,
-          size: file.size
+          size       : file.size
         };
       };
 
-      // Prepare form data for upload
       const formData = new FormData();
       formData.append('file', file);
       formData.append('NewFileName', `Payment Voucher.${file.name.split('.').pop()}`);
 
-      // Upload
-      this._commonService.fileUploadS3("Account", formData).subscribe((data: any) => {
-        if (!data?.length) return;
-        this.kycFileName = data[0];
-        this.imageResponse.name = data[0];
-        this.paymentVoucherForm.get('pFilename')?.setValue(this.kycFileName);
-      }, (error: any) => {
-        this.showErrorMessage(error);
-      });
+      this._commonService.fileUploadS3('Account', formData).subscribe(
+        (data: any) => {
+          if (!data?.length) return;
+          this.kycFileName = data[0];
+          this.imageResponse.name = data[0];
+          this.paymentVoucherForm.get('pFilename')?.setValue(this.kycFileName);
+        },
+        (error: any) => {
+          this._commonService.showErrorMessage(error);
+        }
+      );
     } catch (e: any) {
-      this.showErrorMessage(e.message || e);
+      this._commonService.showErrorMessage(e.message || e);
     }
   }
 
@@ -1658,6 +1679,10 @@ debugger
     return ['jpg', 'png', 'pdf'].includes(ext || '');
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // HELPERS
+  // ─────────────────────────────────────────────────────────────────────────────
+
   showErrorMessage(errormsg: string) {
     this._commonService.showErrorMessage(errormsg);
   }
@@ -1666,17 +1691,11 @@ debugger
     this._commonService.showWarningMessage(errormsg);
   }
 
-  // Getter for pgstno form control
   get pgstno() {
     return this.paymentVoucherForm.get('pgstno');
   }
+
   saveJournalVoucher(): void {
     console.log('Save Journal Voucher clicked');
-
-    // TODO: Implement your actual save logic here
-    // Example:
-    // if (this.paymentVoucherForm.valid) {
-    //   this._AccountingTransactionsService.saveVoucher(this.paymentVoucherForm.value).subscribe(...);
-    // }
   }
 }
