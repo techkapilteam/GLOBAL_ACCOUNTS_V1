@@ -341,13 +341,25 @@ this.betweento   = this.selectedDateMode
   
   
 
-  const fromDate = fromDateRaw
-    ? this.commonService.getFormatDateGlobal(fromDateRaw)
-    : '';
+  // const fromDate = fromDateRaw
+  //   ? this.commonService.getFormatDateGlobal(fromDateRaw)
+  //   : '';
 
-  const toDate = toDateRaw
-    ? this.commonService.getFormatDateGlobal(toDateRaw)
-    : '';
+  // const toDate = toDateRaw
+  //   ? this.commonService.getFormatDateGlobal(toDateRaw)
+  //   : '';
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(fromDateRaw);
+const toDate = formatToDDMMMYYYY(toDateRaw);
 
   const groupedData =
     this.commonService._getGroupingGridExportData(

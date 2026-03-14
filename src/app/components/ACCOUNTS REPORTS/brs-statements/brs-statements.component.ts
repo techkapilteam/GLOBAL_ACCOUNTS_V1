@@ -363,10 +363,27 @@ get f() { return this.BrsStatementsReport.controls; }
     let reportname = this.reportName;
     let gridheaders = ["Receipt Date", "Receipt No", "Cheque No", "Amount", "Cheque Date", "Deposit Date", "Cleared Date","Particular"];
     
-    let fromDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['fromDate'].value);
-    let toDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['toDate'].value);
-    this.startDate = fromDate;
-    this.endDate = toDate;
+    // let fromDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['fromDate'].value);
+    // let toDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['toDate'].value);
+    // this.startDate = fromDate;
+    // this.endDate = toDate;
+    const rawFromDate = this.BrsStatementsReport.controls['fromDate'].value;
+  const rawToDate = this.BrsStatementsReport.controls['toDate'].value;
+
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+    if (!dateVal) return '';
+    const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+      ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+      : new Date(dateVal);
+    if (isNaN(date.getTime())) return '';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  this.startDate = formatToDDMMMYYYY(rawFromDate);
+  this.endDate = formatToDDMMMYYYY(rawToDate);
     let colWidthHeight = {
             0: { cellWidth: 'auto', halign: 'center' },
             1: { cellWidth: 22, halign: 'left' },
@@ -450,10 +467,27 @@ this.pissuedate = this._CommonService.getFormatDateGlobal(dateObj);
     let reportname = this.reportName;
     let gridheaders = ["Trans Date", "Trans No", "Cheque No", "Amount", "Cleared Date", "Particular"];
     
-    let fromDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['fromDate'].value);
-    let toDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['toDate'].value);
-    this.startDate = fromDate;
-    this.endDate = toDate;
+    // let fromDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['fromDate'].value);
+    // let toDate = this._CommonService.getFormatDateGlobal(this.BrsStatementsReport.controls['toDate'].value);
+    // this.startDate = fromDate;
+    // this.endDate = toDate;
+    const rawFromDate = this.BrsStatementsReport.controls['fromDate'].value;
+  const rawToDate = this.BrsStatementsReport.controls['toDate'].value;
+
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+    if (!dateVal) return '';
+    const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+      ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+      : new Date(dateVal);
+    if (isNaN(date.getTime())) return '';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  this.startDate = formatToDDMMMYYYY(rawFromDate);
+  this.endDate = formatToDDMMMYYYY(rawToDate);
     let colWidthHeight = {
   0: { cellWidth: 'auto', halign: 'center' },
   1: { cellWidth: 22, halign: 'left' },

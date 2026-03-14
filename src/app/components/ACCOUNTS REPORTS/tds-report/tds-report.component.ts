@@ -270,8 +270,22 @@ if (this.TdsReportForm.invalid) return;
       };
     }
 
-    const from = this.commonService.getFormatDateGlobal(this.TdsReportForm.value.fromdate);
-    const to = this.commonService.getFormatDateGlobal(this.TdsReportForm.value.todate);
+    // const from = this.commonService.getFormatDateGlobal(this.TdsReportForm.value.fromdate);
+    // const to = this.commonService.getFormatDateGlobal(this.TdsReportForm.value.todate);
+const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const from = formatToDDMMMYYYY(this.TdsReportForm.value.fromdate) ?? '';
+const to   = formatToDDMMMYYYY(this.TdsReportForm.value.todate)   ?? '';
 
     this.amount = this.tdsreportdata.reduce((s, x) => s + (x.ledgeramount || 0), 0);
     this.tdsamount = this.tdsreportdata.reduce((s, x) => s + (x.tdscalculatedamount || 0), 0);

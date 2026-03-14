@@ -265,6 +265,18 @@ this.updateFormattedDates();
   pdfOrPrint(type: 'Pdf' | 'Print'): void {
 
     const { fromDate, toDate } = this.bankBookForm.value;
+    const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' }); // Jan, Feb, etc.
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const from = formatToDDMMMYYYY(fromDate);
+const to = formatToDDMMMYYYY(toDate);
 
     const rows = this.gridView.map(item => ({
       transactionDate: this.commonService.getFormatDateGlobal(item.ptransactiondate),
@@ -291,8 +303,9 @@ this.updateFormattedDates();
       {},
       'landscape',
       'Between',
-      this.commonService.getFormatDateGlobal(fromDate) ?? '',
-      this.commonService.getFormatDateGlobal(toDate) ?? '',
+      // this.commonService.getFormatDateGlobal(fromDate) ?? '',
+      // this.commonService.getFormatDateGlobal(toDate) ?? '',
+      from,to,
       type,
       this.selectedBankName
     );

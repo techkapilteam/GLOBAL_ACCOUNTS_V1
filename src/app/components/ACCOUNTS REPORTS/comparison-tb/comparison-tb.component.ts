@@ -353,12 +353,26 @@ pdfOrprint(printorpdf: 'Pdf' | 'Print'): void {
   const reportname = 'Comparison Trial Balance';
   const gridheaders = ['Particulars', 'Debit', 'Credit', 'Debit', 'Credit', 'Debit', 'Credit'];
 
-  const fromDate = this.commonService.getFormatDateGlobal(
-    this.ComparisionTBForm.controls['fromDate'].value
-  );
-  const toDate = this.commonService.getFormatDateGlobal(
-    this.ComparisionTBForm.controls['toDate'].value
-  );
+  // const fromDate = this.commonService.getFormatDateGlobal(
+  //   this.ComparisionTBForm.controls['fromDate'].value
+  // );
+  // const toDate = this.commonService.getFormatDateGlobal(
+  //   this.ComparisionTBForm.controls['toDate'].value
+  // );
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(this.ComparisionTBForm.controls['fromDate'].value);
+const toDate   = formatToDDMMMYYYY(this.ComparisionTBForm.controls['toDate'].value);
 
   const colWidthHeight = {
     parentaccountname: { cellWidth: 'auto' },
