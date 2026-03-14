@@ -316,13 +316,27 @@ let todate = new Date(this.endDate).toLocaleDateString('en-CA');
     };
     // Total: 12+25+22+65+22+22+15+17 = 200 ... adjusted below for 10mm left margin
 
-    let fromDate = this._CommonService.getFormatDateGlobal(
-      this.BanknBookReportForm.controls['fromDate'].value
-    );
+    // let fromDate = this._CommonService.getFormatDateGlobal(
+    //   this.BanknBookReportForm.controls['fromDate'].value
+    // );
 
-    let toDate = this._CommonService.getFormatDateGlobal(
-      this.BanknBookReportForm.controls['toDate'].value
-    );
+    // let toDate = this._CommonService.getFormatDateGlobal(
+    //   this.BanknBookReportForm.controls['toDate'].value
+    // );
+    const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(this.BanknBookReportForm.controls['fromDate'].value);
+const toDate   = formatToDDMMMYYYY(this.BanknBookReportForm.controls['toDate'].value);
 
     this.verificationService.downloadKgmsOutwardReportsData(
       "Bank Entries Details",

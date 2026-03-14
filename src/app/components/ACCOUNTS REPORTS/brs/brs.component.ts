@@ -421,6 +421,17 @@ setPageModel(): void {
 
     const rows: any[] = [];
     const gridheaders = ["Transaction Date", "Cheque No.", "Particulars", "Amount"];
+    const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
     this.gridView.forEach(element => {
       rows.push([
@@ -438,7 +449,8 @@ setPageModel(): void {
       {},
       "a4",
       "As On",
-      this.commonService.getFormatDateGlobal(this.BRStatmentForm.value.fromDate),
+      // this.commonService.getFormatDateGlobal(this.BRStatmentForm.value.fromDate),
+      formatToDDMMMYYYY(this.BRStatmentForm.value.fromDate),
       new Date().toLocaleDateString(),
       this.commonService.convertAmountToPdfFormat(this.pBankBookBalance),           
     this.commonService.convertAmountToPdfFormat(this.chequesdepositedbutnotcredited), 
