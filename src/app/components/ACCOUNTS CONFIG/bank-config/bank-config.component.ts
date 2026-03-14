@@ -19,11 +19,12 @@ import { ValidationMessageComponent } from '../../../common/validation-message/v
 import { routes } from '../../../app.routes';
 import { Logger } from 'html2canvas/dist/types/core/logger';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-bank-config',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule, 
-    TableModule, ValidationMessageComponent, AddressComponent,NgSelectModule],
+    TableModule, ValidationMessageComponent, AddressComponent,NgSelectModule,ButtonModule],
   templateUrl: './bank-config.component.html',
   styleUrls: ['./bank-config.component.css']
 })
@@ -1555,50 +1556,42 @@ console.log("  this.AdresssDetailsForm",  this.AdresssDetailsForm);
   const selectedBank = this.banksList.find((ele: any) => ele.bankName === f.bankName);
 
 const payload = {
-  schemaname: this._commonService.getschemaname(),
-  company_code: this._commonService.getCompanyCode(),
-  branch_code: this._commonService.getBranchCode(),
+  // Required top-level fields
+  branchcode: String(this._commonService.getBranchCode() || ""),
+  companycode: String(this._commonService.getCompanyCode() || ""),
+  globalSchema: String(this._commonService.getschemaname() || ""),
+  pChequeGenerateDate: this._commonService.getFormatDateNormal(f.pChequeGenerateDate || new Date()),
 
-  branchSchema: this._commonService.getbranchname(),
-  pipaddress:"192.168.2.177",
-  // pipaddress: this._commonService.getIpAddress(),
-
-  pCreatedby: String(1),
-  // pCreatedby: String(this._commonService.getCreatedBy()),
+  branchSchema: String(this._commonService.getbranchname() || ""),
+  pipaddress: "192.168.2.177",
+  pCreatedby: 1, // number
   pBankdate: this._commonService.getFormatDateNormal(f.pBankdate),
-
   pAcctountype: String(f.pAcctountype || ""),
-  pBankID: String(selectedBank?.bankId || "0"),
+  pBankID: Number(selectedBank?.bankId || 0),
   pBankname: String(f.bankName || ""),
   pBankbranch: String(f.pBankbranch || ""),
   pAccountnumber: String(f.pAccountnumber || ""),
   pIfsccode: String(f.pIfsccode || ""),
   pAccountname: String(f.account_name || ""),
-
   pOverdraft: String(this._commonService.removeCommasForEntredNumber(f.pOverdraft) || "0"),
   pOpeningBalance: String(this._commonService.removeCommasForEntredNumber(f.pOpeningBalance) || "0"),
   pOpeningBalanceType: String(f.pOpeningBalanceType || ""),
-
-  pRecordid: String(f.pRecordid || "0"),
+  pRecordid: Number(f.pRecordid || 0),
   pStatusname: "Active",
   ptypeofoperation: this.buttontype === "edit" ? "UPDATE" : "CREATE",
-
   pIsdebitcardapplicable: !!f.pIsdebitcardapplicable,
   pIsupiapplicable: !!f.pIsupiapplicable,
-
   popeningjvno: String(f.popeningjvno || ""),
-
   isprimary: !!f.isprimary,
   isformanbank: !!f.isformanbank,
   isforemanpaymentbank: !!f.isforemanpaymentbank,
   isintrestpaymentbank: !!f.isintrestpaymentbank,
-
   pChqegeneratestatus: "",
   pSwiftccode: "",
   pAccountid: "",
-  pbranchid: "",
+  pbranchid: String(f.pbranchid || ""),
 
-  // Address DTO
+  // Address DTO (required fields included)
   lstBankInformationAddressDTO: [{
     pAddress1: String(this.AdresssDetailsForm?.paddress1 || ""),
     pAddress2: String(this.AdresssDetailsForm?.paddress2 || ""),
@@ -1607,13 +1600,13 @@ const payload = {
     pDistrict: String(this.AdresssDetailsForm?.pDistrict || ""),
     pPincode: String(this.AdresssDetailsForm?.Pincode || ""),
     pCountry: String(this.AdresssDetailsForm?.pCountry || ""),
-
-    pRecordid: String(this.AdresssDetailsForm?.pRecordid || "0"),
-    pdistrictid: String(this.AdresssDetailsForm?.pDistrictId || ""),
+    pRecordid: Number(this.AdresssDetailsForm?.pRecordid || 0),
+    pdistrictid: Number(this.AdresssDetailsForm?.pDistrictId || 0),
     pStatusname: "Active",
     ptypeofoperation: this.buttontype === "edit" ? "UPDATE" : "CREATE",
-    pCreatedby: String(1)
-    // pCreatedby: String(this._commonService.getCreatedBy())
+    pCreatedby: 1,
+    pAddressType: "HEAD OFFICE", // required
+    pBankId: Number(selectedBank?.bankId || 0) // required
   }],
 
   // Debit Card DTO
@@ -1622,30 +1615,25 @@ const payload = {
     pCardName: String(f.pCardName || ""),
     pValidfrom: this._commonService.getFormatDateNormal(f.pValidfrom),
     pValidto: this._commonService.getFormatDateNormal(f.pValidto),
-
-    pRecordid: String(this.datatobind?.[0]?.lstBankdebitcarddtlsDTO?.[0]?.pRecordid || "0"),
+    pRecordid: Number(this.datatobind?.[0]?.lstBankdebitcarddtlsDTO?.[0]?.pRecordid || 0),
     pStatusname: "Active",
     ptypeofoperation: this.buttontype === "edit" ? "UPDATE" : "CREATE",
-    pCreatedby: String(1)
-    // pCreatedby: String(this._commonService.getCreatedBy())
+    pCreatedby: 1,
+    pBankId: Number(selectedBank?.bankId || 0) // required
   }] : [],
 
   // UPI DTO
   lstBankUPI: this.gridData.map((upi: any) => ({
     pUpiid: String(upi.pUpiid || ""),
     pUpiname: String(upi.pUpiname || ""),
-
-    pCreatedby: String(1),
-    // pCreatedby: String(this._commonService.getCreatedBy()),
-    // pStatusname: "Active",
-    // ptypeofoperation: "CREATE",
-    ptypeofoperation: String(upi.ptypeofoperation || ""),
-    pStatusname: String(upi.ptypeofoperation || ""),
-
-    pRecordid: String(upi.pStatusname || "0")
+    pCreatedby: 1,
+    ptypeofoperation: String(upi.ptypeofoperation || "CREATE"),
+    pStatusname: String(upi.ptypeofoperation || "CREATE"),
+    pRecordid: Number(upi.pRecordid || 0), // numeric
+    pBankconfigurationId: Number(upi.pBankconfigurationId || 0) // numeric
   })),
 
-  // Optional arrays (Swagger requires)
+  // Cheque DTOs
   lstChequemanagementDTO: [],
   lstCheques: []
 };
@@ -1660,11 +1648,12 @@ const payload = {
   let p3=this._commonService.getschemaname()
 
   this._accountingmasterserive.GetCheckDuplicateDebitCardNo(finalData).subscribe(res => {
-    if (res[0] === "TRUE") {
+    if (res.status === "TRUE") {
       this._accountingmasterserive.savebankinformation(finalData).subscribe(saved => {
         if (saved) {
           this._commonService.showSuccessMsg("Success!");
-          this.router.navigate(['/configuration/BankViewComponent']);
+          // this.router.navigate(['/configuration/BankViewComponent']);
+          this.router.navigate(['/dashboard/accounts/accounts-config/bank-config-view']);
         }
       }, err => this.handleError(err));
     } else {
@@ -1672,10 +1661,39 @@ const payload = {
     }
   }, err => this.handleError(err));
 }
-handleDuplicates(res: any[]) {
-  if (!res || res[0] === "TRUE") return;
+// handleDuplicates(res: any[]) {
+//   if (!res || res[0] === "TRUE") return;
 
-  res.forEach((code: string) => {
+//   res.forEach((code: string) => {
+//     switch (code) {
+//       case "B":
+//         this._commonService.showWarningMessage("Bank Already Exists");
+//         break;
+//       case "D":
+//         this._commonService.showWarningMessage("Debit Card Already Exists");
+//         break;
+//       case "U":
+//         this._commonService.showWarningMessage("UPI Id Already Exists");
+//         break;
+//       default:
+//         console.warn("Unknown validation code:", code);
+//     }
+//   });
+  
+//   this.disablesavebutton = false;
+//   this.buttonname = 'Save';
+// }
+handleDuplicates(res: any) {
+  // If res is null or undefined, exit
+  if (!res) return;
+
+  // If res is a single string, convert it to an array
+  const codes = Array.isArray(res) ? res : [res];
+
+  // Skip if the first item is "TRUE"
+  if (codes[0] === "TRUE") return;
+
+  codes.forEach((code: string) => {
     switch (code) {
       case "B":
         this._commonService.showWarningMessage("Bank Already Exists");
@@ -1690,7 +1708,7 @@ handleDuplicates(res: any[]) {
         console.warn("Unknown validation code:", code);
     }
   });
-  
+
   this.disablesavebutton = false;
   this.buttonname = 'Save';
 }

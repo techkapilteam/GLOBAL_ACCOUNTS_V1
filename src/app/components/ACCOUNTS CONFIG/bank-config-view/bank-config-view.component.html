@@ -87,13 +87,13 @@
                   {{ row.account_name || '--' }}
                 </td>
                 <td style="padding:8px 12px; font-size:13px; color:#162246;">
-                  {{ row.pStatusname ? 'Active' : 'Inactive' }}
+                  {{ row.status ? 'Active' : 'Inactive' }}
                 </td>
                 <td style="padding:8px 12px; font-size:13px; color:#162246;">
                   <span *ngIf="row.isprimary">Primary Bank</span>
-                  <span *ngIf="row.isintrestpaymentbank">Interest Payment Bank</span>
+                  <span *ngIf="row.is_interest_payment_bank">Interest Payment Bank</span>
                   <span *ngIf="row.isformanbank">Foreman Bank</span>
-                  <span *ngIf="row.isforemanpaymentbank">Foreman Payment Bank</span>
+                  <span *ngIf="row.is_foreman_payment_bank">Foreman Payment Bank</span>
                 </td>
               </tr>
             </ng-template>
