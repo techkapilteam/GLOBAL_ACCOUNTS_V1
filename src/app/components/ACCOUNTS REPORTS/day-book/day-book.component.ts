@@ -427,11 +427,24 @@ let toDate: string;
     'Amount  '
   ];
 
-  const format = this.dayBookForm.controls['dfromdate'].value;
-  const fromDate = this.commonService.getFormatDateGlobal(format);
+  // const format = this.dayBookForm.controls['dfromdate'].value;
+  // const fromDate = this.commonService.getFormatDateGlobal(format);
 
-  const formattodate = this.dayBookForm.controls['dtodate'].value;
-  const toDate = this.commonService.getFormatDateGlobal(formattodate);
+  // const formattodate = this.dayBookForm.controls['dtodate'].value;
+  // const toDate = this.commonService.getFormatDateGlobal(formattodate);
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+const fromDate = formatToDDMMMYYYY(this.dayBookForm.controls['dfromdate'].value);
+const toDate   = formatToDDMMMYYYY(this.dayBookForm.controls['dtodate'].value);
 
   // if (fromDate && toDate) {
   //   this.showdate = 'Between';

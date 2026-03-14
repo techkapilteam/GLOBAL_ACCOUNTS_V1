@@ -85,12 +85,19 @@
     <div class="section-content mt-4" *ngIf="gridData?.length || totalBalanceGrid?.length">
 
       <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-outline-danger btn-sm me-2" (click)="pdfOrprint('Pdf')">
+        <!-- <button class="btn btn-outline-danger btn-sm me-2" (click)="pdfOrprint('Pdf')">
           <i class="pi pi-file-pdf"></i> PDF
         </button>
         <button class="btn btn-outline-secondary btn-sm" (click)="pdfOrprint('Print')">
           <i class="pi pi-print"></i> Print
-        </button>
+        </button> -->
+        <a (click)="pdfOrprint('Pdf')" class="export-icons me-2">
+        <img src="assets/images/pdf-icon-blue.svg" width="18" title="PDF" />
+      </a>
+
+      <a (click)="pdfOrprint('Print')" class="export-icons me-2">
+        <img src="assets/images/print-icon-blue.svg" width="18" title="Print" />
+      </a>
       </div>
 
       <!-- <div class="text-center mb-1 fw-bold fs-5">

@@ -242,13 +242,28 @@ private generateGroupedReport(printOrpdf: 'Print' | 'Pdf'): void {
   const reportName = 'Trial Balance';
   const gridHeaders = ['Particulars', 'Debit', 'Credit'];
 
-  const fromDate = this.commonService.getFormatDateGlobal(
-    this.TrialBalanceForm.controls['fromdate'].value
-  );
+  // const fromDate = this.commonService.getFormatDateGlobal(
+  //   this.TrialBalanceForm.controls['fromdate'].value
+  // );
 
-  const toDate = this.commonService.getFormatDateGlobal(
-    this.TrialBalanceForm.controls['todate'].value
-  );
+  // const toDate = this.commonService.getFormatDateGlobal(
+  //   this.TrialBalanceForm.controls['todate'].value
+  // );
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(this.TrialBalanceForm.controls['fromdate'].value) ?? '';
+const toDate   = formatToDDMMMYYYY(this.TrialBalanceForm.controls['todate'].value)   ?? '';
+
 
   const colWidthHeight = {
     paccountname: { cellWidth: 'auto' },
@@ -297,13 +312,27 @@ private generateNormalReport(printOrpdf: 'Print' | 'Pdf'): void {
   const reportName = 'Trial Balance';
   const gridHeaders = ['Particulars', 'Debit', 'Credit'];
 
-  const fromDate = this.commonService.getFormatDateGlobal(
-    this.TrialBalanceForm.controls['fromdate'].value
-  );
+  // const fromDate = this.commonService.getFormatDateGlobal(
+  //   this.TrialBalanceForm.controls['fromdate'].value
+  // );
 
-  const toDate = this.commonService.getFormatDateGlobal(
-    this.TrialBalanceForm.controls['todate'].value
-  );
+  // const toDate = this.commonService.getFormatDateGlobal(
+  //   this.TrialBalanceForm.controls['todate'].value
+  // );
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(this.TrialBalanceForm.controls['fromdate'].value) ?? '';
+const toDate   = formatToDDMMMYYYY(this.TrialBalanceForm.controls['todate'].value)   ?? '';
 
   const colWidthHeight = {
     paccountname: { cellWidth: 'auto' },

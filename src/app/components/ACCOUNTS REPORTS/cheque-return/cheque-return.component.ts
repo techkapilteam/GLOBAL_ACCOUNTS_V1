@@ -244,6 +244,20 @@ export class ChequeReturnComponent implements OnInit {
       this.commonService.showWarningMessage('No records to export');
       return;
     }
+    const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '--NA--';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '--NA--';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+this.StartDate = formatToDDMMMYYYY(this.FrmChequeReturn.controls['fromdate'].value);
+this.EndDate   = formatToDDMMMYYYY(this.FrmChequeReturn.controls['todate'].value);
 
     const rows = this.gridData.map(e => ([
       this.commonService.getFormatDateGlobal(e.pcleardate),

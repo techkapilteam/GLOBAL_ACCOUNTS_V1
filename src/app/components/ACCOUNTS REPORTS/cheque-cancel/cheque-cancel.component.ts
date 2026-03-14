@@ -180,8 +180,25 @@ return;
   }
 
   pdfOrprint(printorpdf: 'Pdf' | 'Print') {
-    const fromDate = this.commonService.getFormatDateGlobal(this.f.fromdate.value);
-    const toDate = this.commonService.getFormatDateGlobal(this.f.todate.value);
+    // const fromDate = this.commonService.getFormatDateGlobal(this.f.fromdate.value);
+    // const toDate = this.commonService.getFormatDateGlobal(this.f.todate.value);
+    const rawFromDate = this.f.fromdate.value;
+  const rawToDate = this.f.todate.value;
+
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+    if (!dateVal) return '';
+    const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+      ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+      : new Date(dateVal);
+    if (isNaN(date.getTime())) return '';
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const fromDate = formatToDDMMMYYYY(rawFromDate);
+  const toDate = formatToDDMMMYYYY(rawToDate);
 
     const rows = this.gridData.map(e => ([
       this.commonService.getFormatDateGlobal(e.depositedDate),

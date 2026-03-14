@@ -256,8 +256,20 @@ this.SubLedgerName = selectedSub?.psubledgername || '';
   const fromDateControl = this.accountLedgerForm?.controls?.['fromDate']?.value;
   const toDateControl = this.accountLedgerForm?.controls?.['toDate']?.value;
 
-  const fromDate = this.commonService.getFormatDateGlobal(fromDateControl);
-  const toDate = this.commonService.getFormatDateGlobal(toDateControl);
+  // const fromDate = this.commonService.getFormatDateGlobal(fromDateControl);
+  // const toDate = this.commonService.getFormatDateGlobal(toDateControl);
+  const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(fromDateControl);
+const toDate = formatToDDMMMYYYY(toDateControl);
 
   const colWidthHeight = {
     ptransactiondate: { cellWidth: 'auto' },

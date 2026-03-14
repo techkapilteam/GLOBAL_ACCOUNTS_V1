@@ -231,15 +231,29 @@ export class JvListComponent implements OnInit {
     const gridheaders = ['Particulars', 'Debit Amount', 'Credit Amount'];
     const rows: any[] = [];
 
-    const fromDate =
-      this.commonService.getFormatDateGlobal(
-        this.JvlistReportForm.value.fromDate
-      )??'';
+    // const fromDate =
+    //   this.commonService.getFormatDateGlobal(
+    //     this.JvlistReportForm.value.fromDate
+    //   )??'';
 
-    const toDate =
-      this.commonService.getFormatDateGlobal(
-        this.JvlistReportForm.value.toDate
-      )??'';
+    // const toDate =
+    //   this.commonService.getFormatDateGlobal(
+    //     this.JvlistReportForm.value.toDate
+    //   )??'';
+    const formatToDDMMMYYYY = (dateVal: any): string => {
+  if (!dateVal) return '';
+  const date = (dateVal?.year && dateVal?.month && dateVal?.day)
+    ? new Date(dateVal.year, dateVal.month - 1, dateVal.day)
+    : new Date(dateVal);
+  if (isNaN(date.getTime())) return '';
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+const fromDate = formatToDDMMMYYYY(this.JvlistReportForm.value.fromDate) ?? '';
+const toDate   = formatToDDMMMYYYY(this.JvlistReportForm.value.toDate)   ?? '';
 
     const groupedData =
       this.commonService._MultipleGroupingGridExportData(
