@@ -170,8 +170,10 @@ export class BankEntriesComponent implements OnInit {
     this.startDate = this.BanknBookReportForm.controls['fromDate'].value;
     this.endDate = this.BanknBookReportForm.controls['toDate'].value;
 
-    let fromdate = this._CommonService.getFormatDateNormal(this.startDate);
-    let todate = this._CommonService.getFormatDateNormal(this.endDate);
+    // let fromdate = this._CommonService.getFormatDateNormal(this.startDate);
+    // let todate = this._CommonService.getFormatDateNormal(this.endDate);
+    let fromdate = new Date(this.startDate).toLocaleDateString('en-CA');
+let todate = new Date(this.endDate).toLocaleDateString('en-CA');
 
     this._bankBookService.GetBankEntriesDetails2(
       fromdate,
