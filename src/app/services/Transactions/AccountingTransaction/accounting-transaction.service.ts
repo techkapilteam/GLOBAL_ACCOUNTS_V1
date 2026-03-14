@@ -126,11 +126,11 @@ export class AccountingTransactionsService {
       set('modeofreceipt', modeofreceipt).set('companyCode', companyCode).set('branchCode', branchCode);
     return this._CommonService.getAPI('/Accounts/getchequesrowcount', params, 'YES');
   }
-  GetBankBalance(brstodate: any, _recordid: any, branchSchema: any, branchCode: 'KLC01', companyCode: 'KAPILCHITS') {
-    const params = new HttpParams().set('brstodate', brstodate).set('_recordid', _recordid).set('branchSchema', branchSchema)
-      .set('branchCode', branchCode).set('companyCode', companyCode);
-    return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
-  }
+  // GetBankBalance(brstodate: any, _recordid: any, branchSchema: any, branchCode: 'KLC01', companyCode: 'KAPILCHITS') {
+  //   const params = new HttpParams().set('brstodate', brstodate).set('_recordid', _recordid).set('branchSchema', branchSchema)
+  //     .set('branchCode', branchCode).set('companyCode', companyCode);
+  //   return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
+  // }
   getReceiptNumber(GlobalSchema: any, BranchSchema: any, CompanyCode: any, BranchCode: any) {
     const params = new HttpParams().set('GlobalSchema', GlobalSchema).set('BranchSchema', BranchSchema).set("CompanyCode", CompanyCode)
       .set("BranchCode", BranchCode); return this._CommonService.getAPI("/Accounts/getReceiptNumber", params, 'YES');
@@ -485,13 +485,72 @@ export class AccountingTransactionsService {
     const params = new HttpParams().set('BranchSchema', this._CommonService.getschemaname());
     return this._CommonService.getAPI('/ChitTransactions/getBranchType', params, 'YES');
   }
-  GetChequesIssued(_BankId: any, BrsFromDate: any, BrsTodate:any, BranchSchema: any, startindex: any, endindex: any, modeofreceipt: any,
-  searchtext: any, GlobalSchema: any, branchcode:any, companycode:any){
-  const params = new HttpParams().set('_BankId', _BankId).set('BrsFromDate', BrsFromDate).set('BrsTodate', BrsTodate).set('BranchSchema', BranchSchema)
-    .set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext).set('GlobalSchema', GlobalSchema)
-    .set('branchcode', branchcode).set('companycode', companycode);
-    return this._CommonService.getAPI('/Accounts/GetChequesIssued', params, 'YES');
-  }
+  // GetChequesIssued(_BankId: any, BrsFromDate: any, BrsTodate:any, BranchSchema: any, startindex: any, endindex: any, modeofreceipt: any,
+  // searchtext: any, GlobalSchema: any, branchcode:any, companycode:any){
+  // const params = new HttpParams().set('_BankId', _BankId).set('BrsFromDate', BrsFromDate).set('BrsTodate', BrsTodate).set('BranchSchema', BranchSchema)
+  //   .set('startindex', startindex).set('endindex', endindex).set('modeofreceipt', modeofreceipt).set('searchtext', searchtext).set('GlobalSchema', GlobalSchema)
+  //   .set('branchcode', branchcode).set('companycode', companycode);
+  //   return this._CommonService.getAPI('/Accounts/GetChequesIssued', params, 'YES');
+  // }
+
+  // ============================================================
+// accounting-transaction.service.ts  — relevant method fixes
+// ============================================================
+// Replace / update only these two methods in your existing service.
+// Everything else stays the same.
+
+// ------------------------------------------------------------------
+// FIX: GetChequesIssued — parameter order matches how the component
+//      calls it:
+//      GetChequesIssued(bankId, fromDate, toDate, branchSchema,
+//                       startindex, endindex, modeofreceipt, searchtext,
+//                       globalSchema, branchCode, companyCode)
+// ------------------------------------------------------------------
+GetChequesIssued(
+  _BankId: any,
+  BrsFromDate: any,
+  BrsTodate: any,
+  BranchSchema: any,
+  startindex: any,
+  endindex: any,
+  modeofreceipt: any,
+  searchtext: any,
+  GlobalSchema: any,
+  branchcode: any,
+  companycode: any
+) {
+  const params = new HttpParams()
+    .set('_BankId',      _BankId      ?? '')
+    .set('BrsFromDate',  BrsFromDate  ?? '')
+    .set('BrsTodate',    BrsTodate    ?? '')
+    .set('BranchSchema', BranchSchema ?? '')
+    .set('startindex',   startindex   ?? 0)
+    .set('endindex',     endindex     ?? 10)
+    .set('modeofreceipt', modeofreceipt ?? 'ALL')
+    .set('searchtext',   searchtext   ?? '')
+    .set('GlobalSchema', GlobalSchema ?? '')
+    .set('branchcode',   branchcode   ?? '')
+    .set('companycode',  companycode  ?? '');
+
+  return this._CommonService.getAPI('/Accounts/GetChequesIssued', params, 'YES');
+}
+
+GetBankBalance(
+  brstodate: any,
+  _recordid: any,
+  branchSchema: any,
+  branchCode: any,
+  companyCode: any
+) {
+  const params = new HttpParams()
+    .set('brstodate',    brstodate    ?? '')
+    .set('_recordid',    _recordid    ?? '')
+    .set('branchSchema', branchSchema ?? '')
+    .set('branchCode',   branchCode   ?? '')
+    .set('companyCode',  companyCode  ?? '');
+
+  return this._CommonService.getAPI('/Accounts/GetBankBalance', params, 'YES');
+}
 
   // GetChequesIssued(_BankId: number, fromdate: string, todate: string, branchschema: string,
   //   startindex: number, endindex: number, modeofreceipt: string, searchtext: string,

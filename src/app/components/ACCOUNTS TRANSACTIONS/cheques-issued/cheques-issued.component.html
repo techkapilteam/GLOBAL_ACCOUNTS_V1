@@ -1,18 +1,18 @@
 <div class="screen-container">
   <div class="screen-card card shadow-sm p-4"
     style="border:1px solid #dce8fd; border-radius:12px; box-shadow: 0 4px 24px rgba(22,34,70,0.10) !important;">
- 
+
     <!-- Header -->
     <div class="screen-header mb-4"
       style="padding: 14px 28px; display:flex; align-items:center; gap:10px; border-bottom: 3px solid #0d6efd; border-radius:10px 10px 0 0; margin: -24px -24px 24px -24px;">
       <h2 class="mb-0" style="margin:0; font-size:20px; font-weight:700; color:#070707;">Cheques Issued</h2>
     </div>
- 
+
     <div class="screen-content">
       <form [formGroup]="ChequesIssuedForm">
         <div class="section-content card shadow-sm p-3 mb-3">
           <div class="row">
- 
+
             <!-- Date -->
             <div class="col-md-2 col-xl-2">
               <div class="form-group" *ngIf="tabsShowOrHideBasedOnfromFormName">
@@ -28,73 +28,51 @@
                 </div>
               </div>
             </div>
- 
-            <!-- Bank (ng-select only) -->
+
+            <!-- Bank (ng-select) -->
             <div class="col-md-4 col-xl-4">
               <div class="form-group">
                 <label style="font-size:13px; font-weight:600; color:#162246;">Bank</label>
-                <ng-select
-                  [items]="bankList"
-                  bindLabel="pdepositbankname"
-                  bindValue="pbankid"
-                  formControlName="bankname"
-                  (change)="onBankChange($event)"
-                  placeholder="Select"
-                  [closeOnSelect]="true"
-                  [clearable]="true"
-                  class="w-100">
+                <ng-select [items]="bankList" bindLabel="pdepositbankname" bindValue="pbankid"
+                  formControlName="bankname" (change)="onBankChange($event)" placeholder="Select" [closeOnSelect]="true"
+                  [clearable]="true" class="w-100">
                 </ng-select>
                 <div class="invalid-feedback" *ngIf="ChequesIssuedValidation?.bankname">
                   {{ ChequesIssuedValidation?.bankname }}
                 </div>
               </div>
             </div>
- 
+
             <!-- Bank Info Card -->
             <div class="col-md-6 col-xl-6">
               <div class="border rounded shadow-sm"
                 style="background-color:#fff !important; border-color:#b8cff5 !important; padding:12px 16px; border-width:2px !important;">
-                <span *ngIf="banknameshowhide" class="sec-head-bold mt-0 font-15 overflow-hidden">
-                  {{ bankname }}
-                  <hr class="mt-0 mb-0">
-                </span>
                 <div class="form-group mb-1">
                   <h4 style="color:#0d6efd; margin:0; font-size:1.1rem; text-decoration:underline; font-weight:700;">
                     Cheques Issued
                   </h4>
                 </div>
-                <div class="form-group mb-0"
-                  style="display:flex; align-items:center; color:#495057; font-size:13px;">
-                  <label style="margin-bottom:0; font-weight:700; color:#000;">Balance: </label>
-                  <label class="sec-head-bold ml-1"
-                    style="margin-bottom:0; display:inline-flex; color:#212529; font-weight:800; font-size:14px;">
-                    <ng-container *ngIf="bankbalancetype === 'Dr'">
-                      {{ currencySymbol }} {{ bankbalance | currency:'INR':'symbol':'1.2-2' }} Dr
-                    </ng-container>
-                    <ng-container *ngIf="bankbalancetype === 'Cr'">
-                      {{ currencySymbol }} {{ bankbalance | currency:'INR':'symbol':'1.2-2' }} Cr
-                    </ng-container>
-                    <ng-container *ngIf="bankbalancetype === ''">
-                      {{ currencySymbol }} 0.00
-                    </ng-container>
-                  </label>
-                  <label class="ml-4" style="margin-bottom:0; margin-left:20px; font-weight:700; color:#000;">BRS Date: </label>
-                  <label class="sec-head-bold ml-1"
-                    style="margin-bottom:0; color:#212529; font-weight:800; font-size:14px;">{{ brsdate }}</label>
+                <div class="balance-box">
+                  <div><strong></strong> {{ selectedBankName }}</div>
+                  <div>Balance: ₹ {{ bankbalance }}</div>
+                  <div>BRS Date: {{ brsdate }}</div>
                 </div>
               </div>
             </div>
- 
+
           </div>
         </div>
- 
+
         <!-- Search + Export Row -->
         <div class="row mb-3 align-items-center">
           <div class="col-md-4 col-xl-4">
             <div class="form-group custom-search m-0" style="position:relative;">
-              <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#6c757d; pointer-events:none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+              <span
+                style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#6c757d; pointer-events:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                 </svg>
               </span>
               <input type="search" id="search" class="form-control" placeholder="Search"
@@ -102,7 +80,7 @@
                 style="height:36px; border-radius:4px; padding-left:32px !important; font-size:13px; border:1.5px solid #cdd8f0; color:#162246;" />
             </div>
           </div>
- 
+
           <div class="col-md-8 col-xl-8">
             <div class="d-flex justify-content-end align-items-center gap-2" *ngIf="showicons">
               <a class="export-icons" (click)="pdfOrprint('pdf')" style="cursor:pointer;">
@@ -116,101 +94,141 @@
               </a>
             </div>
           </div>
- 
+
           <!-- Tabs -->
-          <ul class="custom-tabs d-flex flex-wrap">
+          <ul style="list-style:none; padding:0; margin:0 0 12px 0; display:flex; flex-wrap:wrap; gap:6px;">
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'all'"
+              <button type="button"
+                [style]="activeTab==='all' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="All(); activeTab='all'">
-                All <span class="count">{{ all }}</span>
+                All
+                <span
+                  [style]="activeTab==='all' ? 'background:#fff;color:#0d6efd;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;' : 'background:#e8eef9;color:#162246;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;'">{{
+                  all }}</span>
               </button>
             </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'chequesissued'"
+              <button type="button"
+                [style]="activeTab==='chequesissued' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="ChequesIssued(); activeTab='chequesissued'">
-                Cheques Issued <span class="count">{{ chequesissued }}</span>
+                Cheques Issued
+                <span
+                  [style]="activeTab==='chequesissued' ? 'background:#fff;color:#0d6efd;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;' : 'background:#e8eef9;color:#162246;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;'">{{
+                  chequesissued }}</span>
               </button>
             </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'onlinepayment'"
+              <button type="button"
+                [style]="activeTab==='onlinepayment' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="OnlinePayments(); activeTab='onlinepayment'">
-                Online Payments <span class="count blue">{{ onlinepayments }}</span>
+                Online Payments
+                <span
+                  [style]="activeTab==='onlinepayment' ? 'background:#fff;color:#0d6efd;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;' : 'background:#dbeafe;color:#1d4ed8;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;'">{{
+                  onlinepayments }}</span>
               </button>
             </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'cleared'"
+              <button type="button"
+                [style]="activeTab==='cleared' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="Cleared(); activeTab='cleared'">
-                Cleared <span class="count green">{{ cleared }}</span>
+                Cleared
+                <span
+                  [style]="activeTab==='cleared' ? 'background:#fff;color:#0d6efd;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;' : 'background:#d4edda;color:#155724;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;'">{{
+                  cleared }}</span>
               </button>
             </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'returned'"
+              <button type="button"
+                [style]="activeTab==='returned' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="Returned(); activeTab='returned'">
-                Returned <span class="count red">{{ returned }}</span>
+                Returned
+                <span
+                  [style]="activeTab==='returned' ? 'background:#fff;color:#0d6efd;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;' : 'background:#f8d7da;color:#721c24;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;'">{{
+                  returned }}</span>
               </button>
             </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" [class.active-tab]="activeTab === 'cancelled'"
+              <button type="button"
+                [style]="activeTab==='cancelled' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="Cancelled(); activeTab='cancelled'">
-                Cancelled <span class="count red">{{ cancelled }}</span>
+                Cancelled
+                <span
+                  [style]="activeTab==='cancelled' ? 'background:#fff;color:#0d6efd;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;' : 'background:#f8d7da;color:#721c24;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;margin-left:4px;'">{{
+                  cancelled }}</span>
               </button>
             </li>
-            <li *ngIf="!tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" (click)="allCheques()">
-                Cheques <span class="count red">{{ displayAllChequesDataBasedOnForm?.length }}</span>
-              </button>
-            </li>
-            <li *ngIf="!tabsShowOrHideBasedOnfromFormName">
-              <button type="button" class="tab-btn" (click)="otherCheques()">
-                Cash / Adjustments <span class="count red">{{ otherChequesCount }}</span>
-              </button>
-            </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
-              <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'bankfileupload'"
+              <button type="button"
+                [style]="activeTab==='bankfileupload' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="BankUploadExcel(); activeTab='bankfileupload'">
                 Bank File Upload
               </button>
             </li>
+
             <li *ngIf="tabsShowOrHideBasedOnfromFormName && boolforAutoBrs">
-              <button type="button" class="tab-btn outline" [class.active-tab]="activeTab === 'autobrs'"
+              <button type="button"
+                [style]="activeTab==='autobrs' ? 'background:#0d6efd;color:#fff;border:1.5px solid #0d6efd;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:600;cursor:pointer;' : 'background:#fff;color:#162246;border:1.5px solid #c5d4f0;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:500;cursor:pointer;'"
                 (click)="AutoBrs(); activeTab='autobrs'">
                 Auto BRS
               </button>
             </li>
+
           </ul>
- 
+
           <br />
- 
+
+          <!-- BRS Cleared Date Range -->
           <!-- BRS Cleared Date Range -->
           <div *ngIf="brsdateshowhidecleared" class="row mb-3">
-            <div class="col-md-6 col-xl-4">
-              <div class="form-group">
-                <label class="fw-bold">BRS From Date</label>
-                <input class="form-control w-auto" type="text" formControlName="pfrombrsdate" readonly bsDatepicker
-                  placement="bottom"
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+            <div class="col-md-3 col-xl-3">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; font-size:13px;">BRS From Date</label>
+                <!-- maxDate=today prevents future date selection -->
+                <input class="form-control" type="text" formControlName="pfrombrsdate" readonly bsDatepicker
+                  placement="bottom" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  [maxDate]="today" (bsValueChange)="onClearFromDateChange($event)"
                   style="height:36px; border-radius:4px;" />
-                <button type="button" class="btn ms-3" (click)="ShowBrsClear()"
-                  style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
-                  Show
-                </button>
               </div>
-              <div *ngIf="validatebrsdateclear" style="color:red; margin-top:4px; font-size:12px;">
-                BRS To Date should be greater than From Date.
+            </div>
+            <div class="col-md-4 col-xl-4">
+              <div class="form-group mb-0">
+                <label style="font-weight:500; font-size:13px;">BRS To Date</label>
+                <div class="d-flex align-items-center">
+                  <!-- minDate=clearMinToDate ensures To >= From; maxDate=today prevents future -->
+                  <input class="form-control" type="text" formControlName="ptobrsdate" readonly bsDatepicker
+                    placement="bottom"
+                    [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                    [minDate]="clearMinToDate" [maxDate]="today" style="height:36px; border-radius:4px;" />
+                  <button type="button" class="btn ms-3" (click)="ShowBrsClear()"
+                    style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
+                    Show
+                  </button>
+                </div>
+                <div *ngIf="validatebrsdateclear" style="color:red; margin-top:4px; font-size:12px;">
+                  BRS To Date should be greater than or equal to From Date.
+                </div>
               </div>
             </div>
           </div>
+
         </div>
- 
+
         <!-- BRS Returned Date Range -->
-        <form [formGroup]="BrsReturnForm">
+        <div [formGroup]="BrsReturnForm">
           <div *ngIf="brsdateshowhidereturned" class="row mb-3 align-items-center">
             <div class="col-md-3 col-xl-3">
               <div class="form-group mb-0">
                 <label style="font-weight:500; font-size:13px;">BRS From Date</label>
                 <input class="form-control" type="text" formControlName="frombrsdate" readonly bsDatepicker
-                  placement="bottom"
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  placement="bottom" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  [maxDate]="today" (bsValueChange)="onReturnFromDateChange($event)"
                   style="height:36px; border-radius:4px;" />
               </div>
             </div>
@@ -221,29 +239,29 @@
                   <input class="form-control" type="text" formControlName="tobrsdate" readonly bsDatepicker
                     placement="bottom"
                     [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-                    style="height:36px; border-radius:4px;" />
+                    [minDate]="returnMinToDate" [maxDate]="today" style="height:36px; border-radius:4px;" />
                   <button type="button" class="btn ms-3" (click)="ShowBrsReturn()"
                     style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
                     Show
                   </button>
                 </div>
                 <div *ngIf="validatebrsdatereturn" style="color:red; margin-top:4px; font-size:12px;">
-                  BRS To Date should be greater than From Date.
+                  BRS To Date should be greater than or equal to From Date.
                 </div>
               </div>
             </div>
           </div>
-        </form>
- 
+        </div>
+
         <!-- BRS Cancelled Date Range -->
-        <form [formGroup]="BrsCancelForm">
+        <div [formGroup]="BrsCancelForm">
           <div *ngIf="brsdateshowhidecancelled" class="row mb-3 align-items-center">
             <div class="col-md-3 col-xl-3">
               <div class="form-group mb-0">
                 <label style="font-weight:500; font-size:13px;">BRS From Date</label>
                 <input class="form-control" type="text" formControlName="frombrsdate" readonly bsDatepicker
-                  placement="bottom"
-                  [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  placement="bottom" [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
+                  [maxDate]="today" (bsValueChange)="onCancelFromDateChange($event)"
                   style="height:36px; border-radius:4px;" />
               </div>
             </div>
@@ -254,83 +272,77 @@
                   <input class="form-control" type="text" formControlName="tobrsdate" readonly bsDatepicker
                     placement="bottom"
                     [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY', containerClass: 'theme-dark-blue' }"
-                    style="height:36px; border-radius:4px;" />
+                    [minDate]="cancelMinToDate" [maxDate]="today" style="height:36px; border-radius:4px;" />
                   <button type="button" class="btn ms-3" (click)="ShowBrsCancel()"
                     style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; border:0; display:flex; align-items:center;">
                     Show
                   </button>
                 </div>
                 <div *ngIf="validatebrsdatecancel" style="color:red; margin-top:4px; font-size:12px;">
-                  BRS To Date should be greater than From Date.
+                  BRS To Date should be greater than or equal to From Date.
                 </div>
               </div>
             </div>
           </div>
-        </form>
- 
+        </div>
+
         <!-- Table Card -->
-        <div class="row">
+        <div class="row" *ngIf="activeTab !== 'bankfileupload'">
           <div class="col-12">
             <div class="border rounded p-3 bg-white"
               style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
- 
+
               <!-- Cheques Issued Grid -->
               <p-table *ngIf="showOrHideChequesIssuedGrid !== false" [value]="gridData" [paginator]="true"
-                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]"
-                [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
-                [showCurrentPageReport]="true"
+                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true"
+                scrollHeight="500px" responsiveLayout="scroll" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 styleClass="p-datatable-sm p-datatable-gridlines">
- 
                 <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="!showhidegridcolumns"
                       style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
-                      Clear
-                    </th>
+                      Clear</th>
                     <th *ngIf="!showhidegridcolumns && status !== 'autobrs'"
                       style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
-                      Return
-                    </th>
+                      Return</th>
                     <th *ngIf="!showhidegridcolumns"
                       style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      Reference No
-                    </th>
+                      Reference No</th>
                     <th *ngIf="!showhidegridcolumns && status !== 'autobrs'"
                       style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
-                      Cancel
-                    </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      Cheque / Reference No.
-                    </th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      Amount
-                    </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      Party
-                    </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      Payment Id
-                    </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      Payment Date
-                    </th>
-                    <th *ngIf="!hiddendate" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
-                      {{ datetitle }}
-                    </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
-                      Transaction Mode
-                    </th>
+                      Cancel</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Cheque / Reference No.</th>
+                    <th class="text-end"
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Amount</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Party</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Payment Id</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Payment Date</th>
+                    <th *ngIf="!hiddendate"
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      {{ datetitle }}</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                      Transaction Mode</th>
                   </tr>
                 </ng-template>
- 
                 <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
                   <tr>
                     <td *ngIf="!showhidegridcolumns" style="padding:8px 12px; text-align:center;">
                       <input type="checkbox" [checked]="row?.pdepositstatus === true" [disabled]="status === 'autobrs'"
                         (change)="checkedClear($event, row)" />
                     </td>
-                    <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="padding:8px 12px; text-align:center;">
+                    <td *ngIf="!showhidegridcolumns && status !== 'autobrs'"
+                      style="padding:8px 12px; text-align:center;">
                       <input type="checkbox" [checked]="row?.preturnstatus === true"
                         (change)="checkedReturn($event, row)" />
                     </td>
@@ -340,31 +352,32 @@
                         maxlength="15" />
                       <span *ngIf="status === 'autobrs'">{{ row?.preferencetext }}</span>
                     </td>
-                    <td *ngIf="!showhidegridcolumns && status !== 'autobrs'" style="padding:8px 12px; text-align:center;">
+                    <td *ngIf="!showhidegridcolumns && status !== 'autobrs'"
+                      style="padding:8px 12px; text-align:center;">
                       <input type="checkbox" [checked]="row?.pcancelstatus === true"
                         (change)="checkedCancel($event, row)" />
                     </td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pChequenumber }}</td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td class="text-end"
+                      style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ppartyname }}</td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptid }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
-                    <td *ngIf="!hiddendate" style="padding:8px 12px; font-size:13px; color:#162246;">
-                      {{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}
-                    </td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate |
+                      date:'dd-MMM-yyyy' }}</td>
+                    <td *ngIf="!hiddendate" style="padding:8px 12px; font-size:13px; color:#162246;">{{
+                      row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptypeofpayment }}</td>
                   </tr>
                 </ng-template>
- 
                 <ng-template pTemplate="footer">
                   <tr>
                     <td [attr.colspan]="!showhidegridcolumns ? (status !== 'autobrs' ? 4 : 2) : 0"
                       *ngIf="!showhidegridcolumns" style="padding:8px 12px;"></td>
-                    <td style="padding:8px 12px; font-size:13px; font-weight:700; color:#162246; text-align:right !important;">
-                      <b>Total</b>
-                    </td>
+                    <td
+                      style="padding:8px 12px; font-size:13px; font-weight:700; color:#162246; text-align:right !important;">
+                      <b>Total</b></td>
                     <td class="text-end"
                       style="padding:8px 12px; font-size:13px; font-weight:700; color:#162246; text-align:right !important;">
                       <b>{{ currencySymbol }} {{ (amounttotal || 0) | currency:'INR':'symbol':'1.2-2' }}</b>
@@ -373,43 +386,60 @@
                     <td *ngIf="!hiddendate" style="padding:8px 12px;"></td>
                   </tr>
                 </ng-template>
- 
                 <ng-template pTemplate="emptymessage">
                   <tr>
                     <td colspan="11" style="text-align:center; padding:20px;">No Data Available</td>
                   </tr>
                 </ng-template>
               </p-table>
- 
+
               <!-- All Cheques Grid -->
               <p-table *ngIf="showOrHideAllChequesGrid" [value]="displayAllChequesDataBasedOnForm" [paginator]="true"
-                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]"
-                [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
-                [showCurrentPageReport]="true"
+                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true"
+                scrollHeight="500px" responsiveLayout="scroll" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 styleClass="p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque Status</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque / Reference No.</th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Id</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Date</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cleared / Returned / Cancelled Date</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Mode</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Party</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Cheque Status</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Cheque / Reference No.</th>
+                    <th class="text-end"
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Amount</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Payment Id</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Payment Date</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Cleared / Returned / Cancelled Date</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Transaction Mode</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                      Party</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
                   <tr>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.chequeStatus }}</td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pChequenumber }}</td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td class="text-end"
+                      style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptid }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate |
+                      date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pdepositeddate |
+                      date:'dd-MMM-yyyy' }}</td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptypeofpayment }}</td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ppartyname }}</td>
                   </tr>
@@ -420,33 +450,47 @@
                   </tr>
                 </ng-template>
               </p-table>
- 
+
               <!-- Other Cheques Grid -->
               <p-table *ngIf="showOrHideOtherChequesGrid" [value]="OtherChequesData" [paginator]="true"
-                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]"
-                [scrollable]="true" scrollHeight="500px" responsiveLayout="scroll"
-                [showCurrentPageReport]="true"
+                [rows]="pageCriteria.pageSize" [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true"
+                scrollHeight="500px" responsiveLayout="scroll" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 styleClass="p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction No.</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Date</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Particulars</th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Debit Amount</th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Credit Amount</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Account Name</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Transaction No.</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Transaction Date</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Particulars</th>
+                    <th class="text-end"
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Debit Amount</th>
+                    <th class="text-end"
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      Credit Amount</th>
+                    <th
+                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                      Account Name</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
                   <tr>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactionnumber }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactiondate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactiondate |
+                      date:'dd-MMM-yyyy' }}</td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.particulars }}</td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td class="text-end"
+                      style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.debitamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td class="text-end"
+                      style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.creditamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
                     <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.accountname }}</td>
@@ -458,15 +502,16 @@
                   </tr>
                 </ng-template>
               </p-table>
- 
+
             </div>
           </div>
         </div>
- 
+
         <!-- Bank File Upload Section -->
         <div *ngIf="activeTab === 'bankfileupload'" class="mt-3">
-          <div class="row">
-            <div class="col-md-3 col-xl-3">
+
+          <div class="row mb-2">
+            <div class="col-md-6 col-xl-6">
               <div class="form-check form-check-inline radio-btn-secondary">
                 <input class="form-check-input" type="radio" value="Upload" formControlName="auto_brs_type"
                   (change)="auto_brs_typeChange($any($event.target).value)" />
@@ -485,7 +530,8 @@
               </button>
             </div>
           </div>
-          <div class="row mt-2" *ngIf="auto_brs_type_name === 'Upload'">
+
+          <div class="row mt-2 mb-3" *ngIf="auto_brs_type_name === 'Upload'">
             <div class="col-md-3 col-xl-3">
               <input type="file" class="form-control" accept=".xlsx,.xls" (change)="onFileChange($event)"
                 style="height:36px; font-size:13px;" />
@@ -497,24 +543,31 @@
               </a>
             </div>
           </div>
+
           <div class="row mt-2">
             <div class="col-12">
               <div class="border rounded p-3 bg-white"
                 style="border:1px solid #dce8fd !important; border-radius:10px !important; box-shadow:0 2px 8px rgba(13,110,253,0.07);">
                 <p-table [value]="PreDefinedAutoBrsArrayData" [paginator]="true" [rows]="pageCriteria2.pageSize"
-                  [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true" scrollHeight="450px"
-                  responsiveLayout="scroll"
+                  [rowsPerPageOptions]="[10, 20, 50]" [scrollable]="true" scrollHeight="450px" responsiveLayout="scroll"
                   styleClass="p-datatable-sm p-datatable-gridlines">
                   <ng-template pTemplate="header">
                     <tr>
                       <th *ngIf="auto_brs_type_name === 'Pending'"
                         style="width:80px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
-                        Action
-                      </th>
-                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
-                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">UTR Number</th>
-                      <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
-                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Reference Text</th>
+                        Action</th>
+                      <th
+                        style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                        Date</th>
+                      <th
+                        style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                        UTR Number</th>
+                      <th class="text-end"
+                        style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                        Amount</th>
+                      <th
+                        style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                        Reference Text</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
@@ -523,9 +576,11 @@
                         <input type="checkbox" [checked]="row?.check === true"
                           (change)="checkbox_pending_data(row, $event)" />
                       </td>
-                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.transactiondate | date:'dd-MMM-yyyy' }}</td>
+                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.transactiondate |
+                        date:'dd-MMM-yyyy' }}</td>
                       <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.chqueno }}</td>
-                      <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                      <td class="text-end"
+                        style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
                         {{ (row?.chequeamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                       </td>
                       <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preferencetext }}</td>
@@ -534,15 +589,14 @@
                   <ng-template pTemplate="emptymessage">
                     <tr>
                       <td [attr.colspan]="auto_brs_type_name === 'Pending' ? 5 : 4"
-                        style="text-align:center; padding:20px; font-weight:500;">
-                        No Data Available
-                      </td>
+                        style="text-align:center; padding:20px; font-weight:500;">No Data Available</td>
                     </tr>
                   </ng-template>
                 </p-table>
               </div>
             </div>
           </div>
+
           <div class="d-flex justify-content-end mt-2">
             <button type="button" class="btn border-0" (click)="saveAutoBrs()"
               style="background-color:#0d6efd; color:white; height:36px; padding:6px 20px; font-weight:500; border-radius:4px; display:inline-flex; align-items:center; gap:6px;">
@@ -550,8 +604,9 @@
               {{ saveAutoBrsBool ? 'Processing' : 'Save' }}
             </button>
           </div>
+
         </div>
- 
+
         <!-- Action Buttons -->
         <div class="d-flex justify-content-end mt-4 gap-3">
           <a (click)="Clear()" class="btn btn-primary px-4 border-0"
@@ -567,7 +622,7 @@
             </button>
           </div>
         </div>
- 
+
       </form>
     </div>
   </div>
