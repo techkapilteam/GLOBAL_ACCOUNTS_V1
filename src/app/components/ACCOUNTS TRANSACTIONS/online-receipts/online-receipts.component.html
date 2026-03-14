@@ -160,19 +160,19 @@
                             <thead>
                                 <tr>
                                     <th
-                                        style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278; white-space:nowrap;">
+                                        style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278; white-space:nowrap;">
                                         Payment Mode
                                     </th>
                                     <th
-                                        style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278; white-space:nowrap;">
+                                        style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278; white-space:nowrap;">
                                         Status
                                     </th>
                                     <th class="text-right"
-                                        style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278; white-space:nowrap;">
+                                        style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278; white-space:nowrap;">
                                         Count
                                     </th>
                                     <th class="text-right"
-                                        style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                                        style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 14px; white-space:nowrap;">
                                         Amount
                                     </th>
                                 </tr>
@@ -180,11 +180,11 @@
                             <tbody>
                                 <tr *ngFor="let data of PaytmAutoreceiptCount">
                                     <td
-                                        style="padding:8px 12px; font-size:13px; color:#162246; border-bottom:1px solid #dce8fd;">
+                                        style="padding:8px 12px; font-size:13px; color:#2E86C1; border-bottom:1px solid #dce8fd;">
                                         {{ data.paymentmode }}
                                     </td>
                                     <td
-                                        style="padding:8px 12px; font-size:13px; color:#162246; border-bottom:1px solid #dce8fd;">
+                                        style="padding:8px 12px; font-size:13px; color:#2E86C1; border-bottom:1px solid #dce8fd;">
                                         <span *ngIf="data.trstatus == 'Y'"
                                             style="color:#198754; font-weight:600;">Cleared</span>
                                         <span *ngIf="data.trstatus == 'N'"
@@ -192,11 +192,11 @@
                                         <span *ngIf="data.trstatus == ''"></span>
                                     </td>
                                     <td class="text-right"
-                                        style="padding:8px 12px; font-size:13px; color:#162246; border-bottom:1px solid #dce8fd;">
+                                        style="padding:8px 12px; font-size:13px; color:#2E86C1; border-bottom:1px solid #dce8fd;">
                                         {{ data.count }}
                                     </td>
                                     <td class="text-right"
-                                        style="padding:8px 12px; font-size:13px; color:#162246; border-bottom:1px solid #dce8fd;">
+                                        style="padding:8px 12px; font-size:13px; color:#2E86C1; border-bottom:1px solid #dce8fd;">
                                         {{ currencysymbol }} {{ data.sum | currency:'INR':'symbol':'1.2-2' }}
                                     </td>
                                 </tr>
