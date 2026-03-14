@@ -64,7 +64,7 @@ export class BankEntriesComponent implements OnInit {
 
     this.currencysymbol = this._CommonService.datePickerPropertiesSetup("currencysymbol");
 
-    this.dpConfig.dateInputFormat = this._CommonService.datePickerPropertiesSetup("dateInputFormat");
+    this.dpConfig.dateInputFormat = 'DD-MM-YYYY';
     this.dpConfig.containerClass = 'theme-dark-blue';
     // this._CommonService.datePickerPropertiesSetup("containerClass");
     this.dpConfig.showWeekNumbers = false;
@@ -72,7 +72,7 @@ export class BankEntriesComponent implements OnInit {
 
     this.dpConfig1.maxDate = new Date();
     this.dpConfig1.minDate = new Date();
-    this.dpConfig1.dateInputFormat = this._CommonService.datePickerPropertiesSetup("dateInputFormat");
+    this.dpConfig1.dateInputFormat = 'DD-MM-YYYY';
     this.dpConfig1.containerClass = 'theme-dark-blue'
     this._CommonService.datePickerPropertiesSetup("containerClass");
 

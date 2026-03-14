@@ -154,6 +154,9 @@ export class JournalVoucherViewComponent implements OnInit {
 
     window.open(url, '_blank');
   }
+
+
+  
   // filters results
   filterDatatable(event:any) {
     // get the value of the key pressed and make it lowercase
