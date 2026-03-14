@@ -323,6 +323,7 @@ setPageModel(): void {
     const _pBankAccountId = this.BRStatmentForm.value.bankAccountId;
 
     if (!this.chequesInfo) {
+      this.Showhide = false;
 
       this.brstatement.GetBrStatementReportByDates(fromDate, _pBankAccountId,'accounts','KLC01','KAPILCHITS','global').subscribe({
         next: (res: any[]) => {

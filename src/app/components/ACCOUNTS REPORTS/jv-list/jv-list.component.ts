@@ -135,6 +135,7 @@ export class JvListComponent implements OnInit {
   }
 
   getjvListReports(): void {
+    debugger
 
     this.submitted = true;
 
