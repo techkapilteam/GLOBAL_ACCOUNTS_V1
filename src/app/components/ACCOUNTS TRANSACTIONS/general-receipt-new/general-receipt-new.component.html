@@ -227,7 +227,7 @@
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Bank Name <span class="text-danger">*</span></label>
                 <ng-select [items]="banklist" bindLabel="pbankname" bindValue="pbankid" formControlName="pbankid"
                   placeholder="Select" (change)="BankIdChange($event)"
@@ -237,7 +237,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Type of Payment <span class="text-danger">*</span></label>
                 <ng-select [items]="typeofpaymentlist" bindLabel="ptypeofpayment" bindValue="ptypeofpayment"
                   formControlName="ptypeofpayment" placeholder="Select" (change)="typeofPaymentChange($event)"
@@ -247,7 +247,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Reference No. <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pChequenumber" placeholder="Reference No"
                   [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }">
@@ -256,7 +256,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Transaction Date <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" formControlName="pchequedate" bsDatepicker
                   [bsConfig]="dpConfig1" readonly [ngClass]="{ 'is-invalid': formValidationMessages.pchequedate }">
@@ -271,7 +271,7 @@
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Debit Card <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pCardNumber" maxlength="16"
                   placeholder="XXXX XXXX XXXX 3066" (blur)="CardNoChange()"
@@ -281,7 +281,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Bank / Financial Services <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pbankname" placeholder="SBI-Master Card"
                   (blur)="BankNameChange()" [ngClass]="{ 'is-invalid': formValidationMessages.pbankname }">
@@ -290,7 +290,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Reference No. <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pChequenumber" placeholder="Reference No"
                   (blur)="ChequeNoChange()" [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }">
@@ -299,7 +299,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Deposited Bank Name <span class="text-danger">*</span></label>
                 <ng-select [items]="banklist" bindLabel="pbankname" bindValue="pbankid" formControlName="pdepositbankid"
                   [disabled]="DepositBankDisable" (change)="typeofDepositBank($event)" placeholder="Select"
@@ -315,7 +315,7 @@
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Credit Card <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pCardNumber" maxlength="16"
                   placeholder="XXXX XXXX XXXX 3066" (blur)="CardNoChange()"
@@ -325,7 +325,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Bank / Financial Services <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pbankname" placeholder="SBI-Master Card"
                   (blur)="BankNameChange()" [ngClass]="{ 'is-invalid': formValidationMessages.pbankname }">
@@ -334,7 +334,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Reference No. <span class="text-danger">*</span></label>
                 <input class="form-control" formControlName="pChequenumber" placeholder="Reference No"
                   (blur)="ChequeNoChange()" [ngClass]="{ 'is-invalid': formValidationMessages.pChequenumber }">
@@ -343,7 +343,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label style="font-size:12.5px; font-weight:600; color:#0b4093; display:block; margin-bottom:5px;"
+                <label style="font-size:12.5px; font-weight:600; color:#162246; display:block; margin-bottom:5px;"
                   class="required-field">Deposited Bank Name <span class="text-danger">*</span></label>
                 <ng-select [items]="banklist" bindLabel="pbankname" bindValue="pbankid" formControlName="pdepositbankid"
                   [disabled]="DepositBankDisable" (change)="typeofDepositBank($event)" placeholder="Select"
@@ -599,31 +599,31 @@
               <ng-template pTemplate="header">
                 <tr>
                   <th
-                    style="width:60px; background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px;">
+                    style="width:60px; background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px;">
                     Actions</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px;">
                     Ledger Name</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px;">
                     Sub Ledger Name</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:right;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:right;">
                     Amount</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:center;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:center;">
                     GST Calc Type</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:center;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:center;">
                     GST Type</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:center;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:center;">
                     GST(%)</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:right;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:right;">
                     GST Amount</th>
                   <th
-                    style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:right;">
+                    style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:right;">
                     Total Amount</th>
                 </tr>
               </ng-template>
@@ -759,13 +759,13 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th
-                      style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px;">
+                      style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px;">
                       Particulars</th>
                     <th
-                      style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:right;">
+                      style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:right;">
                       Dr</th>
                     <th
-                      style="background:#162246 !important; color:#fff !important; font-size:12px; font-weight:700; padding:10px 12px; text-align:right;">
+                      style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 12px; text-align:right;">
                       Cr</th>
                   </tr>
                 </ng-template>
@@ -836,9 +836,7 @@
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════
-           FOOTER ACTIONS
-      ══════════════════════════════════════════ -->
+     <!-- footer actions -->
       <div
         style="background:#f0f4fd; border-top:2px solid #dce8fd; border-radius:0 0 10px 10px; padding:14px 4px; display:flex; justify-content:flex-end; align-items:center; gap:12px;">
         <button type="button" (click)="ClearGenerealReceipt()" class="btn btn-g-icon d-flex align-items-center"

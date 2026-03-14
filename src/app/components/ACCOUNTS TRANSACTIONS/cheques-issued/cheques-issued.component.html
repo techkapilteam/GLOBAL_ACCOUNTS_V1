@@ -285,40 +285,40 @@
                 <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="!showhidegridcolumns"
-                      style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                      style="width:60px; background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
                       Clear
                     </th>
                     <th *ngIf="!showhidegridcolumns && status !== 'autobrs'"
-                      style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                      style="width:60px; background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
                       Return
                     </th>
                     <th *ngIf="!showhidegridcolumns"
-                      style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                      style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       Reference No
                     </th>
                     <th *ngIf="!showhidegridcolumns && status !== 'autobrs'"
-                      style="width:60px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                      style="width:60px; background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
                       Cancel
                     </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       Cheque / Reference No.
                     </th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    <th class="text-end" style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       Amount
                     </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       Party
                     </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       Payment Id
                     </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       Payment Date
                     </th>
-                    <th *ngIf="!hiddendate" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+                    <th *ngIf="!hiddendate" style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                       {{ datetitle }}
                     </th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">
                       Transaction Mode
                     </th>
                   </tr>
@@ -344,17 +344,17 @@
                       <input type="checkbox" [checked]="row?.pcancelstatus === true"
                         (change)="checkedCancel($event, row)" />
                     </td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pChequenumber }}</td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.pChequenumber }}</td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#2E86C1; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ppartyname }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptid }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
-                    <td *ngIf="!hiddendate" style="padding:8px 12px; font-size:13px; color:#162246;">
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.ppartyname }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.preceiptid }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
+                    <td *ngIf="!hiddendate" style="padding:8px 12px; font-size:13px; color:#2E86C1;">
                       {{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}
                     </td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptypeofpayment }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.ptypeofpayment }}</td>
                   </tr>
                 </ng-template>
  
@@ -390,28 +390,28 @@
                 styleClass="p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque Status</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque / Reference No.</th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Id</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Date</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cleared / Returned / Cancelled Date</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Mode</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Party</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque Status</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cheque / Reference No.</th>
+                    <th class="text-end" style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Id</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Payment Date</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Cleared / Returned / Cancelled Date</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Mode</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Party</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
                   <tr>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.chequeStatus }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pChequenumber }}</td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.chequeStatus }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.pChequenumber }}</td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#2E86C1; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.ptotalreceivedamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptid }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptypeofpayment }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ppartyname }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.preceiptid }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.preceiptdate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.pdepositeddate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.ptypeofpayment }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.ppartyname }}</td>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
@@ -430,26 +430,26 @@
                 styleClass="p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction No.</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Date</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Particulars</th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Debit Amount</th>
-                    <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Credit Amount</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Account Name</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction No.</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Transaction Date</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Particulars</th>
+                    <th class="text-end" style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Debit Amount</th>
+                    <th class="text-end" style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Credit Amount</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Account Name</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
                   <tr>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactionnumber }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.ptransactiondate | date:'dd-MMM-yyyy' }}</td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.particulars }}</td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.ptransactionnumber }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.ptransactiondate | date:'dd-MMM-yyyy' }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.particulars }}</td>
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#2E86C1; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.debitamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
-                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                    <td class="text-end" style="padding:8px 12px; font-size:13px; color:#2E86C1; text-align:right !important;">
                       {{ currencySymbol }} {{ (row?.creditamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                     </td>
-                    <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.accountname }}</td>
+                    <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.accountname }}</td>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
@@ -508,13 +508,13 @@
                   <ng-template pTemplate="header">
                     <tr>
                       <th *ngIf="auto_brs_type_name === 'Pending'"
-                        style="width:80px; background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
+                        style="width:80px; background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap; text-align:center;">
                         Action
                       </th>
-                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
-                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">UTR Number</th>
-                      <th class="text-end" style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
-                      <th style="background:#0b4093 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Reference Text</th>
+                      <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Date</th>
+                      <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">UTR Number</th>
+                      <th class="text-end" style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
+                      <th style="background:#2E86C1 !important; color:#fff !important; font-size:15px; font-weight:700; padding:10px 14px; white-space:nowrap;">Reference Text</th>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
@@ -523,12 +523,12 @@
                         <input type="checkbox" [checked]="row?.check === true"
                           (change)="checkbox_pending_data(row, $event)" />
                       </td>
-                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.transactiondate | date:'dd-MMM-yyyy' }}</td>
-                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.chqueno }}</td>
-                      <td class="text-end" style="padding:8px 12px; font-size:13px; color:#162246; text-align:right !important;">
+                      <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.transactiondate | date:'dd-MMM-yyyy' }}</td>
+                      <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.chqueno }}</td>
+                      <td class="text-end" style="padding:8px 12px; font-size:13px; color:#2E86C1; text-align:right !important;">
                         {{ (row?.chequeamount || 0) | currency:'INR':'symbol':'1.2-2' }}
                       </td>
-                      <td style="padding:8px 12px; font-size:13px; color:#162246;">{{ row?.preferencetext }}</td>
+                      <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{ row?.preferencetext }}</td>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="emptymessage">

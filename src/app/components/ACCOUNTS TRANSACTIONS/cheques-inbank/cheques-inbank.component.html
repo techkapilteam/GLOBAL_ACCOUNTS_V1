@@ -91,7 +91,6 @@
         <div class="section-content mt-4" style="padding: 0; border-top: 1px solid #e9ecef; padding-top: 20px;">
             <div class="row align-items-center mb-0">
 
-
                 <div class="col-md-4 col-xl-4 mb-3">
                     <div class="form-group custom-search m-0" style="position: relative;">
                         <span
@@ -108,7 +107,6 @@
                     </div>
                 </div>
 
-
                 <div class="col-md-2 col-xl-2 mb-3">
                     <button (click)="showSearchText('search')" class="btn btn-primary btn-s-icon border-0"
                         [disabled]="searchloading"
@@ -117,70 +115,24 @@
                     </button>
                 </div>
 
-
                 <div class="col-md-6 col-xl-6 mb-3">
                     <div class="d-flex justify-content-end mr-3" *ngIf="showicons">
                         <ul class="temp-ul d-flex flex-row list-unstyled mb-0 gap-3">
-
                             <li class="temp-ico">
                                 <img src="assets/images/pdf-icon-blue.svg" width="18px" class="pt-2" title="pdf"
-                                    style="cursor:pointer;" kendo-button (click)="pdfOrprint('Pdf')" />
+                                    style="cursor:pointer;" (click)="pdfOrprint('Pdf')" />
                             </li>
-
                             <li class="temp-ico">
                                 <img src="assets/images/print-icon-blue.svg" width="18px" class="pt-2" title="print"
                                     (click)="pdfOrprint('Print')" style="cursor:pointer;" />
                             </li>
-
                             <li class="temp-ico">
                                 <img src="assets/images/icon-excel.svg" width="18px" class="pt-2" title="excel"
                                     (click)="export()" style="cursor:pointer;" />
                             </li>
-
                         </ul>
                     </div>
                 </div>
-
-                <!-- <ul class="nav nav-tabs mb-4" *ngIf="tabsShowOrHideBasedOnfromFormName">
-
-                    <li class="nav-item me-3">
-                        <a id="allcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='all'}"
-                            (click)="All(); $event.preventDefault()">
-                            All <span class="badge bg-warning ms-2">{{all}}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item me-3">
-                        <a id="chequesdepositedcss" href="#" class="nav-link"
-                            [ngClass]="{'active': selectedTab==='chequesDeposited'}"
-                            (click)="ChequesDeposited(); $event.preventDefault()">
-                            Cheques Deposited <span class="badge bg-secondary ms-2">{{chequesdeposited}}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item me-3">
-                        <a id="onlinereceiptscss" href="#" class="nav-link"
-                            [ngClass]="{'active': selectedTab==='onlinereceipts'}"
-                            (click)="OnlineReceipts(); $event.preventDefault()">
-                            Online Receipts <span class="badge bg-primary ms-2">{{onlinereceipts}}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item me-3">
-                        <a id="clearedcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='cleared'}"
-                            (click)="Cleared(); $event.preventDefault()">
-                            Cleared <span class="badge bg-success ms-2">{{cleared}}</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item me-3">
-                        <a id="returnedcss" href="#" class="nav-link" [ngClass]="{'active': selectedTab==='returned'}"
-                            (click)="Returned(); $event.preventDefault()">
-                            Returned <span class="badge bg-danger ms-2">{{returned}}</span>
-                        </a>
-                    </li>
-
-                </ul> -->
 
                 <ul class="nav nav-tabs mb-3" *ngIf="tabsShowOrHideBasedOnfromFormName"
                     style="border-bottom: none; gap: 10px; flex-wrap: wrap; margin-top: 15px; margin-bottom: 15px; padding-left: 0;">
@@ -254,10 +206,7 @@
 
                 </ul>
 
-
-
                 <div *ngIf="brsdateshowhidecleared" class="row mb-3 align-items-center">
-
                     <div class="col-md-3 col-xl-3">
                         <div class="form-group mb-0">
                             <label style="font-weight: 500; font-size: 13px;">BRS From Date</label>
@@ -266,8 +215,6 @@
                                 bsDatepicker placement="bottom" style="height: 36px; border-radius: 4px;">
                         </div>
                     </div>
-
-
                     <div class="col-md-4 col-xl-4">
                         <div class="form-group mb-0">
                             <label style="font-weight: 500; font-size: 13px;">BRS To Date</label>
@@ -275,123 +222,21 @@
                                 <input class="form-control" type="text" formControlName="ptobrsdate" title="tobrsdate"
                                     placeholder="Select To Date" readonly [bsConfig]="brstoConfig" #dp="bsDatepicker"
                                     bsDatepicker placement="bottom" style="height: 36px; border-radius: 4px;">
-
                                 <a (click)="ShowBrsClear()" class="btn ms-3" role="tab" aria-controls="hot"
                                     aria-selected="false"
                                     style="background-color: #0d6efd; color: white; height: 36px; padding: 6px 20px; font-weight: 500; border-radius: 4px; text-decoration: none; cursor: pointer; display: flex; align-items: center;">
                                     Show
                                 </a>
                             </div>
-
                             <div *ngIf="validatebrsdateclear" style="color:red; margin-top: 4px; font-size: 12px;">
                                 Brs To Date Should Be Greater Than From Date
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <!-- 
-            <form [formGroup]="BrsDateForm">
-                <div *ngIf="brsdateshowhidereturned" class="row">
-                    <div class="col-md-6 col-xl-4">
-                        <div class="form-group">
-                            <label>BRS From Date</label>
-                            <input class="form-control w-auto" type="text" readonly formControlName="frombrsdate"
-                                placeholder="" [bsConfig]="brsfromConfig" #dp="bsDatepicker" bsDatepicker
-                                placement="bottom">
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4">
-                        <div class="form-group">
-                            <label>BRS To Date</label>
-                            <input class="form-control w-auto" type="text" readonly formControlName="tobrsdate"
-                                placeholder="" [bsConfig]="brstoConfig" #dp="bsDatepicker" bsDatepicker
-                                placement="bottom">
-                            <div *ngIf="validatebrsdatereturn" style="color:red">Brs To Date Should Be Greater Than From
-                                Date
-                            </div>
-                        </div>
-                    </div>
-                    <div class=" justify-content-end mt-4">
-                        <a (click)="ShowBrsReturn()" data-toggle="tab" class="btn btn-b-icon " role="tab"
-                            aria-controls="hot" aria-selected="false">Show</a>
-                    </div>
-                </div>
-            </form> -->
-                <!-- <form [formGroup]="BrsDateForm">
-  <div *ngIf="brsdateshowhidereturned" class="row">
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label>BRS From Date</label>
-        <input class="form-control w-auto" type="text" readonly
-               formControlName="frombrsdate"
-               placeholder="" [bsConfig]="brsfromConfig"
-               #dp="bsDatepicker" bsDatepicker
-               placement="bottom"
-               [ngModelOptions]="{standalone: true}">
-      </div>
-    </div>
-
-    <div class="col-md-6 col-xl-4">
-      <div class="form-group">
-        <label>BRS To Date</label>
-        <input class="form-control w-auto" type="text" readonly
-               formControlName="tobrsdate"
-               placeholder="" [bsConfig]="brstoConfig"
-               #dp="bsDatepicker" bsDatepicker
-               placement="bottom"
-               [ngModelOptions]="{standalone: true}">
-        <div *ngIf="validatebrsdatereturn" style="color:red">
-          Brs To Date Should Be Greater Than From Date
-        </div>
-      </div>
-    </div>
-
-    <div class="justify-content-end mt-4">
-      <a (click)="ShowBrsReturn()" data-toggle="tab" class="btn btn-b-icon" role="tab"
-         aria-controls="hot" aria-selected="false">Show</a>
-    </div>
-  </div>
-</form> -->
-
-                <!-- <form [formGroup]="BrsDateForm">
-                    <div *ngIf="brsdateshowhidereturned" class="row">
-
-                       
-                        <div class="col-md-6 col-xl-4">
-                            <div class="form-group">
-                                <label>BRS From Date</label>
-                                <input class="form-control w-auto" type="text" placeholder="Select From Date" readonly
-                                    bsDatepicker [bsConfig]="brsfromConfig" formControlName="frombrsdate">
-                            </div>
-                        </div>
-
-                       
-                        <div class="col-md-6 col-xl-4">
-                            <div class="form-group">
-                                <label>BRS To Date</label>
-                                <input class="form-control w-auto" type="text" placeholder="Select To Date" readonly
-                                    bsDatepicker [bsConfig]="brstoConfig" formControlName="tobrsdate">
-                                <div *ngIf="validatebrsdatereturn" style="color:red">
-                                    BRS To Date Should Be Greater Than From Date
-                                </div>
-                            </div>
-                        </div>
-
-                        
-                        <div class="col-12 d-flex justify-content-end mt-4">
-                            <button type="button" class="btn btn-b-icon" (click)="ShowBrsReturn()">
-                                Show
-                            </button>
-                        </div>
-
-                    </div>
-                </form> -->
-
 
                 <form [formGroup]="BrsDateForm">
                     <div *ngIf="brsdateshowhidereturned" class="row mb-3 align-items-center">
-
                         <div class="col-md-3 col-xl-3">
                             <div class="form-group mb-0">
                                 <label style="font-weight: 500; font-size: 13px;">BRS From Date</label>
@@ -407,105 +252,74 @@
                                     <input class="form-control" type="text" placeholder="Select To Date" readonly
                                         bsDatepicker [bsConfig]="brstoConfig" formControlName="tobrsdate"
                                         style="height: 36px; border-radius: 4px;">
-
                                     <button type="button" class="btn btn-b-icon ms-3" (click)="ShowBrsReturn()"
                                         style="background-color: #0d6efd; color: white; height: 36px; padding: 0 20px; font-weight: 500; border-radius: 4px; border: 0; display: flex; align-items: center;">
                                         Show
                                     </button>
                                 </div>
-
                                 <div *ngIf="validatebrsdatereturn" style="color:red; margin-top: 4px; font-size: 12px;">
                                     BRS To Date Should Be Greater Than From Date
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </form>
 
-
-
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade active show " id="all" role="tabpanel" aria-labelledby="fresh-tab">
+                    <div class="tab-pane fade active show" id="all" role="tabpanel" aria-labelledby="fresh-tab">
                         <div class="row">
                             <div class="col-md-12 col-xl-12">
-                                <!-- Outer Table -->
-                                <!-- Outer Table -->
-                                <!-- <p-table #dtOuter [value]="gridData" [paginator]="true" [rows]="page.size"
-                                [totalRecords]="page.totalElements" [lazy]="true" [first]="page.offset * page.size"
-                                (onLazyLoad)="setPage($event)" [scrollable]="true" scrollHeight="400px"
-                                [resizableColumns]="true" [columnResizeMode]="'fit'" [sortField]="'preceiptdate'"
-                                [sortOrder]="1">                             
-
-                            </p-table> -->
-
-                                <!-- Layout wrapper for nested table -->
                                 <div class="tab-pane in" id="predefinedTab">
                                     <div class="row">
                                         <div class="col-md-12 col-xl-12">
 
-                                            <!-- Nested Table -->
                                             <p-table #dtNested [value]="PreDefinedAutoBrsArrayData" [paginator]="true"
                                                 [rows]="pageCriteria2.pageSize"
                                                 [first]="pageCriteria2.offset * pageCriteria2.pageSize"
                                                 [scrollable]="true" scrollHeight="400px" [resizableColumns]="true"
-                                                columnResizeMode="fit" [sortField]="'preceiptdate'" [sortOrder]="1">
+                                                columnResizeMode="fit" [sortField]="'preceiptdate'" [sortOrder]="1"
+                                                class="gr-table-dark-header">
 
                                                 <!-- HEADER -->
                                                 <ng-template pTemplate="header">
                                                     <tr>
-                                                        <th style="width:60px; background-color: #162246 !important; color: white !important; border: 1px solid #dee2e6;"
-                                                            *ngIf="chequeboxshoworhide">
+                                                        <th style="width:60px;" *ngIf="chequeboxshoworhide">
                                                             <input type="checkbox" [checked]="preferdrows"
                                                                 (change)="preferedselection($event)" />
                                                         </th>
-                                                        <th style="width:60px; background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
-                                                            class="cell-center header-center"
+                                                        <th style="width:60px;" class="cell-center header-center"
                                                             *ngIf="!showhidegridcolumns">
                                                             Clear
                                                         </th>
-                                                        <th style="width:60px; background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
-                                                            class="cell-center header-center"
+                                                        <th style="width:60px;" class="cell-center header-center"
                                                             *ngIf="!showhidegridcolumns2">
                                                             Return
                                                         </th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             *ngIf="!showhidegridcolumns">
                                                             Reference no</th>
-                                                        <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-center header-center">
                                                             Cheque/Reference No.</th>
-                                                        <th class="cell-left header-left"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-left header-left">
                                                             Branch Name</th>
-                                                        <th class="cell-right header-right"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-right header-right">
                                                             Amount</th>
-                                                        <th class="cell-left header-left"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-left header-left">
                                                             Party</th>
-                                                        <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-center header-center">
                                                             Receipt Date</th>
-                                                        <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-center header-center">
                                                             Deposited Date</th>
                                                         <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;"
                                                             *ngIf="!hiddendate">
                                                             {{datetitle}}</th>
-                                                        <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-center header-center">
                                                             Receipt Id</th>
-                                                        <th class="cell-center header-center"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-center header-center">
                                                             Transaction Mode</th>
-                                                        <th class="cell-left header-left"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-left header-left">
                                                             Cheque Bank Name</th>
-                                                        <th class="cell-left header-left"
-                                                            style="background-color: #0b4093 !important; color: white !important; border: 1px solid #dee2e6;">
+                                                        <th class="cell-left header-left">
                                                             Cheque Branch Name</th>
                                                     </tr>
                                                 </ng-template>
@@ -570,21 +384,8 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <!-- 111 -->
-
                             </div>
                         </div>
-                        <!-- <div class="row">
-                        <div class="col-md-12 col-xl-12">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-s-icon px-3 border-0 ml-3" (click)="saveAutoBrs()">{{
-                                    saveAutoBrsBool
-                                    ? 'Processing' : 'Save'}}</button>
-                            </div>
-                        </div>
-                    </div> -->
                     </div>
 
                     <div class="d-flex justify-content-end mt-4 mb-2" *ngIf="saveshowhide">
@@ -604,7 +405,7 @@
                         </button>
                     </div>
                     <div class="modal right slideInRight" id="add-detail" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" style="margin-right:0px !important; ">
+                        <div class="modal-dialog" style="margin-right:0px !important;">
                             <div class="model-cst modal-content">
                                 <div class="modal-body">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -627,3 +428,6 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</form>
