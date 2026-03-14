@@ -119,8 +119,11 @@ printedDate: boolean = true;
   if (!encodedId) return;
 
   try {
-    const decoded = atob(encodedId.replace(/\s/g, '+'));
-    const splitData = decoded.split(',');
+    // const decoded = atob(encodedId.replace(/\s/g, '+'));
+    // const splitData = decoded.split(',');
+    const decodedParam = decodeURIComponent(encodedId);
+    const routeParams = atob(decodedParam);
+    const splitData = routeParams.split(',');
 
     this.pJvnumber = splitData[0];
     this.receiptName = splitData[1];
