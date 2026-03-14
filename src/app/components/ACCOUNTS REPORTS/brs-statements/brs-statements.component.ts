@@ -378,8 +378,18 @@ get f() { return this.BrsStatementsReport.controls; }
             7: { cellWidth: 'auto', halign: 'left' },
           }
 
+    const formatDate = (dateStr: any): string => {
+  if (!dateStr) return "--NA--";
+  const dateObj = this._CommonService.getDateObjectFromDataBase(dateStr); // step 1: string → Date
+  if (!dateObj) return "--NA--";
+  return this._CommonService.getFormatDateGlobal(dateObj) || "--NA--";   // step 2: Date → formatted string
+};
+
     this.GridData.forEach(element => {
       debugger;
+      console.log('element:', element);
+  console.log('pclearDate raw:', element.pclearDate);
+  console.log('pparticulars raw:', element.pparticulars);
       let temp = [];
       let ptotalamount = this._CommonService.convertAmountToPdfFormat(element.ptotalamount);
 
@@ -401,15 +411,31 @@ this.pissuedate = this._CommonService.getFormatDateGlobal(dateObj);
       // }
 
 
-      if (element.pclearDate !='[object Object]') {
-        this.pclearDate = String(this._CommonService.getDateObjectFromDataBase(element.pclearDate))
-        this.pclearDate = this._CommonService.getFormatDateGlobal(element.pclearDate);
-      }
-      else {
-        this.pclearDate = "--NA--";
-      }
+      // if (element.pclearDate !='[object Object]') {
+      //   this.pclearDate = String(this._CommonService.getDateObjectFromDataBase(element.pclearDate))
+      //   this.pclearDate = this._CommonService.getFormatDateGlobal(element.pclearDate);
+      // }
+      // else {
+      //   this.pclearDate = "--NA--";
+      // }
+//       if (element.pclearDate) {
+//   const clearDateObj = this._CommonService.getDateObjectFromDataBase(element.pclearDate);
+//   this.pclearDate = this._CommonService.getFormatDateGlobal(clearDateObj);
+// } else {
+//   this.pclearDate = "--NA--";
+// }
      
-      temp = [this.pissuedate, element.ptransactionno, element.preferencenumber?element.preferencenumber:"--NA--", ptotalamount, this.pclearDate, element.pparticulars];
+      // temp = [this.pissuedate, element.ptransactionno, element.preferencenumber?element.preferencenumber:"--NA--", ptotalamount, element.preferencenumber ? this.pclearDate : "--NA--", element.pparticulars];
+      temp = [
+    formatDate(element.pissuedate),                                               // 0 - Receipt Date
+    element.ptransactionno,                                                       // 1 - Receipt No
+    element.preferencenumber || "--NA--",                                         // 2 - Cheque No
+    this._CommonService.convertAmountToPdfFormat(element.ptotalamount),           // 3 - Amount
+    element.preferencenumber ? formatDate(element.pissuedate) : "--NA--",         // 4 - Cheque Date
+    formatDate(element.pdepositdate),                                             // 5 - Deposit Date
+    element.preferencenumber ? formatDate(element.pclearDate) : "--NA--",         // 6 - Cleared Date
+    element.pparticulars || "--NA--"                                              // 7 - Particular
+  ];
       rows.push(temp);
     });
 
