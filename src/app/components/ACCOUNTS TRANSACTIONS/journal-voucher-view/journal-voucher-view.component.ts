@@ -147,6 +147,9 @@ export class JournalVoucherViewComponent implements OnInit {
     //window.open('/#/Reports/JournalVoucherReport?id=' + receipt);
     // window.open('/#/EmiChartReport');
   }
+
+
+  
   // filters results
   filterDatatable(event:any) {
     // get the value of the key pressed and make it lowercase

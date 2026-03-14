@@ -615,84 +615,171 @@ export class TdsJvComponent implements OnInit {
     console.log('Activate Event', event);
   }
 
-  saveJVDetails() {
-    try {
-      this.disablesavebutton = true;
-      this.savebutton = 'Processing';
+  // saveJVDetails() {
+  //   try {
+  //     this.disablesavebutton = true;
+  //     this.savebutton = 'Processing';
 
-      debugger;
-      //this.tdsJvDetailsGrid = this.selected1;
-      let isValid = true;
-      if (this.checkValidations(this.tdsJvDetailsForm, isValid)) {
-        let creditrows = 0;
-        let debitrows = 0;
-        if (this.selectedValues.length > 0) {
-          for (let i = 0; i < this.selectedValues.length; i++) {
-            if (this.selectedValues[i].account_trans_type == "C") {
-              creditrows = creditrows + 1;
-            }
-            else if (this.selectedValues[i].account_trans_type == "D") {
-              debitrows = debitrows + 1;
-            }
-          }
-          if (creditrows > 0 && debitrows > 0) {
-            if (confirm("Do you want to save ?")) {
-              debugger;
-              for (let i = 0; i < this.selectedValues.length; i++) {
-                if (this.selectedValues[i].account_trans_type == "C") {
-                  this.selectedValues[i].credit_amount = this.totalcreditamount;
-                }
-                this.selectedValues[i].payroll_month = this.MonthName;
-                this.selectedValues[i].transaction_date = this._commonService.getFormatDateNormal(this.tdsJvDetailsForm.controls['preceiptdate'].value);
-                this.selectedValues[i].jv_type = this.tdsJvDetailsForm.controls['DebitLedger'].value;
-                // this.tdsJvDetailsGrid[i].employee_code = this.tdsJvDetailsGrid[i].pEmployeeId;
-                this.selectedValues[i].schemaname = this._commonService.getschemaname();
-                this.selectedValues[i].pCreatedby = this._commonService.getCreatedBy();
-                this.selectedValues[i].pipaddress = this._commonService.getIpAddress();
-              }
-              debugger;
-              let formdata = JSON.stringify(this.selectedValues);
-              console.log(formdata)
-              this._AccountingTransactionsService.saveTDSjvdetails(formdata).subscribe((res:any) => {
-                if (res != null) {
-                  this._commonService.showSuccessMessage();
-                  this.clearAllFields();
-                  this.disablesavebutton = false;
-                  this.savebutton = 'Save';
-                }
-              }, (error:any) => {
-                this.disablesavebutton = false;
-                this.savebutton = 'Save';
-              });
-            }
-            else {
-              this.disablesavebutton = false;
-              this.savebutton = 'Save';
-            }
-          }
-          else {
-            this._commonService.showWarningMessage("Please Select Atleast One Debit And One Credit Rows");
-            this.disablesavebutton = false;
-            this.savebutton = 'Save';
-          }
-        }
-        else {
-          this.disablesavebutton = false;
-          this.savebutton = 'Save';
-        }
-      }
-      else {
-        this.disablesavebutton = false;
-        this.savebutton = 'Save';
-        this.allRowsSelected = false;
-      }
-    }
-    catch (error:any) {
+  //     debugger;
+  //     //this.tdsJvDetailsGrid = this.selected1;
+  //     let isValid = true;
+  //     if (this.checkValidations(this.tdsJvDetailsForm, isValid)) {
+  //       let creditrows = 0;
+  //       let debitrows = 0;
+  //       if (this.selectedValues.length > 0) {
+  //         for (let i = 0; i < this.selectedValues.length; i++) {
+  //           if (this.selectedValues[i].account_trans_type == "C") {
+  //             creditrows = creditrows + 1;
+  //           }
+  //           else if (this.selectedValues[i].account_trans_type == "D") {
+  //             debitrows = debitrows + 1;
+  //           }
+  //         }
+  //         if (creditrows > 0 && debitrows > 0) {
+  //           if (confirm("Do you want to save ?")) {
+  //             debugger;
+  //             for (let i = 0; i < this.selectedValues.length; i++) {
+  //               if (this.selectedValues[i].account_trans_type == "C") {
+  //                 this.selectedValues[i].credit_amount = this.totalcreditamount;
+  //               }
+  //               this.selectedValues[i].payroll_month = this.MonthName;
+  //               this.selectedValues[i].transaction_date = this._commonService.getFormatDateNormal(this.tdsJvDetailsForm.controls['preceiptdate'].value);
+  //               this.selectedValues[i].jv_type = this.tdsJvDetailsForm.controls['DebitLedger'].value;
+  //               // this.tdsJvDetailsGrid[i].employee_code = this.tdsJvDetailsGrid[i].pEmployeeId;
+  //               this.selectedValues[i].schemaname = this._commonService.getschemaname();
+  //               this.selectedValues[i].pCreatedby = this._commonService.getCreatedBy();
+  //               this.selectedValues[i].pipaddress = this._commonService.getIpAddress();
+  //             }
+  //             debugger;
+  //             let formdata = JSON.stringify(this.selectedValues);
+  //             console.log(formdata)
+  //             this._AccountingTransactionsService.saveTDSjvdetails(formdata).subscribe((res:any) => {
+  //               if (res != null) {
+  //                 this._commonService.showSuccessMessage();
+  //                 this.clearAllFields();
+  //                 this.disablesavebutton = false;
+  //                 this.savebutton = 'Save';
+  //               }
+  //             }, (error:any) => {
+  //               this.disablesavebutton = false;
+  //               this.savebutton = 'Save';
+  //             });
+  //           }
+  //           else {
+  //             this.disablesavebutton = false;
+  //             this.savebutton = 'Save';
+  //           }
+  //         }
+  //         else {
+  //           this._commonService.showWarningMessage("Please Select Atleast One Debit And One Credit Rows");
+  //           this.disablesavebutton = false;
+  //           this.savebutton = 'Save';
+  //         }
+  //       }
+  //       else {
+  //         this.disablesavebutton = false;
+  //         this.savebutton = 'Save';
+  //       }
+  //     }
+  //     else {
+  //       this.disablesavebutton = false;
+  //       this.savebutton = 'Save';
+  //       this.allRowsSelected = false;
+  //     }
+  //   }
+  //   catch (error:any) {
+  //     this.disablesavebutton = false;
+  //     this.savebutton = 'Save';
+  //     this._commonService.exceptionHandlingMessages('JVDetails', 'SavePayrollProcess', error);
+  //   }
+  // }
+
+
+  saveJVDetails() {
+    debugger
+  try {
+    this.disablesavebutton = true;
+    this.savebutton = 'Processing';
+    debugger;
+
+    let isValid = true;
+    if (!this.checkValidations(this.tdsJvDetailsForm, isValid)) {
       this.disablesavebutton = false;
       this.savebutton = 'Save';
-      this._commonService.exceptionHandlingMessages('JVDetails', 'SavePayrollProcess', error);
+      this.allRowsSelected = false;
+      return;
     }
+
+    if (this.selectedValues.length === 0) {
+      this._commonService.showWarningMessage("No rows selected");
+      this.disablesavebutton = false;
+      this.savebutton = 'Save';
+      return;
+    }
+
+    let creditRows = this.selectedValues.filter(r => r.account_trans_type === 'C');
+    let debitRows = this.selectedValues.filter(r => r.account_trans_type === 'D');
+
+    if (creditRows.length === 0 || debitRows.length === 0) {
+      this._commonService.showWarningMessage("Please select at least one Debit and one Credit row");
+      this.disablesavebutton = false;
+      this.savebutton = 'Save';
+      return;
+    }
+
+    if (!confirm("Do you want to save?")) {
+      this.disablesavebutton = false;
+      this.savebutton = 'Save';
+      return;
+    }
+
+    // Prepare the TDSJVRequestDTO payload
+    const payload = {
+  model: "JOURNAL VOUCHER", // <-- REQUIRED field
+  global_schema: this._commonService.getschemaname(),
+  branch_schema: this._commonService.getbranchname(),
+  company_code: this._commonService.getCompanyCode(),
+  branch_code: this._commonService.getBranchCode(),
+  branch_id: 0,
+  createdby: Number(this._commonService.getCreatedBy()) || 0, // ensure it's an integer
+  ipaddress: this._commonService.getIpAddress() || "",
+  transaction_date: this._commonService.getFormatDateNormal(
+    this.tdsJvDetailsForm.controls['preceiptdate'].value
+  ),
+  payroll_month: this.MonthName,
+  jv_type: this.tdsJvDetailsForm.controls['DebitLedger'].value,
+  narration: this.tdsJvDetailsForm.controls['narration']?.value || "",
+  jv_details: this.selectedValues.map(row => ({
+    account_id: String(row.account_id), // Swagger expects string
+    account_trans_type: row.account_trans_type,
+    particulars: row.particulars || '',
+    debit_amount: String(row.account_trans_type === 'D' ? row.debit_amount || 0 : 0),
+    credit_amount: String(row.account_trans_type === 'C' ? this.totalcreditamount || row.credit_amount || 0 : 0)
+  }))
+};
+
+    console.log("Payload to send:", payload);
+
+    this._AccountingTransactionsService.saveTDSjvdetails(JSON.stringify(payload)).subscribe({
+      next: (res: any) => {
+        this._commonService.showSuccessMessage();
+        this.clearAllFields();
+        this.disablesavebutton = false;
+        this.savebutton = 'Save';
+      },
+      error: (error: any) => {
+        this.disablesavebutton = false;
+        this.savebutton = 'Save';
+        this._commonService.showErrorMessage(error);
+      }
+    });
+
+  } catch (error: any) {
+    this.disablesavebutton = false;
+    this.savebutton = 'Save';
+    this._commonService.exceptionHandlingMessages('JVDetails', 'SavePayrollProcess', error);
   }
+}
   ClearAll() {
     this.clearAllFields();
   }

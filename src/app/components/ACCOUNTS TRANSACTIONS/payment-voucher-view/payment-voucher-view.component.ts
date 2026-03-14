@@ -3003,6 +3003,8 @@ const encodedForUrl = encodeURIComponent(receipt);
           );
 
           window.open(url, '_blank');
+          this._commonService.showSuccessMessage();
+
         } else {
           this.disablesavebutton = false;
           this.savebutton = 'Save';
