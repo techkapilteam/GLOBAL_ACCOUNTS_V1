@@ -323,6 +323,7 @@ setPageModel(): void {
     const _pBankAccountId = this.BRStatmentForm.value.bankAccountId;
 
     if (!this.chequesInfo) {
+      this.Showhide = false;
 
       this.brstatement.GetBrStatementReportByDates(fromDate, _pBankAccountId,'accounts','KLC01','KAPILCHITS','global').subscribe({
         next: (res: any[]) => {
@@ -361,11 +362,14 @@ setPageModel(): void {
       });
 
     } else {
+       const formattedFromDate = new Date(this.BRStatmentForm.value.fromDate).toLocaleDateString('en-CA'); 
+  const formattedToDate = new Date(this.BRStatmentForm.value.toDate).toLocaleDateString('en-CA');     
 
-      this.brstatement.GetBrStatementReportByDatesChequesInfo(fromDate, toDate, _pBankAccountId,'accounts','global','KAPILCHITS','KLC01')
+      this.brstatement.GetBrStatementReportByDatesChequesInfo(formattedFromDate, formattedToDate, _pBankAccountId,'accounts','global','KAPILCHITS','KLC01')
         .subscribe({
           next: (res: any[]) => {
             // this.ChequesInfoDetails = res || [];
+            
             const from = new Date(this.BRStatmentForm.value.fromDate);
     const to = new Date(this.BRStatmentForm.value.toDate);
             this.ChequesInfoDetails = (res || []).filter(item => {

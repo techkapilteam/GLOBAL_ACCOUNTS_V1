@@ -140,12 +140,19 @@ export class JournalVoucherViewComponent implements OnInit {
   }
   viewHandler(event:any, row:any) {
     debugger;
-    let receipt = btoa(row.pjvnumber + ',' + 'Journal Voucher');
-    window.open('/#/JournalVoucherReport?id=' + receipt + '', "_blank");
+    let receipt = btoa(row.journalVoucherNo + ',' + 'Journal Voucher');
+    // window.open('/#/JournalVoucherReport?id=' + receipt + '', "_blank");
     // this.router.navigate(['/Reports/JournalVoucherReport', receipt]);
 
     //window.open('/#/Reports/JournalVoucherReport?id=' + receipt);
     // window.open('/#/EmiChartReport');
+    // const receipt = btoa(`${row.receipt_number},General Receipt`);
+
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/JournalVoucherReport', receipt])
+    );
+
+    window.open(url, '_blank');
   }
   // filters results
   filterDatatable(event:any) {

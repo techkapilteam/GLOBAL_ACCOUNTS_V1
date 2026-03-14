@@ -183,8 +183,10 @@ return;
     const ledgername = this.GstReportForm.value.pledgerid;
 
     const todate = new Date(fromdate.getFullYear(), fromdate.getMonth() + 1, 0);
-    const from = this.commonService.getFormatDateNormal(fromdate);
-    const to = this.commonService.getFormatDateNormal(todate);
+    // const from = this.commonService.getFormatDateNormal(fromdate);
+    // const to = this.commonService.getFormatDateNormal(todate);
+    const from = this.datePipe.transform(fromdate, 'yyyy-MM-dd')!;
+const to = this.datePipe.transform(todate, 'yyyy-MM-dd')!;
 
     this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');
 
@@ -245,8 +247,10 @@ return;
   this.savebutton = 'Processing';
   this.gstpaymentsdata = [];
 
-  const fromdate = this.commonService.getFormatDateNormal(this.GstReportForm.value.fromdate);
-  const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
+  // const fromdate = this.commonService.getFormatDateNormal(this.GstReportForm.value.fromdate);
+  // const todate = this.commonService.getFormatDateNormal(this.GstReportForm.value.todate);
+  const fromdate = this.datePipe.transform(this.GstReportForm.value.fromdate, 'yyyy-MM-dd')!;
+const todate = this.datePipe.transform(this.GstReportForm.value.todate, 'yyyy-MM-dd')!;
   const branchschema = this.loginbranchschema;
 
   // this.tdsReportService.Getgstreport(branchschema, fromdate, todate)
@@ -290,8 +294,10 @@ if (this.GstReportForm.invalid) return;
   const fromdate: Date = this.GstReportForm.value.month;
   const todate = new Date(fromdate.getFullYear(), fromdate.getMonth() + 1, 0);
 
-  const from = this.commonService.getFormatDateNormal(fromdate);
-  const to = this.commonService.getFormatDateNormal(todate);
+  // const from = this.commonService.getFormatDateNormal(fromdate);
+  // const to = this.commonService.getFormatDateNormal(todate);
+  const from = this.datePipe.transform(fromdate, 'yyyy-MM-dd')!;
+const to = this.datePipe.transform(todate, 'yyyy-MM-dd')!;
   const ledgername = this.GstReportForm.value.pledgerid;
 
   this.month = this.datePipe.transform(fromdate, 'MMM-yyyy');

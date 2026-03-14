@@ -2458,8 +2458,9 @@ saveJournalVoucher() {
     ppartyid: String(item.ppartyid || ""),
     pamount: String(item.pdebitamount || item.pcreditamount || item.pamount || 0),
     psubledgerid: String(item.psubledgerid || ""),
-    ptranstype: item.ptranstype || "",          // ✅ NEW field from swagger
-    pledgername: item.pledgername || "",        // ✅ NEW field from swagger
+    // ptranstype: item.ptranstype || "",
+    ptranstype: item.ptranstype === 'Debit' ? 'D' : item.ptranstype === 'Credit' ? 'C' : "",          
+    pledgername: item.pledgername || "",       
     paccountname: item.pledgername || "",
     pgstnumber: "",
     ppartyname: item.ppartyname || "",
@@ -2486,30 +2487,39 @@ saveJournalVoucher() {
   }))
 };
 
-    console.log("FINAL BACKEND PAYLOAD", payload);
+    // console.log("FINAL BACKEND PAYLOAD", payload);
 
     // ==============================
     // API CALL
     // ==============================
-
+console.log('Payload being sent:', JSON.stringify(payload, null, 2));
     this._AccountingTransactionsService
       .saveJournalVoucher(payload)
       .subscribe({
 
        next: (res: any) => {
         console.log('Response from saveJournalVoucher:', res); 
+        console.log('Full response:', res);
+  console.log('voucherNo:', res.voucherNo);
 
           // if (res && res[0] === 'true') {
-        if (res === true) {
+        if (res && res.success === true) {
 
 
             this._commonService.showInfoMessage("Saved successfully");
 
             this.clearPaymentVoucher();
 
-            const receipt = btoa(res[1] + ',' + 'Journal Voucher');
+            // const receipt = btoa(res[1] + ',' + 'Journal Voucher');
+            const receipt = btoa(res.voucherNo + ',' + 'Journal Voucher');
+const encodedForUrl = encodeURIComponent(receipt);
 
-            window.open('/#/JournalVoucherReport?id=' + receipt, "_blank");
+            // window.open('/#/JournalVoucherReport?id=' + receipt, "_blank");
+            const url = this.router.serializeUrl(
+            this.router.createUrlTree(['/JournalVoucherReport', encodedForUrl])
+          );
+
+          window.open(url, '_blank');
           }
 
           this.disablesavebutton = false;

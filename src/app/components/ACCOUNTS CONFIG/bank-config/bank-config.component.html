@@ -86,7 +86,7 @@
         <!-- [ngClass]="{ 'is-invalid':bankmastervalidations.bankName}" -->
 
 
-        <ng-select class="form-control" formControlName="bankName" [items]="banksList" bindLabel="bankName"
+        <ng-select  formControlName="bankName" [items]="banksList" bindLabel="bankName"
           bindValue="bankName" placeholder="Select" (change)="onChange($event)" [ngClass]="{
     'is-invalid': bankmasterform.get('pAccountnumber')?.touched &&
                   bankmasterform.get('pAccountnumber')?.invalid
