@@ -25,10 +25,15 @@ export class ChequeManagementComponent {
   list: any[] = [];
 
   pageCriteria: PageCriteria = new PageCriteria();
+    // pageCriteria: PageCriteria = new PageCriteria();
 
   pageSize = 10;
+  currentPage = 1;        // ✅ track current page
+  totalRecords = 0;       // ✅ track total from API
   loading = false;
   hideprint = false;
+
+ 
 
   constructor(
     private accountingService: AccountingMasterService,
@@ -40,12 +45,47 @@ export class ChequeManagementComponent {
     this.setPageModel();
     this.getChequeManagementGridData();
   }
-  setPageModel(): void {
+  // setPageModel(): void {
+  //   this.pageCriteria.pageSize = this.commonService.pageSize;
+  //   this.pageCriteria.offset = 0;
+  //   this.pageCriteria.pageNumber = 1;
+  //   this.pageCriteria.footerPageHeight = 50;
+  // }
+    setPageModel(): void {
     this.pageCriteria.pageSize = this.commonService.pageSize;
     this.pageCriteria.offset = 0;
     this.pageCriteria.pageNumber = 1;
     this.pageCriteria.footerPageHeight = 50;
   }
+    onPageChange(event: any): void {
+    this.pageSize = event.rows;
+    this.currentPage = Math.floor(event.first / event.rows) + 1;
+    this.getChequeManagementGridData();
+  }
+
+  // getChequeManagementGridData(): void {
+  //   this.loading = true;
+  //   this.accountingService.ViewChequeManagementDetails(
+  //     this.commonService.getbranchname(),
+  //     this.commonService.getschemaname(),
+  //     this.commonService.getCompanyCode(),
+  //     this.commonService.getBranchCode(),
+  //     1,1
+  //   ).subscribe({
+  //     next: (data: any[]) => {
+  //       this.loading = false;
+  //       this.gridData = data ?? [];
+  //       this.list = [...this.gridData];
+  //       this.hideprint = this.gridData.length > 0;
+  //       this.updatePagination();
+  //     },
+  //     error: (error:any) => {
+  //       this.loading = false;
+  //       this.commonService.showErrorMessage(error);
+  //     }
+  //   });
+  // }
+
 
   getChequeManagementGridData(): void {
     this.loading = true;
@@ -54,16 +94,20 @@ export class ChequeManagementComponent {
       this.commonService.getschemaname(),
       this.commonService.getCompanyCode(),
       this.commonService.getBranchCode(),
-      1,1
+      this.pageSize,        // ✅ dynamic PageSize
+      this.currentPage      // ✅ dynamic PageNo
     ).subscribe({
       next: (data: any[]) => {
         this.loading = false;
         this.gridData = data ?? [];
         this.list = [...this.gridData];
+
+        // ✅ Get totalRecords from first row
+        this.totalRecords = data?.[0]?.ptotalrecords ?? 0;
+
         this.hideprint = this.gridData.length > 0;
-        this.updatePagination();
       },
-      error: (error:any) => {
+      error: (error: any) => {
         this.loading = false;
         this.commonService.showErrorMessage(error);
       }

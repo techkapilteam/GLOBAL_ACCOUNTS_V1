@@ -1683,35 +1683,62 @@ const payload = {
 //   this.disablesavebutton = false;
 //   this.buttonname = 'Save';
 // }
+
+
+
+
+
 handleDuplicates(res: any) {
-  // If res is null or undefined, exit
   if (!res) return;
 
-  // If res is a single string, convert it to an array
-  const codes = Array.isArray(res) ? res : [res];
+  // If status is TRUE, everything is fine, exit
+  if (res.status === "TRUE") return;
 
-  // Skip if the first item is "TRUE"
-  if (codes[0] === "TRUE") return;
+  // Check for counts and show warnings
+  if (res.bankAccountCount && res.bankAccountCount > 0) {
+    this._commonService.showWarningMessage("Bank Already Exists");
+  }
 
-  codes.forEach((code: string) => {
-    switch (code) {
-      case "B":
-        this._commonService.showWarningMessage("Bank Already Exists");
-        break;
-      case "D":
-        this._commonService.showWarningMessage("Debit Card Already Exists");
-        break;
-      case "U":
-        this._commonService.showWarningMessage("UPI Id Already Exists");
-        break;
-      default:
-        console.warn("Unknown validation code:", code);
-    }
-  });
+  if (res.debitCardCount && res.debitCardCount > 0) {
+    this._commonService.showWarningMessage("Debit Card Already Exists");
+  }
+
+  if (res.upiCount && res.upiCount > 0) {
+    this._commonService.showWarningMessage("UPI Id Already Exists");
+  }
 
   this.disablesavebutton = false;
   this.buttonname = 'Save';
 }
+// handleDuplicates(res: any) {
+//   // If res is null or undefined, exit
+//   if (!res) return;
+
+//   // If res is a single string, convert it to an array
+//   const codes = Array.isArray(res) ? res : [res];
+
+//   // Skip if the first item is "TRUE"
+//   if (codes[0] === "TRUE") return;
+
+//   codes.forEach((code: string) => {
+//     switch (code) {
+//       case "B":
+//         this._commonService.showWarningMessage("Bank Already Exists");
+//         break;
+//       case "D":
+//         this._commonService.showWarningMessage("Debit Card Already Exists");
+//         break;
+//       case "U":
+//         this._commonService.showWarningMessage("UPI Id Already Exists");
+//         break;
+//       default:
+//         console.warn("Unknown validation code:", code);
+//     }
+//   });
+
+//   this.disablesavebutton = false;
+//   this.buttonname = 'Save';
+// }
 handleError(err: any) {
   this._commonService.showErrorMessage(err);
   this.disablesavebutton = false;
