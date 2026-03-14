@@ -134,7 +134,7 @@ export class PaymentVoucherViewComponent implements OnInit {
       pmodofpayment: ['CASH'],
       pbankname: [''],
       pbranchname: [''],
-      ptranstype: ['CHEQUE', Validators.required],
+      ptranstype: ['CHEQUE'],
       pCardNumber: [''],
       pUpiname: [''],
       pUpiid: [''],
