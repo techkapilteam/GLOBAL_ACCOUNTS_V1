@@ -167,20 +167,20 @@
 
           <ng-template pTemplate="header">
             <tr>
-              <th style="width:50px; background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
+              <th style="width:50px; background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Chit Receipt No</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Reference No</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Branch</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Party</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Date</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Deposited Date</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Clear Date</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Id</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Mode</th>
-              <th style="background:#0b4093 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">UPI</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Chit Receipt No</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Reference No</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Branch</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Amount</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Party</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Date</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Deposited Date</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Clear Date</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Receipt Id</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; border-right:1px solid #2e4278 !important; white-space:nowrap;">Mode</th>
+              <th style="background:#2E86C1 !important; color:#fff !important; font-size:17px; font-weight:700; padding:10px 14px; white-space:nowrap;">UPI</th>
             </tr>
           </ng-template>
 
@@ -189,17 +189,17 @@
               <td style="padding:8px 12px; font-size:13px; color:#162246;">
                 <p-tableCheckbox [value]="row"></p-tableCheckbox>
               </td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.chitReceiptNo}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pChequenumber}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pbranchname || '--NA--'}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{currencySymbol}} {{row.ptotalreceivedamount | number:'1.2-2'}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.ppartyname}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.preceiptdate}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pdepositeddate}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.pCleardate}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.preceiptid}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.ptypeofpayment}}</td>
-              <td style="padding:8px 12px; font-size:13px; color:#0b4093;">{{row.cheque_bank}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.chitReceiptNo}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.pChequenumber}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.pbranchname || '--NA--'}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{currencySymbol}} {{row.ptotalreceivedamount | number:'1.2-2'}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.ppartyname}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.preceiptdate}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.pdepositeddate}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.pCleardate}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.preceiptid}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.ptypeofpayment}}</td>
+              <td style="padding:8px 12px; font-size:13px; color:#2E86C1;">{{row.cheque_bank}}</td>
             </tr>
           </ng-template>
 

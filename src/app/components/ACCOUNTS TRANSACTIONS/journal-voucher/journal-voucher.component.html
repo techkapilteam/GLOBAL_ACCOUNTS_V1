@@ -431,12 +431,12 @@
                 styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="width:100px; background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Actions</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Party Name</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Ledger Name</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Sub Ledger Name</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Debit</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Credit</th>
+                    <th style="width:100px; background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Actions</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Party Name</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Ledger Name</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Sub Ledger Name</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Debit</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Credit</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
@@ -461,11 +461,11 @@
                 </ng-template>
                 <ng-template pTemplate="footer">
                   <tr>
-                    <td colspan="4" style="text-align:right; font-weight:700; padding:8px 12px; background:#f0f4fd;">Total:</td>
-                    <td style="text-align:right; font-weight:700; padding:8px 12px; background:#f0f4fd;">
+                    <td colspan="4" style="text-align:right; font-weight:700; padding:8px 12px; background:#0a0a0a;">Total:</td>
+                    <td style="text-align:right; font-weight:700; padding:8px 12px; background:#0a0a0a;">
                       {{ debittotalamount | currency:'INR':'symbol':'1.2-2' }}
                     </td>
-                    <td style="text-align:right; font-weight:700; padding:8px 12px; background:#f0f4fd;">
+                    <td style="text-align:right; font-weight:700; padding:8px 12px; background:#0a0a0a;">
                       {{ credittotalamount | currency:'INR':'symbol':'1.2-2' }}
                     </td>
                   </tr>
@@ -496,9 +496,9 @@
                 styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Particulars</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Dr</th>
-                    <th style="background:#0b4093 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Cr</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px;">Particulars</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Dr</th>
+                    <th style="background:#2E86C1 !important; color:#fff !important; font-size:16px; font-weight:700; padding:10px 12px; text-align:right;">Cr</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
